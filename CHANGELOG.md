@@ -1,4 +1,17 @@
 # Changelog
+### [0.1.2](https://github.com/DingDangDog/cashbook/compare/v0.1.1...v0.1.2) (2023-01-12)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([7f1360f](https://github.com/DingDangDog/cashbook/commit/7f1360f47c58f99ce47d90a073d25d89786c5361))
+* 更新文档 ([a635327](https://github.com/DingDangDog/cashbook/commit/a6353274618e3e8ad3a975c5b3b06127b7caa366))
+
+
+### 🚑 Bug Fixes | Bug 修复
+
+* 列表总金额不随查询条件变化 close [#19](https://github.com/DingDangDog/cashbook/issues/19) ([ad37a9f](https://github.com/DingDangDog/cashbook/commit/ad37a9f72d0eca816db04749f534072db5628bea))
+
 ### [0.1.1](https://github.com/DingDangDog/cashbook/compare/v0.1.0...v0.1.1) (2022-12-29)
 
 
