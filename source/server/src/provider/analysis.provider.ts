@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FlowDocument } from 'src/schema/flow.schema';
+import { FlowQuery } from 'src/types/flow.dto';
 import {
   DailyLineChartData,
   DailyLineChartQuery,
@@ -65,17 +66,39 @@ export class AnalysisProvider {
     return res;
   }
 
-  async getTotalMoney(bookKey: string) {
-    const match = {
-      bookKey: {
-        $eq: bookKey,
-      },
-    };
+  async getTotalMoney(query: FlowQuery) {
+    const and = [];
+
+    and.push({ bookKey: { $eq: query.bookKey } });
+    if (query.startDay) {
+      and.push({ day: { $gte: new Date(query.startDay) } });
+    }
+    if (query.endDay) {
+      and.push({ day: { $lte: new Date(query.endDay) } });
+    }
+    if (query.type) {
+      and.push({ type: { $eq: query.type } });
+    }
+    if (query.payType) {
+      and.push({ payType: { $eq: query.payType } });
+    }
+    if (query.id) {
+      and.push({ id: { $eq: query.id } });
+    }
+
+    if (query.name) {
+      and.push({ name: { $regex: query.name } });
+    }
+    if (query.description) {
+      and.push({ description: { $regex: query.description } });
+    }
+    const quertOption = and.length > 0 ? { $and: and } : {};
+
     let money = 0;
     try {
       const data: TotalMoneyData[] = await this.flowModel
         .aggregate()
-        .match(match)
+        .match(quertOption)
         .group({ _id: '$bookKey', totalMoney: { $sum: '$money' } })
         .sort({ _id: 1 })
         .exec();

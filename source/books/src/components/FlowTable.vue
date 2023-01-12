@@ -63,7 +63,7 @@
 
   <div class="pageDiv">
     <span>
-      <b style="float: left;">消费总额：{{ flowPageRef.totalMoney }}</b>
+      <b style="float: left;">消费总额：{{ Number(flowPageRef.totalMoney.toFixed(2)) }}</b>
       <!-- {{ queryRef }},{{ flowPageRef }} -->
       <el-pagination :current-page="queryRef.pageNum" :page-size="queryRef.pageSize" :total="flowPageRef.totalCount"
         :page-sizes="[10, 20, 50, 100]" @size-change="pageSizeChange" @current-change="pageNumChange" background

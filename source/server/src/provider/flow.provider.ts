@@ -63,7 +63,7 @@ export class FlowProvider {
     );
     page.pageNum = parseInt(query.pageNum as any);
 
-    const totalMoney = await this.analysisProvider.getTotalMoney(query.bookKey);
+    const totalMoney = await this.analysisProvider.getTotalMoney(query);
     page.totalMoney = totalMoney;
     return page;
   }
