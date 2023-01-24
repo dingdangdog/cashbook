@@ -53,31 +53,11 @@ DingDangDog’s Cashbook
 
 ## 私有部署
 
-### Windows
-
-> 建议使用docker部署
-> 
-> 若不想用docker，可以参考[cashbook-0.0.1-releases](https://github.com/DingDangDog/cashbook/releases/tag/v0.0.1)，但其较为麻烦，需要提前准备好MongoDB和Node环境，不推荐😑
-> 
-> 或请拉取源码自行编译运行。
-> 
-> PS：等我变得更厉害时再来简化吧😣
-
-### Linux
-
-> 建议使用docker部署
-> 
-> 若不想使用docker，请拉取源码自行打包部署，后续可能会简化
-> 
-> PS：等我变得更厉害时再来简化吧😣
-
 ### Docker
-
-> 请先安装docker再进行以下操作
 
 #### 自动部署
 
-> 请先安装`docker-compose`工具
+> 请先安装`docker`和`docker-compose`再进行以下操作。（如果需要同步安装mongo，请阅读下方**拓展**）
 
 1. 创建本地文件夹
 2. 创建`docker-compose.yml`文件，并填入以下内容
