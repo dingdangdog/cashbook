@@ -40,7 +40,7 @@
       <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
     </div>
     <div class="queryParam">
-      <el-button type="success" @click="exportFlows()">导出全部</el-button>
+      <el-button type="success" @click="exportFlows()">导出</el-button>
     </div>
   </el-row>
 
