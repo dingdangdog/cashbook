@@ -5,10 +5,7 @@
       <el-header>
         <div class="headerInfo">
           <a href="https://oldmoon.top/">
-            <img alt="oldmoon logo" v-if="isDark ? true : false" class="logo" src="./static/images/oldmoon.dark.png"
-              :width="tableDivStyle.paddingleft.replace('px', '')"
-              :height="tableDivStyle.paddingleft.replace('px', '')" />
-            <img alt="oldmoon logo" v-if="isDark ? false : true" class="logo" src="./static/images/oldmoon.light.png"
+            <img alt="oldmoon logo" class="logo" src="https://images.oldmoon.top/images/dingdangdog/b457e5e9-45bd-4e92-9e94-7d101b031084.png"
               :width="tableDivStyle.paddingleft.replace('px', '')"
               :height="tableDivStyle.paddingleft.replace('px', '')" />
           </a>
