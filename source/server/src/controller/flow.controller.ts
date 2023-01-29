@@ -193,7 +193,7 @@ export class FlowController {
         message: '导入失败，请使用合法钥匙！',
       };
     }
-    const data = await this.flowProvider.importFlows(flag, flows);
+    const data = await this.flowProvider.importFlows(bookKey, flag, flows);
     return {
       code: 200,
       data,

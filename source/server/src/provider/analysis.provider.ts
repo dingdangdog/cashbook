@@ -104,7 +104,7 @@ export class AnalysisProvider {
         .exec();
       money = data[0].totalMoney;
     } catch (error) {
-      console.log('总金额查询出错！');
+      console.error('总金额查询出错！可能是账本无数据导致，所以可忽略');
     }
     return money;
   }

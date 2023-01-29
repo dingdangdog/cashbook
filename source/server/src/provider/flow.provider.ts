@@ -167,19 +167,20 @@ export class FlowProvider {
     return res;
   }
 
-  async importFlows(flag: string, flows: Flow[]) {
+  async importFlows(bookKey: string, flag: string, flows: Flow[]) {
     if (flag === 'overwrite') {
-      const deleteData = await this.flowModel.deleteMany().exec();
+      const deleteData = await this.flowModel
+        .deleteMany({ bookKey: bookKey })
+        .exec();
       console.log(deleteData);
-    } else {
-      let nextId: number = await this.getNewId();
-      this.idLock = true;
-      flows.forEach(async (flow) => {
-        flow.id = nextId;
-        nextId++;
-      });
-      this.idLock = false;
     }
+    let nextId: number = await this.getNewId();
+    this.idLock = true;
+    flows.forEach(async (flow) => {
+      flow.id = nextId;
+      nextId++;
+    });
+    this.idLock = false;
     const res = await this.flowModel.insertMany(flows);
     return res;
   }
