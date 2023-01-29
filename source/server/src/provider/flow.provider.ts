@@ -111,8 +111,35 @@ export class FlowProvider {
     return data;
   }
 
-  async getAll(bookKey: string): Promise<Flow[]> {
-    return await this.flowModel.find({ bookKey: bookKey }).exec();
+  async getAll(query: FlowQuery): Promise<Flow[]> {
+    const and = [];
+
+    and.push({ bookKey: { $eq: query.bookKey } });
+    if (query.startDay) {
+      and.push({ day: { $gte: new Date(query.startDay) } });
+    }
+    if (query.endDay) {
+      and.push({ day: { $lte: new Date(query.endDay) } });
+    }
+    if (query.type) {
+      and.push({ type: { $eq: query.type } });
+    }
+    if (query.payType) {
+      and.push({ payType: { $eq: query.payType } });
+    }
+    if (query.id) {
+      and.push({ id: { $eq: query.id } });
+    }
+
+    if (query.name) {
+      and.push({ name: { $regex: query.name } });
+    }
+    if (query.description) {
+      and.push({ description: { $regex: query.description } });
+    }
+    const quertOption = and.length > 0 ? { $and: and } : {};
+
+    return await this.flowModel.find(quertOption).sort({ day: -1 }).exec();
   }
 
   async getOneByIdAndBook(id: number, bookKey: string): Promise<Flow> {

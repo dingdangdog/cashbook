@@ -455,7 +455,7 @@ const bookName = localStorage.getItem('bookName');
 const bookKey = localStorage.getItem('bookKey');
 
 const exportFlows = () => {
-  getAll(bookKey || 'none')
+  getAll(queryRef.value)
     .then((data) => {
       const fileName = bookName + '-' + (new Date().getTime()) + '.json';
       exportJson(fileName, JSON.stringify(data));

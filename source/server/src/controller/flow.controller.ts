@@ -145,14 +145,31 @@ export class FlowController {
    * 查询全部
    */
   @Get('/getAll')
-  async getAll(@Query('bookKey') bookKey = 'none') {
+  async getAll(
+    @Headers('bookKey') bookKey = 'none',
+    @Query('startDay') startDay,
+    @Query('endDay') endDay,
+    @Query('type') type,
+    @Query('payType') payType,
+    @Query('name') name,
+    @Query('description') description,
+  ) {
     if (bookKey === 'none') {
       return {
         code: 333,
         message: '数据获取失败，请使用合法钥匙！',
       };
     }
-    const data = await this.flowProvider.getAll(bookKey);
+    const query: FlowQuery = {
+      bookKey: bookKey,
+      startDay: startDay,
+      endDay: endDay,
+      type: type,
+      payType: payType,
+      name: name,
+      description: description,
+    };
+    const data = await this.flowProvider.getAll(query);
     return {
       code: 200,
       data,

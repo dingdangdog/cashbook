@@ -9,8 +9,8 @@ const prefix = '/flow';
  * 查询全部流水
  * @returns FlowPage
  */
-export function getAll(bookKey: string): Promise<Flow[]> {
-    return $http({ url: prefix + "/getAll", method: "get", params: { bookKey: bookKey } })
+export function getAll(query: FlowQuery): Promise<Flow[]> {
+    return $http({ url: prefix + "/getAll", method: "get", params: query })
 }
 
 /**

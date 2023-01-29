@@ -26,8 +26,8 @@ export class UpdateFlowDto {
 
 export class FlowQuery {
   bookKey: string;
-  pageNum = 1;
-  pageSize = 10;
+  pageNum? = 1;
+  pageSize? = 10;
   id?: number;
   startDay?: string;
   endDay?: string;
