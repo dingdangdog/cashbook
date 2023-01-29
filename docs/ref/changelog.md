@@ -1,4 +1,22 @@
 # 更新日志📣
+### [0.1.3](https://github.com/DingDangDog/cashbook/compare/v0.1.2...v0.1.3) (2023-01-29)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([e65fe43](https://github.com/DingDangDog/cashbook/commit/e65fe437e32078098069d722c642235cadb6c0ac))
+
+
+### ✂ Code Refactoring | 代码重构
+
+* 导出功能改为导出当前查询条件的所有查询结果 close [#21](https://github.com/DingDangDog/cashbook/issues/21) ([7ac6eea](https://github.com/DingDangDog/cashbook/commit/7ac6eeae6811e4d35a54ebc638f094f9a6920572))
+* 页面图标变更为网络地址 close [#20](https://github.com/DingDangDog/cashbook/issues/20) ([866ffb8](https://github.com/DingDangDog/cashbook/commit/866ffb82f50fcd2d497fdc60fc427fb9c11cc3d5))
+
+
+### 🚙 Styles | 风格
+
+* 导出按钮改名 ([9f877bf](https://github.com/DingDangDog/cashbook/commit/9f877bfb6a624af2556c6f67cade83d6f5470dcb))
+
 ### [0.1.2](https://github.com/DingDangDog/cashbook/compare/v0.1.1...v0.1.2) (2023-01-12)
 
 
