@@ -13,7 +13,7 @@ export class DistProvider {
 
   async initDist() {
     // 删除原有字典
-    this.distModel.deleteMany();
+    await this.distModel.deleteMany().exec();
     // 初始化字典ID
     let id = 1;
     DefaultData.dist.forEach((value) => {
