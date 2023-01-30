@@ -1,8 +1,10 @@
-import { createVNode } from 'vue';
+import { createVNode, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { generateMixed } from './common'
 import { getBook, createBook } from '../api/api.book'
 import type { Book } from '../types/model/book'
+
+export const isOpen = ref(false);
 
 // 输入钥匙的提示语（登录提示语）
 const confimNode = () => {
@@ -18,6 +20,10 @@ const confimNode = () => {
  * 打开钥匙输入框
  */
 export async function openSet() {
+    if (isOpen.value == true) {
+      return;
+    }
+    isOpen.value = true;
     ElMessageBox.prompt(confimNode, '请输入钥匙打开你的账本', {
         // 1、输入钥匙 或 点击创建
         confirmButtonText: '打开',
@@ -29,6 +35,7 @@ export async function openSet() {
         // 2.1、输入钥匙并点击确定，根据钥匙获取账本信息，判断钥匙是否有效
         getBook(value.trim())
             .then((book: Book) => {
+                isOpen.value = false;
                 // 2.1.1、钥匙正确，登录
                 localStorage.setItem('bookKey', book.bookKey);
                 localStorage.setItem('bookName', book.bookName);
@@ -41,6 +48,7 @@ export async function openSet() {
                     }
                 });
             }).catch(() => {
+                isOpen.value = false;
                 // 2.1.2、钥匙错误，提醒重试或创建
                 ElMessageBox.alert('账本不存在，请先创建！', '账本打开失败', {
                     confirmButtonText: '去创建',
@@ -55,6 +63,7 @@ export async function openSet() {
                 });
             });
     }).catch(() => {
+        isOpen.value = false;
         // 2.2、去创建
         register();
     });
