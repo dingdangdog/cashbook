@@ -1,4 +1,28 @@
 # Changelog
+### [0.1.5](https://github.com/DingDangDog/cashbook/compare/v0.1.4...v0.1.5) (2023-01-30)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([b0f9130](https://github.com/DingDangDog/cashbook/commit/b0f9130a202e53dd02d80b391480e3abfdfcdb7b))
+
+
+### 🛴 Features | 新功能
+
+* 实现图表与列表联动 close [#22](https://github.com/DingDangDog/cashbook/issues/22) ([1491dbb](https://github.com/DingDangDog/cashbook/commit/1491dbbf7200163e1d9812b65a699248ed284097))
+
+
+### 🚑 Bug Fixes | Bug 修复
+
+* 修复图表查询条件bug close [#25](https://github.com/DingDangDog/cashbook/issues/25) ([dd93bdb](https://github.com/DingDangDog/cashbook/commit/dd93bdbeebe9afd025fb6a73caed151b55c64835))
+* 字典初始化逻辑bug修复 ([fb676f4](https://github.com/DingDangDog/cashbook/commit/fb676f44a0bdd9d0d3b5317930f179bc8be37255))
+
+
+### ✂ Code Refactoring | 代码重构
+
+* 首页弹窗增加判断，防止多次弹出 close [#26](https://github.com/DingDangDog/cashbook/issues/26) ([7ed74ad](https://github.com/DingDangDog/cashbook/commit/7ed74addac965a1595b3504a9ec6cac1b02efd1a))
+* 增加消费类型，并重构字典保存逻辑 ([a3c12b2](https://github.com/DingDangDog/cashbook/commit/a3c12b2b986d1ee78ed62a2cbcfdf95faa2982be))
+
 ### [0.1.4](https://github.com/DingDangDog/cashbook/compare/v0.1.3...v0.1.4) (2023-01-29)
 
 
