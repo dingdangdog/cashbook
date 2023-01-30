@@ -1,5 +1,5 @@
 export class DistDto {
-  id: number;
+  id?: number;
 
   type: string;
 
@@ -7,5 +7,5 @@ export class DistDto {
 
   distValue: string;
 
-  sort: number;
+  sort?: number;
 }
