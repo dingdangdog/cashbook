@@ -5,31 +5,31 @@
     </div>
 
     <div class="queryParam">
-      <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
+      <el-date-picker v-model="flowQuery.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
         placeholder="开始时间" />
     </div>
     <div class="queryParam">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
+      <el-date-picker v-model="flowQuery.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
         placeholder="结束时间" />
     </div>
     <div class="queryParam">
-      <el-select v-model="queryRef.type" class="m-2" placeholder="消费类型" clearable>
+      <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
         <el-option v-for="item in expenseTypeOptions" :key="item.distKey" :label="item.distValue" :value="item.distKey" />
       </el-select>
     </div>
 
     <div class="queryParam">
-      <el-select v-model="queryRef.payType" class="m-2" placeholder="支付方式" clearable>
+      <el-select v-model="flowQuery.payType" class="m-2" placeholder="支付方式" clearable>
         <el-option v-for="item in paymentTypeOptions" :key="item.distKey" :label="item.distValue" :value="item.distKey" />
       </el-select>
     </div>
 
     <div class="queryParam">
-      <el-input v-model="queryRef.name" placeholder="名称" />
+      <el-input v-model="flowQuery.name" placeholder="名称" />
     </div>
 
     <!-- <div class="queryParam">
-      <el-input v-model="queryRef.description" placeholder="描述" />
+      <el-input v-model="flowQuery.description" placeholder="描述" />
     </div> -->
 
     <div class="queryParam">
@@ -64,8 +64,8 @@
   <div class="pageDiv">
     <span>
       <b style="float: left;">消费总额：{{ Number(flowPageRef.totalMoney.toFixed(2)) }}</b>
-      <!-- {{ queryRef }},{{ flowPageRef }} -->
-      <el-pagination :current-page="queryRef.pageNum" :page-size="queryRef.pageSize" :total="flowPageRef.totalCount"
+      <!-- {{ flowQuery }},{{ flowPageRef }} -->
+      <el-pagination :current-page="flowQuery.pageNum" :page-size="flowQuery.pageSize" :total="flowPageRef.totalCount"
         :page-sizes="[10, 20, 50, 100]" @size-change="pageSizeChange" @current-change="pageNumChange" background
         layout="->, total, sizes, prev, pager, next">
       </el-pagination>
@@ -152,7 +152,7 @@
 
 <script setup lang="ts">
 // 第三方库引入
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Search, Delete, Edit } from '@element-plus/icons-vue';
 import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus'
@@ -162,6 +162,7 @@ import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows } from
 import { getDistByType } from '../api/api.dist'
 import { dateFormater, deviceAgent, timeFormatter } from '../utils/common'
 import { exportJson } from '../utils/fileUtils'
+import { flowQuery } from '../utils/store'
 import type { Page } from '../types/page';
 import type { Flow, FlowQuery } from '../types/model/flow';
 import type { Dist } from '@/types/model/dist';
@@ -191,11 +192,7 @@ const expenseTypeOptions = ref<Dist[]>([]);
 
 const paymentTypeOptions = ref<Dist[]>([]);
 
-const query: FlowQuery = {
-  pageNum: 1,
-  pageSize: 10
-};
-
+// 分页数据结果
 const flowPage: Page<Flow> = {
   pageNum: 1,
   pageSize: 0,
@@ -205,7 +202,7 @@ const flowPage: Page<Flow> = {
   pageData: []
 };
 
-// 初始化空对象
+// 初始化空对象，用于新增、修改的弹出框数据绑定
 const flow: Flow = {
   id: undefined,
   day: undefined,
@@ -245,8 +242,6 @@ const dialgoFormTitle = ref(formTitle[0]);
 const formLabelWidth = '200px';
 // 表单实例
 const dialgoFormRef = ref<FormInstance>();
-// 查询条件数据绑定
-const queryRef = ref(query);
 // 分页数据绑定
 const flowPageRef = ref(flowPage);
 // 表单弹窗数据绑定
@@ -254,26 +249,26 @@ const flowRef = reactive(flow);
 
 // 切换页码
 const pageNumChange = (pageNum: number) => {
-  queryRef.value.pageNum = pageNum;
+  flowQuery.pageNum = pageNum;
   doQuery();
 };
 
 // 切换分页容量
 const pageSizeChange = (pageSize: number) => {
-  queryRef.value.pageSize = pageSize;
+  flowQuery.pageSize = pageSize;
   doQuery();
 };
 
 // 执行分页数据查询
 const doQuery = () => {
-  getFlowPage(queryRef.value).then(res => {
+  getFlowPage(flowQuery).then(res => {
     flowPageRef.value = res;
     // console.log(JSON.stringify(flowPage) + "doQuery");
     loading.value = false;
   });
 };
 
-// 提交表单
+// 提交表单（新增或修改）
 const confirmForm = async (dialgoForm: FormInstance | undefined, closeDialog: boolean) => {
   if (!dialgoForm) return;
   if (! await dialgoForm.validate((valid, fields) => {
@@ -392,11 +387,12 @@ const deleteById = (id: number) => {
   })
 };
 
+// 打开新增弹窗
 const openCreateDialog = (title: string) => {
   dialgoFormTitle.value = title;
   dialogFormVisible.value = true;
 }
-
+// 打开修改弹窗
 const openUpdateDialog = (title: string, updateFlow: Flow) => {
   dialgoFormTitle.value = title;
   dialogFormVisible.value = true;
@@ -436,6 +432,7 @@ const readJsonInfo = (flie: UploadFile) => {
           description: flow.description,
         })
       })
+      // 调用导入接口
       importFlows(importFlag.value, importFlowList).then(() => {
         ElMessageBox.alert('', '导入成功', {
           confirmButtonText: '确定',
@@ -453,9 +450,9 @@ const readJsonInfo = (flie: UploadFile) => {
 
 const bookName = localStorage.getItem('bookName');
 const bookKey = localStorage.getItem('bookKey');
-
+// 导出方法(前台导出，后台负责要导出的查询数据)
 const exportFlows = () => {
-  getAll(queryRef.value)
+  getAll(flowQuery)
     .then((data) => {
       const fileName = bookName + '-' + (new Date().getTime()) + '.json';
       exportJson(fileName, JSON.stringify(data));
@@ -463,6 +460,10 @@ const exportFlows = () => {
       ElMessage.error('数据获取出错，无法导出！')
     })
 }
+
+watch(flowQuery, (newValue, oldValue) => {
+  doQuery();
+});
 
 // ref(1)
 

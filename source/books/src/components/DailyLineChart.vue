@@ -24,6 +24,7 @@ import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { dailyLine } from '../api/api.analysis'
+import { flowQuery } from '../utils/store';
 
 const query: DailyLineChartQuery = {
 }
@@ -109,6 +110,10 @@ const doQuery = (query: DailyLineChartQuery) => {
       lineDiv = document.getElementById('lineDiv');
       lineChart = echarts.init(lineDiv);
       lineChart.setOption(optionRef.value);
+      // lineChart.on('click', function (){
+      //   flowQuery.startDay = queryRef.value.startDay;
+      //   flowQuery.endDay = queryRef.value.endDay;
+      // });
     }
   })
 }
@@ -119,6 +124,8 @@ const zoomChange = (total: number): number => {
 }
 
 onMounted(() => {
+  queryRef.value.startDay = flowQuery.startDay;
+  queryRef.value.endDay = flowQuery.endDay;
   doQuery(queryRef.value);
 })
 </script>

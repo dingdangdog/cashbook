@@ -23,9 +23,6 @@
           <span v-if="!haveUserIdRef()">当前账本：{{ bookName }}&nbsp;</span>
           <el-button v-if="!haveUserIdRef()" type="info" plain @click="clearUser()">关闭账本</el-button>
         </div>
-        <!-- <div class="themeButton">
-          <el-button v-if="haveUserIdRef()" type="primary" plain @click="openSet()">打卡账本</el-button>
-        </div> -->
 
       </el-header>
 
@@ -70,9 +67,10 @@
 import { ref } from 'vue';
 import { useToggle } from '@vueuse/shared';
 import { useDark } from '@vueuse/core';
-import { openSet, clearUser } from './utils/setKey'
+import { clearUser } from './utils/setKey'
 import { defineAsyncComponent } from 'vue'
 import { getServerInfo } from './api/api.server';
+import { chartDialog } from './utils/store';
 // 异步组件引用
 const FlowTable = defineAsyncComponent(() => import("./components/FlowTable.vue"));
 const DailyLineChart = defineAsyncComponent(() => import("./components/DailyLineChart.vue"));
@@ -80,7 +78,7 @@ const TypePieChart = defineAsyncComponent(() => import("./components/TypePieChar
 
 // 设置账本
 const bookName = localStorage.getItem('bookName');
-
+// 判断是否打开账本
 const haveUserId = (): boolean => {
   if (bookName || 'none' === bookName) {
     return false;
@@ -94,25 +92,20 @@ const haveUserIdRef = ref(haveUserId);
 const isDark = useDark({
   storageKey: 'vitepress-theme-appearance',
 })
-
+// 设置主题色
 const toggleDark = useToggle(isDark);
 
-// 图表控制
-const chartDialog = ref({
-  chartDiaLogShow: false,
-  chartDiaLogTitle: '每日消费曲线',
-  showChartNum: 1,
-})
 
+// 修改展示图表的信息
 const showChart = (showChartNum: number, chartDiaLogTitle: string) => {
-  chartDialog.value.chartDiaLogShow = true;
-  chartDialog.value.chartDiaLogTitle = chartDiaLogTitle;
-  chartDialog.value.showChartNum = showChartNum;
+  chartDialog.chartDiaLogShow = true;
+  chartDialog.chartDiaLogTitle = chartDiaLogTitle;
+  chartDialog.showChartNum = showChartNum;
 }
-
+// 关闭图表弹窗
 const closeDialog = () => {
-  chartDialog.value.chartDiaLogShow = false;
-  chartDialog.value.showChartNum = 0;
+  chartDialog.chartDiaLogShow = false;
+  chartDialog.showChartNum = 0;
 }
 
 // 动态表格样式
@@ -125,7 +118,7 @@ const tableDivStyle = ref({
   header: document.documentElement.clientWidth * 0.033 + `px`,
   footer: document.documentElement.clientWidth * 0.02 + `px`
 });
-
+// 服务器信息封装
 const serverInfo = ref({
   id: 1,
   version: '',
@@ -133,7 +126,7 @@ const serverInfo = ref({
   createDate: new Date(),
   startDate: new Date(),
 });
-
+// 获取服务器信息
 getServerInfo().then(res => {
   serverInfo.value.id = res.id;
   serverInfo.value.version = res.version || '';
