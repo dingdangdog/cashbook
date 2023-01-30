@@ -22,13 +22,21 @@ export class AnalysisProvider {
   async dailyLineChart(
     query: DailyLineChartQuery,
   ): Promise<DailyLineChartData[]> {
-    this.flowModel.count(query);
+    // this.flowModel.count(query);
 
     const match: DailyLineChartMatch = {};
     match.bookKey = { $eq: query.bookKey };
     if (query.startDay && query.endDay) {
       match.day = {
         $gte: new Date(query.startDay),
+        $lte: new Date(query.endDay),
+      };
+    } else if (query.startDay) {
+      match.day = {
+        $gte: new Date(query.startDay),
+      };
+    } else if (query.endDay) {
+      match.day = {
         $lte: new Date(query.endDay),
       };
     }
@@ -53,6 +61,14 @@ export class AnalysisProvider {
     if (query.startDay && query.endDay) {
       match.day = {
         $gte: new Date(query.startDay),
+        $lte: new Date(query.endDay),
+      };
+    } else if (query.startDay) {
+      match.day = {
+        $gte: new Date(query.startDay),
+      };
+    } else if (query.endDay) {
+      match.day = {
         $lte: new Date(query.endDay),
       };
     }
