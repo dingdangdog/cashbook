@@ -1,4 +1,18 @@
 # 更新日志📣
+### [0.1.6](https://github.com/DingDangDog/cashbook/compare/v0.1.5...v0.1.6) (2023-01-31)
+
+
+### ✂ Code Refactoring | 代码重构
+
+* 主题按钮显示更换为表情符号，并优化饼图各主题的文字颜色 close [#27](https://github.com/DingDangDog/cashbook/issues/27) ([9816aae](https://github.com/DingDangDog/cashbook/commit/9816aaef3886c5325a4a769c88b7a3534858f550))
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([11a1056](https://github.com/DingDangDog/cashbook/commit/11a10568eaf20f7f552d20358c73160b40315787))
+* 更新文档 ([9f4c633](https://github.com/DingDangDog/cashbook/commit/9f4c633b46189163657adf195b1ac584c1d5f897))
+* readme些许优化 ([a49d034](https://github.com/DingDangDog/cashbook/commit/a49d034444a243ee493e04bd6b72c432bb2c29d9))
+
 ### [0.1.5](https://github.com/DingDangDog/cashbook/compare/v0.1.4...v0.1.5) (2023-01-30)
 
 
