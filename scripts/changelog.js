@@ -19,7 +19,7 @@ const insertLog = () => {
   // 添加脚本执行器并应用
   const { execSync } = require("child_process");
   execSync(
-    `git add . && git commit -m \"docs: 更新文档\" && git tag doc-${newVersion} && git push --follow-tags origin main && git push --tags`,
+    `git pull && git add . && git commit -m \"docs: 更新文档\" && git tag doc-${newVersion} && git push --follow-tags origin main && git push --tags`,
     (err, stdout, stderr) => {
       if (err) {
         console.log(err);
