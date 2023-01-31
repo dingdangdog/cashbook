@@ -50,6 +50,7 @@ DingDangDog’s Cashbook
 - [x] 前后端docker镜像合并部署
 - [x] 增加docker-compose容器编排
 - [x] 列表展示流水总额
+- [x] 图&表联动
 
 ## 私有部署
 
@@ -85,7 +86,7 @@ DingDangDog’s Cashbook
 
 #### 手动部署
 
-> 以下操作建议在已经具备有MongoDB环境的情况下进行
+> 以下操作请在已经具备有MongoDB环境的情况下进行
 
 1. 拉取docker镜像：
 
