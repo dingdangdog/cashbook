@@ -14,7 +14,7 @@
           <h1>CashBook</h1>
         </div>
         <div class="themeButton">
-          <el-button plain @click="toggleDark()">{{ isDark ? 'Dark' : 'Light' }}
+          <el-button plain @click="toggleDark()">{{ isDark ? '⛅' : '🔆' }}
           </el-button>
         </div>
         <div class="themeButton">
@@ -66,11 +66,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useToggle } from '@vueuse/shared';
-import { useDark } from '@vueuse/core';
 import { clearUser } from './utils/setKey'
 import { defineAsyncComponent } from 'vue'
 import { getServerInfo } from './api/api.server';
-import { chartDialog } from './utils/store';
+import { chartDialog, isDark } from './utils/store';
 // 异步组件引用
 const FlowTable = defineAsyncComponent(() => import("./components/FlowTable.vue"));
 const DailyLineChart = defineAsyncComponent(() => import("./components/DailyLineChart.vue"));
@@ -88,10 +87,7 @@ const haveUserId = (): boolean => {
 }
 const haveUserIdRef = ref(haveUserId);
 
-// 设置主题
-const isDark = useDark({
-  storageKey: 'vitepress-theme-appearance',
-})
+
 // 设置主题色
 const toggleDark = useToggle(isDark);
 

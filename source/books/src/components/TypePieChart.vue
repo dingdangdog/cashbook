@@ -23,7 +23,7 @@ import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { typePie } from '../api/api.analysis';
-import { flowQuery, chartDialog } from '../utils/store';
+import { flowQuery, chartDialog, isDark} from '../utils/store';
 
 const query: TypePieChartQuery = {
 }
@@ -38,7 +38,10 @@ const optionRef = ref({
   legend: {
     top: '5%',
     left: '0',
-    orient: 'vertical'
+    orient: 'vertical',
+    textStyle: {
+      color: '#fff'
+    }
   },
   toolbox: {
     feature: {
@@ -93,6 +96,7 @@ const doQuery = (query: TypePieChartQuery) => {
         });
       })
       optionRef.value.series[0].data = dataList;
+      optionRef.value.legend.textStyle.color = isDark.value.valueOf() ? '#fff' : '#000';
       pieDiv = document.getElementById('pieDiv');
       pieChart = echarts.init(pieDiv);
       pieChart.setOption(optionRef.value);
