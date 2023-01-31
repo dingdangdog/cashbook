@@ -1,4 +1,17 @@
 # Changelog
+### [0.1.7](https://github.com/DingDangDog/cashbook/compare/v0.1.6...v0.1.7) (2023-01-31)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([eb8db95](https://github.com/DingDangDog/cashbook/commit/eb8db95e2837110ec966cf87f73f15d1c82cab1c))
+* 更新文档 ([b08cde2](https://github.com/DingDangDog/cashbook/commit/b08cde2b7a8a13c9350eea3549344efdb64aaab9))
+
+
+### 🚑 Bug Fixes | Bug 修复
+
+* 自动提交脚本优化，防止网络连接失败造成重复生成无用tag ([e8b56e0](https://github.com/DingDangDog/cashbook/commit/e8b56e0f6f1d26d5fa827105154f22e10cc79893))
+
 ### [0.1.6](https://github.com/DingDangDog/cashbook/compare/v0.1.5...v0.1.6) (2023-01-31)
 
 
