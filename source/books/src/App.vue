@@ -30,7 +30,7 @@
         <el-row class="mb-4">
           <el-button round @click="showChart(1, '日消费曲线')">日消费曲线</el-button>
           <el-button type="primary" round @click="showChart(2, '消费类型统计')">消费类型统计</el-button>
-          <el-button type="success" round>Success</el-button>
+          <el-button type="success" round @click="showChart(3, '消费日历')">消费日历</el-button>
           <el-button type="info" round>Info</el-button>
           <el-button type="warning" round>Warning</el-button>
           <el-button type="danger" round>Danger</el-button>
@@ -58,6 +58,7 @@
     <el-dialog v-model="chartDialog.chartDiaLogShow" :title="chartDialog.chartDiaLogTitle" @close="closeDialog()">
       <DailyLineChart v-if="(chartDialog.showChartNum == 1)" />
       <TypePieChart v-if="(chartDialog.showChartNum == 2)" />
+      <CalendarChart v-if="(chartDialog.showChartNum == 3)" />
     </el-dialog>
 
   </div>
@@ -74,6 +75,7 @@ import { chartDialog, isDark } from './utils/store';
 const FlowTable = defineAsyncComponent(() => import("./components/FlowTable.vue"));
 const DailyLineChart = defineAsyncComponent(() => import("./components/DailyLineChart.vue"));
 const TypePieChart = defineAsyncComponent(() => import("./components/TypePieChart.vue"));
+const CalendarChart = defineAsyncComponent(() => import("./components/CalendarChart.vue"));
 
 // 设置账本
 const bookName = localStorage.getItem('bookName');
