@@ -17,15 +17,10 @@
 <script setup lang="ts">
 import { flowQuery, chartDialog } from '../utils/store';
 import { dailyLine } from '../api/api.analysis'
-import type { DailyLineChartQuery, DailyLineChart } from '@/types/model/analysis';
-import { ElMessage } from 'element-plus';
+import type { DailyLineChartQuery } from '@/types/model/analysis';
 import { ref } from 'vue';
 
-
-
 const allCount = ref<any>({});
-
-// const allCount = ref<DailyLineChart[]>([]);
 
 const doQuery = async (param: DailyLineChartQuery) => {
     const res = await dailyLine(param);
@@ -49,10 +44,6 @@ doQuery(queryRef.value).then((res) => {
     });
 });
 
-
-// onMounted(() => {
-//     doQuery(queryRef.value);
-// })
 </script>
 <style>
 .is-selected {
