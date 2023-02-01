@@ -1,4 +1,11 @@
 # Changelog
+### [0.1.9](https://github.com/DingDangDog/cashbook/compare/v0.1.8...v0.1.9) (2023-02-01)
+
+
+### 📚 Documentation | 文档
+
+* 新功能更新readme ([e69b6e4](https://github.com/DingDangDog/cashbook/commit/e69b6e42d938d468a1cb3f2026cf2498b3cf2237))
+
 ### [0.1.8](https://github.com/DingDangDog/cashbook/compare/v0.1.7...v0.1.8) (2023-02-01)
 
 
