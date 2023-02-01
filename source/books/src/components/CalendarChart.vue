@@ -2,9 +2,9 @@
     <el-calendar>
         <template #date-cell="{ data }">
             <div @click="clickDay(data)">
-                <p :class="data.isSelected ? 'is-selected' : ''">
+                <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
                     {{ data.day.split('-').slice(1).join('-') }}
-                    {{ data.isSelected ? '✔️' : '' }}
+                    <!-- {{ data.isSelected ? '✔️' : '' }} -->
                 </p>
                 <p :class="allCount[data.day] ? 'have-flow' : 'no-flow'">
                     {{ allCount[data.day] ? Number(allCount[data.day].toFixed(2)) : 0 }}
