@@ -51,6 +51,7 @@ DingDangDog’s Cashbook
 - [x] 增加docker-compose容器编排
 - [x] 列表展示流水总额
 - [x] 图&表联动
+- [x] 消费日历
 
 ## 私有部署
 
@@ -136,3 +137,7 @@ docker run -p 16001:80 --name cashbook -e CASHBOOK_MONGODB_URL=mongodb://usernam
 ### 消费类型统计饼图
 
 ![image-20221212164530378](./images/image-20221212164530378.png)
+
+### 消费日历
+
+![image-20230201180827277](./images/image-20230201180827277.png)
