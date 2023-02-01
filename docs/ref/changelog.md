@@ -1,4 +1,23 @@
 # 更新日志📣
+### [0.1.9](https://github.com/DingDangDog/cashbook/compare/v0.1.8...v0.1.9) (2023-02-01)
+
+
+### 📚 Documentation | 文档
+
+* 新功能更新readme ([e69b6e4](https://github.com/DingDangDog/cashbook/commit/e69b6e42d938d468a1cb3f2026cf2498b3cf2237))
+
+### [0.1.8](https://github.com/DingDangDog/cashbook/compare/v0.1.7...v0.1.8) (2023-02-01)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([20876af](https://github.com/DingDangDog/cashbook/commit/20876af36303a765adbe34416658971aabf40b49))
+
+
+### 🛴 Features | 新功能
+
+* 增加消费日历新功能 close [#28](https://github.com/DingDangDog/cashbook/issues/28) ([2650d54](https://github.com/DingDangDog/cashbook/commit/2650d5407df33569dd78713ed76682629f1b611b))
+
 ### [0.1.7](https://github.com/DingDangDog/cashbook/compare/v0.1.6...v0.1.7) (2023-01-31)
 
 
