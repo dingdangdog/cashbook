@@ -1,10 +1,10 @@
 <template>
-    <el-calendar>
+    <el-calendar v-model="day">
         <template #date-cell="{ data }">
             <div @click="clickDay(data)">
                 <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
                     {{ data.day.split('-').slice(1).join('-') }}
-                    <!-- {{ data.isSelected ? '✔️' : '' }} -->
+                    {{ data.day === flowQuery.startDay ? '✔️' : '' }}
                 </p>
                 <p :class="allCount[data.day] ? 'have-flow' : 'no-flow'">
                     {{ allCount[data.day] ? Number(allCount[data.day].toFixed(2)) : 0 }}
@@ -22,6 +22,8 @@ import { ref } from 'vue';
 
 const allCount = ref<any>({});
 
+const day = ref(flowQuery.startDay ? new Date(flowQuery.startDay) : new Date ());
+
 const doQuery = async (param: DailyLineChartQuery) => {
     const res = await dailyLine(param);
     return res;
@@ -30,6 +32,7 @@ const doQuery = async (param: DailyLineChartQuery) => {
 const clickDay = (param: any) => {
     flowQuery.startDay = param.day;
     flowQuery.endDay = param.day;
+    day.value = new Date(param.day);
     chartDialog.chartDiaLogShow = false;
     console.log(param);
 }
