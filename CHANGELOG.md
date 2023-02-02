@@ -1,4 +1,23 @@
 # Changelog
+### [0.1.10](https://github.com/DingDangDog/cashbook/compare/v0.1.9...v0.1.10) (2023-02-02)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([bd4dd99](https://github.com/DingDangDog/cashbook/commit/bd4dd9966e471f0d070939036aadb03299ea94bc))
+* 更新文档 ([99430be](https://github.com/DingDangDog/cashbook/commit/99430becdb6e3e63e05a8cb6193760a7258da6f7))
+
+
+### 🚙 Styles | 风格
+
+* 无用代码删除 ([343ebae](https://github.com/DingDangDog/cashbook/commit/343ebae38e9de60fbbecc8f95203069b2fb6c38b))
+
+
+### ✂ Code Refactoring | 代码重构
+
+* 优化日期展示效果 ([1db66a3](https://github.com/DingDangDog/cashbook/commit/1db66a3a163b4553b8a1cb63f62bde8725411d3d))
+* 优化消费日历展示和回显 close [#29](https://github.com/DingDangDog/cashbook/issues/29) ([24b643b](https://github.com/DingDangDog/cashbook/commit/24b643bab335feea75887efe7211c5b41f11734a))
+
 ### [0.1.9](https://github.com/DingDangDog/cashbook/compare/v0.1.8...v0.1.9) (2023-02-01)
 
 
