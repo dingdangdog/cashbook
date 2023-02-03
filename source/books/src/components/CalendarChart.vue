@@ -60,7 +60,7 @@ const queryRef = ref(query);
 doQuery(queryRef.value).then((res) => {
     res.forEach((data) => {
         allCount.value[data._id] = data.daySum;
-        let month = dayToMonth(data._id);
+        let month = dayToMonth(data._id + ' 08:00:01');
         if (monthCount.value[month] || monthCount.value[month] === 0) {
             monthCount.value[month] = monthCount.value[month] + data.daySum;
         } else {
