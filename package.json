@@ -1,6 +1,6 @@
 {
   "name": "cashbook",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "private": true,
   "scripts": {
     "local-build": "node scripts/local-build.ts",
