@@ -24,11 +24,14 @@ DingDangDog’s Cashbook
 1. 项目提供[演示系统](#演示系统)，不是正式系统，建议不要记录真实数据！原因就不多说了。
 2. 建议想要使用此项目的朋友们私有化部署，不要在公网公开使用！保护好隐私！
 3. 建议仅作为个人或家庭记账工具使用，商用或其他使用不受约束，出现任何问题概不负责！
-4. PS：赚钱的老板不介意的话可以打赏一下哦😁TODO：后续补充打赏方式
+4. 建议使用者每年创建一个账本，图表功能可以起到分析全年数据的效果。
+5. 如果使用发现任何问题，或有任何建议意见，欢迎提[ISSUE](https://github.com/DingDangDog/cashbook/issues/new)
+
+> PS：赚钱的老板不介意的话可以打赏一下哦😁TODO：后续补充打赏方式
 
 ## 演示系统
 
-- 请以PC端打开，目前未适配其他终端。
+- 请以PC端浏览器打开，目前未适配其他终端。
 - 演示地址：[cash.oldmoon.top](https://cash.oldmoon.top/)
 - 演示账本钥匙：`fScrX9FwtiE`
 
@@ -141,3 +144,17 @@ docker run -p 16001:80 --name cashbook -e CASHBOOK_MONGODB_URL=mongodb://usernam
 ### 消费日历
 
 ![image-20230201180827277](./images/image-20230201180827277.png)
+
+## 赞助者
+
+> 目前没有😁
+
+## 打赏
+
+- 零花钱多的老板可以赏个咖啡钱，非常感谢您的支持。😘
+
+<div style="float:left">
+  <img width="400px" src="https://images.oldmoon.top/images/dingdangdog/446e3117029aea9f1b0930c49dfbb623.zfb.jpg" alt="zfb"/>
+  <img width="400px" src="https://images.oldmoon.top/images/dingdangdog/64990797817f3d585bb32f7bbf199544.standrad.png" alt="wx"/>
+</div>
+
