@@ -18,6 +18,18 @@ DingDangDog’s Cashbook
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow.svg" />
 </p>
 
+## 目录
+
+[必读建议](#必读建议)
+[演示系统](#演示系统)
+[概念说明](#概念说明)
+[主要功能](#主要功能)
+[私有部署](#私有部署)
+[更新日志](#更新日志)
+[截图展示](#截图展示)
+[赞助者](#赞助者)
+[打赏](#打赏)
+
 
 ## 必读建议
 
@@ -27,7 +39,7 @@ DingDangDog’s Cashbook
 4. 建议使用者每年创建一个账本，图表功能可以起到分析全年数据的效果。
 5. 如果使用发现任何问题，或有任何建议意见，欢迎提[ISSUE](https://github.com/DingDangDog/cashbook/issues/new)
 
-> PS：赚钱的老板不介意的话可以打赏一下哦😁TODO：后续补充打赏方式
+> PS：赚钱的老板不介意的话可以打赏一下哦😁
 
 ## 演示系统
 
