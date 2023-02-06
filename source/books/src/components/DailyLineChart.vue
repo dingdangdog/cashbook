@@ -90,6 +90,8 @@ var lineDiv: any;
 var lineChart: echarts.ECharts;
 
 const doQuery = (query: DailyLineChartQuery) => {
+  flowQuery.startDay = queryRef.value.startDay;
+  flowQuery.endDay = queryRef.value.endDay;
   dailyLine(query).then(res => {
     if (res) {
       if (res.length === 0) {

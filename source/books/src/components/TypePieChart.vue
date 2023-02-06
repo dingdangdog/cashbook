@@ -82,6 +82,8 @@ var pieDiv: any;
 var pieChart: echarts.ECharts;
 
 const doQuery = (query: TypePieChartQuery) => {
+  flowQuery.startDay = queryRef.value.startDay;
+  flowQuery.endDay = queryRef.value.endDay;
   typePie(query).then(res => {
     if (res) {
       if (res.length === 0) {
