@@ -1,25 +1,27 @@
 <template>
-    <el-calendar ref="refCalendar" v-model="day">
-        <template #header="{ date }">
-            <span>{{ date }} <b>消费总额：{{ monthCount[date] ? Number(monthCount[date].toFixed(2)) : 0 }} </b></span>
-            <el-button-group>
-                <el-button @click="selectDate('prev-month')">上个月</el-button>
-                <el-button @click="selectDate('today')">今天</el-button>
-                <el-button @click="selectDate('next-month')">下个月</el-button>
-            </el-button-group>
-        </template>
-        <template #date-cell="{ data }">
-            <div @click="clickDay(data)">
-                <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
-                    {{ data.day.split('-').slice(1).join('-') }}
-                    {{ data.day === flowQuery.startDay ? '✔️' : '' }}
-                </p>
-                <p :class="allCount[data.day] ? 'have-flow' : 'no-flow'">
-                    {{ allCount[data.day]? Number(allCount[data.day].toFixed(2)) : 0 }}
-                </p>
-            </div>
-        </template>
-    </el-calendar>
+    <div class="calendar-main">
+        <el-calendar ref="refCalendar" v-model="day">
+            <template #header="{ date }">
+                <span>{{ date }} <b>消费总额：{{ monthCount[date] ? Number(monthCount[date].toFixed(2)) : 0 }} </b></span>
+                <el-button-group>
+                    <el-button @click="selectDate('prev-month')">上个月</el-button>
+                    <el-button @click="selectDate('today')">今天</el-button>
+                    <el-button @click="selectDate('next-month')">下个月</el-button>
+                </el-button-group>
+            </template>
+            <template #date-cell="{ data }">
+                <div @click="clickDay(data)">
+                    <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
+                        {{ data.day.split('-').slice(1).join('-') }}
+                        {{ data.day === flowQuery.startDay ? '✔️' : '' }}
+                    </p>
+                    <p :class="allCount[data.day] ? 'have-flow' : 'no-flow'">
+                        {{ allCount[data.day] ? Number(allCount[data.day].toFixed(2)) : 0 }}
+                    </p>
+                </div>
+            </template>
+        </el-calendar>
+    </div>
 </template>
   
 <script setup lang="ts">
@@ -86,7 +88,16 @@ const dayToMonth = (day: string) => {
 .no-flow {
     color: #67c23a;
 }
-.el-calendar__body{
+
+.el-calendar__body {
     padding: 0 20px;
+}
+
+@media screen and (max-width: 480px) {
+    .calendar-main {
+        width: 700px;
+        height: 700px;
+        margin: 10px;
+    }
 }
 </style>

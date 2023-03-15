@@ -12,7 +12,7 @@
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="lineDiv" style="width:100%; height:400px; padding:10px">
+  <div id="lineDiv">
   </div>
 </template>
 
@@ -135,5 +135,24 @@ onMounted(() => {
 <style scoped>
 .queryRow .queryParam {
   margin: 8px 3px;
+}
+
+#lineDiv {
+  width: 100%;
+  height: 400px;
+  padding: 10px;
+}
+
+
+@media screen and (max-width: 480px) {
+  .queryRow {
+    width: 700px;
+  }
+
+  #lineDiv {
+    width: 700px;
+    height: 700px;
+    padding: 10px
+  }
 }
 </style>

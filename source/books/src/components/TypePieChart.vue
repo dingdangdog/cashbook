@@ -12,7 +12,7 @@
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="pieDiv" style="width:100%; height:400px; padding:10px">
+  <div id="pieDiv">
   </div>
 </template>
 
@@ -23,7 +23,7 @@ import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { typePie } from '../api/api.analysis';
-import { flowQuery, chartDialog, isDark} from '../utils/store';
+import { flowQuery, chartDialog, isDark } from '../utils/store';
 
 const query: TypePieChartQuery = {
 }
@@ -60,8 +60,12 @@ const optionRef = ref({
         borderWidth: 2
       },
       label: {
-        show: false,
-        position: 'center'
+        show: true,
+        // position: 'center'
+        formatter(param: any) {
+          // correct the percentage
+          return param.name + ' (' + param.percent * 2 + '%)';
+        }
       },
       emphasis: {
         label: {
@@ -102,7 +106,7 @@ const doQuery = (query: TypePieChartQuery) => {
       pieDiv = document.getElementById('pieDiv');
       pieChart = echarts.init(pieDiv);
       pieChart.setOption(optionRef.value);
-      pieChart.on('click', function (param){
+      pieChart.on('click', function (param) {
         flowQuery.startDay = queryRef.value.startDay;
         flowQuery.endDay = queryRef.value.endDay;
         flowQuery.type = param.name;
@@ -123,5 +127,23 @@ onMounted(() => {
 <style scoped>
 .queryRow .queryParam {
   margin: 8px 3px;
+}
+
+#pieDiv {
+  width: 100%;
+  height: 400px;
+  padding: 10px
+}
+
+@media screen and (max-width: 480px) {
+  .queryRow {
+    width: 700px;
+  }
+
+  #pieDiv {
+    width: 700px;
+    height: 700px;
+    padding: 10px
+  }
 }
 </style>

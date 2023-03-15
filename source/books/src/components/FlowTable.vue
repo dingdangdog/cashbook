@@ -1,6 +1,6 @@
 <template>
   <el-row class="queryRow">
-    <div class="queryParam">
+    <div class="queryParam pc-button">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
 
@@ -36,30 +36,45 @@
       <el-button :icon="Search" circle @click="doQuery()" />
     </div>
 
+    <div class="queryParam pc-button">
+      <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
+    </div>
+    <div class="queryParam pc-button">
+      <el-button type="success" @click="exportFlows()">导出</el-button>
+    </div>
+  </el-row>
+
+  <el-row class="mini-buttons">
     <div class="queryParam">
       <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
     </div>
     <div class="queryParam">
       <el-button type="success" @click="exportFlows()">导出</el-button>
     </div>
+    <div class="queryParam">
+      <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
+    </div>
   </el-row>
 
-  <el-table v-loading="loading" :data="flowPageRef.pageData" stripe row-key="row" :height="tableRef.height">
-    <el-table-column type="index" width="50" v-if="deviceAgent() === 'pc'" />
-    <el-table-column prop="id" label="ID" v-if=false />
-    <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="40" v-if="deviceAgent() === 'pc'" />
-    <el-table-column prop="type" label="消费类型" min-width="30" v-if="deviceAgent() === 'pc'" />
-    <el-table-column prop="money" label="金额（元）" min-width="30" />
-    <el-table-column prop="payType" label="支付方式" min-width="40" v-if="deviceAgent() === 'pc'" />
-    <el-table-column prop="name" label="名称" min-width="40" />
-    <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
-    <el-table-column label="操作" prop="id" width="110">
-      <template v-slot="scop">
-        <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(formTitle[1], scop.row)" />
-        <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row.id)" />
-      </template>
-    </el-table-column>
-  </el-table>
+  <div class="el-table-div">
+    <el-table v-loading="loading" :data="flowPageRef.pageData" stripe row-key="row"
+      style="width: 100%; max-width: 100%; overflow-x: auto;">
+      <el-table-column type="index" width="50" v-if="deviceAgent() === 'pc'" />
+      <el-table-column prop="id" label="ID" v-if=false />
+      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="40" />
+      <el-table-column prop="type" label="消费类型" min-width="30" />
+      <el-table-column prop="money" label="金额（元）" min-width="30" />
+      <el-table-column prop="payType" label="支付方式" min-width="40" />
+      <el-table-column prop="name" label="名称" min-width="40" />
+      <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
+      <el-table-column label="操作" prop="id" width="110">
+        <template v-slot="scop">
+          <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(formTitle[1], scop.row)" />
+          <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row.id)" />
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
   <div class="pageDiv">
     <span>
@@ -74,40 +89,44 @@
 
 
   <!-- 弹出框表单 -->
-  <el-dialog v-model="dialogFormVisible" :title="dialgoFormTitle">
+  <el-dialog v-model="dialogFormVisible" :title="dialgoFormTitle" :fullscreen="miniScreen">
 
-    <el-form ref="dialgoFormRef" :model="flowRef" :rules="rules">
+    <div class="el-dialog-main">
+      <el-form ref="dialgoFormRef" :model="flowRef" :rules="rules">
 
-      <el-form-item label="日期" :label-width="formLabelWidth" prop="day">
-        <el-date-picker v-model="flowRef.day" type="date" format="YYYY/MM/DD"
-          :default-value="new Date(flowRef.day || new Date())" value-format="YYYY-MM-DD" placeholder="选择">
-        </el-date-picker>
-      </el-form-item>
+        <el-form-item label="日期" :label-width="formLabelWidth" prop="day">
+          <el-date-picker v-model="flowRef.day" type="date" format="YYYY/MM/DD"
+            :default-value="new Date(flowRef.day || new Date())" value-format="YYYY-MM-DD" placeholder="选择">
+          </el-date-picker>
+        </el-form-item>
 
-      <el-form-item label="消费类型" :label-width="formLabelWidth" prop="type">
-        <el-select v-model="flowRef.type" placeholder="选择" clearable>
-          <el-option v-for="item in expenseTypeOptions" :key="item.distKey" :label="item.distValue" :value="item.distKey" />
-        </el-select>
-      </el-form-item>
+        <el-form-item label="消费类型" :label-width="formLabelWidth" prop="type">
+          <el-select v-model="flowRef.type" placeholder="选择" clearable>
+            <el-option v-for="item in expenseTypeOptions" :key="item.distKey" :label="item.distValue"
+              :value="item.distKey" />
+          </el-select>
+        </el-form-item>
 
-      <el-form-item label="金额" :label-width="formLabelWidth" prop="money">
-        <el-input-number v-model="flowRef.money" :min="0" />
-      </el-form-item>
+        <el-form-item label="金额" :label-width="formLabelWidth" prop="money">
+          <el-input-number v-model="flowRef.money" :min="0" />
+        </el-form-item>
 
-      <el-form-item label="支付方式" :label-width="formLabelWidth" prop="payType">
-        <el-select v-model="flowRef.payType" placeholder="选择" clearable>
-          <el-option v-for="item in paymentTypeOptions" :key="item.distKey" :label="item.distValue" :value="item.distKey" />
-        </el-select>
-      </el-form-item>
+        <el-form-item label="支付方式" :label-width="formLabelWidth" prop="payType">
+          <el-select v-model="flowRef.payType" placeholder="选择" clearable>
+            <el-option v-for="item in paymentTypeOptions" :key="item.distKey" :label="item.distValue"
+              :value="item.distKey" />
+          </el-select>
+        </el-form-item>
 
-      <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-        <el-input v-model="flowRef.name" />
-      </el-form-item>
+        <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="flowRef.name" />
+        </el-form-item>
 
-      <el-form-item label="描述" :label-width="formLabelWidth" prop="description" textarea>
-        <el-input v-model="flowRef.description" />
-      </el-form-item>
-    </el-form>
+        <el-form-item label="描述" :label-width="formLabelWidth" prop="description" textarea>
+          <el-input v-model="flowRef.description" />
+        </el-form-item>
+      </el-form>
+    </div>
     <!-- 表单确认按钮 -->
     <template #footer>
       <span class="dialog-footer">
@@ -124,7 +143,7 @@
     </template>
   </el-dialog>
 
-  <el-dialog v-model="dialogUpdateVisible" title="文件上传">
+  <el-dialog v-model="dialogUpdateVisible" title="文件上传" :fullscreen="miniScreen">
     <!-- <el-upload submit="submitExcel()" :auto-upload="false">
       <el-button type="primary">导入Excel文件</el-button>
       <template #tip>
@@ -133,21 +152,23 @@
         </div>
       </template>
     </el-upload> -->
-    <el-radio-group v-model="importFlag" class="ml-4">
-      <el-radio label="overwrite" size="large"><b style="color: red;">删除原有流水</b></el-radio>
-      <el-radio label="add" size="large"><b>保留原有流水</b></el-radio>
-    </el-radio-group>
-    <hr/>
-    <el-upload :auto-upload="false" :on-change="readJsonInfo" v-model:file-list='fileList'>
-      <el-button type="primary">导入Json文件</el-button>
-      <template #tip>
-        <div class="el-upload__tip">
-          仅支持上传Json文件
-        </div>
-      </template>
-    </el-upload>
-  </el-dialog>
 
+    <div class="el-dialog-main">
+      <el-radio-group v-model="importFlag" class="ml-4">
+        <el-radio label="overwrite" size="large"><b style="color: red;">删除原有流水</b></el-radio>
+        <el-radio label="add" size="large"><b>保留原有流水</b></el-radio>
+      </el-radio-group>
+      <hr />
+      <el-upload :auto-upload="false" :on-change="readJsonInfo" v-model:file-list='fileList'>
+        <el-button type="primary">导入Json文件</el-button>
+        <template #tip>
+          <div class="el-upload__tip">
+            仅支持上传Json文件
+          </div>
+        </template>
+      </el-upload>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -178,12 +199,20 @@ onMounted(() => {
   });
 });
 
+const miniScreen = ref(false);
+if (document.body.clientWidth <= 480) {
+  miniScreen.value = true;
+}
 // const tableRef = ref();
 // tableRef.value.height = document.documentElement.clientHeight * 0.65;
 
-const tableRef = ref({
-  'height': document.documentElement.clientHeight * 0.63
-});
+// const tableRef = ref({
+//   'height': document.documentElement.clientHeight * 0.63
+// });
+
+// if (document.body.clientWidth <= 480) {
+//   tableRef.value.height = document.documentElement.clientHeight * 0.7;
+// }
 
 /*
  * 集中定义常量
@@ -239,7 +268,10 @@ const dialogUpdateVisible = ref(false);
 // 表单弹窗标题
 const dialgoFormTitle = ref(formTitle[0]);
 // 表单输入框宽度
-const formLabelWidth = '200px';
+const formLabelWidth = ref('200px');
+if (document.body.clientWidth <= 480) {
+  formLabelWidth.value = '100px';
+}
 // 表单实例
 const dialgoFormRef = ref<FormInstance>();
 // 分页数据绑定
@@ -465,13 +497,6 @@ watch(flowQuery, (newValue, oldValue) => {
   doQuery();
 });
 
-// ref(1)
-
-// 将需要对外暴露的方法和对象添加到这里
-// defineExpose({
-//   queryRef, flowPageRef, pageChange, doQuery
-// });
-
 </script>
 
 <style scoped>
@@ -481,5 +506,32 @@ watch(flowQuery, (newValue, oldValue) => {
 
 .pageDiv {
   margin: 10px 0;
+}
+
+@media screen and (min-width: 960px) {
+  .mini-buttons {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .el-table-div {
+    width: 800px;
+  }
+
+  .pc-button {
+    display: none;
+  }
+
+  .queryParam {
+    margin: 8px 3px;
+  }
+
+  .el-dialog-main {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>
