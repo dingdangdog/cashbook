@@ -1,9 +1,19 @@
 <template>
-  <el-row class="queryRow" justify="center">
+  <el-row class="queryRow">
     <div class="queryParam">
       <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
         placeholder="开始时间" />
     </div>
+    <div class="queryParam pc-button">
+      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
+        placeholder="结束时间" />
+    </div>
+    <div class="queryParam pc-button">
+      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
+    </div>
+  </el-row>
+
+  <el-row class="mini-buttons">
     <div class="queryParam">
       <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
         placeholder="结束时间" />
@@ -52,19 +62,26 @@ const optionRef = ref({
     {
       name: '消费类型',
       type: 'pie',
-      radius: ['40%', '70%'],
+      radius: ['60%', '80%'],
+      // center: ['10%', '30%'],
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
         borderColor: '#fff',
         borderWidth: 2
       },
+      // grid: {
+      //   left: '30',
+      //   top: '20',
+      //   right: '30',
+      //   buttom: '20'
+      // },
       label: {
         show: true,
-        // position: 'center'
+        position: 'center',
         formatter(param: any) {
           // correct the percentage
-          return param.name + ' (' + param.percent * 2 + '%)';
+          return param.name + ' (' + param.percent + '%)';
         }
       },
       emphasis: {
@@ -103,6 +120,12 @@ const doQuery = (query: TypePieChartQuery) => {
       })
       optionRef.value.series[0].data = dataList;
       optionRef.value.legend.textStyle.color = isDark.value.valueOf() ? '#fff' : '#000';
+
+      if (document.body.clientWidth <= 480) {
+        optionRef.value.series[0].radius = ['30%', '50%'];
+      }
+
+
       pieDiv = document.getElementById('pieDiv');
       pieChart = echarts.init(pieDiv);
       pieChart.setOption(optionRef.value);
@@ -125,7 +148,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.queryRow .queryParam {
+.queryRow {
+  margin: 8px 3px;
+}
+
+.queryParam {
   margin: 8px 3px;
 }
 
@@ -135,15 +162,27 @@ onMounted(() => {
   padding: 10px
 }
 
+@media screen and (min-width: 960px) {
+  .mini-buttons {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 480px) {
-  .queryRow {
-    width: 700px;
+  .pc-button {
+    display: none;
+  }
+
+  .mini-buttons {
+    margin: 8px 3px;
   }
 
   #pieDiv {
-    width: 700px;
-    height: 700px;
-    padding: 10px
+    font-size: small;
+  }
+
+  #pieDiv>div>canvas {
+    margin: 20px;
   }
 }
 </style>

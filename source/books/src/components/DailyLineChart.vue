@@ -1,9 +1,19 @@
 <template>
-  <el-row class="queryRow" justify="center">
+  <el-row class="queryRow">
     <div class="queryParam">
       <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
         placeholder="开始时间" />
     </div>
+    <div class="queryParam pc-button">
+      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
+        placeholder="结束时间" />
+    </div>
+    <div class="queryParam pc-button">
+      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
+    </div>
+  </el-row>
+
+  <el-row class="mini-buttons">
     <div class="queryParam">
       <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
         placeholder="结束时间" />
@@ -133,9 +143,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.queryRow .queryParam {
+.queryRow {
   margin: 8px 3px;
 }
+
+.queryParam {
+  margin: 8px 3px;
+}
+
 
 #lineDiv {
   width: 100%;
@@ -143,16 +158,23 @@ onMounted(() => {
   padding: 10px;
 }
 
+@media screen and (min-width: 960px) {
+  .mini-buttons {
+    display: none;
+  }
+}
 
 @media screen and (max-width: 480px) {
-  .queryRow {
-    width: 700px;
+  .pc-button {
+    display: none;
+  }
+
+  .mini-buttons{
+    margin: 8px 3px;
   }
 
   #lineDiv {
-    width: 700px;
-    height: 700px;
-    padding: 10px
+    font-size: small;
   }
 }
 </style>

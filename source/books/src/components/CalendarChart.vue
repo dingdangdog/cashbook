@@ -3,12 +3,15 @@
         <el-calendar ref="refCalendar" v-model="day">
             <template #header="{ date }">
                 <span>{{ date }} <b>消费总额：{{ monthCount[date] ? Number(monthCount[date].toFixed(2)) : 0 }} </b></span>
-                <el-button-group>
-                    <el-button @click="selectDate('prev-month')">上个月</el-button>
-                    <el-button @click="selectDate('today')">今天</el-button>
-                    <el-button @click="selectDate('next-month')">下个月</el-button>
-                </el-button-group>
+                <el-row class="mini-button-group">
+                    <el-button-group>
+                        <el-button @click="selectDate('prev-month')">上个月</el-button>
+                        <el-button @click="selectDate('today')">今天</el-button>
+                        <el-button @click="selectDate('next-month')">下个月</el-button>
+                    </el-button-group>
+                </el-row>
             </template>
+
             <template #date-cell="{ data }">
                 <div @click="clickDay(data)">
                     <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
@@ -95,9 +98,41 @@ const dayToMonth = (day: string) => {
 
 @media screen and (max-width: 480px) {
     .calendar-main {
-        width: 700px;
-        height: 700px;
-        margin: 10px;
+        font-size: small;
+    }
+
+    .el-calendar {
+        width: 100%;
+        height: auto;
+        font-size: smaller;
+    }
+
+    .el-dialog__body {
+        padding: 0;
+    }
+
+    .el-button {
+        font-size: small;
+    }
+
+    .el-calendar__header {
+        padding: 10px;
+    }
+
+    .el-calendar__header>span {
+        width: 100%;
+        margin: 5px 5px;
+        font-size: small;
+    }
+
+    .el-calendar__body {
+        padding: 0 10px;
+    }
+
+    .mini-button-group {
+        /* display: inline; */
+        display: flex;
+        flex-wrap: wrap;
     }
 }
 </style>

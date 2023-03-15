@@ -5,12 +5,12 @@
     </div>
 
     <div class="queryParam">
-      <el-date-picker v-model="flowQuery.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="开始时间" />
+      <el-date-picker class="date-picker" v-model="flowQuery.startDay" type="date" format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD" placeholder="开始时间" />
     </div>
     <div class="queryParam">
-      <el-date-picker v-model="flowQuery.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
+      <el-date-picker class="date-picker" v-model="flowQuery.endDay" type="date" format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD" placeholder="结束时间" />
     </div>
     <div class="queryParam">
       <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
@@ -32,7 +32,7 @@
       <el-input v-model="flowQuery.description" placeholder="描述" />
     </div> -->
 
-    <div class="queryParam">
+    <div class="queryParam query-icon">
       <el-button :icon="Search" circle @click="doQuery()" />
     </div>
 
@@ -53,6 +53,9 @@
     </div>
     <div class="queryParam">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
+    </div>
+    <div class="queryParam">
+      <el-button type="success" @click="clearQuery()">清空条件</el-button>
     </div>
   </el-row>
 
@@ -493,6 +496,15 @@ const exportFlows = () => {
     })
 }
 
+const clearQuery = () => {
+  flowQuery.id = undefined;
+  flowQuery.startDay = undefined;
+  flowQuery.endDay = undefined;
+  flowQuery.type = undefined;
+  flowQuery.name = undefined;
+  flowQuery.payType = undefined;
+}
+
 watch(flowQuery, (newValue, oldValue) => {
   doQuery();
 });
@@ -525,6 +537,16 @@ watch(flowQuery, (newValue, oldValue) => {
 
   .queryParam {
     margin: 8px 3px;
+    max-width: 150px;
+  }
+
+  .query-icon {
+    display: none;
+  }
+
+  .el-date-picker {
+    /* --el-date-editor-width: 140px !important; */
+    width: 140px !important;
   }
 
   .el-dialog-main {
