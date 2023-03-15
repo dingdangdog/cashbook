@@ -1,4 +1,11 @@
 # 更新日志📣
+### [0.1.16](https://github.com/DingDangDog/cashbook/compare/v0.1.15...v0.1.16) (2023-03-15)
+
+
+### 📚 Documentation | 文档
+
+* 更新文档 ([57f1554](https://github.com/DingDangDog/cashbook/commit/57f15541a9a658952c0618482d5fc05d85bd1e8e))
+
 ### [0.1.15](https://github.com/DingDangDog/cashbook/compare/v0.1.14...v0.1.15) (2023-03-15)
 
 
