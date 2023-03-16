@@ -5,11 +5,11 @@
     </div>
 
     <div class="queryParam">
-      <el-date-picker class="date-picker" v-model="flowQuery.startDay" type="date" format="YYYY/MM/DD"
+      <el-date-picker :style="datePickerStyle" class="date-picker" v-model="flowQuery.startDay" type="date" format="YYYY/MM/DD"
         value-format="YYYY-MM-DD" placeholder="开始时间" />
     </div>
     <div class="queryParam">
-      <el-date-picker class="date-picker" v-model="flowQuery.endDay" type="date" format="YYYY/MM/DD"
+      <el-date-picker :style="datePickerStyle" class="date-picker" v-model="flowQuery.endDay" type="date" format="YYYY/MM/DD"
         value-format="YYYY-MM-DD" placeholder="结束时间" />
     </div>
     <div class="queryParam">
@@ -46,13 +46,13 @@
 
   <el-row class="mini-buttons">
     <div class="queryParam">
+      <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
+    </div>
+    <div class="queryParam">
       <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
     </div>
     <div class="queryParam">
       <el-button type="success" @click="exportFlows()">导出</el-button>
-    </div>
-    <div class="queryParam">
-      <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
     <div class="queryParam">
       <el-button type="success" @click="clearQuery()">清空条件</el-button>
@@ -61,14 +61,14 @@
 
   <div class="el-table-div">
     <el-table v-loading="loading" :data="flowPageRef.pageData" stripe row-key="row"
-      style="width: 100%; max-width: 100%; overflow-x: auto;">
+      style="overflow-x: auto;">
       <el-table-column type="index" width="50" v-if="deviceAgent() === 'pc'" />
       <el-table-column prop="id" label="ID" v-if=false />
-      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="40" />
-      <el-table-column prop="type" label="消费类型" min-width="30" />
-      <el-table-column prop="money" label="金额（元）" min-width="30" />
-      <el-table-column prop="payType" label="支付方式" min-width="40" />
-      <el-table-column prop="name" label="名称" min-width="40" />
+      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="120"/>
+      <el-table-column prop="type" label="消费类型" min-width="80" />
+      <el-table-column prop="money" label="金额（元）" min-width="100"/>
+      <el-table-column prop="payType" label="支付方式" min-width="80"/>
+      <el-table-column prop="name" label="名称" min-width="150"/>
       <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
       <el-table-column label="操作" prop="id" width="110">
         <template v-slot="scop">
@@ -80,7 +80,7 @@
   </div>
 
   <div class="pageDiv">
-    <span>
+    <span class="pageSpan">
       <b style="float: left;">消费总额：{{ Number(flowPageRef.totalMoney.toFixed(2)) }}</b>
       <!-- {{ flowQuery }},{{ flowPageRef }} -->
       <el-pagination :current-page="flowQuery.pageNum" :page-size="flowQuery.pageSize" :total="flowPageRef.totalCount"
@@ -206,6 +206,13 @@ const miniScreen = ref(false);
 if (document.body.clientWidth <= 480) {
   miniScreen.value = true;
 }
+
+const datePickerStyle = ref("");
+
+if (document.body.clientWidth <= 480) {
+  datePickerStyle.value = "width: auto";
+}
+
 // const tableRef = ref();
 // tableRef.value.height = document.documentElement.clientHeight * 0.65;
 
@@ -524,12 +531,13 @@ watch(flowQuery, (newValue, oldValue) => {
   .mini-buttons {
     display: none;
   }
+
 }
 
 @media screen and (max-width: 480px) {
-  .el-table-div {
+  /* .el-table-div {
     width: 800px;
-  }
+  } */
 
   .pc-button {
     display: none;
@@ -537,16 +545,13 @@ watch(flowQuery, (newValue, oldValue) => {
 
   .queryParam {
     margin: 8px 3px;
-    max-width: 150px;
+    max-width: 176px;
   }
-
-  .query-icon {
+  .pageSpan {
     display: none;
   }
-
-  .el-date-picker {
-    /* --el-date-editor-width: 140px !important; */
-    width: 140px !important;
+  .query-icon {
+    display: none;
   }
 
   .el-dialog-main {

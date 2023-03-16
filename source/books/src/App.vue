@@ -26,31 +26,27 @@
       </el-header>
 
       <el-main>
-        <el-scrollbar style="height: 100%; width: 100%;">
-          <div class="mini-amin">
-            <span class="message">{{ system.message }}</span>
-            <span class="message">{{ system.userInfo }}</span>
-            <el-row class="mb-4 chart-buttons">
-              <el-button round @click="showChart(1, '日消费曲线')">日消费曲线</el-button>
-              <el-button type="primary" round @click="showChart(2, '消费类型统计')">消费类型统计</el-button>
-              <el-button type="success" round @click="showChart(3, '消费日历')">消费日历</el-button>
-              <el-button type="info" round>Info</el-button>
-              <el-button type="warning" round>Warning</el-button>
-              <el-button type="danger" round>Danger</el-button>
-            </el-row>
+        <span class="message">{{ system.message }}</span>
+        <span class="message">{{ system.userInfo }}</span>
+        <el-row class="mb-4 chart-buttons">
+          <el-button round @click="showChart(1, '日消费曲线')">日消费曲线</el-button>
+          <el-button type="primary" round @click="showChart(2, '消费类型统计')">消费类型统计</el-button>
+          <el-button type="success" round @click="showChart(3, '消费日历')">消费日历</el-button>
+          <el-button type="info" round>Info</el-button>
+          <el-button type="warning" round>Warning</el-button>
+          <el-button type="danger" round>Danger</el-button>
+        </el-row>
 
-            <div class="table">
-              <Suspense>
-                <template #default>
-                  <FlowTable />
-                </template>
-                <template #fallback>
-                  <div>加载中...</div>
-                </template>
-              </Suspense>
-            </div>
-          </div>
-        </el-scrollbar>
+        <div class="table">
+          <Suspense>
+            <template #default>
+              <FlowTable />
+            </template>
+            <template #fallback>
+              <div>加载中...</div>
+            </template>
+          </Suspense>
+        </div>
       </el-main>
 
       <el-footer>
@@ -258,9 +254,9 @@ const system = ref({
     padding: 5px;
   }
 
-  .mini-amin {
+  /* .mini-amin {
     width: 800px;
-  }
+  } */
 
   .chart-buttons>.el-button {
     margin-top: 10px;
