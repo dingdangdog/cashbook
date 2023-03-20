@@ -51,7 +51,7 @@ DingDangDog’s Cashbook
 
 ## 演示系统
 
-- 请以PC端浏览器打开，目前未适配其他终端。
+- 建议以PC端浏览器打开（由于个人前端水平有限，手机端有点丑）。
 - 演示地址：[cash.oldmoon.top](https://cash.oldmoon.top/)
 - 演示账本钥匙：`fScrX9FwtiE`
 
@@ -75,6 +75,7 @@ DingDangDog’s Cashbook
 - [x] 列表展示流水总额
 - [x] 图&表联动
 - [x] 消费日历
+- [x] 手机端布局和调整
 
 ## 私有部署
 
