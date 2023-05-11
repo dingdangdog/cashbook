@@ -1,0 +1,7 @@
+server:
+  port: 13303
+
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:./cashbook.db
