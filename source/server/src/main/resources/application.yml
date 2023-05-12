@@ -1,5 +1,7 @@
 server:
-  port: 13303
+  port: 13713
+  version: 1.0.0
+  environment: personal
 
 spring:
   datasource:

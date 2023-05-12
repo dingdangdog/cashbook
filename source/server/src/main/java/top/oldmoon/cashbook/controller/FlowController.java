@@ -9,8 +9,10 @@ import top.oldmoon.cashbook.entity.POJO.Book;
 import top.oldmoon.cashbook.entity.POJO.Flow;
 import top.oldmoon.cashbook.entity.param.FlowsPageParam;
 import top.oldmoon.cashbook.service.impl.FlowServiceImpl;
+import top.oldmoon.cashbook.util.DateTimeUtils;
 import top.oldmoon.cashbook.util.ResultUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -39,7 +41,7 @@ public class FlowController {
      * 创建流水
      */
     @PostMapping()
-    public ResultDTO<Flow> create(Flow flow) {
+    public ResultDTO<Flow> create(@RequestBody Flow flow) {
         boolean save = flowService.save(flow);
         if (save) {
             return ResultUtils.success(flow);
@@ -52,7 +54,8 @@ public class FlowController {
      * 修改流水
      */
     @PutMapping("/{id}")
-    public ResultDTO<Flow> update(Flow flow) {
+    public ResultDTO<Flow> update(@RequestBody Flow flow, @PathVariable Integer id) {
+        flow.setId(id);
         boolean update = flowService.updateById(flow);
         if (update) {
             return ResultUtils.success(flow);

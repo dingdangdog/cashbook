@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import top.oldmoon.cashbook.service.impl.BookServiceImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +23,7 @@ public class SqliteInitRunner implements ApplicationRunner {
     private String url;
 
     @Autowired
-    private BookServiceImpl bookService;
+    private DataInit dataInit;
     @Override
     public void run(ApplicationArguments args) throws Exception {
         {
@@ -61,15 +60,11 @@ public class SqliteInitRunner implements ApplicationRunner {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "version TEXT, " +
                     "environment TEXT, " +
-                    "create_date TEXT, " +
-                    "start_date TEXT)");
+                    "create_date TEXT)");
             statement.close();
             connection.close();
         }
-//        Book book = new Book();
-//        book.setBookKey("abcd");
-//        book.setBookName("test");
-//        book.setCreateDate(DateTimeUtils.format(LocalDateTime.now()));
-//        bookService.save(book);
+        dataInit.initServer();
+        dataInit.initDist();
     }
 }

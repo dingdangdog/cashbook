@@ -11,14 +11,10 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class FlowsPageParam {
+public class FlowsPageParam extends BaseParam{
     private int pageNum = 1;
     private int pageSize = 10;
     private Integer id;
-
-    private String bookKey;
-    private String startDay;
-    private String endDay;
     private String type;
     private String payType;
     private String name;

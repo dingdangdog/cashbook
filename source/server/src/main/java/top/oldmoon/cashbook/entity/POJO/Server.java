@@ -21,5 +21,4 @@ public class Server {
     private String version;
     private String environment;
     private String createDate;
-    private String startDate;
 }

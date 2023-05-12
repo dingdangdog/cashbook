@@ -1,7 +1,7 @@
 package top.oldmoon.cashbook.service;
 
 /**
- * TODO
+ * 字典
  *
  * @author dingdangdog
  * @since 1.0

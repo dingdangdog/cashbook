@@ -15,6 +15,6 @@ public class TypePieVO {
     /**
      * 消费类型
      */
-    private String _id;
+    private String type;
     private String typeSum;
 }

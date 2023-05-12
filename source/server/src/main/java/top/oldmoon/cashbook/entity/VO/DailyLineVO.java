@@ -15,6 +15,6 @@ public class DailyLineVO {
     /**
      * 日期：yyyy-MM-dd
      */
-    private String _id;
+    private String day;
     private String daySum;
 }
