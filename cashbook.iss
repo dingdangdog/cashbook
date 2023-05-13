@@ -1,6 +1,6 @@
 [Setup]
 AppName=Cashbook
-AppVersion=1.0
+AppVersion=1.0.0
 DefaultDirName={autopf}\Cashbook
 DefaultGroupName=oldmoon
 Uninstallable=true
