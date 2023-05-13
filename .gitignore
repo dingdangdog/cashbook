@@ -10,8 +10,9 @@
 /**/.vscode/
 /**/node_modules/
 /**/dist/
-/*/node_modules/
-/*/dist/
+/**/node_modules/
+/**/dist/
+/**/server/
 /**/package-lock.json
 /**/nginx/logs/*.*
 
