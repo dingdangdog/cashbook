@@ -131,7 +131,7 @@ const tableDivStyle = ref({
   paddingbottom: document.documentElement.clientHeight * 0.01 + `px`,
   paddingleft: document.documentElement.clientWidth * 0.03 + `px`,
   paddingright: document.documentElement.clientWidth * 0.03 + `px`,
-  header: document.documentElement.clientWidth * 0.033 + `px`,
+  header: document.documentElement.clientWidth * 0.02 + `px`,
   footer: document.documentElement.clientWidth * 0.02 + `px`
 });
 // 服务器信息封装
@@ -184,6 +184,7 @@ const system = ref({
     margin-top: v-bind('tableDivStyle.margintop');
     margin-right: 20px;
     float: left;
+    display: none;
   }
 
   .headerInfo>.h1 {
@@ -192,7 +193,7 @@ const system = ref({
 
   .themeButton {
     float: right;
-    margin: 30px 5px;
+    margin: 10px 5px;
   }
 
   .message {

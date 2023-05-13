@@ -10,7 +10,8 @@
 /**/.vscode/
 /**/node_modules/
 /**/dist/
-/**/dist_electron/
+/*/node_modules/
+/*/dist/
 /**/package-lock.json
 /**/nginx/logs/*.*
 

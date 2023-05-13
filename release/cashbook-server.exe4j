@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exe4j version="9.0" transformSequenceNumber="3">
+  <directoryPresets config="E:/cashbook-desktop/release" />
+  <application name="cashbook-server" distributionSourceDir="E:/cashbook-desktop/release/server" />
+  <executable name="cashbook-server" iconSet="true" iconFile="E:/cashbook-desktop/release/icon.ico" executableDir="." redirectStderr="false" redirectStdout="true" executableMode="console" singleInstance="true" serviceDescription="cashbook-server" executionLevel="highestAvailable" checkConsoleParameter="true">
+    <versionInfo include="true" fileVersion="1.0.0" fileDescription="cashbook-server" internalName="cashbook-server" companyName="oldmoon" productVersion="1.0" />
+  </executable>
+  <java mainClass="org.springframework.boot.loader.JarLauncher" vmParameters="Djava.awt.headless=true" preferredVM="client" minVersion="17" maxVersion="17">
+    <classPath>
+      <archive location="E:/cashbook-desktop/source/server/target/cashbook-server-1.0.jar" failOnError="false" />
+    </classPath>
+  </java>
+</exe4j>

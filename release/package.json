@@ -1,0 +1,26 @@
+{
+  "name": "cashbook-books",
+  "version": "1.0.0",
+  "main": "main.js",
+  "build": {
+    "appId": "cashbook",
+    "productName": "cashbook",
+    "extends": null,
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "scripts": {
+    "electron": "electron .",
+    "package": "electron-builder"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.56",
+    "electron": "^24.2.0",
+    "electron-builder": "^23.6.0",
+    "npm-run-all": "^4.1.5"
+  }
+}

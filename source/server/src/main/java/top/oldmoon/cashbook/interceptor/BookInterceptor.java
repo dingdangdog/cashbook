@@ -22,7 +22,7 @@ public class BookInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestUri = request.getRequestURI();
-        if (!requestUri.contains("/book")|| !requestUri.contains("/server")) {
+        if (!requestUri.contains("/book") && !requestUri.contains("/server")) {
             String bookKey = request.getHeader("bookKey");
             if (null == bookKey) {
                 response.setContentType("application/json;charset=utf-8");
