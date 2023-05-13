@@ -1,6 +1,6 @@
 {
   "name": "cashbook-books",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "main.js",
   "build": {
     "appId": "cashbook",
@@ -12,12 +12,13 @@
     "win": {
       "target": "nsis"
     },
-    "files": ["nginx/**/*","main.js"]
+    "files": ["nginx/**/*","main.js","dist/**/*"]
 
   },
   "scripts": {
     "dev": "vite",
-    "electron": "vite build && electron .",
+    "electron": "electron .",
+    "build&electron": "vite build && electron .",
     "build": "run-p type-check build-only",
     "package": "electron-builder",
     "preview": "vite preview --port 4173",
