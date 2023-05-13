@@ -14,7 +14,8 @@
 /**/dist/
 /**/server/
 /**/package-lock.json
-
+/**/nginx/logs/
+/**/nginx/temp/
 
 ### Mac OS ###
 .DS_Store
