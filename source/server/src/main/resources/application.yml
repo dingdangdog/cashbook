@@ -1,9 +1,0 @@
-server:
-  port: 13713
-  version: 1.0.0
-  environment: personal
-
-spring:
-  datasource:
-    driver-class-name: org.sqlite.JDBC
-    url: jdbc:sqlite:./cashbook.db

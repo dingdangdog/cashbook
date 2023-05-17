@@ -9,10 +9,8 @@
 ### VS Code ###
 /**/.vscode/
 /**/node_modules/
-/**/dist/
-/**/node_modules/
-/**/dist/
-/**/server/
+/source/books/dist/
+
 /**/package-lock.json
 /**/nginx/logs/
 /**/nginx/temp/

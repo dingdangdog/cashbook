@@ -20,9 +20,9 @@ export default defineConfig({
       // /api相关接口跨域配置
       '/api': {
         //实际请求地址
-        target: 'http://127.0.0.1:13713',
+        target: 'http://127.0.0.1:13303',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/")
+        rewrite: (path) => path.replace(/^\/api/, "/api")
       },
     }
   },

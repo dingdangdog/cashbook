@@ -1,0 +1,22 @@
+package dao
+
+import (
+	"cashbook-server/types"
+	"cashbook-server/util"
+)
+
+func GetServerInfo() types.Server {
+	sqlGetServerInfo := `SELECT id, version, environment, create_date FROM server ;`
+
+	rows, err := db.Query(sqlGetServerInfo)
+	util.CheckErr(err)
+
+	var server types.Server
+	for rows.Next() {
+		err = rows.Scan(&server.Id, &server.Version, &server.Environment, &server.CreateDate)
+		util.CheckErr(err)
+		break
+	}
+
+	return server
+}

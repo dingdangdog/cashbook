@@ -3,6 +3,9 @@ const child_process = require('child_process');
 const { spawn} = require('child_process');
 const path = require('path')
 
+let serverWindowPid;
+let timeOut;
+
 function createWindow () {
   // 创建浏览器窗口
   const win = new BrowserWindow({
@@ -18,33 +21,35 @@ function createWindow () {
   win.loadURL('http://localhost:8088')
 
   // 关闭窗口时
-  win.on('closed', () => {
+  win.on('close', (code) => {
     stopNginx()
+    clearTimeout(timeOut);
+    if (serverWindowPid) {
+      // 根据pid停止关闭后台服务
+      console.log('killing cashbook-server ' + serverWindowPid);
+      process.kill(serverWindowPid);
+    }
   })
 }
 
 async function startServer(){
-  const script = 'cd server && start /B cashbook-server.exe /c';
-  await child_process.exec(script, { windowsHide: true })
-  // const child = spawn('cashbook-server.exe', [], {
-  //   cwd: path.join(__dirname, '/server'),
-  //   detached: true,
-  // });
-  
-}
+  const serverName = "main";
+  const serverPath = path.join(__dirname, ('/server/' + serverName + '.exe'));
+  // 启动后台服务
+  const startServer = `PowerShell -Command "Start-Process `+serverPath+` -WindowStyle Hidden"`;
+  const serverWindow = await spawn('powershell.exe', [startServer]);
 
-function stopServer(){
-  // TODO 以下方式无法停止，需要思考其他方式
-  child_process.exec("taskkill /IM cashbook-server.exe /F")
-  // 设置需要运行的命令和参数
-  // const command = 'runas';
-  // const args = ['/user:Administrator', 'taskkill', '/IM', 'cashbook-server.exe', '/F'];
-
-  // // 以管理员权限运行命令
-  // const stopServer = spawn(command, args, {
-  //   shell: true,
-  //   stdio: 'inherit'
-  // });
+  timeOut = setTimeout(() => {
+    // 获取服务程序PID
+    const getWindowPid = `Get-Process -Name "` + serverName + `" | Select-Object -ExpandProperty Id`;
+    const getWindow = spawn('powershell.exe', [getWindowPid]);
+    getWindow.stdout.on('data', (data) => {
+      console.log(`server-pid: ${data}`);
+      
+    // 保存后台服务进程的PID
+      serverWindowPid = data;
+    })
+  }, 2000);
 }
 
 function startNginx(){
@@ -56,8 +61,10 @@ function stopNginx(){
 }
 
 // 当 Electron 完成初始化时，创建窗口
-app.whenReady().then(() => {
-  startServer()
+app.whenReady().then(async () => {
+  await startServer()
+  // 等待后台服务启动
+  await wait(1000);
   startNginx()
   createWindow()
 
@@ -69,10 +76,8 @@ app.whenReady().then(() => {
     }
   })
 
-
   app.on('before-quit', ()=> {
     stopNginx()
-    stopServer()
   })
 })
 
@@ -86,4 +91,8 @@ app.on('window-all-closed', () => {
   }
 })
 
+// 线程等待
+function wait(ms) {
+  return new Promise(resolve =>setTimeout(() => resolve(), ms));
+};
 

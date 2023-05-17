@@ -1,7 +1,7 @@
 import $http from './index'
 import type { DailyLineChartQuery, DailyLineChart, TypePieChartQuery, TypePieChart } from '../types/model/analysis';
 
-const prefix = '/analysis';
+const prefix = '/flowApi/analysis';
 
 /**
  * 查询每日消费曲线

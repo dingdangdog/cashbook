@@ -17,5 +17,5 @@ export function getBook(bookKey: string): Promise<Book> {
 * @returns User
 */
 export function createBook(createDto: CreateBookDto): Promise<Book> {
-  return $http({ url: prefix + "/createBook", method: "post", data: createDto })
+  return $http({ url: prefix, method: "post", data: createDto })
 }
