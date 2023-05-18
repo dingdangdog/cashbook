@@ -2,6 +2,7 @@
 ### IntelliJ IDEA ###
 /**/.idea/
 /**/target/
+/**/build/
 /**/cashbook.db
 /**/*.iml
 
@@ -15,5 +16,6 @@
 /**/nginx/logs/
 /**/nginx/temp/
 
+/**/cashbook-*.exe
 ### Mac OS ###
 .DS_Store

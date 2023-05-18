@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	dao.InitDb("./data", "cashbook.db")
+
+	dao.InitDb()
 
 	router := gin.Default()
 	api := router.Group("/api")

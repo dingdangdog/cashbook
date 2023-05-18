@@ -18,8 +18,8 @@
           <el-button v-if="haveUserIdRef()" type="info" plain @click="clearUser()">关闭账本</el-button>
         </div>
         <div class="themeButton header-message">
-          <b v-if="serverInfo.environment === 'personal'" style="color: red;">私人系统，无关人员请离开！</b>&nbsp;&nbsp;
-          <b v-if="serverInfo.environment === 'demo'">演示系统，数据随时可能清除，请知晓！</b>&nbsp;&nbsp;
+          <!-- <b v-if="serverInfo.environment === 'personal'" style="color: red;">私人系统，无关人员请离开！</b>&nbsp;&nbsp;
+          <b v-if="serverInfo.environment === 'demo'">演示系统，数据随时可能清除，请知晓！</b>&nbsp;&nbsp; -->
           <span v-if="haveUserIdRef()">当前账本：{{ bookName }}&nbsp;</span>
         </div>
 
@@ -50,9 +50,8 @@
       </el-main>
 
       <el-footer>
-        <p style="margin-top: 0px; margin-bottom: 0px;">Powered by <a
-            href="https://github.com/DingDangDog/cashbook-desktop">cashbook-desktop_v{{ serverInfo.version }}</a></p>
-        <p style="margin-top: 0px; margin-bottom: 0px;">友链：<a href="https://oldmoon.top/about">oldmoon.top</a></p>
+        <p style="margin-top: 0px; margin-bottom: 0px;">Powered by <a href="#" @click="openSource()">cashbook-desktop_v{{ serverInfo.version }}</a></p>
+        <p style="margin-top: 0px; margin-bottom: 0px;">友链：<a href="#"  @click="openOldmoon()">oldmoon.top</a></p>
       </el-footer>
 
     </el-container>
@@ -122,6 +121,14 @@ const showChart = (showChartNum: number, chartDiaLogTitle: string) => {
 const closeDialog = () => {
   chartDialog.chartDiaLogShow = false;
   chartDialog.showChartNum = 0;
+}
+
+const openSource = () => {
+  window.open("https://github.com/DingDangDog/cashbook-desktop");
+}
+
+const openOldmoon =() => {
+  window.open("https://oldmoon.top");
 }
 
 // 动态表格样式

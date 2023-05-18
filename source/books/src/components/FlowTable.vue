@@ -525,7 +525,9 @@ watch(flowQuery, (newValue, oldValue) => {
 .pageDiv {
   margin: 10px 0;
 }
-
+.el-table-div {
+  min-height: 300px;
+}
 @media screen and (min-width: 960px) {
   .mini-buttons {
     display: none;

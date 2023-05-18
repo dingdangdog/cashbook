@@ -33,12 +33,14 @@ function createWindow () {
 }
 
 async function startServer(){
-  const serverName = "main";
-  const serverPath = path.join(__dirname, ('/server/' + serverName + '.exe'));
-  // 启动后台服务
-  const startServer = `PowerShell -Command "Start-Process `+serverPath+` -WindowStyle Hidden"`;
-  const serverWindow = await spawn('powershell.exe', [startServer]);
+  // 设置为生产模式
+  // child_process.exec("set GIN_MODE=release")
 
+  const serverName = "cashbook-server";
+  // const serverPath = path.join(__dirname, ('/server/' + serverName + '.exe'));
+  // 启动后台服务
+  spawn('./server/' + serverName, [] , {})
+  
   timeOut = setTimeout(() => {
     // 获取服务程序PID
     const getWindowPid = `Get-Process -Name "` + serverName + `" | Select-Object -ExpandProperty Id`;
@@ -64,7 +66,7 @@ function stopNginx(){
 app.whenReady().then(async () => {
   await startServer()
   // 等待后台服务启动
-  await wait(1000);
+  await wait(1500);
   startNginx()
   createWindow()
 
