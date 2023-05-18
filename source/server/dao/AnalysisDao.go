@@ -6,12 +6,12 @@ import (
 )
 
 func GetDailyLine(flowQuery types.FlowQuery) []types.DailyLine {
-	sqlGetFlowPage := `SELECT day, SUM(money) AS 'daySum' FROM flows WHERE book_key = ?`
+	sqlGetFlowPage := `SELECT day, COALESCE(SUM(money),0) AS 'daySum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY day;`
 
 	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := db.Query(sql, flowQuery.BookKey)
+	rows, err := db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]types.DailyLine, 0)
@@ -30,12 +30,12 @@ func GetDailyLine(flowQuery types.FlowQuery) []types.DailyLine {
 }
 
 func GetTypePie(flowQuery types.FlowQuery) []types.TypePie {
-	sqlGetFlowPage := `SELECT type, SUM(money) AS 'typeSum' FROM flows WHERE book_key = ?`
+	sqlGetFlowPage := `SELECT type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY type;`
 
 	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := db.Query(sql, flowQuery.BookKey)
+	rows, err := db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]types.TypePie, 0)

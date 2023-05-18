@@ -18,8 +18,8 @@ func CreateFlow(flow types.Flow) int64 {
 	util.CheckErr(err)
 	id, err := res.LastInsertId()
 	util.CheckErr(err)
-	err = stmt.Close()
-	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
 	return id
 }
 func UpdateFlow(flow types.Flow) {
@@ -40,6 +40,8 @@ func UpdateFlow(flow types.Flow) {
 	util.CheckErr(err)
 	_, err = res.RowsAffected()
 	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
 }
 
 func DeleteFlow(id int64) {
@@ -50,35 +52,41 @@ func DeleteFlow(id int64) {
 	util.CheckErr(err)
 	_, err = res.RowsAffected()
 	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
 }
 
 func GetCountAndMoney(flowQuery types.FlowQuery) types.FlowCount {
 	sqlGetCountAndMoney := `
-		SELECT COUNT(*) AS 'totalCount', SUM(money) AS 'totalMoney' 
-		FROM flows WHERE book_key = ` + flowQuery.BookKey
+		SELECT COUNT(*) AS 'totalCount', COALESCE(SUM(money),0) AS 'totalMoney' 
+		FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 
 	rows, err := db.Query(sqlGetCountAndMoney + sqlWhere + `;`)
 	util.CheckErr(err)
 	var flowCount types.FlowCount
-	for rows.Next() {
-		err = rows.Scan(&flowCount.TotalCount, &flowCount.TotalMoney)
+	if rows != nil {
+		for rows.Next() {
+			err = rows.Scan(&flowCount.TotalCount, &flowCount.TotalMoney)
+			util.CheckErr(err)
+			break
+		}
+		err = rows.Close()
 		util.CheckErr(err)
-		break
 	}
 	return flowCount
 }
 
 func GetFlowsPage(flowQuery types.FlowQuery) *types.Page {
-	sqlGetFlowPage := `SELECT id, book_key, 'day', 'type', money, pay_type, 'name', description FROM flows WHERE book_key = ?`
+	sqlGetFlowPage := "SELECT id, book_key, day, type, money, pay_type, name, description FROM flows WHERE book_key = '" + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 
 	offset := (flowQuery.PageNum - 1) * flowQuery.PageSize
-	sqlOrderBy := ` ORDER BY day DESC;`
-	sqlPage := ` LIMIT ` + strconv.FormatInt(flowQuery.PageSize, 10) + ` OFFSET ` + strconv.FormatInt(offset, 10)
+	sqlOrderBy := ` ORDER BY day DESC`
+	sqlPage := ` LIMIT ` + strconv.FormatInt(flowQuery.PageSize, 10) + ` OFFSET ` + strconv.FormatInt(offset, 10) + `;`
 	sql := sqlGetFlowPage + sqlWhere + sqlOrderBy + sqlPage
 
-	rows, err := db.Query(sql, flowQuery.BookKey)
+	rows, err := db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]interface{}, 0)
@@ -116,38 +124,42 @@ func getWhereSql(flowQuery types.FlowQuery) string {
 		sql += ` AND id = ` + strconv.FormatInt(flowQuery.Id, 10)
 	}
 	if 0 != len(flowQuery.StartDay) {
-		sql += ` AND day >= ` + flowQuery.StartDay
+		sql += ` AND day >= '` + flowQuery.StartDay + `'`
 	}
 	if 0 != len(flowQuery.EndDay) {
-		sql += ` AND day < ` + flowQuery.EndDay
+		sql += ` AND day < '` + flowQuery.EndDay + `'`
 	}
 	if 0 != len(flowQuery.Type) {
-		sql += ` AND type = ` + flowQuery.Type
+		sql += ` AND type = '` + flowQuery.Type + `'`
 	}
 	if 0 != len(flowQuery.PayType) {
-		sql += ` AND pay_type = ` + flowQuery.PayType
+		sql += ` AND pay_type = '` + flowQuery.PayType + `'`
 	}
 	if 0 != len(flowQuery.Name) {
-		sql += ` AND name LIKE '%'||` + flowQuery.Name + `||'%'`
+		sql += ` AND name LIKE '%'||''` + flowQuery.Name + `''||'%'`
 	}
 	if 0 != len(flowQuery.Description) {
-		sql += ` AND description LIKE '%'||` + flowQuery.Description + `||'%'`
+		sql += ` AND description LIKE '%'||'` + flowQuery.Description + `'||'%'`
 	}
 	return sql
 }
 
 func GetAll(bookKey string) []types.Flow {
-	sqlGetAll := `SELECT id, book_key, 'day', 'type', money, pay_type, 'name', description FROM flows WHERE book_key = ?;`
+	sqlGetAll := `SELECT id, book_key, 'day', 'type', money, pay_type, 'name', description FROM flows WHERE book_key = '` + bookKey + `';`
 
 	rows, err := db.Query(sqlGetAll, bookKey)
 	util.CheckErr(err)
 
 	results := make([]types.Flow, 0)
-	for rows.Next() {
-		var flow types.Flow
-		err = rows.Scan(&flow.Id, &flow.BookKey, &flow.Day, &flow.Type, &flow.Money, &flow.PayType, &flow.Name, &flow.Description)
+	if rows != nil {
+		for rows.Next() {
+			var flow types.Flow
+			err = rows.Scan(&flow.Id, &flow.BookKey, &flow.Day, &flow.Type, &flow.Money, &flow.PayType, &flow.Name, &flow.Description)
+			util.CheckErr(err)
+			results = append(results, flow)
+		}
+		err = rows.Close()
 		util.CheckErr(err)
-		results = append(results, flow)
 	}
 
 	return results

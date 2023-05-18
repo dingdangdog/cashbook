@@ -12,10 +12,14 @@ func GetServerInfo() types.Server {
 	util.CheckErr(err)
 
 	var server types.Server
-	for rows.Next() {
-		err = rows.Scan(&server.Id, &server.Version, &server.Environment, &server.CreateDate)
+	if rows != nil {
+		for rows.Next() {
+			err = rows.Scan(&server.Id, &server.Version, &server.Environment, &server.CreateDate)
+			util.CheckErr(err)
+			break
+		}
+		err = rows.Close()
 		util.CheckErr(err)
-		break
 	}
 
 	return server

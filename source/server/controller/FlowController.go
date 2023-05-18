@@ -28,6 +28,7 @@ func CreateFlow(c *gin.Context) {
 
 func UpdateFlow(c *gin.Context) {
 	var data types.Flow
+
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -38,7 +39,10 @@ func UpdateFlow(c *gin.Context) {
 	}
 
 	data.BookKey = c.Request.Header.Get("bookKey")
-
+	id := c.Param("id")
+	num, err := strconv.ParseInt(id, 10, 64)
+	util.CheckErr(err)
+	data.Id = num
 	dao.UpdateFlow(data)
 
 	c.JSON(200, util.Success(data))

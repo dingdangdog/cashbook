@@ -12,8 +12,8 @@ var db *sql.DB
 
 func InitDb(dbpath string, dbname string) {
 	util.PathExistsOrCreate(dbpath)
-	dblink, err := sql.Open("sqlite", dbpath+"/"+dbname)
-	util.CheckErr(err)
+	db, _ = sql.Open("sqlite", dbpath+"/"+dbname)
+	//util.CheckErr(err)
 	sqlBytes, err := os.ReadFile("./sql/schema.sql")
 	util.CheckErr(err)
 	schema := string(sqlBytes)
@@ -21,10 +21,10 @@ func InitDb(dbpath string, dbname string) {
 	//var re = regexp.MustCompile(`--.*$|/\*[\s\S]*?\*/`)
 	//schema = re.ReplaceAllString(schema, "")
 	// 执行SQL语句
-	_, err = dblink.Exec(schema)
+	_, err = db.Exec(schema)
 	util.CheckErr(err)
-	fmt.Println("--------数据库连接成功！--------")
-	db = dblink
+	fmt.Println("-------- 数据库连接成功 --------")
+
 	initDist()
 }
 
@@ -32,7 +32,7 @@ func initDist() {
 	data := GetDistList("expenseType")
 	if nil == data || len(data) == 0 {
 
-		fmt.Println("------开始字典数据初始化------")
+		fmt.Println("------ 开始字典数据初始化 ------")
 		sqlBytes, err := os.ReadFile("./sql/dists.sql")
 		util.CheckErr(err)
 		dist := string(sqlBytes)
@@ -42,9 +42,9 @@ func initDist() {
 		// 执行SQL语句
 		_, err = db.Exec(dist)
 		util.CheckErr(err)
-		fmt.Println("------完成字典数据初始化------")
+		fmt.Println("------ 完成字典数据初始化 ------")
 		return
 	}
 
-	fmt.Println("------已存在字典数据，无需初始化------")
+	fmt.Println("------ 已存在字典数据，无需初始化 ------")
 }

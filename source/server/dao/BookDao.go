@@ -20,20 +20,26 @@ func CreateBook(book types.Book) int64 {
 	util.CheckErr(err)
 	id, err := res.LastInsertId()
 	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
 	return id
 }
 
 func GetBook(bookKey string) *types.Book {
-	sqlGetBook := `SELECT id, book_key, book_name, create_date FROM Books WHERE book_key = ?;`
+	sqlGetBook := `SELECT id, book_key, book_name, create_date FROM Books WHERE book_key = '` + bookKey + `';`
 
-	rows, err := db.Query(sqlGetBook, bookKey)
+	rows, err := db.Query(sqlGetBook)
 	util.CheckErr(err)
 
 	var book = new(types.Book)
-	for rows.Next() {
-		err = rows.Scan(&book.Id, &book.BookKey, &book.BookName, &book.CreateDate)
+	if rows != nil {
+		for rows.Next() {
+			err = rows.Scan(&book.Id, &book.BookKey, &book.BookName, &book.CreateDate)
+			util.CheckErr(err)
+			break
+		}
+		err = rows.Close()
 		util.CheckErr(err)
-		break
 	}
 	return book
 }
