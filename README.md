@@ -1,3 +1,10 @@
+## Notice（公告）
+
+This Repository has Stop Used, New Repository: [cashbook-desktop](https://github.com/dingdangdog/cashbook-desktop).
+
+本仓库停止维护，新建了个桌面版仓库：[cashbook-desktop](https://github.com/dingdangdog/cashbook-desktop)，后续会在新仓库开发和维护。
+
+
 <div align="center">
 <span>
 <img src="./source/books/src/static/images/cashbook.png" height="60"/>
