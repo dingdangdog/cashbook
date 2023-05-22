@@ -2,7 +2,7 @@ import $http from './index'
 import type { Page } from '../types/page';
 import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '../types/model/flow';
 
-const prefix = '/flowApi/flow';
+const prefix = '/admin/flow';
 
 /**
  * 查询全部流水

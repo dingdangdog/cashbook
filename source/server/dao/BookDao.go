@@ -43,3 +43,66 @@ func GetBook(bookKey string) *types.Book {
 	}
 	return book
 }
+
+func ChangeKey(change types.ChangeBookKey) int64 {
+	book := GetBook(change.BookKey)
+	if book.Id != 0 {
+		return 0
+	}
+
+	tx, err := db.Begin()
+	id := util.CheckErr(err)
+	if id == 0 {
+		return 0
+	}
+
+	// 更新账本
+	sqlUpdateBook := `
+		UPDATE books SET book_key = ? WHERE book_key = ? ;
+		`
+	stmt, err := tx.Prepare(sqlUpdateBook)
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+	res, err := stmt.Exec(change.BookKey, change.OldKey)
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+	_, err = res.RowsAffected()
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+
+	// 更新流水
+	sqlUpdateFlow := `
+		UPDATE flows SET book_key = ? WHERE book_key = ? ;
+		`
+	stmt, err = tx.Prepare(sqlUpdateFlow)
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+	res, err = stmt.Exec(change.BookKey, change.OldKey)
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+	_, err = res.RowsAffected()
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+
+	//提交事务
+	err = tx.Commit()
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+
+	book = GetBook(change.BookKey)
+	return book.Id
+}

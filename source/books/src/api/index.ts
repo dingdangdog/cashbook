@@ -37,7 +37,7 @@ $http.interceptors.request.use(async config => {
 $http.interceptors.response.use(res => {
 
     if (res.data.code != 200) {
-        ElMessage.error(res.data.message);
+        ElMessage.error(res.data.data);
         return Promise.reject(res.data);
     }
     return res.data.data

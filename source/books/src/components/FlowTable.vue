@@ -1,9 +1,14 @@
 <template>
+  <!-- 表格查询框与操作按钮 -->
   <el-row class="queryRow">
+    
     <div class="queryParam pc-button">
-      <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
+      <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
     </div>
-
+    <div class="queryParam pc-button">
+      <el-button type="success" @click="exportFlows()">导出</el-button>
+    </div>
+    
     <div class="queryParam">
       <el-date-picker :style="datePickerStyle" class="date-picker" v-model="flowQuery.startDay" type="date" format="YYYY/MM/DD"
         value-format="YYYY-MM-DD" placeholder="开始时间" />
@@ -37,40 +42,23 @@
     </div>
 
     <div class="queryParam pc-button">
-      <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
-    </div>
-    <div class="queryParam pc-button">
-      <el-button type="success" @click="exportFlows()">导出</el-button>
-    </div>
-  </el-row>
-
-  <el-row class="mini-buttons">
-    <div class="queryParam">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
-    <div class="queryParam">
-      <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
-    </div>
-    <div class="queryParam">
-      <el-button type="success" @click="exportFlows()">导出</el-button>
-    </div>
-    <div class="queryParam">
-      <el-button type="success" @click="clearQuery()">清空条件</el-button>
-    </div>
+
   </el-row>
 
+  <!-- 表格主体数据列表 -->
   <div class="el-table-div">
-    <el-table v-loading="loading" :data="flowPageRef.pageData" stripe row-key="row"
-      style="overflow-x: auto;">
-      <el-table-column type="index" width="50" v-if="deviceAgent() === 'pc'" />
+    <el-table v-loading="loading" :data="flowPageRef.pageData" stripe row-key="row" height="65vh">
+      <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if=false />
-      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="120"/>
+      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="100"/>
       <el-table-column prop="type" label="消费类型" min-width="80" />
-      <el-table-column prop="money" label="金额（元）" min-width="100"/>
+      <el-table-column prop="money" label="金额（元）" min-width="80"/>
       <el-table-column prop="payType" label="支付方式" min-width="80"/>
-      <el-table-column prop="name" label="名称" min-width="150"/>
+      <el-table-column prop="name" label="名称" min-width="100"/>
       <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
-      <el-table-column label="操作" prop="id" width="110">
+      <el-table-column label="操作" width="150">
         <template v-slot="scop">
           <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(formTitle[1], scop.row)" />
           <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row.id)" />
@@ -79,6 +67,7 @@
     </el-table>
   </div>
 
+  <!-- 表格分页插件 -->
   <div class="pageDiv">
     <span class="pageSpan">
       <b style="float: left;">消费总额：{{ Number(flowPageRef.totalMoney.toFixed(2)) }}</b>
@@ -91,7 +80,7 @@
   </div>
 
 
-  <!-- 弹出框表单 -->
+  <!-- 弹出框表单：新增和修改通用 -->
   <el-dialog v-model="dialogFormVisible" :title="dialgoFormTitle" :fullscreen="miniScreen">
 
     <div class="el-dialog-main">
@@ -146,6 +135,7 @@
     </template>
   </el-dialog>
 
+  <!-- 文件导入窗口 -->
   <el-dialog v-model="dialogUpdateVisible" title="文件上传" :fullscreen="miniScreen">
     <!-- <el-upload submit="submitExcel()" :auto-upload="false">
       <el-button type="primary">导入Excel文件</el-button>
@@ -188,7 +178,7 @@ import { dateFormater, deviceAgent, timeFormatter } from '../utils/common'
 import { exportJson } from '../utils/fileUtils'
 import { flowQuery } from '../utils/store'
 import type { Page } from '../types/page';
-import type { Flow, FlowQuery } from '../types/model/flow';
+import type { Flow } from '../types/model/flow';
 import type { Dist } from '@/types/model/dist';
 
 // 初始化后自动执行
@@ -408,7 +398,7 @@ const deleteById = (id: number) => {
       type: 'warning',
     }
   ).then(() => {
-    deleteFlow(id).then(res => {
+    deleteFlow(id).then(() => {
       doQuery();
       ElMessage({
         type: 'success',
@@ -502,16 +492,8 @@ const exportFlows = () => {
     })
 }
 
-const clearQuery = () => {
-  flowQuery.id = undefined;
-  flowQuery.startDay = undefined;
-  flowQuery.endDay = undefined;
-  flowQuery.type = undefined;
-  flowQuery.name = undefined;
-  flowQuery.payType = undefined;
-}
 
-watch(flowQuery, (newValue, oldValue) => {
+watch(flowQuery, () => {
   doQuery();
 });
 
@@ -520,47 +502,19 @@ watch(flowQuery, (newValue, oldValue) => {
 <style scoped>
 .queryRow .queryParam {
   margin: 8px 3px;
+  display: flex; /* 设置body为flex布局 */
+  justify-content: center; /* 横向居中 */
+  align-items: center; /* 纵向居中 */
 }
 
 .pageDiv {
   margin: 10px 0;
-}
-.el-table-div {
-  min-height: 60vh;
-  max-height: 80vh;
-}
-@media screen and (min-width: 960px) {
-  .mini-buttons {
-    display: none;
-  }
-
+  /* width: 85%; */
 }
 
-@media screen and (max-width: 480px) {
-  /* .el-table-div {
-    width: 800px;
-  } */
-
-  .pc-button {
-    display: none;
-  }
-
-  .queryParam {
-    margin: 8px 3px;
-    max-width: 176px;
-  }
-  .pageSpan {
-    display: none;
-  }
-  .query-icon {
-    display: none;
-  }
-
-  .el-dialog-main {
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.el-table {
+  overflow-x: auto;
+  overflow-y: auto;
 }
+
 </style>

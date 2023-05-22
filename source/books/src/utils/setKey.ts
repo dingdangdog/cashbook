@@ -11,9 +11,9 @@ const confimNode = () => {
     return createVNode('ul',
         undefined,
         [
-            createVNode('li', undefined, '若有账本，请输入钥匙并点击【打开】以打开账本。'),
-            createVNode('li', undefined, '若无账本，请点击【创建】前往创建账本。'),
-            createVNode('li', undefined, '注意：无法跳过，点击【x】将自动前往账本创建页。'),
+            createVNode('li', undefined, '已有账本，请输入密钥并点击【打开】'),
+            createVNode('li', undefined, '无账本，请点击【创建】'),
+            createVNode('li', undefined, '注意：取消将自动前往创建页。'),
         ]);
 }
 /**
@@ -24,13 +24,13 @@ export async function openSet() {
       return;
     }
     isOpen.value = true;
-    ElMessageBox.prompt(confimNode, '请输入钥匙打开你的账本', {
+    ElMessageBox.prompt(confimNode, '打开账本', {
         // 1、输入钥匙 或 点击创建
         confirmButtonText: '打开',
         cancelButtonText: '创建',
         roundButton: true,
-        inputPattern: /^[a-zA-Z0-9]{11}$/,
-        inputErrorMessage: '请输入账本创建时，系统自动生成的11位字符钥匙。'
+        // inputPattern: /^[a-zA-Z0-9]{11}$/,
+        // inputErrorMessage: '请输入账本创建时，系统自动生成的11位字符钥匙。'
     }).then(({ value }) => {
         // 2.1、输入钥匙并点击确定，根据钥匙获取账本信息，判断钥匙是否有效
         getBook(value.trim())
@@ -107,9 +107,9 @@ const registerNode = () => {
     return createVNode('ul',
         undefined,
         [
-            createVNode('li', undefined, '请输入账本名称（必须为4-12位）'),
-            createVNode('li', undefined, '点击【确定】后，系统会为你生成11位随机账本钥匙'),
-            createVNode('li', undefined, '注意：钥匙用于开启账本，请妥善保管！！！'),
+            createVNode('li', undefined, '请输入1-12位账本名称'),
+            createVNode('li', undefined, '系统会随机生成11位账本密钥'),
+            createVNode('li', undefined, '注意：密钥用于开启账本，请妥善保管！！！'),
         ]);
 }
 /**
@@ -119,8 +119,8 @@ export async function register() {
     ElMessageBox.prompt(registerNode, '欢迎创建账本', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /^[\S]{4,12}$/,
-        inputErrorMessage: '请输入4-12位账本名称。'
+        inputPattern: /^[\S]{1,12}$/,
+        inputErrorMessage: '请输入1-12位账本名称。'
     }).then((confim) => {
         // 输入完成，确定创建
         const key = generateMixed(11);
@@ -138,7 +138,7 @@ const clearMessageNode = () => {
         undefined,
         [
             createVNode('li', undefined, '确定关闭当前账本? '),
-            createVNode('li', undefined, '关闭前，请记住你的账本钥匙（' + localStorage.getItem('bookKey') + '），以便下次使用！'),
+            createVNode('li', undefined, '关闭前，请牢记当前账本密钥（' + localStorage.getItem('bookKey') + '）'),
         ]);
 }
 

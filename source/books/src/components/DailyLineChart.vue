@@ -46,6 +46,7 @@ const xAxisList: string[] = [];
 const dataList: string[] = [];
 
 const optionRef = ref({
+
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -74,12 +75,12 @@ const optionRef = ref({
   xAxis: {
     name: '日期',
     type: 'category',
-    data: xAxisList
+    data: xAxisList,
   },
   yAxis: {
     name: '金额(元)',
     show: true,
-    type: 'value'
+    type: 'value',
   },
   series: [
     {

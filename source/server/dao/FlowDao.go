@@ -60,6 +60,7 @@ func GetCountAndMoney(flowQuery types.FlowQuery) types.FlowCount {
 	sqlGetCountAndMoney := `
 		SELECT COUNT(*) AS 'totalCount', COALESCE(SUM(money),0) AS 'totalMoney' 
 		FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
+
 	sqlWhere := getWhereSql(flowQuery)
 
 	rows, err := db.Query(sqlGetCountAndMoney + sqlWhere + `;`)
@@ -79,11 +80,14 @@ func GetCountAndMoney(flowQuery types.FlowQuery) types.FlowCount {
 
 func GetFlowsPage(flowQuery types.FlowQuery) *types.Page {
 	sqlGetFlowPage := "SELECT id, book_key, day, type, money, pay_type, name, description FROM flows WHERE book_key = '" + flowQuery.BookKey + "'"
+
 	sqlWhere := getWhereSql(flowQuery)
 
-	offset := (flowQuery.PageNum - 1) * flowQuery.PageSize
 	sqlOrderBy := ` ORDER BY day DESC`
+
+	offset := (flowQuery.PageNum - 1) * flowQuery.PageSize
 	sqlPage := ` LIMIT ` + strconv.FormatInt(flowQuery.PageSize, 10) + ` OFFSET ` + strconv.FormatInt(offset, 10) + `;`
+
 	sql := sqlGetFlowPage + sqlWhere + sqlOrderBy + sqlPage
 
 	rows, err := db.Query(sql)
@@ -136,7 +140,7 @@ func getWhereSql(flowQuery types.FlowQuery) string {
 		sql += ` AND pay_type = '` + flowQuery.PayType + `'`
 	}
 	if 0 != len(flowQuery.Name) {
-		sql += ` AND name LIKE '%'||''` + flowQuery.Name + `''||'%'`
+		sql += ` AND name LIKE '%'||'` + flowQuery.Name + `'||'%'`
 	}
 	if 0 != len(flowQuery.Description) {
 		sql += ` AND description LIKE '%'||'` + flowQuery.Description + `'||'%'`

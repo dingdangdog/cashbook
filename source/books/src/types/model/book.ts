@@ -2,7 +2,7 @@ export interface Book {
   id: number;
   bookName: string;
   bookKey: string;
-  createDate: Date;
+  createDate: string;
 }
 /**
 * 创建流水的传输实体

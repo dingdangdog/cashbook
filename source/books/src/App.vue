@@ -1,60 +1,53 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-header>
-        <HeaderInfo />
-      </el-header>
+  <el-container>
+    <el-header>
+      <HeaderInfo />
+    </el-header>
+    <hr/>
+    <el-main>
+      <el-row class="chart-buttons">
+        <el-button type="warning" plain @click="showChart(2, '消费类型统计')">消费类型统计</el-button>
+        <el-button type="warning" plain @click="showChart(4, '支付方式统计')">支付方式统计</el-button>
+        <el-button type="primary" plain @click="showChart(1, '消费趋势')">消费趋势</el-button>
+        <el-button type="primary" plain @click="showChart(3, '消费日历')">消费日历</el-button>
+      </el-row>
 
-      <el-main>
-        <el-row class="mb-4 chart-buttons">
-          <el-button type="primary" plain @click="showChart(1, '日消费曲线')"
-            >日消费曲线</el-button
-          >
-          <el-button type="warning" plain @click="showChart(2, '消费类型统计')"
-            >消费类型统计</el-button
-          >
-          <el-button type="primary" plain @click="showChart(3, '消费日历')"
-            >消费日历</el-button
-          >
-          <!-- <el-button type="info" round>Info</el-button>
-          <el-button type="warning" round>Warning</el-button>
-          <el-button type="danger" round>Danger</el-button> -->
-        </el-row>
+      <div class="table">
+        <Suspense>
+          <template #default>
+            <FlowTable />
+          </template>
+          <template #fallback>
+            <div>加载中...</div>
+          </template>
+        </Suspense>
+      </div>
+    </el-main>
 
-        <div class="table">
-          <Suspense>
-            <template #default>
-              <FlowTable />
-            </template>
-            <template #fallback>
-              <div>加载中...</div>
-            </template>
-          </Suspense>
-        </div>
-      </el-main>
+    <hr/>
+    <el-footer>
+      <span style="margin-top: 0px; margin-bottom: 0px">
+        Powered by
+        <a href="#" @click="openSource()">cashbook-desktop_v{{ version }}</a>
+      </span>&nbsp;&nbsp;
+      <span style="margin-top: 0px; margin-bottom: 0px">
+        友链：<a href="#" @click="openOldmoon()">oldmoon.top</a>
+      </span>
+    </el-footer>
+  </el-container>
 
-      <el-footer>
-        <p style="margin-top: 0px; margin-bottom: 0px">
-          Powered by
-          <a href="#" @click="openSource()">cashbook-desktop_v{{ version }}</a>
-        </p>
-        <p style="margin-top: 0px; margin-bottom: 0px">
-          友链：<a href="#" @click="openOldmoon()">oldmoon.top</a>
-        </p>
-      </el-footer>
-    </el-container>
-
-    <el-dialog
-      v-model="chartDialog.chartDiaLogShow"
-      :title="chartDialog.chartDiaLogTitle"
-      @close="closeDialog()"
-      :fullscreen="miniScreen"
-    >
-      <DailyLineChart v-if="chartDialog.showChartNum == 1" />
-      <TypePieChart v-if="chartDialog.showChartNum == 2" />
-      <CalendarChart v-if="chartDialog.showChartNum == 3" />
-    </el-dialog>
-  </div>
+  <el-dialog
+    v-model="chartDialog.chartDiaLogShow"
+    :title="chartDialog.chartDiaLogTitle"
+    @close="closeDialog()"
+    :fullscreen="miniScreen"
+  >
+    <DailyLineChart v-if="chartDialog.showChartNum == 1" />
+    <TypePieChart v-if="chartDialog.showChartNum == 2" />
+    <CalendarChart v-if="chartDialog.showChartNum == 3" />
+    <PayTypeBar v-if="chartDialog.showChartNum == 4" />
+  </el-dialog>
+  
 </template>
 
 <script setup lang="ts">
@@ -73,6 +66,9 @@ const TypePieChart = defineAsyncComponent(
 );
 const CalendarChart = defineAsyncComponent(
   () => import("./components/CalendarChart.vue")
+);
+const PayTypeBar = defineAsyncComponent(
+  () => import("./components/PayTypeBar.vue")
 );
 const HeaderInfo = defineAsyncComponent(
   () => import("./components/HeaderInfo.vue")
@@ -118,89 +114,44 @@ const tableDivStyle = ref({
 </script>
 
 <style scoped>
-@media screen and (min-width: 960px) {
-  body {
-    margin: 0;
-    padding: 0;
-  }
-
-  .el-main {
-    padding-top: v-bind("tableDivStyle.paddingtop");
-    padding-bottom: v-bind("tableDivStyle.paddingtop");
-    float: left;
-  }
-
-  /* .el-main {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: v-bing('mainRef.padding-left');
-  padding-right: v-bing('mainRef.padding-right');
-} */
-
-  .mb-4 {
-    margin: 10px;
-    padding-left: v-bind("tableDivStyle.paddingleft");
-    padding-right: v-bind("tableDivStyle.paddingright");
-  }
-
-  .table {
-    float: none;
-    padding-left: v-bind("tableDivStyle.paddingleft");
-    padding-right: v-bind("tableDivStyle.paddingright");
-  }
-
-  .el-footer {
-    box-align: center;
-    text-align: center;
-    height: v-bind("tableDivStyle.footer");
-  }
+.el-container {
+  margin: 0.2vh 0.5vw;
+  width: 100%;
+  max-width: 99vw;
+  /* max-height: 99vh; */
+  display: flex; /* 设置body为flex布局 */
+  justify-content: center; /* 横向居中 */
+  align-items: center; /* 纵向居中 */
 }
 
-@media screen and (max-width: 480px) {
-  .el-header {
-    height: 60px;
-    padding: 5px;
-  }
+.el-header {
+  height: 8vh;
+}
 
-  .headerInfo {
-    float: left;
-  }
+.el-main {
+  height: 82vh;
+  padding: 0.5rem;
+}
 
-  .header-icon {
-    width: 60px;
-  }
+.chart-buttons{
+  
+  display: flex; /* 设置body为flex布局 */
+  justify-content: center; /* 横向居中 */
+  align-items: center; /* 纵向居中 */
+}
 
-  .themeButton {
-    float: right;
-    margin: 10px 10px;
-  }
+.table {
+  height: 95%;
+}
 
-  .header-message {
-    display: none;
-  }
+.el-footer {
+  padding: 0.5rem;
+  height: 4vh;
+  box-align: center;
+  text-align: center;
+}
 
-  .el-main {
-    padding: 5px;
-  }
-
-  /* .mini-amin {
-    width: 800px;
-  } */
-
-  .chart-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;  
-  }
-
-  .chart-buttons > .el-button {
-    margin-top: 10px;
-  }
-
-  .el-footer {
-    box-align: center;
-    text-align: center;
-    font-size: small;
-  }
+hr{
+  width: 100%;
 }
 </style>
