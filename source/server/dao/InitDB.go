@@ -9,7 +9,7 @@ import (
 	_ "modernc.org/sqlite"
 	"os"
 	"path/filepath"
-	"runtime"
+	"strings"
 	"time"
 )
 
@@ -18,7 +18,7 @@ var exePath string
 
 func InitDb() {
 	exePath, _ = os.Executable()
-	if runtime.GOOS == "windows" && filepath.Base(exePath) == "___go_build_main_go.exe" {
+	if strings.Contains(filepath.Base(exePath), "go_build_main_go.exe") {
 		// Windows开发环境下
 		dir, err := os.Getwd()
 		util.CheckErr(err)
