@@ -526,7 +526,8 @@ watch(flowQuery, (newValue, oldValue) => {
   margin: 10px 0;
 }
 .el-table-div {
-  min-height: 300px;
+  min-height: 60vh;
+  max-height: 80vh;
 }
 @media screen and (min-width: 960px) {
   .mini-buttons {

@@ -1,0 +1,25 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.0.5)
+
+2023-05-14T17:28:51.302+08:00  INFO 9184 --- [           main] top.oldmoon.cashbook.CashbookServer      : Starting CashbookServer using Java 17.0.6 with PID 9184 (E:\cashbook-desktop\source\server\target\cashbook-server-1.0.jar started by xxhu1 in E:\cashbook-desktop\release\server)
+2023-05-14T17:28:51.305+08:00  INFO 9184 --- [           main] top.oldmoon.cashbook.CashbookServer      : No active profile set, falling back to 1 default profile: "default"
+2023-05-14T17:28:52.284+08:00  INFO 9184 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 13713 (http)
+2023-05-14T17:28:52.294+08:00  INFO 9184 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-05-14T17:28:52.294+08:00  INFO 9184 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.7]
+2023-05-14T17:28:52.368+08:00  INFO 9184 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-05-14T17:28:52.369+08:00  INFO 9184 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1010 ms
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.3.1 
+2023-05-14T17:28:53.125+08:00  INFO 9184 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 13713 (http) with context path ''
+2023-05-14T17:28:53.134+08:00  INFO 9184 --- [           main] top.oldmoon.cashbook.CashbookServer      : Started CashbookServer in 2.209 seconds (process running for 2.571)
+2023-05-14T17:28:53.229+08:00  INFO 9184 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-05-14T17:28:53.238+08:00  INFO 9184 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@1929425f
+2023-05-14T17:28:53.240+08:00  INFO 9184 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
