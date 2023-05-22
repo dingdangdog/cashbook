@@ -52,3 +52,27 @@ func GetTypePie(flowQuery types.FlowQuery) []types.TypePie {
 
 	return results
 }
+
+func GetPayTypeBar(flowQuery types.FlowQuery) []types.TypePie {
+	sqlGetFlowPage := `SELECT pay_type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
+	sqlWhere := getWhereSql(flowQuery)
+	sqlGroupBy := ` GROUP BY pay_type;`
+
+	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
+	rows, err := db.Query(sql)
+	util.CheckErr(err)
+
+	results := make([]types.TypePie, 0)
+	if rows != nil {
+		for rows.Next() {
+			var typePie types.TypePie
+			err = rows.Scan(&typePie.Type, &typePie.TypeSum)
+			util.CheckErr(err)
+			results = append(results, typePie)
+		}
+		err := rows.Close()
+		util.CheckErr(err)
+	}
+
+	return results
+}

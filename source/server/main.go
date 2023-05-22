@@ -18,20 +18,28 @@ func main() {
 
 	api.GET("/book/:key", controller.GetBook)
 	api.POST("/book", controller.CreateBook)
-	api.GET("/dist/:type", controller.GetDistList)
 	api.GET("/server", controller.GetServerInfo)
 
-	flowApi := api.Group("/flowApi")
-	flowApi.Use(openBook())
+	adminApi := api.Group("/admin")
+	adminApi.Use(openBook())
 	{
-		flowApi.POST("/analysis/dailyLine", controller.GetDailyLine)
-		flowApi.POST("/analysis/typePie", controller.GetTypePie)
+		adminApi.POST("/book/changeKey", controller.ChangeKey)
 
-		flowApi.GET("/flow/getAll", controller.GetAll)
-		flowApi.GET("/flow", controller.GetFlowsPage)
-		flowApi.POST("/flow", controller.CreateFlow)
-		flowApi.PUT("/flow/:id", controller.UpdateFlow)
-		flowApi.DELETE("/flow/:id", controller.DeleteFlow)
+		adminApi.GET("/dist/:type", controller.GetDistList)
+		adminApi.GET("/dist", controller.GetDistPage)
+		adminApi.POST("/dist", controller.AddDist)
+		adminApi.PUT("/dist/:id", controller.UpdateDist)
+		adminApi.DELETE("/dist/:id", controller.DeleteDist)
+
+		adminApi.POST("/analysis/dailyLine", controller.GetDailyLine)
+		adminApi.POST("/analysis/typePie", controller.GetTypePie)
+		adminApi.POST("/analysis/payTypeBar", controller.GetPayTypeBar)
+
+		adminApi.GET("/flow/getAll", controller.GetAll)
+		adminApi.GET("/flow", controller.GetFlowsPage)
+		adminApi.POST("/flow", controller.CreateFlow)
+		adminApi.PUT("/flow/:id", controller.UpdateFlow)
+		adminApi.DELETE("/flow/:id", controller.DeleteFlow)
 	}
 	fmt.Println("-------- 服务启动成功：http://localhost:13303 --------")
 	err := router.Run(":13303")
