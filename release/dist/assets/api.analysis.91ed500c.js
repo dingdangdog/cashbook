@@ -1,1 +1,0 @@
-import{$ as e}from"./index.264f2790.js";const i="/flowApi/analysis";function o(t){return e({url:i+"/dailyLine",method:"post",data:t})}function n(t){return e({url:i+"/typePie",method:"post",data:t})}export{o as d,n as t};

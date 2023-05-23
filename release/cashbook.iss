@@ -2,18 +2,18 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "cashbook"
-#define MyAppVersion "1.0.0"
-#define MyAppPublisher "oldmoon"
+#define MyAppVersion "1.0.1"
+#define MyAppPublisher "dingdangdog"
 #define MyAppURL "https://www.oldmoon.top/"
 #define MyAppExeName "cashbook.exe"
 #define MyAppAssocName MyAppName + " File"
-#define MyAppAssocExt ".exe"
+#define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{1C578134-E706-4390-965B-58936B368D2E}
+AppId={{CA2F3B00-F2DD-4B57-827B-24B15287807F}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -27,7 +27,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=E:\codes\dingdangdog\my-product\cashbook-desktop\release
-OutputBaseFilename=cashbook-v1.0.0
+OutputBaseFilename=cashbook-v1.0.1-win-x86
 SetupIconFile=E:\codes\dingdangdog\my-product\cashbook-desktop\release\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -40,8 +40,24 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\chrome_100_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\chrome_200_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\ffmpeg.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\icudtl.dat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\LICENSE.electron.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\LICENSES.chromium.html"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\resources.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\v8_context_snapshot.bin"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\vk_swiftshader.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\vk_swiftshader_icd.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\vulkan-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "E:\codes\dingdangdog\my-product\cashbook-desktop\release\build\win-unpacked\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

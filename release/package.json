@@ -1,16 +1,57 @@
 {
   "name": "cashbook-books",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
   "build": {
+    "asar": false,
     "appId": "cashbook",
     "productName": "cashbook",
     "extends": null,
     "directories": {
       "output": "build"
     },
+    "files": [
+      "./icon.ico",
+      "./main.js"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/dist/",
+        "to": "app/dist/"
+      },
+      {
+        "from": "resources/config/",
+        "to": "app/config/"
+      },
+      {
+        "from": "resources/sql/",
+        "to": "app/sql/"
+      },
+      {
+        "from": "resources/cashbook-server.exe",
+        "to": "app/cashbook-server.exe"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
     "win": {
-      "target": "nsis"
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm",
+        "tar.gz"
+      ]
     }
   },
   "scripts": {
