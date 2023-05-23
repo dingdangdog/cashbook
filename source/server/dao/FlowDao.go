@@ -131,7 +131,7 @@ func getWhereSql(flowQuery types.FlowQuery) string {
 		sql += ` AND day >= '` + flowQuery.StartDay + `'`
 	}
 	if 0 != len(flowQuery.EndDay) {
-		sql += ` AND day < '` + flowQuery.EndDay + `'`
+		sql += ` AND day <= '` + flowQuery.EndDay + `'`
 	}
 	if 0 != len(flowQuery.Type) {
 		sql += ` AND type = '` + flowQuery.Type + `'`

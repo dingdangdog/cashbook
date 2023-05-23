@@ -19,7 +19,7 @@
                         {{ data.day === flowQuery.startDay ? '✔️' : '' }}
                     </p>
                     <p :class="allCount[data.day] ? 'have-flow' : 'no-flow'">
-                        {{ allCount[data.day] ? Number(allCount[data.day]) : 0 }}
+                        {{ allCount[data.day] ? Number(allCount[data.day]).toFixed(2) : 0 }}
                     </p>
                 </div>
             </template>
