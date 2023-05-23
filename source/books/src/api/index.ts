@@ -7,7 +7,7 @@ import { ElMessage } from 'element-plus'
 
 // 创建http调用者
 const $http = axios.create({
-    baseURL: '/api',
+    baseURL: 'http://localhost:13303/api',
     timeout: 2000,
     headers: {
         "Content-Type": "application/json;chartset=utf-8"

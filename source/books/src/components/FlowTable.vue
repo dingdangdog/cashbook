@@ -454,7 +454,7 @@ const readJsonInfo = (flie: UploadFile) => {
         // 数据转换
         importFlowList.push({
           id: flow.id,
-          day: new Date(flow.day || new Date()),
+          day: flow.day,
           type: flow.type,
           bookKey: bookKey,
           payType: flow.payType,

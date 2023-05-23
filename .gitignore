@@ -6,6 +6,8 @@
 /**/cashbook.db
 /**/*.iml
 /**/*.zip
+/**/*.exe
+/**/resources
 
 
 ### VS Code ###
