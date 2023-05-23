@@ -53,5 +53,5 @@ export function deleteFlow(id: number): Promise<any> {
  * @returns 
  */
 export function importFlows(importFlag: string, flows: Flow[]) {
-    return $http({ url: prefix + "/importFlows?flag=" + importFlag, method: "post", data: flows })
+    return $http({ url: prefix + "/importFlows?flag=" + importFlag, method: "post", data: { 'flows':flows }})
 }

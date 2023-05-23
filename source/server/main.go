@@ -36,6 +36,8 @@ func main() {
 		adminApi.POST("/analysis/payTypeBar", controller.GetPayTypeBar)
 
 		adminApi.GET("/flow/getAll", controller.GetAll)
+		adminApi.POST("/flow/importFlows", controller.ImportFlows)
+
 		adminApi.GET("/flow", controller.GetFlowsPage)
 		adminApi.POST("/flow", controller.CreateFlow)
 		adminApi.PUT("/flow/:id", controller.UpdateFlow)

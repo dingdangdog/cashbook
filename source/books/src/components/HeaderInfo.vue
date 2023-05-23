@@ -246,6 +246,7 @@ const confirmForm = async (dialgoForm: FormInstance | undefined) => {
 
 // 重置表单数据
 const resetForm = () => {
+  changeKeyVisable.value = false;
   newKey.value.key = "";
   newKey.value.keyAgain = "";
 };

@@ -149,7 +149,7 @@ func getWhereSql(flowQuery types.FlowQuery) string {
 }
 
 func GetAll(bookKey string) []types.Flow {
-	sqlGetAll := `SELECT id, book_key, 'day', 'type', money, pay_type, 'name', description FROM flows WHERE book_key = '` + bookKey + `';`
+	sqlGetAll := `SELECT id, book_key, day, type, money, pay_type, name, description FROM flows WHERE book_key = '` + bookKey + `';`
 
 	rows, err := db.Query(sqlGetAll, bookKey)
 	util.CheckErr(err)
@@ -167,4 +167,49 @@ func GetAll(bookKey string) []types.Flow {
 	}
 
 	return results
+}
+
+func ImportFlows(bookKey string, flag string, flows []types.Flow) int64 {
+	tx, err := db.Begin()
+	num := util.CheckErr(err)
+	if num == 0 {
+		return 0
+	}
+	if flag == "overwrite" {
+		_, err = tx.Exec(`DELETE FROM flows WHERE book_key = '` + bookKey + `';`)
+		num = util.CheckTxErr(tx, err)
+		if num == 0 {
+			return 0
+		}
+	}
+
+	sqlInsertPatch := `INSERT INTO flows (book_key, day, type, money, pay_type, name, description) VALUES `
+
+	// 组装批量插入sql
+	for index, flow := range flows {
+		sqlInsertPatch += `('` + bookKey + `','` + flow.Day + `','` + flow.Type + `',` +
+			strconv.FormatFloat(flow.Money, 'f', -1, 64) + `,'` +
+			flow.PayType + `','` + flow.Name + `','` + flow.Description + `')`
+		if index != (len(flows) - 1) {
+			sqlInsertPatch += `,`
+		} else {
+			sqlInsertPatch += `;`
+		}
+	}
+	res, err := tx.Exec(sqlInsertPatch)
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	nums, err := res.RowsAffected()
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	err = tx.Commit()
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	return nums
 }

@@ -87,7 +87,8 @@ const optionRef = ref({
       name: '每日消费统计',
       type: 'line',
       stack: 'Total',
-      symbol: 'none',
+      symbol: 'star',
+      symbolSize: 10,
       areaStyle: {},
       emphasis: {
         focus: 'series'

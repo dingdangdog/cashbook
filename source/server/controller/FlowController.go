@@ -76,8 +76,44 @@ func GetFlowsPage(c *gin.Context) {
 }
 
 func GetAll(c *gin.Context) {
-	bookKey := c.Param("bookKey")
+	bookKey := c.Request.Header.Get("bookKey")
 	data := dao.GetAll(bookKey)
 
 	c.JSON(200, util.Success(data))
+}
+
+func ImportFlows(c *gin.Context) {
+	var data types.FlowsImport
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+
+	// flag = overwrite || add
+	flag := c.Query("flag")
+
+	if len(flag) == 0 {
+		c.JSON(500, util.Error("导入失败，数据异常"))
+		return
+	}
+	if len(data.Flows) == 0 {
+		c.JSON(500, util.Error("导入失败，导入数据为空"))
+		return
+	}
+
+	bookKey := c.Request.Header.Get("bookKey")
+
+	nums := dao.ImportFlows(bookKey, flag, data.Flows)
+
+	if nums == 0 {
+		c.JSON(500, util.Error("导入失败，请重试"))
+		return
+	}
+
+	c.JSON(200, util.Success(nums))
 }
