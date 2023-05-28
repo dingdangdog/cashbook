@@ -18,8 +18,15 @@ export function typePie(query: TypePieChartQuery): Promise<TypePieChart[]> {
 }
 
 /**
- * 支付类型统计饼图
+ * 支付类型统计柱图
  */
 export function payTypeBar(query: TypePieChartQuery): Promise<TypePieChart[]> {
   return $http({ url: prefix + "/payTypeBar", method: "post", data: query })
+}
+
+/**
+ * 按月统计柱图
+ */
+export function monthBar(): Promise<TypePieChart[]> {
+  return $http({ url: prefix + "/monthBar", method: "post"})
 }

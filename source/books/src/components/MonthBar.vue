@@ -9,7 +9,7 @@
         placeholder="结束时间" />
     </div>
     <div class="queryParam pc-button">
-      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
+      <el-button :icon="Search" circle @click="doQuery()" />
     </div>
   </el-row>
 
@@ -19,7 +19,7 @@
         placeholder="结束时间" />
     </div>
     <div class="queryParam">
-      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
+      <el-button :icon="Search" circle @click="doQuery()" />
     </div>
   </el-row>
   <div id="pieDiv">
@@ -32,7 +32,7 @@ import { Search } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
-import { payTypeBar } from '../api/api.analysis';
+import { monthBar } from '../api/api.analysis';
 import { flowQuery, chartDialog } from '../utils/store';
 
 const query: TypePieChartQuery = {
@@ -59,7 +59,7 @@ const optionRef = ref({
   },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月']
   },
   yAxis: {
     type: 'value'
@@ -75,10 +75,10 @@ const optionRef = ref({
 var pieDiv: any;
 var pieChart: echarts.ECharts;
 
-const doQuery = (query: TypePieChartQuery) => {
+const doQuery = () => {
   flowQuery.startDay = queryRef.value.startDay;
   flowQuery.endDay = queryRef.value.endDay;
-  payTypeBar(query).then(res => {
+  monthBar().then(res => {
     if (res) {
       if (res.length === 0) {
         ElMessage.error("未查询到数据！");
@@ -118,7 +118,7 @@ const getRandomColor = () => {
 onMounted(() => {
   queryRef.value.startDay = flowQuery.startDay;
   queryRef.value.endDay = flowQuery.endDay;
-  doQuery(queryRef.value);
+  doQuery();
 })
 </script>
 

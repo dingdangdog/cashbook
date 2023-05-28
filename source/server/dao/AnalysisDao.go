@@ -76,3 +76,26 @@ func GetPayTypeBar(flowQuery types.FlowQuery) []types.TypePie {
 
 	return results
 }
+
+func MonthBar(bookKey string) []types.TypePie {
+	sqlGetFlowPage := `SELECT SUBSTR(day, 6, 2) AS 'type', COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + bookKey +
+		`' GROUP BY SUBSTR(day, 6, 2) ORDER BY SUBSTR(day, 6, 2);`
+
+	sql := sqlGetFlowPage
+	rows, err := db.Query(sql)
+	util.CheckErr(err)
+
+	results := make([]types.TypePie, 0)
+	if rows != nil {
+		for rows.Next() {
+			var typePie types.TypePie
+			err = rows.Scan(&typePie.Type, &typePie.TypeSum)
+			util.CheckErr(err)
+			results = append(results, typePie)
+		}
+		err := rows.Close()
+		util.CheckErr(err)
+	}
+
+	return results
+}

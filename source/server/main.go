@@ -34,6 +34,7 @@ func main() {
 		adminApi.POST("/analysis/dailyLine", controller.GetDailyLine)
 		adminApi.POST("/analysis/typePie", controller.GetTypePie)
 		adminApi.POST("/analysis/payTypeBar", controller.GetPayTypeBar)
+		adminApi.POST("/analysis/monthBar", controller.MonthBar)
 
 		adminApi.GET("/flow/getAll", controller.GetAll)
 		adminApi.POST("/flow/importFlows", controller.ImportFlows)

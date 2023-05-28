@@ -8,7 +8,8 @@
       <el-row class="chart-buttons">
         <el-button type="warning" plain @click="showChart(2, '消费类型统计')">消费类型统计</el-button>
         <el-button type="warning" plain @click="showChart(4, '支付方式统计')">支付方式统计</el-button>
-        <el-button type="primary" plain @click="showChart(1, '消费趋势')">消费趋势</el-button>
+        <el-button type="primary" plain @click="showChart(1, '日消费趋势')">日消费趋势</el-button>
+        <el-button type="primary" plain @click="showChart(5, '月消费趋势')">月消费趋势</el-button>
         <el-button type="primary" plain @click="showChart(3, '消费日历')">消费日历</el-button>
       </el-row>
 
@@ -46,6 +47,7 @@
     <TypePieChart v-if="chartDialog.showChartNum == 2" />
     <CalendarChart v-if="chartDialog.showChartNum == 3" />
     <PayTypeBar v-if="chartDialog.showChartNum == 4" />
+    <MonthBar v-if="chartDialog.showChartNum == 5" />
   </el-dialog>
   
 </template>
@@ -69,6 +71,9 @@ const CalendarChart = defineAsyncComponent(
 );
 const PayTypeBar = defineAsyncComponent(
   () => import("./components/PayTypeBar.vue")
+);
+const MonthBar = defineAsyncComponent(
+  () => import("./components/MonthBar.vue")
 );
 const HeaderInfo = defineAsyncComponent(
   () => import("./components/HeaderInfo.vue")

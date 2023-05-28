@@ -61,3 +61,11 @@ func GetPayTypeBar(c *gin.Context) {
 
 	c.JSON(200, util.Success(data))
 }
+
+func MonthBar(c *gin.Context) {
+	bookKey := c.Request.Header.Get("bookKey")
+
+	data := dao.MonthBar(bookKey)
+
+	c.JSON(200, util.Success(data))
+}
