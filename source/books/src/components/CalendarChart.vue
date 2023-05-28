@@ -88,9 +88,7 @@ const moneyClass = (money: any) => {
         return 'thousand-flow';
     } else if (money >= 500) {
         return 'five-hundred-flow';
-    } else if (money >= 100) {
-        return 'hundred-flow';
-    } else {
+    } {
         return 'have-flow';
     }
 }
@@ -106,11 +104,12 @@ const moneyClass = (money: any) => {
 .five-hundred-flow {
     color: #d485e1;
 }
-.hundred-flow {
+/* .hundred-flow {
     color: #f6b204;
-}
+} */
 .have-flow {
-    color: #1fbbf8;
+    /* color: #1fbbf8; */
+    color: #f6b204;
 }
 
 .no-flow {
