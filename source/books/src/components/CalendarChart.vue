@@ -18,7 +18,7 @@
                         {{ data.day.split('-').slice(1).join('-') }}
                         {{ data.day === flowQuery.startDay ? '✔️' : '' }}
                     </p>
-                    <p :class="allCount[data.day] ? 'have-flow' : 'no-flow'">
+                    <p :class="moneyClass(allCount[data.day])" style="display: flex; justify-content: right;">
                         {{ allCount[data.day] ? Number(allCount[data.day]).toFixed(2) : 0 }}
                     </p>
                 </div>
@@ -81,14 +81,36 @@ const dayToMonth = (day: string) => {
     return year + ' 年 ' + month + ' 月';
 }
 
+const moneyClass = (money: any) => {
+    if (!money || money == 0) {
+        return 'no-flow';
+    } else if (money >= 1000) {
+        return 'thousand-flow';
+    } else if (money >= 500) {
+        return 'five-hundred-flow';
+    } else if (money >= 100) {
+        return 'hundred-flow';
+    } else {
+        return 'have-flow';
+    }
+}
 </script>
 <style>
 .is-selected {
     color: #1989fa;
 }
 
-.have-flow {
+.thousand-flow {
     color: #f56c6c;
+}
+.five-hundred-flow {
+    color: #d485e1;
+}
+.hundred-flow {
+    color: #f6b204;
+}
+.have-flow {
+    color: #1fbbf8;
 }
 
 .no-flow {
