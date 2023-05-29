@@ -1,5 +1,6 @@
 package types
 
+// Dist 字典表
 type Dist struct {
 	Id        int64  `json:"id"`
 	Type      string `json:"type"`

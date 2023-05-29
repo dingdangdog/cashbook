@@ -24,25 +24,27 @@ func main() {
 	adminApi.Use(openBook())
 	{
 		adminApi.POST("/book/changeKey", controller.ChangeKey)
-
+		// 字典相关
 		adminApi.GET("/dist/:type", controller.GetDistList)
 		adminApi.GET("/dist", controller.GetDistPage)
 		adminApi.POST("/dist", controller.AddDist)
 		adminApi.PUT("/dist/:id", controller.UpdateDist)
 		adminApi.DELETE("/dist/:id", controller.DeleteDist)
-
+		// 分析图表相关
 		adminApi.POST("/analysis/dailyLine", controller.GetDailyLine)
 		adminApi.POST("/analysis/typePie", controller.GetTypePie)
 		adminApi.POST("/analysis/payTypeBar", controller.GetPayTypeBar)
 		adminApi.POST("/analysis/monthBar", controller.MonthBar)
-
+		// 流水相关
 		adminApi.GET("/flow/getAll", controller.GetAll)
 		adminApi.POST("/flow/importFlows", controller.ImportFlows)
-
 		adminApi.GET("/flow", controller.GetFlowsPage)
-		adminApi.POST("/flow", controller.CreateFlow)
+		adminApi.POST("/flow", controller.AddFlow)
 		adminApi.PUT("/flow/:id", controller.UpdateFlow)
 		adminApi.DELETE("/flow/:id", controller.DeleteFlow)
+		// 计划相关
+		adminApi.GET("/plans/:month", controller.GetPlan)
+		adminApi.POST("/plans/:overwrite", controller.SetPlan)
 	}
 	fmt.Println("-------- 服务启动成功：http://localhost:13303 --------")
 	err := router.Run(":13303")

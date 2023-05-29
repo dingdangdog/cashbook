@@ -72,4 +72,12 @@ CREATE TABLE IF NOT EXISTS "server" (
   "create_date" TEXT
 );
 
+
+CREATE TABLE IF NOT EXISTS "plans" (
+  "month" TEXT NOT NULL,
+  "limit_money" integer,
+  "used_money" integer,
+  PRIMARY KEY ("month")
+);
+
 PRAGMA foreign_keys = true;

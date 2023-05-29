@@ -18,6 +18,7 @@
 
     <!-- 其他按钮 -->
     <div class="header-info header-buttons">
+      <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
       <el-button plain @click="openDistDialog()"> 字典管理 </el-button>
       <el-button id="theme-button" plain @click="toggleDark()"
         >{{ isDark ? "☪" : "☼" }}
@@ -50,8 +51,8 @@
   <!-- 弹出框表单：新增和修改通用 -->
   <el-dialog
     style="width: 30vw"
-    v-model="changeKeyVisable"
-    :title="changeKeyTitle"
+    v-model="keyDialog.visable"
+    :title="keyDialog.title"
   >
     <div class="el-dialog-main">
       <el-form ref="dialgoFormRef" :model="newKey" :rules="rules">
@@ -71,8 +72,45 @@
     <!-- 表单确认按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="resetForm()"> 取消 </el-button>
-        <el-button type="primary" @click="confirmForm(dialgoFormRef)">
+        <el-button @click="resetKeyForm()"> 取消 </el-button>
+        <el-button type="primary" @click="confirmKeyForm(dialgoFormRef)">
+          确定
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <!-- 弹出框表单：新增和修改通用 -->
+  <el-dialog
+    style="width: 30vw"
+    v-model="planDialog.visable"
+    :title="planDialog.title"
+  >
+    <div class="el-dialog-main">
+      <el-form ref="planFormRef" :model="planRef" :rules="planFormRules">
+        <el-form-item label="月份" :label-width="formLabelWidth" prop="month">
+          <el-date-picker
+            v-model="planRef.month"
+            type="month"
+            format="YYYY-MM"
+            placeholder="月份"
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="额度"
+          :label-width="formLabelWidth"
+          prop="limitMoney"
+        >
+          <el-input-number v-model="planRef.limitMoney" :min="0" />
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 表单确认按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="resetPlanForm()"> 取消 </el-button>
+        <el-button type="primary" @click="confirmPlanForm(planFormRef)">
           确定
         </el-button>
       </span>
@@ -81,16 +119,19 @@
 </template>
 <script setup lang="ts">
 import { Tools } from "@element-plus/icons-vue";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useToggle } from "@vueuse/shared";
 import { clearUser } from "../utils/setKey";
 import { isDark } from "../utils/store";
 import { getServerInfo } from "../api/api.server";
 import { defineAsyncComponent } from "vue";
 import type { Book } from "@/types/model/book";
+import type { Plan } from "@/types/model/plan";
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { changeKey } from "@/api/api.book";
+import { setPlans, getPlan } from "../api/api.plan";
+import { dateFormater } from '../utils/common'
 
 // 异步组件引用
 const DistTable = defineAsyncComponent(() => import("./DistTable.vue"));
@@ -183,8 +224,10 @@ const rules = ref<FormRules>({
   ],
 });
 
-const changeKeyVisable = ref(false);
-const changeKeyTitle = ref("");
+const keyDialog = ref({
+  visable: false,
+  title: '',
+})
 
 // 表单输入框宽度
 const formLabelWidth = ref("100px");
@@ -193,13 +236,13 @@ if (document.body.clientWidth <= 480) {
 }
 
 const changeBookKey = () => {
-  changeKeyVisable.value = true;
-  changeKeyTitle.value =
+  keyDialog.value.visable = true;
+  keyDialog.value.title =
     "修改密钥，原密钥：(" + localStorage.getItem("bookKey") + ")";
 };
 
 // 提交表单（新增或修改）
-const confirmForm = async (dialgoForm: FormInstance | undefined) => {
+const confirmKeyForm = async (dialgoForm: FormInstance | undefined) => {
   if (!dialgoForm) return;
   if (
     !(await dialgoForm.validate((valid, fields) => {
@@ -245,10 +288,96 @@ const confirmForm = async (dialgoForm: FormInstance | undefined) => {
 };
 
 // 重置表单数据
-const resetForm = () => {
-  changeKeyVisable.value = false;
+const resetKeyForm = () => {
+  keyDialog.value.visable = false;
   newKey.value.key = "";
   newKey.value.keyAgain = "";
+};
+
+
+
+// 额度设置表单实例
+const planFormRef = ref<FormInstance>();
+
+const planModel: Plan = {
+  month: new Date(),
+  limitMoney: 0,
+  usedMoney: undefined,
+}
+
+const planRef = reactive(planModel);
+
+// 表单输入框校验规则
+const planFormRules = ref<FormRules>({
+  month: [{ required: true, message: "请选择额度月份", trigger: "blur" }],
+  limitMoney: [{ required: true, message: "请填入额度", trigger: "blur" }],
+});
+
+const planDialog = ref({
+  visable: false,
+  title: '',
+})
+const showPlanDialog = () => {
+  planDialog.value.visable = true;
+  planDialog.value.title = '额度设置';
+};
+
+// 提交表单（新增或修改）
+const confirmPlanForm = async (form: FormInstance | undefined) => {
+  if (!form) return;
+  if (
+    !(await form.validate((valid, fields) => {
+      if (valid) {
+        console.log("submit!");
+      } else {
+        console.log("error submit!", fields);
+        return false;
+      }
+    }))
+  ) {
+    return;
+  }
+  getPlan(dateFormater('YYYY-MM', planRef.month) || '').then((plan) => {
+    if (plan && plan.month) {
+      ElMessageBox.confirm(
+        "已存在额度设置(" + plan.month + "："+ plan.limitMoney +")，是否修改设置？",
+        "通知",
+        {
+          confirmButtonText: "确定",
+          type: "warning",
+        }
+      ).then(() => {
+        toSetPlan(planRef, 1)
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消设置!',
+        })
+      });
+    } else {
+      toSetPlan(planRef, 0)
+    }
+  })
+};
+
+const toSetPlan = (plan: Plan, o: number) => {
+  plan.month = dateFormater('YYYY-MM', plan.month || new Date)
+  setPlans(plan, o).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '设置成功!',
+    })
+    
+    resetPlanForm();
+  })
+}
+
+// 重置表单数据
+const resetPlanForm = () => {
+  planDialog.value.visable = false;
+  planRef.month = '';
+  planRef.limitMoney = 0;
 };
 </script>
 
@@ -269,7 +398,7 @@ const resetForm = () => {
 }
 
 .header-buttons {
-  min-width: 360px;
+  min-width: 420px;
 
   display: flex;
   justify-content: right;

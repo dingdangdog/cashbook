@@ -1,5 +1,6 @@
 package types
 
+// Flow 流水信息表
 type Flow struct {
 	Id          int64   `json:"id"`
 	BookKey     string  `json:"bookKey"`
