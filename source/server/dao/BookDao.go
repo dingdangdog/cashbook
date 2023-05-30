@@ -3,6 +3,7 @@ package dao
 import (
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"database/sql"
 	"time"
 )
 
@@ -25,13 +26,13 @@ func CreateBook(book types.Book) int64 {
 	return id
 }
 
-func GetBook(bookKey string) *types.Book {
+func GetBook(bookKey string) types.Book {
 	sqlGetBook := `SELECT id, book_key, book_name, create_date FROM Books WHERE book_key = '` + bookKey + `';`
 
 	rows, err := db.Query(sqlGetBook)
 	util.CheckErr(err)
 
-	var book = new(types.Book)
+	var book types.Book
 	if rows != nil {
 		for rows.Next() {
 			err = rows.Scan(&book.Id, &book.BookKey, &book.BookName, &book.CreateDate)
@@ -41,6 +42,7 @@ func GetBook(bookKey string) *types.Book {
 		err = rows.Close()
 		util.CheckErr(err)
 	}
+
 	return book
 }
 
@@ -60,38 +62,34 @@ func ChangeKey(change types.ChangeBookKey) int64 {
 	sqlUpdateBook := `
 		UPDATE books SET book_key = ? WHERE book_key = ? ;
 		`
-	stmt, err := tx.Prepare(sqlUpdateBook)
-	id = util.CheckTxErr(tx, err)
-	if id == 0 {
-		return 0
-	}
-	res, err := stmt.Exec(change.BookKey, change.OldKey)
-	id = util.CheckTxErr(tx, err)
-	if id == 0 {
-		return 0
-	}
-	_, err = res.RowsAffected()
-	id = util.CheckTxErr(tx, err)
+	id = exec(sqlUpdateBook, tx, change.BookKey, change.OldKey)
 	if id == 0 {
 		return 0
 	}
 
 	// 更新流水
-	sqlUpdateFlow := `
+	sqlUpdateFlows := `
 		UPDATE flows SET book_key = ? WHERE book_key = ? ;
 		`
-	stmt, err = tx.Prepare(sqlUpdateFlow)
-	id = util.CheckTxErr(tx, err)
+	id = exec(sqlUpdateFlows, tx, change.BookKey, change.OldKey)
 	if id == 0 {
 		return 0
 	}
-	res, err = stmt.Exec(change.BookKey, change.OldKey)
-	id = util.CheckTxErr(tx, err)
+
+	// 更新字典
+	sqlUpdateDists := `
+		UPDATE dists SET book_key = ? WHERE book_key = ? ;
+		`
+	id = exec(sqlUpdateDists, tx, change.BookKey, change.OldKey)
 	if id == 0 {
 		return 0
 	}
-	_, err = res.RowsAffected()
-	id = util.CheckTxErr(tx, err)
+
+	// 更新额度设置
+	sqlUpdatePlans := `
+		UPDATE plans SET book_key = ? WHERE book_key = ? ;
+		`
+	id = exec(sqlUpdatePlans, tx, change.BookKey, change.OldKey)
 	if id == 0 {
 		return 0
 	}
@@ -105,4 +103,24 @@ func ChangeKey(change types.ChangeBookKey) int64 {
 
 	book = GetBook(change.BookKey)
 	return book.Id
+}
+
+func exec(sql string, tx *sql.Tx, bookKey string, oldKey string) int64 {
+	stmt, err := tx.Prepare(sql)
+	id := util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+	res, err := stmt.Exec(bookKey, oldKey)
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+	_, err = res.RowsAffected()
+	id = util.CheckTxErr(tx, err)
+	if id == 0 {
+		return 0
+	}
+
+	return 1
 }

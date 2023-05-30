@@ -28,7 +28,13 @@ func GetBook(c *gin.Context) {
 	bookKey := c.Param("key")
 	data := dao.GetBook(bookKey)
 
-	c.JSON(200, util.Success(data))
+	if data.Id == 0 {
+		c.JSON(200, util.Error("账本不存在！"))
+	} else {
+		c.JSON(200, util.Success(data))
+
+		dao.CheckAndInitBookDist(bookKey)
+	}
 }
 
 func ChangeKey(c *gin.Context) {

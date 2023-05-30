@@ -63,7 +63,7 @@ func openBook() gin.HandlerFunc {
 			return
 		}
 
-		if nil == dao.GetBook(bookKey) {
+		if dao.GetBook(bookKey).Id == 0 {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success":      false,
 				"errorMessage": "账本不存在！",
