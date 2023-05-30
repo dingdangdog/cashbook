@@ -10,7 +10,7 @@ function createWindow() {
   // 创建浏览器窗口
   const win = new BrowserWindow({
     width: 1200,
-    height: 600,
+    height: 960,
     //绝对路径
     icon: path.join(__dirname, "icon.ico"),
     webPreferences: {

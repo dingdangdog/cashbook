@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "cashbook"
-#define MyAppVersion "1.0.2"
+#define MyAppVersion "1.0.3"
 #define MyAppPublisher "dingdangdog"
 #define MyAppURL "https://www.oldmoon.top/"
 #define MyAppExeName "cashbook.exe"
@@ -27,7 +27,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=E:\codes\dingdangdog\my-product\cashbook-desktop\release
-OutputBaseFilename=cashbook-v1.0.2-win-x86
+OutputBaseFilename=cashbook-v1.0.3-win-x86
 SetupIconFile=E:\codes\dingdangdog\my-product\cashbook-desktop\release\icon.ico
 Compression=lzma
 SolidCompression=yes
