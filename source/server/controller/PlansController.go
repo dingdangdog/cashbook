@@ -20,11 +20,13 @@ func SetPlan(c *gin.Context) {
 		})
 		return
 	}
+	data.BookKey = c.Request.Header.Get("bookKey")
 
 	if overwrite == "1" {
 		dao.UpdatePlan(data)
 	} else {
 		dao.SetPlan(data)
+		go dao.UpdatePlanUsed(data.BookKey)
 	}
 
 	c.JSON(200, util.Success(data))
@@ -33,7 +35,14 @@ func SetPlan(c *gin.Context) {
 func GetPlan(c *gin.Context) {
 	month := c.Param("month")
 
-	plan := dao.GetPlan(month)
+	bookKey := c.Request.Header.Get("bookKey")
+	plan := dao.GetPlan(bookKey, month)
 
 	c.JSON(200, util.Success(plan))
+}
+
+func UpdatePlans(c *gin.Context) {
+	bookKey := c.Request.Header.Get("bookKey")
+	go dao.UpdatePlanUsed(bookKey)
+	c.JSON(200, util.Success(bookKey))
 }
