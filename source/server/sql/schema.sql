@@ -74,10 +74,11 @@ CREATE TABLE IF NOT EXISTS "server" (
 
 
 CREATE TABLE IF NOT EXISTS "plans" (
-  "month" TEXT NOT NULL,
-  "limit_money" integer,
-  "used_money" integer,
-  PRIMARY KEY ("month")
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "month" TEXT,
+  "book_key" TEXT,
+  "limit_money" REAL,
+  "used_money" REAL
 );
 
 PRAGMA foreign_keys = true;

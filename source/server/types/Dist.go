@@ -7,4 +7,5 @@ type Dist struct {
 	DistKey   string `json:"distKey"`
 	DistValue string `json:"distValue"`
 	Sort      int64  `json:"sort"`
+	BookKey   string `json:"bookKey"`
 }

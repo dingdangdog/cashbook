@@ -3,6 +3,7 @@ export interface Dist {
   type?: string;
   distKey?: string;
   distValue?: string;
+  bookKey?: string;
   sort?: number;
 }
 

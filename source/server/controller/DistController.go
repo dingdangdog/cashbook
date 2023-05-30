@@ -11,7 +11,8 @@ import (
 
 func GetDistList(c *gin.Context) {
 	Type := c.Param("type")
-	data := dao.GetDistList(Type)
+	bookKey := c.Request.Header.Get("bookKey")
+	data := dao.GetDistList(bookKey, Type)
 
 	c.JSON(200, util.Success(data))
 }
@@ -27,6 +28,7 @@ func GetDistPage(c *gin.Context) {
 		return
 	}
 
+	query.BookKey = c.Request.Header.Get("bookKey")
 	page := dao.GetDistPage(query)
 
 	c.JSON(200, util.Success(page))
@@ -42,6 +44,8 @@ func AddDist(c *gin.Context) {
 		})
 		return
 	}
+
+	data.BookKey = c.Request.Header.Get("bookKey")
 
 	id := dao.AddDist(data)
 	data.Id = id
@@ -64,6 +68,8 @@ func UpdateDist(c *gin.Context) {
 	num, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
 	data.Id = num
+
+	data.BookKey = c.Request.Header.Get("bookKey")
 	dao.UpdateDist(data)
 
 	c.JSON(200, util.Success(data))

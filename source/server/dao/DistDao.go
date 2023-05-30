@@ -3,24 +3,33 @@ package dao
 import (
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"database/sql"
 	"strconv"
 )
 
-func GetDistList(Type string) []types.Dist {
-	sqlGetDistList := `SELECT id, dist_key, dist_value, type, sort FROM dists WHERE type = ? ORDER BY sort;`
-
-	rows, err := db.Query(sqlGetDistList, Type)
-	util.CheckErr(err)
+func GetDistList(bookKey string, Type string) []types.Dist {
+	sqlGetDistList := ""
+	var rows *sql.Rows
+	var err error
+	if len(bookKey) == 0 {
+		sqlGetDistList = `SELECT id, dist_key, dist_value, type, sort, book_key FROM dists WHERE type = ? AND book_key is null ORDER BY sort;`
+		rows, err = db.Query(sqlGetDistList, Type)
+		util.CheckErr(err)
+	} else {
+		sqlGetDistList = `SELECT id, dist_key, dist_value, type, sort, book_key FROM dists WHERE type = ? AND book_key = ? ORDER BY sort;`
+		rows, err = db.Query(sqlGetDistList, Type, bookKey)
+		util.CheckErr(err)
+	}
 
 	results := make([]types.Dist, 0)
 	if rows != nil {
 		for rows.Next() {
 			var dist types.Dist
-			err = rows.Scan(&dist.Id, &dist.DistKey, &dist.DistValue, &dist.Type, &dist.Sort)
+			err = rows.Scan(&dist.Id, &dist.DistKey, &dist.DistValue, &dist.Type, &dist.Sort, &dist.BookKey)
 			util.CheckErr(err)
 			results = append(results, dist)
 		}
-		err := rows.Close()
+		err = rows.Close()
 		util.CheckErr(err)
 	}
 
@@ -28,7 +37,7 @@ func GetDistList(Type string) []types.Dist {
 }
 
 func GetDistPage(query types.DistQuery) *types.Page {
-	sqlGetDistPage := "SELECT id, type, dist_key, dist_value, sort FROM dists WHERE 1=1"
+	sqlGetDistPage := "SELECT id, type, dist_key, dist_value, sort, book_key FROM dists WHERE 1=1"
 
 	sqlWhere := getDistWhereSql(query)
 
@@ -49,7 +58,7 @@ func GetDistPage(query types.DistQuery) *types.Page {
 	if rows != nil {
 		for rows.Next() {
 			var dist types.Dist
-			err = rows.Scan(&dist.Id, &dist.Type, &dist.DistKey, &dist.DistValue, &dist.Sort)
+			err = rows.Scan(&dist.Id, &dist.Type, &dist.DistKey, &dist.DistValue, &dist.Sort, &dist.BookKey)
 			util.CheckErr(err)
 			results = append(results, dist)
 		}
@@ -97,6 +106,11 @@ func getDistWhereSql(query types.DistQuery) string {
 	if 0 != query.Id {
 		sql += ` AND id = ` + strconv.FormatInt(query.Id, 10)
 	}
+	if 0 != len(query.BookKey) {
+		sql += ` AND book_key = '` + query.BookKey + `'`
+	} else {
+		sql += ` AND book_key is null`
+	}
 	if 0 != len(query.Type) {
 		sql += ` AND type = '` + query.Type + `'`
 	}
@@ -112,12 +126,12 @@ func getDistWhereSql(query types.DistQuery) string {
 
 func AddDist(dist types.Dist) int64 {
 	sqlAddDist := `
-		INSERT INTO dists (type, dist_key, dist_value, sort)
-		VALUES (?, ?, ?, ?);
+		INSERT INTO dists (type, dist_key, dist_value, sort, book_key)
+		VALUES (?, ?, ?, ?, ?);
 		`
 	stmt, err := db.Prepare(sqlAddDist)
 	util.CheckErr(err)
-	res, err := stmt.Exec(dist.Type, dist.DistKey, dist.DistValue, dist.Sort)
+	res, err := stmt.Exec(dist.Type, dist.DistKey, dist.DistValue, dist.Sort, dist.BookKey)
 	util.CheckErr(err)
 	id, err := res.LastInsertId()
 	util.CheckErr(err)
@@ -148,4 +162,31 @@ func DeleteDist(id int64) {
 	util.CheckErr(err)
 	_, err = res.RowsAffected()
 	util.CheckErr(err)
+}
+
+func CheckAndInitBookDist(bookKey string) {
+	sqlGetDistCount := `
+		SELECT COUNT(*) AS 'count'
+		FROM dists WHERE book_key = '` + bookKey + `';`
+
+	rows, err := db.Query(sqlGetDistCount)
+	util.CheckErr(err)
+	var count int64
+	if rows != nil {
+		for rows.Next() {
+			err = rows.Scan(&count)
+			util.CheckErr(err)
+			break
+		}
+		err = rows.Close()
+		util.CheckErr(err)
+	}
+	if count == 0 {
+		sqlInitBookDist := `
+			INSERT INTO dists (type, dist_key, dist_value, sort, book_key) 
+			SELECT type, dist_key, dist_value, sort, '` + bookKey + `' FROM dists WHERE book_key is null;
+			`
+		_, err = db.Exec(sqlInitBookDist)
+		util.CheckErr(err)
+	}
 }
