@@ -25,6 +25,8 @@ func AddFlow(c *gin.Context) {
 	id := dao.CreateFlow(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
+
+	go dao.UpdatePlanUsed(data.BookKey)
 }
 
 // UpdateFlow 更新流水
@@ -48,6 +50,8 @@ func UpdateFlow(c *gin.Context) {
 	dao.UpdateFlow(data)
 
 	c.JSON(200, util.Success(data))
+
+	go dao.UpdatePlanUsed(data.BookKey)
 }
 
 // DeleteFlow 删除流水
@@ -58,6 +62,9 @@ func DeleteFlow(c *gin.Context) {
 	dao.DeleteFlow(num)
 
 	c.JSON(200, util.Success("删除成功："+id))
+
+	bookKey := c.Request.Header.Get("bookKey")
+	go dao.UpdatePlanUsed(bookKey)
 }
 
 // GetFlowsPage 分页获取流水数据
@@ -119,6 +126,7 @@ func ImportFlows(c *gin.Context) {
 		c.JSON(500, util.Error("导入失败，请重试"))
 		return
 	}
-
 	c.JSON(200, util.Success(nums))
+
+	go dao.UpdatePlanUsed(bookKey)
 }
