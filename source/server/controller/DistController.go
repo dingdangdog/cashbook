@@ -12,9 +12,13 @@ import (
 func GetDistList(c *gin.Context) {
 	Type := c.Param("type")
 	bookKey := c.Request.Header.Get("bookKey")
+
+	dao.CheckAndInitBookDist(bookKey)
+
 	data := dao.GetDistList(bookKey, Type)
 
 	c.JSON(200, util.Success(data))
+
 }
 
 func GetDistPage(c *gin.Context) {
