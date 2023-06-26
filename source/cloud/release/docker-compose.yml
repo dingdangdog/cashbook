@@ -1,0 +1,16 @@
+version: "3.0"
+
+services:
+  cashbook-cloud:
+    image: dingdangdog/cashbook:cloud_1.0.0
+    restart: always
+    #network_mode: host
+    environment:
+      TZ: "Asia/Shanghai"
+      TIME_ZONE: Asia/Shanghai
+    volumes:
+      - ${PWD}/data/:/app/data/
+      - ${PWD}/db/:/app/db/
+      - ${PWD}/application.yml:/app/application.yml
+    ports:
+      - 21066:21066

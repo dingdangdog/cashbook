@@ -5,7 +5,6 @@ spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:/app/db/cashbook-cloud.db
-#    url: jdbc:sqlite:E:/codes/dingdangdog/my-product/cashbook-desktop/source/cloud/cashbook-cloud.db
   sql:
     init:
       mode: always
@@ -18,7 +17,6 @@ mybatis:
     map-underscore-to-camel-case: true
 
 filePath: /app/data/
-#filePath: E:/codes/dingdangdog/my-product/cashbook-desktop/source/cloud/data/
 
 system:
   salt: dingdangdog
