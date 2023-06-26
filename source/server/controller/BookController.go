@@ -29,7 +29,7 @@ func GetBook(c *gin.Context) {
 	data := dao.GetBook(bookKey)
 
 	if data.Id == 0 {
-		c.JSON(200, util.Error("账本不存在！"))
+		c.JSON(200, util.Error("账本不存在！", nil))
 	} else {
 		c.JSON(200, util.Success(data))
 
@@ -52,7 +52,7 @@ func ChangeKey(c *gin.Context) {
 
 	id := dao.ChangeKey(data)
 	if id == 0 {
-		c.JSON(200, util.Error("修改失败，可能存在相同密钥，请修改后再试"))
+		c.JSON(200, util.Error("修改失败，可能存在相同密钥，请修改后再试", nil))
 	} else {
 		c.JSON(200, util.Success(data))
 	}

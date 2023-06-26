@@ -190,3 +190,40 @@ func CheckAndInitBookDist(bookKey string) {
 		util.CheckErr(err)
 	}
 }
+
+func ImportDistsDB(bookKey string, dists []types.Dist, tx *sql.Tx) int64 {
+	var num int64
+	_, err := tx.Exec(`DELETE FROM dists WHERE book_key = '` + bookKey + `';`)
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+
+	sqlInsertPatch := `INSERT INTO dists (book_key, type, dist_key, dist_value, sort) VALUES `
+
+	// 组装批量插入sql
+	for index, dist := range dists {
+		sqlInsertPatch += `('` + bookKey + `','` + dist.Type + `','` + dist.DistKey + `','` +
+			dist.DistValue + `',` + strconv.FormatInt(dist.Sort, 10) + `)`
+		if index != (len(dists) - 1) {
+			sqlInsertPatch += `,`
+		} else {
+			sqlInsertPatch += `;`
+		}
+	}
+	res, err := tx.Exec(sqlInsertPatch)
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	nums, err := res.RowsAffected()
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	return nums
+}

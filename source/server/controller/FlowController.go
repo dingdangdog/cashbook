@@ -110,11 +110,11 @@ func ImportFlows(c *gin.Context) {
 	flag := c.Query("flag")
 
 	if len(flag) == 0 {
-		c.JSON(500, util.Error("导入失败，数据异常"))
+		c.JSON(500, util.Error("导入失败，数据异常", nil))
 		return
 	}
 	if len(data.Flows) == 0 {
-		c.JSON(500, util.Error("导入失败，导入数据为空"))
+		c.JSON(500, util.Error("导入失败，导入数据为空", nil))
 		return
 	}
 
@@ -123,7 +123,7 @@ func ImportFlows(c *gin.Context) {
 	nums := dao.ImportFlows(bookKey, flag, data.Flows)
 
 	if nums == 0 {
-		c.JSON(500, util.Error("导入失败，请重试"))
+		c.JSON(500, util.Error("导入失败，请重试", nil))
 		return
 	}
 	c.JSON(200, util.Success(nums))

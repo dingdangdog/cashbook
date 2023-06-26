@@ -3,7 +3,9 @@ package dao
 import (
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"database/sql"
 	_ "modernc.org/sqlite"
+	"strconv"
 )
 
 func SetPlan(plan types.Plan) {
@@ -103,4 +105,42 @@ func UpdatePlanUsed(bookKey string) {
 	util.CheckTxErr(tx, err)
 	err = tx.Commit()
 	util.CheckTxErr(tx, err)
+}
+
+func ImportPlansDB(bookKey string, plans []types.Plan, tx *sql.Tx) int64 {
+	var num int64
+	_, err := tx.Exec(`DELETE FROM plans WHERE book_key = '` + bookKey + `';`)
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+
+	sqlInsertPatch := `INSERT INTO plans (book_key, month, limit_money, used_money) VALUES `
+
+	// 组装批量插入sql
+	for index, plan := range plans {
+		sqlInsertPatch += `('` + bookKey + `','` + plan.Month + `',` +
+			strconv.FormatFloat(plan.LimitMoney, 'f', -1, 64) + `,` +
+			strconv.FormatFloat(plan.UsedMoney, 'f', -1, 64) + `)`
+		if index != (len(plans) - 1) {
+			sqlInsertPatch += `,`
+		} else {
+			sqlInsertPatch += `;`
+		}
+	}
+	res, err := tx.Exec(sqlInsertPatch)
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	nums, err := res.RowsAffected()
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	return nums
 }

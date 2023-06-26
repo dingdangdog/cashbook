@@ -45,6 +45,9 @@ func main() {
 		// 计划相关
 		adminApi.GET("/plans/:month", controller.GetPlan)
 		adminApi.POST("/plans/:overwrite", controller.SetPlan)
+		// 在线同步相关
+		adminApi.POST("/online/upload", controller.Upload)
+		adminApi.POST("/online/download", controller.Download)
 	}
 	fmt.Println("-------- 服务启动成功：http://localhost:13303 --------")
 	err := router.Run(":13303")
