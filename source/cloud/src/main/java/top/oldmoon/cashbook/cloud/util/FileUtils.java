@@ -16,6 +16,12 @@ public class FileUtils {
 
     public static void writeFile(String filePath, String fileInfo) throws IOException {
         Path path = Paths.get(filePath);
+        if (!Files.exists(path)) {
+            if (!Files.exists(path.getParent())) {
+                Files.createDirectories(path.getParent());
+            }
+            Files.createFile(path);
+        }
         Files.write(path, fileInfo.getBytes());
     }
 

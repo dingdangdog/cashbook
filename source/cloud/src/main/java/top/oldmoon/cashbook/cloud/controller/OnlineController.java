@@ -31,7 +31,7 @@ public class OnlineController {
     private System system;
 
     @PostMapping("/upload")
-    public boolean upload(Data data) throws IOException {
+    public boolean upload(@RequestBody Data data) throws IOException {
         Auth auth = checkAuth(data.getKey());
         if (!auth.isFlag()) {
             return false;

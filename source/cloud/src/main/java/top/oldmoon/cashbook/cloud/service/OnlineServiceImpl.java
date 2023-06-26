@@ -3,6 +3,7 @@ package top.oldmoon.cashbook.cloud.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.oldmoon.cashbook.cloud.dao.OnlineDao;
 import top.oldmoon.cashbook.cloud.model.*;
 import top.oldmoon.cashbook.cloud.util.FileUtils;
@@ -33,15 +34,19 @@ public class OnlineServiceImpl implements OnlineService {
         return onlineDao.getAuth(key);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void upload(Auth auth, Data data) throws IOException {
         LocalDate day = LocalDate.now();
         LocalTime time = LocalTime.now();
-        String fileName = filePath + "/" + day + "/" + data.getKey() + time.toString().replace(":", "") + ".json";
+        String fileName = filePath + day + "/" + data.getKey() + time.toString().replace(":", "") + ".txt";
         FileUtils.writeFile(fileName, data.getJson());
 
         LogUpload upload = new LogUpload(null, data.getKey(), day.toString(), time.toString(), fileName);
         onlineDao.saveUploadLog(upload);
+        // 修改 auth 当日剩余次数
+        auth.getAuth().setDay(auth.getAuth().getDay() - 1);
+        onlineDao.updateAuthDay(auth.getAuth());
     }
 
     @Override

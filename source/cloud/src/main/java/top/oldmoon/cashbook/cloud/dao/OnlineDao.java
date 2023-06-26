@@ -25,4 +25,6 @@ public interface OnlineDao {
     LogUpload getLastUploadLog(@Param("key") String key);
 
     void generateAuth(@Param("keys") List<String> keys);
+
+    void updateAuthDay(@Param("auth") AuthInfo auth);
 }

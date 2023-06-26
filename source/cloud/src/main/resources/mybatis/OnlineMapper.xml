@@ -10,7 +10,7 @@
 
     <insert id="saveDownloadLog">
         insert into log_download (key, day, time, file_path)
-        values (#{upload.key}, #{upload.day}, #{upload.time}, #{upload.filePath})
+        values (#{download.key}, #{download.day}, #{download.time}, #{download.filePath})
     </insert>
     <insert id="generateAuth">
         insert into auth_info (`key`, `state`, `limit`, `day`)
@@ -19,24 +19,23 @@
             (#{key}, 0, 0, 0)
         </foreach>
     </insert>
+    <update id="updateAuthDay">
+        update auth_info
+        set `day` = #{auth.day}
+        where `key` = #{auth.key}
+    </update>
 
     <select id="getAuth" resultType="top.oldmoon.cashbook.cloud.model.AuthInfo">
-        select `key`, `state`, `limit`, `day` from auth_info
-        <where>
-            <if test="key != null and key != ''">
-                and `key` = #{key}
-            </if>
-        </where>
+        select `key`, `state`, `limit`, `day`
+        from auth_info
+        where `key` = #{key}
     </select>
 
     <select id="getLastUploadLog" resultType="top.oldmoon.cashbook.cloud.model.LogUpload">
         select `id`, `key`, `day`, `time`, `file_path`
-        form log_upload
-        <where>
-            <if test="key != null and key != ''">
-                and key = #{key}
-            </if>
-        </where>
+        from log_upload
+        where `key` = #{key}
+        order by `time` desc
         limit 1
     </select>
 </mapper>

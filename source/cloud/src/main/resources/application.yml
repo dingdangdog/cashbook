@@ -1,10 +1,10 @@
 server:
-  port: 9090
+  port: 21066
 
 spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
-#    url: jdbc:sqlite:/db/data/cashbook-cloud.db
+#    url: jdbc:sqlite:/db/cashbook-cloud.db
     url: jdbc:sqlite:E:/codes/dingdangdog/my-product/cashbook-desktop/source/cloud/cashbook-cloud.db
   sql:
     init:
@@ -18,6 +18,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 filePath: E:/codes/dingdangdog/my-product/cashbook-desktop/source/cloud/data/
+#filePath: /data/cashbook/cloud/
 
 system:
   salt: dingdangdog
