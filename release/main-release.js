@@ -10,7 +10,7 @@ function createWindow() {
   // 创建浏览器窗口
   const win = new BrowserWindow({
     width: 1200,
-    height: 600,
+    height: 960,
     //绝对路径
     icon: path.join(__dirname, "icon.ico"),
     webPreferences: {
@@ -20,8 +20,8 @@ function createWindow() {
 
   // 最大化窗口
   win.maximize()
-  
-  win.loadFile("./resources/dist/index.html");
+
+  win.loadFile(path.join(__dirname, "dist/index.html"));
 
   // 关闭窗口时
   win.on("close", () => {
@@ -37,7 +37,7 @@ function createWindow() {
 async function startServer() {
   const serverName = "cashbook-server";
   // 启动后台服务
-  spawn("./resources/" + serverName, [], {});
+  spawn(path.join(__dirname, serverName + ".exe"), [], {});
 
   timeOut = setTimeout(() => {
     // 获取服务程序PID

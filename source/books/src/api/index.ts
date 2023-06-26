@@ -7,8 +7,10 @@ import { ElMessage } from 'element-plus'
 
 // 创建http调用者
 const $http = axios.create({
-    // baseURL: 'http://127.0.0.1:13303/api',
-    baseURL: '/api',
+    // 打包时把我放开！
+    baseURL: 'http://127.0.0.1:13303/api',
+    // 开发时把我放开！
+    // baseURL: '/api',
     timeout: 2000,
     headers: {
         "Content-Type": "application/json;chartset=utf-8"
@@ -39,8 +41,8 @@ $http.interceptors.response.use(res => {
 
     if (res.data.code != 200) {
         ElMessage.error("接口异常");
-        // return Promise.reject(res.data);
-        return res.data
+        return Promise.reject(res.data);
+        // return res.data
     }
     return res.data.data
 }, err => {

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "cashbook"
-#define MyAppVersion "1.0.3"
+#define MyAppVersion "1.0.4"
 #define MyAppPublisher "dingdangdog"
 #define MyAppURL "https://www.oldmoon.top/"
 #define MyAppExeName "cashbook.exe"
