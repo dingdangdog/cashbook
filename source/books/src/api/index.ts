@@ -38,8 +38,9 @@ $http.interceptors.request.use(async config => {
 $http.interceptors.response.use(res => {
 
     if (res.data.code != 200) {
-        ElMessage.error(res.data.data);
-        return Promise.reject(res.data);
+        ElMessage.error("接口异常");
+        // return Promise.reject(res.data);
+        return res.data
     }
     return res.data.data
 }, err => {
