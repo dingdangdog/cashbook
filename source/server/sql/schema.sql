@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "dists" (
 -- ----------------------------
 -- Table structure for flows
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS"flows" (
+CREATE TABLE IF NOT EXISTS "flows" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "book_key" TEXT,
   "day" TEXT,

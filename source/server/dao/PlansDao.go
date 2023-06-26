@@ -57,6 +57,31 @@ func GetPlan(bookKey string, month string) types.Plan {
 	return plan
 }
 
+func GetAllPlan(bookKey string) []types.Plan {
+	sqlGetPlan := `
+		SELECT month, limit_money, used_money, book_key
+		FROM plans 
+		WHERE book_key = ?;
+		`
+
+	rows, err := db.Query(sqlGetPlan, bookKey)
+	util.CheckErr(err)
+
+	results := make([]types.Plan, 0)
+	if rows != nil {
+		for rows.Next() {
+			var plan types.Plan
+			err = rows.Scan(&plan.Month, &plan.LimitMoney, &plan.UsedMoney, &plan.BookKey)
+			util.CheckErr(err)
+			results = append(results, plan)
+		}
+		err = rows.Close()
+		util.CheckErr(err)
+	}
+
+	return results
+}
+
 func UpdatePlanUsed(bookKey string) {
 	used := MonthBar(bookKey)
 

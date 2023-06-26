@@ -18,6 +18,7 @@
 
     <!-- 其他按钮 -->
     <div class="header-info header-buttons">
+      <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button>
       <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
       <el-button plain @click="openDistDialog()"> 字典管理 </el-button>
       <el-button id="theme-button" plain @click="toggleDark()"
@@ -48,7 +49,7 @@
     <DistTable />
   </el-dialog>
 
-  <!-- 弹出框表单：新增和修改通用 -->
+  <!-- 弹出框表单：账本密钥修改 -->
   <el-dialog
     style="width: 30vw"
     v-model="keyDialog.visable"
@@ -80,7 +81,7 @@
     </template>
   </el-dialog>
 
-  <!-- 弹出框表单：新增和修改通用 -->
+  <!-- 弹出框表单：额度设置 -->
   <el-dialog
     style="width: 30vw"
     v-model="planDialog.visable"
@@ -116,6 +117,54 @@
       </span>
     </template>
   </el-dialog>
+
+  
+  <!-- 弹出框表单：在线同步 -->
+  <el-dialog
+    style="width: 30vw"
+    v-model="onlineDialog.visable"
+    :title="onlineDialog.title"
+  >
+    <div class="el-dialog-main">
+      <el-form ref="onlineFormRef" :model="onlineRef" :rules="onlineFormRules">
+
+        <el-form-item
+          label="服务器地址"
+          :label-width="formLabelWidth"
+          prop="serverAddress"
+        >
+          <el-input v-model="onlineRef.serverAddress" placeholder="为空时使用默认服务器"/>
+        </el-form-item>
+
+        <el-form-item
+          label="授权密钥"
+          :label-width="formLabelWidth"
+          prop="secret"
+        >
+          <el-input v-model="onlineRef.secret" placeholder="服务器授权密钥"/>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 表单确认按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        
+        <el-button type="info" @click="getSecret()">
+          获取授权码
+        </el-button>
+
+        <el-button @click="resetOnlineForm()"> 取消 </el-button>
+
+        <el-button type="success" @click="confirmPlanForm(onlineFormRef)">
+          上传
+        </el-button>
+        
+        <el-button type="primary" @click="confirmPlanForm(onlineFormRef)">
+          下载
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { Tools } from "@element-plus/icons-vue";
@@ -132,6 +181,7 @@ import { ElMessageBox, ElMessage } from "element-plus";
 import { changeKey } from "@/api/api.book";
 import { setPlans, getPlan } from "../api/api.plan";
 import { dateFormater } from '../utils/common'
+import type { OnlineSync } from "@/types/model/online";
 
 // 异步组件引用
 const DistTable = defineAsyncComponent(() => import("./DistTable.vue"));
@@ -322,6 +372,25 @@ const showPlanDialog = () => {
   planDialog.value.title = '额度设置';
 };
 
+
+// 额度设置表单实例
+const onlineFormRef = ref<FormInstance>();
+
+const onlineModel: OnlineSync = {
+  serverAddress: undefined,
+  secret: undefined,
+}
+const onlineRef = reactive(onlineModel);
+
+const onlineDialog = ref({
+  visable: false,
+  title: '',
+})
+const showOnlineDialog = () => {
+  onlineDialog.value.visable = true;
+  onlineDialog.value.title = '额度设置';
+};
+
 // 提交表单（新增或修改）
 const confirmPlanForm = async (form: FormInstance | undefined) => {
   if (!form) return;
@@ -361,6 +430,8 @@ const confirmPlanForm = async (form: FormInstance | undefined) => {
   })
 };
 
+
+
 const toSetPlan = (plan: Plan, o: number) => {
   plan.month = dateFormater('YYYY-MM', plan.month || new Date)
   setPlans(plan, o).then(() => {
@@ -373,12 +444,47 @@ const toSetPlan = (plan: Plan, o: number) => {
   })
 }
 
+
 // 重置表单数据
 const resetPlanForm = () => {
   planDialog.value.visable = false;
   planRef.month = '';
   planRef.limitMoney = 0;
 };
+
+// 表单输入框校验规则
+const onlineFormRules = ref<FormRules>({
+  secret: [{ required: true, message: "请输入授权密钥", trigger: "blur" }],
+});
+
+
+// 提交表单（新增或修改）
+const confirmOnlineForm = async (form: FormInstance | undefined) => {
+  if (!form) return;
+  if (
+    !(await form.validate((valid, fields) => {
+      if (valid) {
+        console.log("submit!");
+      } else {
+        console.log("error submit!", fields);
+        return false;
+      }
+    }))
+  ) {
+    return;
+  }
+};
+
+// 重置表单数据
+const resetOnlineForm = () => {
+  onlineDialog.value.visable = false;
+  onlineRef.secret = undefined;
+  onlineRef.serverAddress = undefined;
+};
+
+const getSecret = () => {
+  window.open("https://oldmoon.top")
+}
 </script>
 
 <style scoped>
@@ -398,7 +504,7 @@ const resetPlanForm = () => {
 }
 
 .header-buttons {
-  min-width: 420px;
+  min-width: 520px;
 
   display: flex;
   justify-content: right;

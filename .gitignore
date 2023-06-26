@@ -7,7 +7,7 @@
 /**/*.iml
 /**/*.zip
 /**/*.exe
-/**/resources
+/release/resources
 
 
 ### VS Code ###
