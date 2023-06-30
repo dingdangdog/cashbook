@@ -16,11 +16,11 @@ public class AuthInfo {
      */
     private int state;
     /**
-     * 剩余天数：-1为无限
+     * 当天剩余次数：默认3次
      */
     private int limit;
     /**
-     * 当天剩余次数：默认3次
+     * 剩余天数：-1为无限
      */
     private int day;
 

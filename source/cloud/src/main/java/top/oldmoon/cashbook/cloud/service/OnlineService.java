@@ -20,4 +20,6 @@ public interface OnlineService {
     Data download(String key) throws IOException;
 
     boolean generateAuth(Integer sum);
+
+    void empowerAuth(String auth, AuthInfo authInfo);
 }

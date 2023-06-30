@@ -19,9 +19,30 @@
             (#{key}, 0, 0, 0)
         </foreach>
     </insert>
-    <update id="updateAuthDay">
+    <update id="updateAuthLimit">
         update auth_info
-        set `day` = #{auth.day}
+        set `limit` = #{auth.limit}
+        where `key` = #{auth.key}
+    </update>
+    <update id="resetAuthLimit">
+        update auth_info set `limit` = 3 where state = 1 and `day` != 0
+    </update>
+    <update id="autoAuthDay">
+        update auth_info set `day` = `day` - 1 where state = 1 and `day` > 0
+    </update>
+    <update id="empowerAuth">
+        update auth_info
+        <set>
+            <if test="auth.state != null and auth.state != 0">
+                `state` = #{auth.state},
+            </if>
+            <if test="auth.day != null and auth.day != 0">
+                `day` = #{auth.day},
+            </if>
+            <if test="auth.limit != null and auth.limit != 0">
+                `limit` = #{auth.limit},
+            </if>
+        </set>
         where `key` = #{auth.key}
     </update>
 
@@ -37,5 +58,10 @@
         where `key` = #{key}
         order by `time` desc
         limit 1
+    </select>
+    <select id="getAllUsedAuth" resultType="top.oldmoon.cashbook.cloud.model.AuthInfo">
+        select `key`, `state`, `limit`, `day`
+        from auth_info
+        where state = 1 and (`limit` > 0 or `limit` = -1)
     </select>
 </mapper>

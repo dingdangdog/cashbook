@@ -26,5 +26,13 @@ public interface OnlineDao {
 
     void generateAuth(@Param("keys") List<String> keys);
 
-    void updateAuthDay(@Param("auth") AuthInfo auth);
+    void updateAuthLimit(@Param("auth") AuthInfo auth);
+
+    List<AuthInfo> getAllUsedAuth();
+
+    void resetAuthLimit();
+
+    void autoAuthDay();
+
+    void empowerAuth(@Param("auth")AuthInfo authInfo);
 }

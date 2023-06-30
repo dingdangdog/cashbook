@@ -45,8 +45,8 @@ public class OnlineServiceImpl implements OnlineService {
         LogUpload upload = new LogUpload(null, data.getKey(), day.toString(), time.toString(), fileName);
         onlineDao.saveUploadLog(upload);
         // 修改 auth 当日剩余次数
-        auth.getAuth().setDay(auth.getAuth().getDay() - 1);
-        onlineDao.updateAuthDay(auth.getAuth());
+        auth.getAuth().setLimit(auth.getAuth().getLimit() - 1);
+        onlineDao.updateAuthLimit(auth.getAuth());
     }
 
     @Override
@@ -79,5 +79,10 @@ public class OnlineServiceImpl implements OnlineService {
         }
         onlineDao.generateAuth(keys);
         return true;
+    }
+
+    @Override
+    public void empowerAuth(String auth, AuthInfo authInfo) {
+        onlineDao.empowerAuth(authInfo);
     }
 }

@@ -3,6 +3,7 @@ package top.oldmoon.cashbook.cloud.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import top.oldmoon.cashbook.cloud.model.Auth;
 import top.oldmoon.cashbook.cloud.model.AuthInfo;
@@ -76,5 +77,14 @@ public class OnlineController {
             return "OK";
         }
         return "FAIL";
+    }
+
+    @PostMapping("/empowerAuth")
+    public boolean empowerAuth(@RequestBody AuthInfo authInfo, @RequestHeader("auth") String auth) throws NoSuchAlgorithmException {
+        if (CommonUtils.verifyPassword(auth, system.getKey(), system.getSalt()) && (StringUtils.hasLength(authInfo.getKey()))) {
+                onlineService.empowerAuth(auth, authInfo);
+                return true;
+        }
+        return false;
     }
 }
