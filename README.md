@@ -1,7 +1,18 @@
-# cashbook-desktop
-cashbook's desktop application
+<h1 align="center">cashbook-desktop</h1>
 
-桌面版账本，暂时仅支持`Windows`桌面版。
+<p align="center">
+  <img alt="stars" src="https://img.shields.io/github/stars/dingdangdog/cashbook-desktop" />
+  <img alt="dorks" src="https://img.shields.io/github/forks/dingdangdog/cashbook-desktop" />
+  <img alt="issues-open" src="https://img.shields.io/github/issues/dingdangdog/cashbook-desktop?color=important" />
+  <img alt="issues-close" src="https://img.shields.io/github/issues-closed/dingdangdog/cashbook-desktop?color=green" />
+  <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow.svg" />
+</p>
+
+- cashbook's desktop application
+
+- 桌面版账本，暂时仅支持`Windows`桌面版。
+
+## 目录
 
 - [重要说明](#重要说明)
   - [在线同步](#在线同步)
