@@ -1,0 +1,11 @@
+version: "3"
+
+# 单独编排cashbook容器
+services:
+  cashbook:
+    image: dingdangdog/cashbook:desktop-001
+    restart: always
+    ports:
+      - 880:80
+    volumes:
+      - F:/docker/cashbook-desktop/data:/app/data
