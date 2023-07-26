@@ -14,8 +14,10 @@ import (
 var db *sql.DB
 var exePath string
 
+var configPath = "./config/server.conf"
+
 func InitDb() {
-	confBytes, err := os.ReadFile("./config/server.conf")
+	confBytes, err := os.ReadFile(configPath)
 	util.CheckErr(err)
 	var conf types.Server
 	if len(confBytes) != 0 {
@@ -74,9 +76,9 @@ func initServerInfo(conf types.Server) {
 	if 0 == server.Id {
 		// 第一次，创建
 		conf.CreateDate = time.Now().Format("2006-01-02")
-		stmt, err := db.Prepare(`INSERT INTO server (id, version, environment, create_date) VALUES (1, ?, ?, ?)`)
+		stmt, err := db.Prepare(`INSERT INTO server (id, version, environment, create_date, server_path) VALUES (1, ?, ?, ?, ?)`)
 		util.CheckErr(err)
-		res, err := stmt.Exec(conf.Version, conf.Environment, conf.CreateDate)
+		res, err := stmt.Exec(conf.Version, conf.Environment, conf.CreateDate, conf.ServerPath)
 		util.CheckErr(err)
 		_, err = res.LastInsertId()
 		util.CheckErr(err)

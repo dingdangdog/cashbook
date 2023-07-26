@@ -5,6 +5,5 @@ echo "----------------------------------------------------"
 echo "GitHub：https://github.com/dingdangdog/cashbook-desktop"
 echo "--------------联系邮箱：dddogx@qq.com---------------"
 echo "===================================================="
-
-nginx -c /app/nginx.conf
+nginx -t && nginx
 cd /app && go run .
