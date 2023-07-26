@@ -20,8 +20,8 @@ function createWindow() {
 
   // 最大化窗口
   win.maximize()
-
-  win.loadFile(path.join(__dirname, "dist/index.html"));
+  
+  win.loadFile("./resources/dist/index.html");
 
   // 关闭窗口时
   win.on("close", () => {
@@ -37,7 +37,7 @@ function createWindow() {
 async function startServer() {
   const serverName = "cashbook-server";
   // 启动后台服务
-  spawn(path.join(__dirname, serverName + ".exe"), [], {});
+  spawn("./resources/" + serverName, [], {});
 
   timeOut = setTimeout(() => {
     // 获取服务程序PID

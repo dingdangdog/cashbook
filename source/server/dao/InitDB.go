@@ -40,12 +40,14 @@ func InitDb() {
 	util.CheckErr(err)
 	fmt.Println("-------- 数据库连接成功 --------")
 
+	alterTableSchema()
+
 	initDist()
 	initServerInfo(conf)
 }
 
 func initDist() {
-	data := GetDistList("expenseType")
+	data := GetDistList("", "expenseType")
 	if nil == data || len(data) == 0 {
 
 		fmt.Println("------ 开始字典数据初始化 ------")
@@ -87,4 +89,13 @@ func initServerInfo(conf types.Server) {
 		_, err = res.RowsAffected()
 		util.CheckErr(err)
 	}
+}
+
+func alterTableSchema() {
+	// 增加 字典的 book_key 字段
+	sqlDistAddBookKey := `
+		ALTER TABLE dists ADD COLUMN book_key TEXT;
+		`
+	_, err := db.Exec(sqlDistAddBookKey)
+	util.CheckErr(err)
 }

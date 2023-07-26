@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "dists" (
 -- ----------------------------
 -- Table structure for flows
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS"flows" (
+CREATE TABLE IF NOT EXISTS "flows" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "book_key" TEXT,
   "day" TEXT,
@@ -75,10 +75,11 @@ CREATE TABLE IF NOT EXISTS "server" (
 
 
 CREATE TABLE IF NOT EXISTS "plans" (
-  "month" TEXT NOT NULL,
-  "limit_money" integer,
-  "used_money" integer,
-  PRIMARY KEY ("month")
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "month" TEXT,
+  "book_key" TEXT,
+  "limit_money" REAL,
+  "used_money" REAL
 );
 
 PRAGMA foreign_keys = true;

@@ -18,6 +18,7 @@
 
     <!-- 其他按钮 -->
     <div class="header-info header-buttons">
+      <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button>
       <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
       <el-button plain @click="openDistDialog()"> 字典管理 </el-button>
       <el-button id="theme-button" plain @click="toggleDark()"
@@ -48,7 +49,7 @@
     <DistTable />
   </el-dialog>
 
-  <!-- 弹出框表单：新增和修改通用 -->
+  <!-- 弹出框表单：账本密钥修改 -->
   <el-dialog
     style="width: 30vw"
     v-model="keyDialog.visable"
@@ -80,7 +81,7 @@
     </template>
   </el-dialog>
 
-  <!-- 弹出框表单：新增和修改通用 -->
+  <!-- 弹出框表单：额度设置 -->
   <el-dialog
     style="width: 30vw"
     v-model="planDialog.visable"
@@ -116,6 +117,52 @@
       </span>
     </template>
   </el-dialog>
+
+  
+  <!-- 弹出框表单：在线同步 -->
+  <el-dialog
+    style="width: 30vw"
+    v-model="onlineDialog.visable"
+    :title="onlineDialog.title"
+  >
+    <div class="el-dialog-main">
+      <el-form ref="onlineFormRef" :model="onlineRef" :rules="onlineFormRules">
+
+        <el-form-item
+          label="服务器地址"
+          :label-width="formLabelWidth"
+          prop="serverAddress"
+        >
+          <el-input v-model="onlineRef.serverAddress" placeholder="如：http://localhost:8080"/>
+        </el-form-item>
+
+        <el-form-item
+          label="服务授权码"
+          :label-width="formLabelWidth"
+          prop="secret"
+        >
+          <el-input v-model="onlineRef.secret" placeholder="服务器授权密钥"/>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 表单确认按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        <!-- <el-button type="info" @click="getSecret()">
+          获取授权码
+        </el-button> -->
+
+        <el-button type="success" @click="toUpload(onlineFormRef)">
+          上传
+        </el-button>
+        
+        <el-button type="primary" @click="toDownload(onlineFormRef)">
+          下载
+        </el-button>
+        <el-button @click="resetOnlineForm()"> 取消 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { Tools } from "@element-plus/icons-vue";
@@ -131,7 +178,9 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { changeKey } from "@/api/api.book";
 import { setPlans, getPlan } from "../api/api.plan";
+import { upload, download } from "../api/api.online";
 import { dateFormater } from '../utils/common'
+import type { OnlineSync } from "@/types/model/online";
 
 // 异步组件引用
 const DistTable = defineAsyncComponent(() => import("./DistTable.vue"));
@@ -322,6 +371,7 @@ const showPlanDialog = () => {
   planDialog.value.title = '额度设置';
 };
 
+
 // 提交表单（新增或修改）
 const confirmPlanForm = async (form: FormInstance | undefined) => {
   if (!form) return;
@@ -379,6 +429,146 @@ const resetPlanForm = () => {
   planRef.month = '';
   planRef.limitMoney = 0;
 };
+
+
+// 额度设置表单实例
+const onlineFormRef = ref<FormInstance>();
+
+const onlineModel: OnlineSync = {
+  secret: window.localStorage.getItem("online-key")||undefined,
+  serverAddress: window.localStorage.getItem("online-address")||undefined,
+}
+const onlineRef = reactive(onlineModel);
+
+const onlineDialog = ref({
+  visable: false,
+  title: '',
+})
+const showOnlineDialog = () => {
+  onlineDialog.value.visable = true;
+  onlineDialog.value.title = '额度设置';
+};
+
+// 表单输入框校验规则
+const onlineFormRules = ref<FormRules>({
+  secret: [{ required: true, message: "请输入授权密钥", trigger: "blur" }],
+  serverAddress: [{ required: true, message: "请输入服务器地址", trigger: "blur" }],
+});
+
+
+// 重置表单数据
+const resetOnlineForm = () => {
+  onlineDialog.value.visable = false;
+  onlineRef.secret = undefined;
+  onlineRef.serverAddress = undefined;
+};
+
+const saveOnline = () => {
+  window.localStorage.setItem("online-key", onlineModel.secret||"")
+  window.localStorage.setItem("online-address", onlineModel.serverAddress||"")
+}
+
+const toUpload = async (form: FormInstance | undefined) => {
+  saveOnline()
+  if (!form) return;
+  if (
+    !(await form.validate((valid, fields) => {
+      if (valid) {
+        console.log("submit!");
+      } else {
+        console.log("error submit!", fields);
+        return false;
+      }
+    }))
+  ) {
+    return;
+  }
+  upload(onlineModel).then(res => {
+    if (res == 'true'){
+      ElMessage({
+        type: 'success',
+        message: '上传成功!',
+      })
+    } else {
+      console.log(res)
+      if (res.code == 203) {
+        if (!res.data?.auth?.state || res.data.auth.state == 0) {
+          ElMessage.error("授权码无效");
+        } else {
+          ElMessage.error("授权码剩余天数：" + (res.data.auth.limit == -1 ? "不限" : res.data.auth.limit));
+          ElMessage.error("授权码本日剩余次数：" + res.data.auth.day);
+        }
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res.message,
+        })
+      }
+    }
+  })
+}
+const toDownload = async (form: FormInstance | undefined) => {
+  saveOnline()
+  
+  if (!form) return;
+  if (
+    !(await form.validate((valid, fields) => {
+      if (valid) {
+        console.log("submit!");
+      } else {
+        console.log("error submit!", fields);
+        return false;
+      }
+    }))
+  ) {
+    return;
+  }
+  ElMessageBox.confirm(
+    '下载成功后将覆盖当前账本数据（流水、支付方式、消费类型、额度设置），确认下载？',
+    '确认下载',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(() => {
+    download(onlineModel).then(res => {
+      if (res == 1){
+        ElMessage({
+          type: 'success',
+          message: '下载成功!',
+        })
+        ElMessageBox.confirm(
+          '下载成功，请重新登录当前账本。当前账本密码：' + window.localStorage.getItem("bookKey"),
+          '下载成功',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        ).then(()=> {
+          localStorage.removeItem("bookKey");
+          localStorage.removeItem("bookName");
+          location.reload();
+        }).catch(()=>{
+          localStorage.removeItem("bookKey");
+          localStorage.removeItem("bookName");
+          location.reload();
+        })
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res.message,
+        })
+      }
+    })
+  }).catch(() => {
+    ElMessage({
+      type: 'info',
+      message: '取消下载',
+    })
+  })
+}
 </script>
 
 <style scoped>
@@ -398,7 +588,7 @@ const resetPlanForm = () => {
 }
 
 .header-buttons {
-  min-width: 420px;
+  min-width: 520px;
 
   display: flex;
   justify-content: right;

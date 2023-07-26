@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTO Mapper 3.0/EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.oldmoon.cashbook.cloud.dao.OnlineDao">
+
+    <insert id="saveUploadLog">
+        insert into log_upload (key, day, time, file_path)
+        values (#{upload.key}, #{upload.day}, #{upload.time}, #{upload.filePath})
+    </insert>
+
+    <insert id="saveDownloadLog">
+        insert into log_download (key, day, time, file_path)
+        values (#{download.key}, #{download.day}, #{download.time}, #{download.filePath})
+    </insert>
+    <insert id="generateAuth">
+        insert into auth_info (`key`, `state`, `limit`, `day`)
+        values
+        <foreach collection="keys" separator="," item="key">
+            (#{key}, 0, 0, 0)
+        </foreach>
+    </insert>
+    <update id="updateAuthLimit">
+        update auth_info
+        set `limit` = #{auth.limit}
+        where `key` = #{auth.key}
+    </update>
+    <update id="resetAuthLimit">
+        update auth_info set `limit` = 3 where state = 1 and `day` != 0
+    </update>
+    <update id="autoAuthDay">
+        update auth_info set `day` = `day` - 1 where state = 1 and `day` > 0
+    </update>
+    <update id="empowerAuth">
+        update auth_info
+        <set>
+            <if test="auth.state != null and auth.state != 0">
+                `state` = #{auth.state},
+            </if>
+            <if test="auth.day != null and auth.day != 0">
+                `day` = #{auth.day},
+            </if>
+            <if test="auth.limit != null and auth.limit != 0">
+                `limit` = #{auth.limit},
+            </if>
+        </set>
+        where `key` = #{auth.key}
+    </update>
+
+    <select id="getAuth" resultType="top.oldmoon.cashbook.cloud.model.AuthInfo">
+        select `key`, `state`, `limit`, `day`
+        from auth_info
+        where `key` = #{key}
+    </select>
+
+    <select id="getLastUploadLog" resultType="top.oldmoon.cashbook.cloud.model.LogUpload">
+        select `id`, `key`, `day`, `time`, `file_path`
+        from log_upload
+        where `key` = #{key}
+        order by `time` desc
+        limit 1
+    </select>
+    <select id="getAllUsedAuth" resultType="top.oldmoon.cashbook.cloud.model.AuthInfo">
+        select `key`, `state`, `limit`, `day`
+        from auth_info
+        where state = 1 and (`limit` > 0 or `limit` = -1)
+    </select>
+</mapper>

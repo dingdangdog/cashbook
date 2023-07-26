@@ -31,13 +31,13 @@
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if=false />
       <el-table-column prop="type" label="字典类型" :formatter="getDistTypeName" min-width="100" />
-      <el-table-column prop="distKey" label="字典Key" min-width="100"/>
+      <el-table-column prop="distKey" label="字典Key" v-if=false min-width="100"/>
       <el-table-column prop="distValue" label="字典值" min-width="100"/>
       <el-table-column prop="sort" label="排序" min-width="60"/>
       <el-table-column label="操作" width="120">
         <template v-slot="scop">
           <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(formTitle[1], scop.row)" />
-          <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row.id)" />
+          <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -62,22 +62,22 @@
       <el-form ref="dialgoFormRef" :model="distRef" :rules="rules">
 
         <el-form-item label="字典类型" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="distRef.type" placeholder="选择" clearable :disabled="isUpdate" >
+          <el-select v-model="distRef.type" placeholder="选择" clearable :disabled="!(isCreate && isAbled)" :change="distTypeChange()" >
             <el-option v-for="item in distTypeOptions" :key="item.distKey" :label="item.distValue"
               :value="item.distKey" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="字典key" :label-width="formLabelWidth" prop="distKey">
-          <el-input v-model="distRef.distKey" :disabled="isUpdate" />
+        <el-form-item label="字典key" :label-width="formLabelWidth" prop="distKey" v-show="false">
+          <el-input v-model="distRef.distKey" :disabled="!(isCreate && isAbled)" />
         </el-form-item>
 
         <el-form-item label="字典值" :label-width="formLabelWidth" prop="distValue">
-          <el-input v-model="distRef.distValue" />
+          <el-input v-model="distRef.distValue" :disabled="!(isCreate && isAbled)"/>
         </el-form-item>
 
         <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input-number v-model="distRef.sort" :min="0" />
+          <el-input-number v-model="distRef.sort" :min="0" :disabled="!(isCreate && isAbled)"/>
         </el-form-item>
       </el-form>
     </div>
@@ -105,8 +105,10 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 // 私有引入
 import { getDistByType, getDistPage, addDist, update, deleteDist } from '../api/api.dist'
+import { getFlowPage } from '../api/api.flow'
 import type { Page } from '../types/page';
 import type { Dist, DistQuery } from '@/types/model/dist';
+import type { FlowQuery } from '@/types/model/flow';
 
 // 初始化后自动执行
 onMounted(() => {
@@ -154,8 +156,7 @@ const distQueryRef = ref(distQuery)
 // 表单输入框校验规则
 const rules = ref<FormRules>({
   type: [{ required: true, message: '请选择字典类型！', trigger: 'blur' },],
-  distKey: [{ required: true, message: '请输入字典Key！', trigger: 'blur' }],
-  distValue: [{ required: true, message: '请输入字典K值！', trigger: 'blur' }]
+  distValue: [{ required: true, message: '请输入字典值！', trigger: 'blur' }]
 });
 
 
@@ -182,8 +183,6 @@ const formTitle = [
 const loading = ref(true);
 // 表单弹窗显示控制器
 const dialogFormVisible = ref(false);
-// 表单是否是修改表单
-const isUpdate = ref(false);
 // 表单弹窗标题
 const dialgoFormTitle = ref(formTitle[0]);
 // 表单输入框宽度
@@ -258,7 +257,7 @@ const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
 const createOne = () => {
   addDist({
     type: distRef.type,
-    distKey: distRef.distKey,
+    distKey: distRef.distValue,
     distValue: distRef.distValue,
     sort: distRef.sort
   }).then(res => {
@@ -308,44 +307,69 @@ const updateOne = () => {
 };
 
 // 删除
-const deleteById = (id: number) => {
-  ElMessageBox.confirm(
-    '确定删除此字典值吗？',
-    '确认删除',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  ).then(() => {
-    deleteDist(id).then(() => {
-      doQuery();
-      ElMessage({
-        type: 'success',
-        message: '删除成功!',
+const deleteById = (row: Dist) => {
+  let query: FlowQuery= {
+    pageNum: 1,
+    pageSize: 1,
+  }
+  if (row.type == "expenseType") {
+    query.type = row.distKey
+  } else if (row.type == "paymentType") {
+    query.payType = row.distKey
+  }
+  getFlowPage(query).then((res) => {
+    if (res.totalCount > 0 ){
+      ElMessageBox.alert (
+        '此字典值存在相关流水，不可删除！',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          type: 'warning',
+        }
+      )
+    } else {
+      ElMessageBox.confirm(
+        '确定删除此字典值吗？',
+        '确认删除',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      ).then(() => {
+        deleteDist(row.id || 0).then(() => {
+          doQuery();
+          ElMessage({
+            type: 'success',
+            message: '删除成功!',
+          })
+          getDistByType('distType').then(data => {
+            distTypeOptions.value = data;
+          });
+        }).catch(() => {
+          ElMessage({
+            type: 'error',
+            message: '删除失败',
+          })
+        });
+      }).catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消删除',
+        })
       })
-      getDistByType('distType').then(data => {
-        distTypeOptions.value = data;
-      });
-    }).catch(() => {
-      ElMessage({
-        type: 'error',
-        message: '删除失败',
+        }
       })
-    });
-  }).catch(() => {
-    ElMessage({
-      type: 'info',
-      message: '取消删除',
-    })
-  })
 };
 
+// 表单是否是修改表单
+const isAbled = ref(false);
+const isCreate = ref(false);
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
   dialgoFormTitle.value = title;
   dialogFormVisible.value = true;
-  isUpdate.value = false;
+  isCreate.value = true;
 
   distRef.id = undefined;
   distRef.type = undefined;
@@ -357,7 +381,7 @@ const openCreateDialog = (title: string) => {
 const openUpdateDialog = (title: string, updateDist: Dist) => {
   dialgoFormTitle.value = title;
   dialogFormVisible.value = true;
-  isUpdate.value = true; 
+  isCreate.value = false; 
 
   distRef.id = updateDist.id;
   distRef.type = updateDist.type;
@@ -365,6 +389,14 @@ const openUpdateDialog = (title: string, updateDist: Dist) => {
   distRef.distValue = updateDist.distValue;
   distRef.sort = updateDist.sort;
 };
+
+const distTypeChange = () => {
+  if (distRef.type == "distType") {
+    isAbled.value = false;
+  } else {
+    isAbled.value = true;
+  }
+}
 
 watch(distQueryRef.value, () => {
   doQuery();

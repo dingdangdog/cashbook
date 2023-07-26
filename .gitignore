@@ -7,17 +7,17 @@
 /**/*.iml
 /**/*.zip
 /**/*.exe
-/**/resources
+/**/*.db
+/release/resources
 
 
 ### VS Code ###
 /**/.vscode/
 /**/node_modules/
 /source/books/dist/
+/source/cloud/data/
 
 /**/package-lock.json
-/**/nginx/logs/
-/**/nginx/temp/
 
 /**/cashbook-*.exe
 ### Mac OS ###

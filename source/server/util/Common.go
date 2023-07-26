@@ -4,6 +4,7 @@ import (
 	"cashbook-server/types"
 	"database/sql"
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -42,10 +43,18 @@ func Success(data any) *types.Result {
 	return res
 }
 
-func Error(data any) *types.Result {
+func Error(message string, data any) *types.Result {
 	res := new(types.Result)
-	res.Code = 500
-	res.Message = "ErrExec"
+	res.Code = http.StatusInternalServerError
+	res.Message = message
+	res.Data = data
+	return res
+}
+
+func ErrorAll(code int64, message string, data any) *types.Result {
+	res := new(types.Result)
+	res.Code = code
+	res.Message = message
 	res.Data = data
 	return res
 }

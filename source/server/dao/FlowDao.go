@@ -3,6 +3,7 @@ package dao
 import (
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"database/sql"
 	_ "modernc.org/sqlite"
 	"strconv"
 )
@@ -172,11 +173,22 @@ func GetAll(bookKey string) []types.Flow {
 func ImportFlows(bookKey string, flag string, flows []types.Flow) int64 {
 	tx, err := db.Begin()
 	num := util.CheckErr(err)
+	nums := ImportFlowsDB(bookKey, flag, flows, tx)
+	if nums == 0 {
+		return 0
+	}
+	err = tx.Commit()
+	num = util.CheckTxErr(tx, err)
 	if num == 0 {
 		return 0
 	}
+	return nums
+}
+
+func ImportFlowsDB(bookKey string, flag string, flows []types.Flow, tx *sql.Tx) int64 {
+	var num int64
 	if flag == "overwrite" {
-		_, err = tx.Exec(`DELETE FROM flows WHERE book_key = '` + bookKey + `';`)
+		_, err := tx.Exec(`DELETE FROM flows WHERE book_key = '` + bookKey + `';`)
 		num = util.CheckTxErr(tx, err)
 		if num == 0 {
 			return 0
@@ -206,7 +218,6 @@ func ImportFlows(bookKey string, flag string, flows []types.Flow) int64 {
 	if num == 0 {
 		return 0
 	}
-	err = tx.Commit()
 	num = util.CheckTxErr(tx, err)
 	if num == 0 {
 		return 0
