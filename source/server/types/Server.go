@@ -6,4 +6,5 @@ type Server struct {
 	Version     string `json:"version"`
 	Environment string `json:"environment"`
 	CreateDate  string `json:"createDate"`
+	ServerPath  string `json:"serverPath"`
 }

@@ -8,8 +8,6 @@ import (
 	"fmt"
 	_ "modernc.org/sqlite"
 	"os"
-	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -17,15 +15,16 @@ var db *sql.DB
 var exePath string
 
 func InitDb() {
-	exePath, _ = os.Executable()
-	if strings.Contains(filepath.Base(exePath), "go_build_main_go.exe") {
-		// Windows开发环境下
-		dir, err := os.Getwd()
-		util.CheckErr(err)
-		exePath = dir
-	} else {
-		exePath = filepath.Dir(exePath)
+	confBytes, err := os.ReadFile("./config/server.conf")
+	util.CheckErr(err)
+	var conf types.Server
+	if len(confBytes) != 0 {
+		if err := json.Unmarshal(confBytes, &conf); err != nil {
+			util.CheckErr(err)
+			return
+		}
 	}
+	exePath = conf.ServerPath
 
 	util.PathExistsOrCreate(exePath + "/data")
 	db, _ = sql.Open("sqlite", exePath+"/data/cashbook.db")
@@ -42,7 +41,7 @@ func InitDb() {
 	fmt.Println("-------- 数据库连接成功 --------")
 
 	initDist()
-	initServerInfo()
+	initServerInfo(conf)
 }
 
 func initDist() {
@@ -67,16 +66,7 @@ func initDist() {
 }
 
 // initServerInfo 初始化服务信息
-func initServerInfo() {
-	confBytes, err := os.ReadFile(exePath + "/config/server.conf")
-	util.CheckErr(err)
-	var conf types.Server
-	if len(confBytes) != 0 {
-		if err := json.Unmarshal(confBytes, &conf); err != nil {
-			util.CheckErr(err)
-			return
-		}
-	}
+func initServerInfo(conf types.Server) {
 	server := GetServerInfo()
 
 	if 0 == server.Id {

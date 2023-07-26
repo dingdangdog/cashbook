@@ -69,7 +69,8 @@ CREATE TABLE IF NOT EXISTS "server" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "version" TEXT,
   "environment" TEXT,
-  "create_date" TEXT
+  "create_date" TEXT,
+  "server_path" TEXT
 );
 
 

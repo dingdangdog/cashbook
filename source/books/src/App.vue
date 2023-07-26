@@ -105,17 +105,6 @@ const openSource = () => {
 const openOldmoon = () => {
   window.open("https://oldmoon.top");
 };
-
-// 动态表格样式
-const tableDivStyle = ref({
-  margintop: document.documentElement.clientHeight * 0.005 + `px`,
-  paddingtop: document.documentElement.clientHeight * 0.02 + `px`,
-  paddingbottom: document.documentElement.clientHeight * 0.01 + `px`,
-  paddingleft: document.documentElement.clientWidth * 0.03 + `px`,
-  paddingright: document.documentElement.clientWidth * 0.03 + `px`,
-  header: document.documentElement.clientWidth * 0.02 + `px`,
-  footer: document.documentElement.clientWidth * 0.02 + `px`,
-});
 </script>
 
 <style scoped>
