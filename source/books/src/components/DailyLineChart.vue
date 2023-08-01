@@ -34,7 +34,7 @@ import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { dailyLine } from '../api/api.analysis'
-import { flowQuery } from '../utils/store';
+import { flowQuery, resetFlowQuery } from '../utils/store';
 
 const query: DailyLineChartQuery = {
 }
@@ -102,6 +102,7 @@ var lineDiv: any;
 var lineChart: echarts.ECharts;
 
 const doQuery = (query: DailyLineChartQuery) => {
+  resetFlowQuery();
   flowQuery.startDay = queryRef.value.startDay;
   flowQuery.endDay = queryRef.value.endDay;
   dailyLine(query).then(res => {

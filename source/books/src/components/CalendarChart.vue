@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { flowQuery, chartDialog } from "../utils/store";
+import { flowQuery, chartDialog, resetFlowQuery } from "../utils/store";
 import { dailyLine } from "../api/api.analysis";
 import type { DailyLineChartQuery } from "@/types/model/analysis";
 import { ref } from "vue";
@@ -56,6 +56,7 @@ const doQuery = async (param: DailyLineChartQuery) => {
 const monthCount = ref<any>({});
 
 const clickDay = (param: any) => {
+  resetFlowQuery();
   flowQuery.startDay = param.day;
   flowQuery.endDay = param.day;
   day.value = new Date(param.day);

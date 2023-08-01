@@ -175,7 +175,7 @@ import { defineAsyncComponent } from "vue";
 import type { Book } from "@/types/model/book";
 import type { Plan } from "@/types/model/plan";
 import type { FormInstance, FormRules } from "element-plus";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { ElMessageBox, ElMessage, ElLoading } from "element-plus";
 import { changeKey } from "@/api/api.book";
 import { setPlans, getPlan } from "../api/api.plan";
 import { upload, download } from "../api/api.online";
@@ -483,13 +483,20 @@ const toUpload = async (form: FormInstance | undefined) => {
   ) {
     return;
   }
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
   upload(onlineModel).then(res => {
     if (res == 'true'){
+      loading.close();
       ElMessage({
         type: 'success',
         message: '上传成功!',
       })
     } else {
+      loading.close();
       console.log(res)
       if (res.code == 203) {
         if (!res.data?.auth?.state || res.data.auth.state == 0) {
@@ -532,8 +539,14 @@ const toDownload = async (form: FormInstance | undefined) => {
       type: 'warning',
     }
   ).then(() => {
+    const loading = ElLoading.service({
+      lock: true,
+      text: 'Loading',
+      background: 'rgba(0, 0, 0, 0.7)',
+    })
     download(onlineModel).then(res => {
       if (res == 1){
+        loading.close();
         ElMessage({
           type: 'success',
           message: '下载成功!',
@@ -556,6 +569,7 @@ const toDownload = async (form: FormInstance | undefined) => {
           location.reload();
         })
       } else {
+        loading.close();
         ElMessage({
           type: 'error',
           message: res.message,

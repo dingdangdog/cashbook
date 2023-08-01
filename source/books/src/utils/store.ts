@@ -20,3 +20,13 @@ export const chartDialog = reactive({
 export const isDark = useDark({
   storageKey: 'vitepress-theme-appearance',
 })
+
+export const resetFlowQuery = () => {
+  flowQuery.id = undefined;
+  flowQuery.startDay = undefined;
+  flowQuery.endDay = undefined;
+  flowQuery.type = undefined;
+  flowQuery.payType = undefined;
+  flowQuery.name = undefined;
+  flowQuery.description = undefined;
+}

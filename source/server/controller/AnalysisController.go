@@ -10,7 +10,7 @@ import (
 
 func GetDailyLine(c *gin.Context) {
 	var query types.FlowQuery
-	if err := c.ShouldBindQuery(&query); err != nil {
+	if err := c.ShouldBindJSON(&query); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
@@ -28,7 +28,7 @@ func GetDailyLine(c *gin.Context) {
 
 func GetTypePie(c *gin.Context) {
 	var query types.FlowQuery
-	if err := c.ShouldBindQuery(&query); err != nil {
+	if err := c.ShouldBindJSON(&query); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,
@@ -46,7 +46,7 @@ func GetTypePie(c *gin.Context) {
 
 func GetPayTypeBar(c *gin.Context) {
 	var query types.FlowQuery
-	if err := c.ShouldBindQuery(&query); err != nil {
+	if err := c.ShouldBindJSON(&query); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success":      false,

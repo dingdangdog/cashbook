@@ -33,7 +33,7 @@ import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { typePie } from '../api/api.analysis';
-import { flowQuery, chartDialog, isDark } from '../utils/store';
+import { flowQuery, chartDialog, isDark, resetFlowQuery } from '../utils/store';
 
 const query: TypePieChartQuery = {
 }
@@ -130,6 +130,7 @@ const doQuery = (query: TypePieChartQuery) => {
       pieChart = echarts.init(pieDiv);
       pieChart.setOption(optionRef.value);
       pieChart.on('click', function (param) {
+        resetFlowQuery();
         flowQuery.startDay = queryRef.value.startDay;
         flowQuery.endDay = queryRef.value.endDay;
         flowQuery.type = param.name;

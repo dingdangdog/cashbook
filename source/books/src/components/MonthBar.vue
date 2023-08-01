@@ -1,39 +1,15 @@
 <template>
-  <el-row class="queryRow">
-    <div class="queryParam">
-      <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="开始时间" />
-    </div>
-    <div class="queryParam pc-button">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
-    </div>
-    <div class="queryParam pc-button">
-      <el-button :icon="Search" circle @click="doQuery()" />
-    </div>
-  </el-row>
-
-  <el-row class="mini-buttons">
-    <div class="queryParam">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
-    </div>
-    <div class="queryParam">
-      <el-button :icon="Search" circle @click="doQuery()" />
-    </div>
-  </el-row>
   <div id="pieDiv">
   </div>
 </template>
 
 <script setup lang="ts">
 import type { TypePieChartQuery } from '@/types/model/analysis';
-import { Search } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { monthBar } from '../api/api.analysis';
-import { flowQuery, chartDialog } from '../utils/store';
+import { flowQuery, chartDialog, resetFlowQuery } from '../utils/store';
 
 const query: TypePieChartQuery = {
 }
@@ -76,8 +52,6 @@ var pieDiv: any;
 var pieChart: echarts.ECharts;
 
 const doQuery = () => {
-  flowQuery.startDay = queryRef.value.startDay;
-  flowQuery.endDay = queryRef.value.endDay;
   monthBar().then(res => {
     if (res) {
       if (res.length === 0) {
@@ -97,9 +71,9 @@ const doQuery = () => {
       pieChart = echarts.init(pieDiv);
       pieChart.setOption(optionRef.value);
       pieChart.on('click', function (param) {
-        flowQuery.startDay = queryRef.value.startDay;
-        flowQuery.endDay = queryRef.value.endDay;
-        flowQuery.payType = param.name;
+        resetFlowQuery();
+        flowQuery.startDay = param.name + '-01';
+        flowQuery.endDay = param.name + '-31';
         chartDialog.chartDiaLogShow = false;
       });
     }
