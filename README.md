@@ -10,7 +10,7 @@
 
 - cashbook's desktop application
 
-- 桌面版账本，暂时仅支持`Windows`桌面版。
+- 桌面版账本，目前仅支持`Windows`桌面版。
 
 ## 目录
 
