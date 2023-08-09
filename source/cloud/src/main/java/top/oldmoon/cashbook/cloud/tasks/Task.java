@@ -25,8 +25,8 @@ public class Task {
     /**
      * 授权码每天自动减少一天：每天0点10分执行
      */
-//    @Scheduled(cron = "1 0 0 * * ?")
-    @Scheduled(cron = "1 */5 * * * ? ")
+    @Scheduled(cron = "1 0 0 * * ?")
+//    @Scheduled(cron = "1 */5 * * * ? ")
     public void autoAuthDay(){
         try {
             logger.info("--------开始--减少授权码剩余天数--------");
@@ -40,7 +40,8 @@ public class Task {
     /**
      * 授权码每天重置可用次数：每天0点0分0秒执行
      */
-    @Scheduled(cron = "30 */5 * * * ? ")
+    @Scheduled(cron = "1 1 0 * * ?")
+//    @Scheduled(cron = "30 */5 * * * ? ")
     public void resetAuthLimit(){
         try {
             logger.info("--------开始--重置每日授权码可用次数--------");

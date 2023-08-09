@@ -14,7 +14,13 @@ import (
 var db *sql.DB
 var exePath string
 
-var configPath = "./config/server.conf"
+// 打包配置
+//var prefix = "/resources/app"
+
+// 开发配置
+var prefix = "/resources"
+
+var configPath = "." + prefix + "/config/server.conf"
 
 func InitDb() {
 	confBytes, err := os.ReadFile(configPath)
@@ -28,10 +34,10 @@ func InitDb() {
 	}
 	exePath = conf.ServerPath
 
-	util.PathExistsOrCreate(exePath + "/data")
-	db, _ = sql.Open("sqlite", exePath+"/data/cashbook.db")
+	util.PathExistsOrCreate(exePath + prefix + "/data")
+	db, _ = sql.Open("sqlite", exePath+prefix+"/data/cashbook.db")
 	//util.CheckErr(err)
-	sqlBytes, err := os.ReadFile(exePath + "/sql/schema.sql")
+	sqlBytes, err := os.ReadFile(exePath + prefix + "/sql/schema.sql")
 	util.CheckErr(err)
 	schema := string(sqlBytes)
 	// 过滤注释内容

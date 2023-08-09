@@ -16,6 +16,7 @@
 /**/node_modules/
 /source/books/dist/
 /source/cloud/data/
+/source/cloud/src/test/
 
 /**/package-lock.json
 

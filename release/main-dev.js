@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron");
-const child_process = require("child_process");
+// const child_process = require("child_process");
 const { spawn } = require("child_process");
 const path = require("path");
 
@@ -21,7 +21,7 @@ function createWindow() {
   // 最大化窗口
   win.maximize()
   
-  win.loadFile("../source/books/dist/index.html");
+  win.loadFile("./resources/dist/index.html");
 
   // 关闭窗口时
   win.on("close", () => {
@@ -37,7 +37,18 @@ function createWindow() {
 async function startServer() {
   const serverName = "cashbook-server";
   // 启动后台服务
-  spawn("../source/server/" + serverName, [], {});
+  const server = spawn("./resources/" + serverName + ".exe", [], {});
+  server.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+  server.on('close', function(code) {
+    console.log('child process exited with code :' + code);
+  });
+  server.on('error', (err) => {
+    // This will be called with err being an AbortError if the controller aborts
+    alert(err);
+    console.log(err);
+  });
 
   timeOut = setTimeout(() => {
     // 获取服务程序PID
