@@ -16,12 +16,16 @@ func main() {
 
 	router := gin.Default()
 	port := ":8080"
-	api := router.Group("/api")
 
+	root := router.Group("/")
+	root.GET("/captcha/:img", controller.CaptchaHandle)
+
+	api := router.Group("/api")
 	api.GET("/book/:key", controller.GetBook)
 	api.POST("/book", controller.CreateBook)
 	api.GET("/book/list", controller.GetBookList)
 	api.GET("/server", controller.GetServerInfo)
+	api.GET("/captcha", controller.Captcha)
 
 	adminApi := api.Group("/admin")
 	adminApi.Use(openBook())
