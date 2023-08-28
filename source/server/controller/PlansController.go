@@ -4,8 +4,10 @@ import (
 	"cashbook-server/dao"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 func SetPlan(c *gin.Context) {
@@ -20,7 +22,7 @@ func SetPlan(c *gin.Context) {
 		})
 		return
 	}
-	data.BookKey = c.Request.Header.Get("bookKey")
+	data.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	if overwrite == "1" {
 		dao.UpdatePlan(data)
@@ -35,14 +37,14 @@ func SetPlan(c *gin.Context) {
 func GetPlan(c *gin.Context) {
 	month := c.Param("month")
 
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 	plan := dao.GetPlan(bookKey, month)
 
 	c.JSON(200, util.Success(plan))
 }
 
 func UpdatePlans(c *gin.Context) {
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 	go dao.UpdatePlanUsed(bookKey)
 	c.JSON(200, util.Success(bookKey))
 }

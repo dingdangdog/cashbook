@@ -4,8 +4,10 @@ import (
 	"cashbook-server/dao"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 func GetDailyLine(c *gin.Context) {
@@ -19,7 +21,7 @@ func GetDailyLine(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	query.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	data := dao.GetDailyLine(query)
 
@@ -37,7 +39,7 @@ func GetTypePie(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	query.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	data := dao.GetTypePie(query)
 
@@ -55,7 +57,7 @@ func GetPayTypeBar(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	query.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	data := dao.GetPayTypeBar(query)
 
@@ -63,7 +65,7 @@ func GetPayTypeBar(c *gin.Context) {
 }
 
 func MonthBar(c *gin.Context) {
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 
 	data := dao.MonthBar(bookKey)
 

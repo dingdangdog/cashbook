@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"github.com/gin-contrib/sessions"
 )
 
 // AddFlow 新增流水
@@ -20,7 +21,7 @@ func AddFlow(c *gin.Context) {
 		})
 		return
 	}
-	data.BookKey = c.Request.Header.Get("bookKey")
+	data.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	id := dao.CreateFlow(data)
 	data.Id = id
@@ -42,7 +43,7 @@ func UpdateFlow(c *gin.Context) {
 		return
 	}
 
-	data.BookKey = c.Request.Header.Get("bookKey")
+	data.BookKey = sessions.Default(c).Get("bookKey").(string)
 	id := c.Param("id")
 	num, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
@@ -63,7 +64,7 @@ func DeleteFlow(c *gin.Context) {
 
 	c.JSON(200, util.Success("删除成功："+id))
 
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 	go dao.UpdatePlanUsed(bookKey)
 }
 
@@ -79,7 +80,7 @@ func GetFlowsPage(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	query.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	page := dao.GetFlowsPage(query)
 
@@ -87,7 +88,7 @@ func GetFlowsPage(c *gin.Context) {
 }
 
 func GetAll(c *gin.Context) {
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 	data := dao.GetAll(bookKey)
 
 	c.JSON(200, util.Success(data))
@@ -118,7 +119,7 @@ func ImportFlows(c *gin.Context) {
 		return
 	}
 
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 
 	nums := dao.ImportFlows(bookKey, flag, data.Flows)
 

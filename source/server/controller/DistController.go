@@ -7,11 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"github.com/gin-contrib/sessions"
 )
 
 func GetDistList(c *gin.Context) {
 	Type := c.Param("type")
-	bookKey := c.Request.Header.Get("bookKey")
+	bookKey := sessions.Default(c).Get("bookKey").(string)
 
 	dao.CheckAndInitBookDist(bookKey)
 
@@ -32,7 +33,7 @@ func GetDistPage(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	query.BookKey = sessions.Default(c).Get("bookKey").(string)
 	page := dao.GetDistPage(query)
 
 	c.JSON(200, util.Success(page))
@@ -49,7 +50,7 @@ func AddDist(c *gin.Context) {
 		return
 	}
 
-	data.BookKey = c.Request.Header.Get("bookKey")
+	data.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	id := dao.AddDist(data)
 	data.Id = id
@@ -73,7 +74,7 @@ func UpdateDist(c *gin.Context) {
 	util.CheckErr(err)
 	data.Id = num
 
-	data.BookKey = c.Request.Header.Get("bookKey")
+	data.BookKey = sessions.Default(c).Get("bookKey").(string)
 	dao.UpdateDist(data)
 
 	c.JSON(200, util.Success(data))

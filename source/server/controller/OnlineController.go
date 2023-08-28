@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"github.com/gin-contrib/sessions"
 )
 
 func Upload(c *gin.Context) {
@@ -16,7 +17,7 @@ func Upload(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, util.Error("参数处理异常", nil))
 		return
 	}
-	online.BookKey = c.Request.Header.Get("bookKey")
+	online.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	authJson := util.Get(online.ServerAddress + "/online/checkAuth?key=" + online.Secret)
 
@@ -59,7 +60,7 @@ func Download(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, util.Error("参数处理异常", nil))
 		return
 	}
-	online.BookKey = c.Request.Header.Get("bookKey")
+	online.BookKey = sessions.Default(c).Get("bookKey").(string)
 
 	authJson := util.Get(online.ServerAddress + "/online/checkAuth?key=" + online.Secret)
 

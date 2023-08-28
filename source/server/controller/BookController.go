@@ -5,7 +5,7 @@ import (
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"net/http"
-
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -54,7 +54,7 @@ func ChangeKey(c *gin.Context) {
 		return
 	}
 
-	data.OldKey = c.Request.Header.Get("bookKey")
+	data.OldKey = sessions.Default(c).Get("bookKey").(string)
 
 	id := dao.ChangeKey(data)
 	if id == 0 {
