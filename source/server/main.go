@@ -50,7 +50,7 @@ func main() {
 		adminApi.POST("/online/download", controller.Download)
 	}
 	fmt.Println("-------- 服务启动成功：http://localhost:13303 --------")
-	err := router.Run(":13303")
+	err := router.Run("0.0.0.0:13303")
 	util.CheckErr(err)
 }
 

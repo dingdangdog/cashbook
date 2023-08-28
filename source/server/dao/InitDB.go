@@ -6,9 +6,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	_ "modernc.org/sqlite"
 	"os"
 	"time"
+
+	_ "modernc.org/sqlite"
 )
 
 var db *sql.DB
@@ -59,7 +60,7 @@ func initDist() {
 	if nil == data || len(data) == 0 {
 
 		fmt.Println("------ 开始字典数据初始化 ------")
-		sqlBytes, err := os.ReadFile(exePath + "/sql/dists.sql")
+		sqlBytes, err := os.ReadFile(exePath + prefix + "/sql/dists.sql")
 		util.CheckErr(err)
 		dist := string(sqlBytes)
 		// 过滤注释内容
