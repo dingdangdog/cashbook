@@ -5,8 +5,9 @@ import (
 	"cashbook-server/dao"
 	"cashbook-server/util"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -14,10 +15,12 @@ func main() {
 	dao.InitDb()
 
 	router := gin.Default()
+	port := ":8080"
 	api := router.Group("/api")
 
 	api.GET("/book/:key", controller.GetBook)
 	api.POST("/book", controller.CreateBook)
+	api.GET("/book/list", controller.GetBookList)
 	api.GET("/server", controller.GetServerInfo)
 
 	adminApi := api.Group("/admin")
@@ -49,8 +52,8 @@ func main() {
 		adminApi.POST("/online/upload", controller.Upload)
 		adminApi.POST("/online/download", controller.Download)
 	}
-	fmt.Println("-------- 服务启动成功：http://localhost:13303 --------")
-	err := router.Run("0.0.0.0:13303")
+	fmt.Println("-------- 服务启动成功：http://localhost" + port + " --------")
+	err := router.Run(port)
 	util.CheckErr(err)
 }
 

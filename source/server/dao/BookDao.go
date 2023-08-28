@@ -26,6 +26,27 @@ func CreateBook(book types.Book) int64 {
 	return id
 }
 
+func GetBookList() []types.Book {
+	sqlGetBookList := `SELECT id, book_name FROM Books;`
+	rows, err := db.Query(sqlGetBookList)
+	util.CheckErr(err)
+	var books []types.Book
+
+	if rows != nil {
+		var book types.Book
+		//var temp string = ""
+		for rows.Next() {
+			err = rows.Scan(&book.Id, &book.BookName)
+			util.CheckErr(err)
+			books = append(books, book)
+		}
+		err = rows.Close()
+		util.CheckErr(err)
+	}
+
+	return books
+}
+
 func GetBook(bookKey string) types.Book {
 	sqlGetBook := `SELECT id, book_key, book_name, create_date FROM Books WHERE book_key = '` + bookKey + `';`
 

@@ -4,8 +4,9 @@ import (
 	"cashbook-server/dao"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func CreateBook(c *gin.Context) {
@@ -21,6 +22,11 @@ func CreateBook(c *gin.Context) {
 
 	id := dao.CreateBook(data)
 	data.Id = id
+	c.JSON(200, util.Success(data))
+}
+
+func GetBookList(c *gin.Context) {
+	data := dao.GetBookList()
 	c.JSON(200, util.Success(data))
 }
 
