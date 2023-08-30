@@ -1,5 +1,5 @@
 import $http from './index'
-import type { Server } from '../types/model/server';
+import type { Server, Captcha } from '../types/model/server';
 
 const prefix = '/server';
 
@@ -9,4 +9,12 @@ const prefix = '/server';
  */
 export function getServerInfo(): Promise<Server> {
     return $http({ url: prefix, method: "get" })
+}
+
+/**
+ * 获取验证码地址
+ * @return Captcha
+ */
+export function getCaptcha(): Promise<Captcha> {
+    return $http({ url: "/captcha", method: "get" })
 }

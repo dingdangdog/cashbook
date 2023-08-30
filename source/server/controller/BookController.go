@@ -5,6 +5,7 @@ import (
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -31,12 +32,24 @@ func GetBookList(c *gin.Context) {
 }
 
 func GetBook(c *gin.Context) {
+	//验证码核验
+	verifyRes, err := VerifyCaptcha(c.Query("captcha_id"), c.Query("captcha_value"))
+	if !verifyRes {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success":      false,
+			"errorMessage": err,
+		})
+		return
+	}
+
 	bookKey := c.Param("key")
 	data := dao.GetBook(bookKey)
 
 	if data.Id == 0 {
-		c.JSON(200, util.Error("账本不存在！", nil))
+		c.JSON(500, util.Error("账本不存在！", nil))
 	} else {
+		sessions.Default(c).Set("bookKey", bookKey)
+		sessions.Default(c).Save()
 		c.JSON(200, util.Success(data))
 
 		dao.CheckAndInitBookDist(bookKey)

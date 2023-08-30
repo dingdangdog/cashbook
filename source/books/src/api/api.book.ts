@@ -7,8 +7,8 @@ const prefix = '/book';
  * 查询用户信息
  * @returns User
  */
-export function getBook(bookKey: string): Promise<Book> {
-  return $http({ url: prefix + "/" + bookKey, method: "get"})
+export function getBook(bookKey: string, captchaValue: string, captchaKey: string): Promise<Book> {
+  return $http({ url: prefix + "/" + bookKey + "?captcha_id=" + captchaKey + "&captcha_value="+captchaValue, method: "get"})
 }
 
 

@@ -46,7 +46,7 @@ $http.interceptors.response.use(res => {
     }
     return res.data.data
 }, err => {
-    console.log(err);
+    return Promise.reject(err);
 })
 
 export default $http;
