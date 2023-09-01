@@ -3,7 +3,7 @@ FROM golang:alpine AS binarybuilder
 LABEL author.name="DingDangDog"
 LABEL author.email="dddogx@qq.com"
 LABEL project.name="cashbook-desktop"
-LABEL project.version="docker.001"
+LABEL project.version="docker.002"
 LABEL project.github="https://github.com/DingDangDog/cashbook-desktop"
 
 RUN apk add --no-cache nginx
@@ -20,14 +20,16 @@ RUN nginx -t
 # 后端
 COPY ./source/server/ ./
 
-RUN rm -f ./data/cashbook.db
-RUN rm -rf ./data/.idea
+RUN rm -f ./resources/data/cashbook.db
+RUN rm -rf ./.idea
 RUN go env -w GOPROXY=https://goproxy.cn,direct && go mod tidy && go build .
 
-COPY ./entrypoint.sh ./
+#COPY ./entrypoint.sh ./
 
-VOLUME /app/config
-VOLUME /app/data
+VOLUME /app/resources/config
+VOLUME /app/resources/data
+
+RUN nginx -t
 
 EXPOSE 80
-ENTRYPOINT ["sh","./entrypoint.sh"]
+CMD  ["sh", "-c", "nginx && go run ."]
