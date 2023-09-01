@@ -43,4 +43,5 @@ export class FlowQuery {
     payType?: string;
     name?: string;
     description?: string;
+    moneySort?: string;
 }

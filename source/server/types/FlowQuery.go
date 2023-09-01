@@ -11,4 +11,5 @@ type FlowQuery struct {
 	PayType     string `json:"payType" uri:"payType" form:"payType"`
 	Name        string `json:"name" uri:"name" form:"name"`
 	Description string `json:"description" uri:"description" form:"description"`
+	MoneySort   string `json:"moneySort" uri:"moneySort" form:"moneySort"`
 }
