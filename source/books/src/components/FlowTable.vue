@@ -49,12 +49,13 @@
 
   <!-- 表格主体数据列表 -->
   <div class="el-table-div">
-    <el-table v-loading="loading" :data="flowPageRef.pageData" stripe row-key="row" height="65vh">
+    <el-table v-loading="loading" :data="flowPageRef.pageData" :default-sort="{prop:'money', order:'null'}"
+     @sort-change="moneySortFunc" stripe row-key="row" height="65vh">
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if=false />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="100"/>
       <el-table-column prop="type" label="消费类型" min-width="80" />
-      <el-table-column prop="money" label="金额（元）" min-width="80"/>
+      <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom"/>
       <el-table-column prop="payType" label="支付方式" min-width="80"/>
       <el-table-column prop="name" label="名称" min-width="100"/>
       <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
@@ -299,6 +300,23 @@ const doQuery = () => {
     loading.value = false;
   });
 };
+
+// 金额排序
+const sortFlag = ref<string|undefined>(undefined);
+const moneySortFunc = () => {
+  console.log(1111)
+  if (!sortFlag.value) {
+    flowQuery.moneySort = 'ASC';
+    sortFlag.value = 'ascending';
+  } else if (sortFlag.value === 'ascending') {
+    flowQuery.moneySort = 'DESC';
+    sortFlag.value = 'descending';
+  } else if (sortFlag.value === 'descending') {
+    flowQuery.moneySort = '';
+    sortFlag.value = undefined;
+  }
+  doQuery();
+}
 
 // 提交表单（新增或修改）
 const confirmForm = async (dialgoForm: FormInstance | undefined, closeDialog: boolean) => {
