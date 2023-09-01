@@ -85,16 +85,13 @@ func GetFlowsPage(flowQuery types.FlowQuery) *types.Page {
 	sqlWhere := getWhereSql(flowQuery)
 
 	sqlOrderBy := ` ORDER BY day DESC`
-	if len(flowQuery.MoneySort) > 0 {
-		sqlOrderBy = `ORDER BY money ` + flowQuery.MoneySort
-	}
 
 	offset := (flowQuery.PageNum - 1) * flowQuery.PageSize
 	sqlPage := ` LIMIT ` + strconv.FormatInt(flowQuery.PageSize, 10) + ` OFFSET ` + strconv.FormatInt(offset, 10) + `;`
 
-	allSQL := sqlGetFlowPage + sqlWhere + sqlOrderBy + sqlPage
+	sql := sqlGetFlowPage + sqlWhere + sqlOrderBy + sqlPage
 
-	rows, err := db.Query(allSQL)
+	rows, err := db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]interface{}, 0)
@@ -127,29 +124,29 @@ func GetFlowsPage(flowQuery types.FlowQuery) *types.Page {
 }
 
 func getWhereSql(flowQuery types.FlowQuery) string {
-	var allSQL string
+	var sql string
 	if 0 != flowQuery.Id {
-		allSQL += ` AND id = ` + strconv.FormatInt(flowQuery.Id, 10)
+		sql += ` AND id = ` + strconv.FormatInt(flowQuery.Id, 10)
 	}
 	if 0 != len(flowQuery.StartDay) {
-		allSQL += ` AND day >= '` + flowQuery.StartDay + `'`
+		sql += ` AND day >= '` + flowQuery.StartDay + `'`
 	}
 	if 0 != len(flowQuery.EndDay) {
-		allSQL += ` AND day <= '` + flowQuery.EndDay + `'`
+		sql += ` AND day <= '` + flowQuery.EndDay + `'`
 	}
 	if 0 != len(flowQuery.Type) {
-		allSQL += ` AND type = '` + flowQuery.Type + `'`
+		sql += ` AND type = '` + flowQuery.Type + `'`
 	}
 	if 0 != len(flowQuery.PayType) {
-		allSQL += ` AND pay_type = '` + flowQuery.PayType + `'`
+		sql += ` AND pay_type = '` + flowQuery.PayType + `'`
 	}
 	if 0 != len(flowQuery.Name) {
-		allSQL += ` AND name LIKE '%'||'` + flowQuery.Name + `'||'%'`
+		sql += ` AND name LIKE '%'||'` + flowQuery.Name + `'||'%'`
 	}
 	if 0 != len(flowQuery.Description) {
-		allSQL += ` AND description LIKE '%'||'` + flowQuery.Description + `'||'%'`
+		sql += ` AND description LIKE '%'||'` + flowQuery.Description + `'||'%'`
 	}
-	return allSQL
+	return sql
 }
 
 func GetAll(bookKey string) []types.Flow {
