@@ -302,18 +302,14 @@ const doQuery = () => {
 };
 
 // 金额排序
-const sortFlag = ref<string|undefined>(undefined);
-const moneySortFunc = () => {
-  console.log(1111)
-  if (!sortFlag.value) {
+const moneySortFunc = (obj: any) => {
+  console.log(obj)
+  if (obj.order === 'ascending') {
     flowQuery.moneySort = 'ASC';
-    sortFlag.value = 'ascending';
-  } else if (sortFlag.value === 'ascending') {
+  } else if (obj.order === 'descending') {
     flowQuery.moneySort = 'DESC';
-    sortFlag.value = 'descending';
-  } else if (sortFlag.value === 'descending') {
+  } else {
     flowQuery.moneySort = '';
-    sortFlag.value = undefined;
   }
   doQuery();
 }
