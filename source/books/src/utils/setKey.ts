@@ -28,9 +28,10 @@ export async function openSet() {
         // 1、输入钥匙 或 点击创建
         confirmButtonText: '打开',
         cancelButtonText: '创建',
-        roundButton: true,
-        // inputPattern: /^[a-zA-Z0-9]{11}$/,
-        // inputErrorMessage: '请输入账本创建时，系统自动生成的11位字符钥匙。'
+        roundButton: true, // 圆角按钮
+        closeOnPressEscape: false, // 不可按ESC关闭
+        closeOnClickModal: false, // 不可点击浮层关闭
+        draggable: true, // 可拖拽
     }).then(({ value }) => {
         // 2.1、输入钥匙并点击确定，根据钥匙获取账本信息，判断钥匙是否有效
         getBook(value.trim())
