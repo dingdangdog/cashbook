@@ -4,6 +4,12 @@ export interface Book {
   bookKey: string;
   createDate: string;
 }
+
+export class BookQuery {
+  id?: number;
+  bookName?: string;
+  createDate?: string;
+}
 /**
 * 创建流水的传输实体
 */

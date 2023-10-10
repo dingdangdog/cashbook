@@ -1,12 +1,23 @@
 <template>
   <el-row class="queryRow">
+    <h4 class="queryParam">支付方式统计</h4>
     <div class="queryParam">
-      <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="开始时间" />
+      <el-date-picker
+        v-model="queryRef.startDay"
+        type="date"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        placeholder="开始时间"
+      />
     </div>
     <div class="queryParam pc-button">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
+      <el-date-picker
+        v-model="queryRef.endDay"
+        type="date"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        placeholder="结束时间"
+      />
     </div>
     <div class="queryParam pc-button">
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
@@ -15,111 +26,160 @@
 
   <el-row class="mini-buttons">
     <div class="queryParam">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
+      <el-date-picker
+        v-model="queryRef.endDay"
+        type="date"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        placeholder="结束时间"
+      />
     </div>
     <div class="queryParam">
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="pieDiv">
-  </div>
+  <div id="payTypeDiv"></div>
 </template>
 
 <script setup lang="ts">
-import type { TypePieChartQuery } from '@/types/model/analysis';
-import { Search } from '@element-plus/icons-vue';
-import * as echarts from 'echarts';
-import { ElMessage } from 'element-plus';
-import { onMounted, ref } from 'vue';
-import { payTypeBar } from '../api/api.analysis';
-import { flowQuery, chartDialog, resetFlowQuery } from '../utils/store';
+import type { TypePieChartQuery } from '@/types/model/analysis'
+import { Search } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
+import { payTypeBar } from '../api/api.analysis'
+import { flowQuery, chartDialog, resetFlowQuery } from '../utils/store'
+import { isDark } from '@/utils/common'
 
-const query: TypePieChartQuery = {
-}
-const queryRef = ref(query);
+const query: TypePieChartQuery = {}
+const queryRef = ref(query)
 
-const dataList: any[] = [];
-const xAxisList: any[] = [];
-const colors: any[] = [];
+const dataList: any[] = []
 
 const optionRef = ref({
-  color: colors,
   tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
+    trigger: 'item'
+  },
+  legend: {
+    top: '5%',
+    left: '0',
+    orient: 'vertical',
+    textStyle: {
+      color: '#fff'
     }
   },
-
   toolbox: {
     feature: {
       saveAsImage: {}
     }
   },
-  xAxis: {
-    type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  },
-  yAxis: {
-    type: 'value'
-  },
   series: [
     {
-      data: [120, 200, 150, 80, 70, 110, 130],
-      type: 'bar'
+      name: '支付类型',
+      type: 'pie',
+      radius: ['60%', '80%'],
+      // center: ['10%', '30%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      // grid: {
+      //   left: '30',
+      //   top: '20',
+      //   right: '30',
+      //   buttom: '20'
+      // },
+      label: {
+        show: true,
+        position: 'center',
+        formatter(param: any) {
+          // correct the percentage
+          return param.name + ' (' + param.percent + '%)'
+        }
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: '40',
+          fontWeight: 'bold'
+        }
+      },
+      labelLine: {
+        show: false
+      },
+      data: dataList
     }
   ]
-});
+  // xAxis: {
+  //   type: 'category',
+  //   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  // },
+  // yAxis: {
+  //   type: 'value'
+  // },
+  // series: [
+  //   {
+  //     data: [120, 200, 150, 80, 70, 110, 130],
+  //     type: 'bar'
+  //   }
+  // ]
+})
 
-var pieDiv: any;
-var pieChart: echarts.ECharts;
+var payTypeDiv: any
+var payTypeChart: echarts.ECharts
 
 const doQuery = (query: TypePieChartQuery) => {
-  flowQuery.startDay = queryRef.value.startDay;
-  flowQuery.endDay = queryRef.value.endDay;
-  payTypeBar(query).then(res => {
+  flowQuery.startDay = queryRef.value.startDay
+  flowQuery.endDay = queryRef.value.endDay
+  payTypeBar(query).then((res) => {
     if (res) {
       if (res.length === 0) {
-        ElMessage.error("未查询到数据！");
-        return;
+        ElMessage.error('未查询到数据！')
+        return
       }
-      dataList.length = 0;
+      dataList.length = 0
       res.forEach((data) => {
-        xAxisList.push(data.type);
-        dataList.push(Number(data.typeSum).toFixed(2));
-        colors.push(getRandomColor());
+        dataList.push({
+          value: Number(data.typeSum).toFixed(2),
+          name: data.type
+        })
       })
-      optionRef.value.series[0].data = dataList;
-      optionRef.value.xAxis.data = xAxisList;
+      optionRef.value.series[0].data = dataList
+      optionRef.value.legend.textStyle.color = isDark.value.valueOf() ? '#fff' : '#000'
 
-      pieDiv = document.getElementById('pieDiv');
-      pieChart = echarts.init(pieDiv);
-      pieChart.setOption(optionRef.value);
-      pieChart.on('click', function (param) {
-        resetFlowQuery();
-        flowQuery.startDay = queryRef.value.startDay;
-        flowQuery.endDay = queryRef.value.endDay;
-        flowQuery.payType = param.name;
-        chartDialog.chartDiaLogShow = false;
-      });
+      if (document.body.clientWidth <= 480) {
+        optionRef.value.series[0].radius = ['30%', '50%']
+      }
+
+      payTypeDiv = document.getElementById('payTypeDiv')
+      payTypeChart = echarts.init(payTypeDiv)
+      payTypeChart.setOption(optionRef.value)
+      payTypeChart.on('click', function (param) {
+        resetFlowQuery()
+        flowQuery.startDay = queryRef.value.startDay
+        flowQuery.endDay = queryRef.value.endDay
+        flowQuery.type = param.name
+        chartDialog.chartDiaLogShow = false
+      })
     }
   })
 }
 
 const getRandomColor = () => {
-  var letters = '6789ABCDEF';
-  var color = '#';
+  var letters = '6789ABCDEF'
+  var color = '#'
   for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 10)];
+    color += letters[Math.floor(Math.random() * 10)]
   }
-  return color;
+  return color
 }
 
 onMounted(() => {
-  queryRef.value.startDay = flowQuery.startDay;
-  queryRef.value.endDay = flowQuery.endDay;
-  doQuery(queryRef.value);
+  queryRef.value.startDay = flowQuery.startDay
+  queryRef.value.endDay = flowQuery.endDay
+  doQuery(queryRef.value)
 })
 </script>
 
@@ -129,13 +189,13 @@ onMounted(() => {
 }
 
 .queryParam {
-  margin: 8px 3px;
+  margin: auto 0.5rem;
 }
 
-#pieDiv {
+#payTypeDiv {
   width: 100%;
   height: 400px;
-  padding: 10px
+  padding: 10px;
 }
 
 @media screen and (min-width: 960px) {
@@ -153,11 +213,11 @@ onMounted(() => {
     margin: 8px 3px;
   }
 
-  #pieDiv {
+  #payTypeDiv {
     font-size: small;
   }
 
-  #pieDiv>div>canvas {
+  #payTypeDiv > div > canvas {
     margin: 20px;
   }
 }

@@ -17,6 +17,7 @@ func main() {
 	api := router.Group("/api")
 
 	api.GET("/book/:key", controller.GetBook)
+	api.GET("/allBook", controller.GetAllBook)
 	api.POST("/book", controller.CreateBook)
 	api.GET("/server", controller.GetServerInfo)
 

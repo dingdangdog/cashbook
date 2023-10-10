@@ -37,20 +37,20 @@
       <el-input v-model="flowQuery.description" placeholder="描述" />
     </div> -->
 
-    <div class="queryParam query-icon">
+    <!-- <div class="queryParam query-icon">
       <el-button :icon="Search" circle @click="doQuery()" />
-    </div>
+    </div> -->
 
     <div class="queryParam pc-button">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
 
   </el-row>
-
+  <hr/>
   <!-- 表格主体数据列表 -->
   <div class="el-table-div">
     <el-table v-loading="loading" :data="flowPageRef.pageData" :default-sort="{prop:'money', order:'null'}"
-     @sort-change="moneySortFunc" stripe row-key="row" height="65vh">
+     @sort-change="moneySortFunc" stripe row-key="row" max-height="calc(100vh - 20rem)">
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if=false />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="100"/>
@@ -68,6 +68,7 @@
     </el-table>
   </div>
 
+  <hr/>
   <!-- 表格分页插件 -->
   <div class="pageDiv">
     <span class="pageSpan">
@@ -515,7 +516,7 @@ watch(flowQuery, () => {
 
 <style scoped>
 .queryRow .queryParam {
-  margin: 8px 3px;
+  margin: 0.5rem 0.5rem;
   display: flex; /* 设置body为flex布局 */
   justify-content: center; /* 横向居中 */
   align-items: center; /* 纵向居中 */

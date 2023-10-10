@@ -15,9 +15,9 @@
       <el-input v-model="flowQuery.description" placeholder="描述" />
     </div> -->
 
-    <div class="queryParam query-icon">
+    <!-- <div class="queryParam query-icon">
       <el-button :icon="Search" circle @click="doQuery()" />
-    </div>
+    </div> -->
 
     <div class="queryParam pc-button">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
@@ -25,9 +25,10 @@
 
   </el-row>
 
+  <hr/>
   <!-- 表格主体数据列表 -->
   <div class="el-table-div">
-    <el-table v-loading="loading" :data="distPageRef.pageData" stripe row-key="row" height="45vh">
+    <el-table v-loading="loading" :data="distPageRef.pageData" stripe row-key="row" max-height="calc(100vh - 20rem)">
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if=false />
       <el-table-column prop="type" label="字典类型" :formatter="getDistTypeName" min-width="100" />
@@ -43,6 +44,7 @@
     </el-table>
   </div>
 
+  <hr/>
   <!-- 表格分页插件 -->
   <div class="pageDiv">
     <span class="pageSpan">
@@ -100,7 +102,7 @@
 // 第三方库引入
 import { ref, onMounted, reactive, watch } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { Search, Delete, Edit } from '@element-plus/icons-vue';
+import { Delete, Edit } from '@element-plus/icons-vue';
 import type { FormInstance, FormRules } from 'element-plus'
 
 // 私有引入
@@ -144,7 +146,7 @@ const dist: Dist = {
 
 const distQuery: DistQuery = {
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 20,
   id: undefined,
   type: undefined,
   distKey: undefined,

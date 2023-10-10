@@ -124,3 +124,26 @@ func exec(sql string, tx *sql.Tx, bookKey string, oldKey string) int64 {
 
 	return 1
 }
+
+func GetAllBook() []types.Book {
+	sqlGetBook := `SELECT id, book_name, create_date FROM books ;`
+
+	rows, err := db.Query(sqlGetBook)
+	util.CheckErr(err)
+
+	results := make([]types.Book, 0)
+	//var book types.Book
+	if rows != nil {
+		for rows.Next() {
+			var book types.Book
+			err = rows.Scan(&book.Id, &book.BookName, &book.CreateDate)
+			util.CheckErr(err)
+			results = append(results, book)
+			//break
+		}
+		err = rows.Close()
+		util.CheckErr(err)
+	}
+
+	return results
+}

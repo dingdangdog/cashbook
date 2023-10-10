@@ -1,52 +1,26 @@
 <template>
-  <el-row class="queryRow">
-    <div class="queryParam">
-      <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="开始时间" />
-    </div>
-    <div class="queryParam pc-button">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
-    </div>
-    <div class="queryParam pc-button">
-      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
-    </div>
-  </el-row>
-
-  <el-row class="mini-buttons">
-    <div class="queryParam">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
-    </div>
-    <div class="queryParam">
-      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
-    </div>
-  </el-row>
-  <div id="lineDiv">
-  </div>
+  <h4>每日流水统计</h4>
+  <div id="lineDiv"></div>
 </template>
 
 <script setup lang="ts">
-import type { DailyLineChartQuery } from '@/types/model/analysis';
-import { dateFormater } from '@/utils/common';
-import { Search } from '@element-plus/icons-vue';
-import * as echarts from 'echarts';
-import { ElMessage } from 'element-plus';
-import { onMounted, ref } from 'vue';
-import { dailyLine } from '../api/api.analysis'
-import { flowQuery, resetFlowQuery } from '../utils/store';
+import type { DailyLineChartQuery } from '@/types/model/analysis'
+import { dateFormater } from '@/utils/common'
+import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
+import { dailyLine } from '@/api/api.analysis'
+import { flowQuery, resetFlowQuery } from '@/utils/store'
 
-const query: DailyLineChartQuery = {
-}
-const queryRef = ref(query);
+const query: DailyLineChartQuery = {}
+const queryRef = ref(query)
 
 // 横轴数据
-const xAxisList: string[] = [];
+const xAxisList: string[] = []
 // 纵轴数据
-const dataList: string[] = [];
+const dataList: string[] = []
 
 const optionRef = ref({
-
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -75,12 +49,12 @@ const optionRef = ref({
   xAxis: {
     name: '日期',
     type: 'category',
-    data: xAxisList,
+    data: xAxisList
   },
   yAxis: {
     name: '金额(元)',
     show: true,
-    type: 'value',
+    type: 'value'
   },
   series: [
     {
@@ -96,35 +70,35 @@ const optionRef = ref({
       data: dataList
     }
   ]
-});
+})
 
-var lineDiv: any;
-var lineChart: echarts.ECharts;
+var lineDiv: any
+var lineChart: echarts.ECharts
 
 const doQuery = (query: DailyLineChartQuery) => {
-  resetFlowQuery();
-  flowQuery.startDay = queryRef.value.startDay;
-  flowQuery.endDay = queryRef.value.endDay;
-  dailyLine(query).then(res => {
+  resetFlowQuery()
+  flowQuery.startDay = queryRef.value.startDay
+  flowQuery.endDay = queryRef.value.endDay
+  dailyLine(query).then((res) => {
     if (res) {
       if (res.length === 0) {
-        ElMessage.error("未查询到数据！");
-        return;
+        ElMessage.error('未查询到数据！')
+        return
       }
-      xAxisList.length = 0;
-      dataList.length = 0;
+      xAxisList.length = 0
+      dataList.length = 0
       res.forEach((data) => {
-        xAxisList.push(dateFormater('YYYY-MM-dd', data.day));
-        dataList.push(Number(data.daySum).toFixed(2));
+        xAxisList.push(dateFormater('YYYY-MM-dd', data.day))
+        dataList.push(Number(data.daySum).toFixed(2))
       })
-      optionRef.value.xAxis.data = xAxisList;
-      optionRef.value.series[0].data = dataList;
-      optionRef.value.dataZoom[0].start = zoomChange(xAxisList.length);
-      optionRef.value.dataZoom[1].start = zoomChange(xAxisList.length);
+      optionRef.value.xAxis.data = xAxisList
+      optionRef.value.series[0].data = dataList
+      optionRef.value.dataZoom[0].start = zoomChange(xAxisList.length)
+      optionRef.value.dataZoom[1].start = zoomChange(xAxisList.length)
 
-      lineDiv = document.getElementById('lineDiv');
-      lineChart = echarts.init(lineDiv);
-      lineChart.setOption(optionRef.value);
+      lineDiv = document.getElementById('lineDiv')
+      lineChart = echarts.init(lineDiv)
+      lineChart.setOption(optionRef.value)
       // lineChart.on('click', function (){
       //   flowQuery.startDay = queryRef.value.startDay;
       //   flowQuery.endDay = queryRef.value.endDay;
@@ -135,13 +109,13 @@ const doQuery = (query: DailyLineChartQuery) => {
 
 // 缩放比例动态计算，保证美观
 const zoomChange = (total: number): number => {
-  return (Math.ceil(total / 30) - 1) * 10;
+  return (Math.ceil(total / 30) - 1) * 10
 }
 
 onMounted(() => {
-  queryRef.value.startDay = flowQuery.startDay;
-  queryRef.value.endDay = flowQuery.endDay;
-  doQuery(queryRef.value);
+  queryRef.value.startDay = flowQuery.startDay
+  queryRef.value.endDay = flowQuery.endDay
+  doQuery(queryRef.value)
 })
 </script>
 
@@ -151,9 +125,8 @@ onMounted(() => {
 }
 
 .queryParam {
-  margin: 8px 3px;
+  margin: auto 0.5rem;
 }
-
 
 #lineDiv {
   width: 100%;
@@ -172,7 +145,7 @@ onMounted(() => {
     display: none;
   }
 
-  .mini-buttons{
+  .mini-buttons {
     margin: 8px 3px;
   }
 

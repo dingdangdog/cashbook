@@ -1,12 +1,23 @@
 <template>
   <el-row class="queryRow">
+    <h4 class="queryParam">消费类型统计</h4>
     <div class="queryParam">
-      <el-date-picker v-model="queryRef.startDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="开始时间" />
+      <el-date-picker
+        v-model="queryRef.startDay"
+        type="date"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        placeholder="开始时间"
+      />
     </div>
     <div class="queryParam pc-button">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
+      <el-date-picker
+        v-model="queryRef.endDay"
+        type="date"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        placeholder="结束时间"
+      />
     </div>
     <div class="queryParam pc-button">
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
@@ -15,31 +26,35 @@
 
   <el-row class="mini-buttons">
     <div class="queryParam">
-      <el-date-picker v-model="queryRef.endDay" type="date" format="YYYY/MM/DD" value-format="YYYY-MM-DD"
-        placeholder="结束时间" />
+      <el-date-picker
+        v-model="queryRef.endDay"
+        type="date"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        placeholder="结束时间"
+      />
     </div>
     <div class="queryParam">
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="pieDiv">
-  </div>
+  <div id="typePieDiv"></div>
 </template>
 
 <script setup lang="ts">
-import type { TypePieChartQuery } from '@/types/model/analysis';
-import { Search } from '@element-plus/icons-vue';
-import * as echarts from 'echarts';
-import { ElMessage } from 'element-plus';
-import { onMounted, ref } from 'vue';
-import { typePie } from '../api/api.analysis';
-import { flowQuery, chartDialog, isDark, resetFlowQuery } from '../utils/store';
+import type { TypePieChartQuery } from '@/types/model/analysis'
+import { Search } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
+import { typePie } from '@/api/api.analysis'
+import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
+import { isDark } from '@/utils/common'
 
-const query: TypePieChartQuery = {
-}
-const queryRef = ref(query);
+const query: TypePieChartQuery = {}
+const queryRef = ref(query)
 
-const dataList: any[] = [];
+const dataList: any[] = []
 
 const optionRef = ref({
   tooltip: {
@@ -81,7 +96,7 @@ const optionRef = ref({
         position: 'center',
         formatter(param: any) {
           // correct the percentage
-          return param.name + ' (' + param.percent + '%)';
+          return param.name + ' (' + param.percent + '%)'
         }
       },
       emphasis: {
@@ -97,54 +112,52 @@ const optionRef = ref({
       data: dataList
     }
   ]
-});
+})
 
-var pieDiv: any;
-var pieChart: echarts.ECharts;
+var typePieDiv: any
+var typePieChart: echarts.ECharts
 
 const doQuery = (query: TypePieChartQuery) => {
-  flowQuery.startDay = queryRef.value.startDay;
-  flowQuery.endDay = queryRef.value.endDay;
-  typePie(query).then(res => {
+  flowQuery.startDay = queryRef.value.startDay
+  flowQuery.endDay = queryRef.value.endDay
+  typePie(query).then((res) => {
     if (res) {
       if (res.length === 0) {
-        ElMessage.error("未查询到数据！");
-        return;
+        ElMessage.error('未查询到数据！')
+        return
       }
-      dataList.length = 0;
+      dataList.length = 0
       res.forEach((data) => {
         dataList.push({
           value: Number(data.typeSum).toFixed(2),
-          name: data.type,
-        });
+          name: data.type
+        })
       })
-      optionRef.value.series[0].data = dataList;
-      optionRef.value.legend.textStyle.color = isDark.value.valueOf() ? '#fff' : '#000';
+      optionRef.value.series[0].data = dataList
+      optionRef.value.legend.textStyle.color = isDark.value.valueOf() ? '#fff' : '#000'
 
       if (document.body.clientWidth <= 480) {
-        optionRef.value.series[0].radius = ['30%', '50%'];
+        optionRef.value.series[0].radius = ['30%', '50%']
       }
 
-
-      pieDiv = document.getElementById('pieDiv');
-      pieChart = echarts.init(pieDiv);
-      pieChart.setOption(optionRef.value);
-      pieChart.on('click', function (param) {
-        resetFlowQuery();
-        flowQuery.startDay = queryRef.value.startDay;
-        flowQuery.endDay = queryRef.value.endDay;
-        flowQuery.type = param.name;
-        chartDialog.chartDiaLogShow = false;
-      });
+      typePieDiv = document.getElementById('typePieDiv')
+      typePieChart = echarts.init(typePieDiv)
+      typePieChart.setOption(optionRef.value)
+      typePieChart.on('click', function (param) {
+        resetFlowQuery()
+        flowQuery.startDay = queryRef.value.startDay
+        flowQuery.endDay = queryRef.value.endDay
+        flowQuery.type = param.name
+        chartDialog.chartDiaLogShow = false
+      })
     }
   })
 }
 
-
 onMounted(() => {
-  queryRef.value.startDay = flowQuery.startDay;
-  queryRef.value.endDay = flowQuery.endDay;
-  doQuery(queryRef.value);
+  queryRef.value.startDay = flowQuery.startDay
+  queryRef.value.endDay = flowQuery.endDay
+  doQuery(queryRef.value)
 })
 </script>
 
@@ -154,13 +167,13 @@ onMounted(() => {
 }
 
 .queryParam {
-  margin: 8px 3px;
+  margin: auto 0.5rem;
 }
 
-#pieDiv {
+#typePieDiv {
   width: 100%;
   height: 400px;
-  padding: 10px
+  padding: 10px;
 }
 
 @media screen and (min-width: 960px) {
@@ -178,11 +191,11 @@ onMounted(() => {
     margin: 8px 3px;
   }
 
-  #pieDiv {
+  #typePieDiv {
     font-size: small;
   }
 
-  #pieDiv>div>canvas {
+  #typePieDiv > div > canvas {
     margin: 20px;
   }
 }
