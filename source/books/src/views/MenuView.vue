@@ -1,6 +1,5 @@
 <template>
   <el-menu default-active="/" :collapse="isCollapse" @select="selectMenu">
-    
     <el-menu-item index="/">
       <el-icon><Calendar /></el-icon>
       <template #title>消费日历</template>
@@ -67,7 +66,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, type Router } from 'vue-router'
 import {
   Calendar,
   Expand,
@@ -83,12 +82,12 @@ import {
   Setting
 } from '@element-plus/icons-vue'
 import { useToggle } from '@vueuse/shared'
-import { isDark } from '../utils/common'
+import { isDark } from '@/utils/common'
 
 // 设置主题色
 const themeChange = useToggle(isDark)
 
-const router = new useRouter()
+const router: Router = useRouter()
 // 菜单缩放
 const isCollapse = ref(false)
 
@@ -127,7 +126,7 @@ const selectMenu = (key: string, keyPath: string[]) => {
   bottom: 1rem;
   width: auto;
 }
-#menu-bottom li{
+#menu-bottom li {
   padding-right: 3rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <el-row class="queryRow">
-    <h4 class="queryParam">支付方式统计</h4>
+    <h4 class="queryParam">消费类型统计</h4>
     <div class="queryParam">
       <el-date-picker
         v-model="queryRef.startDay"
@@ -38,18 +38,18 @@
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="payTypeDiv"></div>
+  <div id="typePieDiv"></div>
 </template>
 
 <script setup lang="ts">
-import type { TypePieChartQuery } from '@/types/model/analysis'
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import { payTypeBar } from '../api/api.analysis'
-import { flowQuery, chartDialog, resetFlowQuery } from '../utils/store'
+import { typePie } from '@/api/api.analysis'
+import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
+import type { TypePieChartQuery } from '@/types/model/analysis'
 
 const query: TypePieChartQuery = {}
 const queryRef = ref(query)
@@ -75,7 +75,7 @@ const optionRef = ref({
   },
   series: [
     {
-      name: '支付类型',
+      name: '消费类型',
       type: 'pie',
       radius: ['60%', '80%'],
       // center: ['10%', '30%'],
@@ -112,28 +112,15 @@ const optionRef = ref({
       data: dataList
     }
   ]
-  // xAxis: {
-  //   type: 'category',
-  //   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  // },
-  // yAxis: {
-  //   type: 'value'
-  // },
-  // series: [
-  //   {
-  //     data: [120, 200, 150, 80, 70, 110, 130],
-  //     type: 'bar'
-  //   }
-  // ]
 })
 
-var payTypeDiv: any
-var payTypeChart: echarts.ECharts
+var typePieDiv: any
+var typePieChart: echarts.ECharts
 
 const doQuery = (query: TypePieChartQuery) => {
   flowQuery.startDay = queryRef.value.startDay
   flowQuery.endDay = queryRef.value.endDay
-  payTypeBar(query).then((res) => {
+  typePie(query).then((res) => {
     if (res) {
       if (res.length === 0) {
         ElMessage.error('未查询到数据！')
@@ -153,10 +140,10 @@ const doQuery = (query: TypePieChartQuery) => {
         optionRef.value.series[0].radius = ['30%', '50%']
       }
 
-      payTypeDiv = document.getElementById('payTypeDiv')
-      payTypeChart = echarts.init(payTypeDiv)
-      payTypeChart.setOption(optionRef.value)
-      payTypeChart.on('click', function (param) {
+      typePieDiv = document.getElementById('typePieDiv')
+      typePieChart = echarts.init(typePieDiv)
+      typePieChart.setOption(optionRef.value)
+      typePieChart.on('click', function (param) {
         resetFlowQuery()
         flowQuery.startDay = queryRef.value.startDay
         flowQuery.endDay = queryRef.value.endDay
@@ -165,15 +152,6 @@ const doQuery = (query: TypePieChartQuery) => {
       })
     }
   })
-}
-
-const getRandomColor = () => {
-  var letters = '6789ABCDEF'
-  var color = '#'
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 10)]
-  }
-  return color
 }
 
 onMounted(() => {
@@ -192,7 +170,7 @@ onMounted(() => {
   margin: auto 0.5rem;
 }
 
-#payTypeDiv {
+#typePieDiv {
   width: 100%;
   height: 400px;
   padding: 10px;
@@ -213,11 +191,11 @@ onMounted(() => {
     margin: 8px 3px;
   }
 
-  #payTypeDiv {
+  #typePieDiv {
     font-size: small;
   }
 
-  #payTypeDiv > div > canvas {
+  #typePieDiv > div > canvas {
     margin: 20px;
   }
 }

@@ -110,18 +110,19 @@
 <script setup lang="ts">
 import { Tools } from '@element-plus/icons-vue'
 import { ref, reactive } from 'vue'
-import { clearUser } from '@/utils/setKey'
-import type { Book } from '@/types/model/book'
-import type { Plan } from '@/types/model/plan'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
+
 import { changeKey } from '@/api/api.book'
 import { setPlans, getPlan } from '@/api/api.plan'
 import { upload, download } from '@/api/api.online'
-import { dateFormater } from '@/utils/common'
-import type { OnlineSync } from '@/types/model/online'
-
 import { getServerInfo } from '@/api/api.server'
+
+import { dateFormater } from '@/utils/common'
+import { clearUser } from '@/utils/setKey'
+import type { OnlineSync } from '@/types/model/online'
+import type { Book } from '@/types/model/book'
+import type { Plan } from '@/types/model/plan'
 
 // 服务器信息封装
 const serverInfo = ref({
@@ -546,7 +547,6 @@ const toDownload = async (form: FormInstance | undefined) => {
   font-size: 1rem;
   padding: 0.5rem;
 }
-
 
 #iconTitle {
   padding: 0.5rem;

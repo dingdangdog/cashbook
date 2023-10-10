@@ -23,10 +23,10 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
 // 异步组件引用
-const DailyLineChart = defineAsyncComponent(() => import('@/components/DailyLineChart.vue'))
-const TypePieChart = defineAsyncComponent(() => import('@/components/TypePieChart.vue'))
-const PayTypeBar = defineAsyncComponent(() => import('@/components/PayTypeBar.vue'))
-const MonthBar = defineAsyncComponent(() => import('@/components/MonthBar.vue'))
+const DailyLineChart = defineAsyncComponent(() => import('@/components/charts/DailyLineChart.vue'))
+const TypePieChart = defineAsyncComponent(() => import('@/components/charts/TypePieChart.vue'))
+const PayTypeBar = defineAsyncComponent(() => import('@/components/charts/PayTypeBar.vue'))
+const MonthBar = defineAsyncComponent(() => import('@/components/charts/MonthBar.vue'))
 </script>
 
 <style scoped>

@@ -4,13 +4,13 @@
 </template>
 
 <script setup lang="ts">
-import type { DailyLineChartQuery } from '@/types/model/analysis'
-import { dateFormater } from '@/utils/common'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { dailyLine } from '@/api/api.analysis'
 import { flowQuery, resetFlowQuery } from '@/utils/store'
+import { dateFormater } from '@/utils/common'
+import type { DailyLineChartQuery } from '@/types/model/analysis'
 
 const query: DailyLineChartQuery = {}
 const queryRef = ref(query)

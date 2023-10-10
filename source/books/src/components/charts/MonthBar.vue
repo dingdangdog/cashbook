@@ -4,12 +4,12 @@
 </template>
 
 <script setup lang="ts">
-import type { TypePieChartQuery } from '@/types/model/analysis'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import { monthBar } from '../api/api.analysis'
-import { flowQuery, chartDialog, resetFlowQuery } from '../utils/store'
+import { monthBar } from '@/api/api.analysis'
+import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
+import type { TypePieChartQuery } from '@/types/model/analysis'
 
 const query: TypePieChartQuery = {}
 const queryRef = ref(query)

@@ -5,11 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent } from 'vue'
 // 异步组件引用
-const BookTable = defineAsyncComponent(
-  () => import("@/components/BookTable.vue")
-);
+const BookTable = defineAsyncComponent(() => import('@/components/table/BookTable.vue'))
 </script>
 
 <style>

@@ -13,7 +13,13 @@
   <hr />
   <!-- 表格主体数据列表 -->
   <div class="el-table-div">
-    <el-table v-loading="loading" :data="books" stripe row-key="row" max-height="calc(100vh - 20rem)">
+    <el-table
+      v-loading="loading"
+      :data="books"
+      stripe
+      row-key="row"
+      max-height="calc(100vh - 20rem)"
+    >
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if="false" />
       <el-table-column prop="bookName" label="账本名称" min-width="100" />
@@ -33,7 +39,7 @@
 import { ref, onMounted, watch } from 'vue'
 
 // 私有引入
-import { getAllBook } from '../api/api.book'
+import { getAllBook } from '@/api/api.book'
 import type { BookQuery, Book } from '@/types/model/book'
 
 // 初始化后自动执行

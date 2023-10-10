@@ -32,13 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import { flowQuery, chartDialog, resetFlowQuery } from '../utils/store'
-import { dailyLine } from '../api/api.analysis'
-import type { DailyLineChartQuery } from '@/types/model/analysis'
 import { ref } from 'vue'
-import { getPlan } from '../api/api.plan'
+import { dailyLine } from '@/api/api.analysis'
+import { getPlan } from '@/api/api.plan'
 import type { Plan } from '@/types/model/plan'
-import { dateFormater } from '../utils/common'
+import type { DailyLineChartQuery } from '@/types/model/analysis'
+import { dateFormater } from '@/utils/common'
+import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
 
 const allCount = ref<any>({})
 
