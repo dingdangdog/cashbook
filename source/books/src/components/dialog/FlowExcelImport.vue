@@ -52,8 +52,8 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
     sheetData[0].forEach((title: any) => {
       const th = document.createElement('th')
       th.innerText = title
-      th.classList.add('excel-th')
-      th.style.border = 'black 1px solid'
+      th.className = 'excel-th'
+      // th.style.border = '#FFF 1px solid'
       th.style.textAlign = 'left'
       head.appendChild(th)
     })
@@ -68,8 +68,8 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
       row.forEach((value: any) => {
         const td = document.createElement('td')
         td.innerText = value
-        td.classList.add('excel-td')
-        td.style.border = 'black 1px solid'
+        td.className = 'excel-td'
+        // td.style.border = 'black 1px solid'
         tr.appendChild(td)
       })
       excelTableBody.value.appendChild(tr)
@@ -81,24 +81,24 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
 }
 </script>
 
-<style scoped>
+<style>
 table {
   border-collapse: collapse;
-  border: black 1px solid;
+  /* border: 1px solid; */
   width: 100%;
 }
 
 .excel-th {
-  padding: 20px 0;
+  padding: 0.5rem;
   width: auto;
   border-collapse: collapse;
-  border: black 1px solid;
+  border: 1px solid;
 }
 
 .excel-td {
-  padding: 5px 10px;
+  padding: 0.5rem;
   width: 2rem;
   border-collapse: collapse;
-  border: black 1px solid;
+  border: 1px solid;
 }
 </style>
