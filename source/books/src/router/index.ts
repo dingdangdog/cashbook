@@ -4,6 +4,7 @@ import CalendarView from '@/views/CalendarView.vue'
 import FlowsView from '@/views/FlowsView.vue'
 import DictView from '@/views/DictView.vue'
 import BooksView from '@/views/BooksView.vue'
+import SystemView from '@/views/SystemView.vue'
 import AboutView from '@/views/AboutView.vue'
 
 const router = createRouter({
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/books',
       name: 'books',
       component: BooksView
+    },
+    {
+      path: '/system',
+      name: 'system',
+      component: SystemView
     },
     {
       path: '/about',

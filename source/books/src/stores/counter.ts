@@ -10,3 +10,13 @@ export const useCounterStore = defineStore('counter', () => {
 
   return { count, doubleCount, increment }
 })
+const setting = {
+  background: ''
+}
+export const getSystemBackground: any = () => {
+  return setting.background
+}
+
+export const setSystemBackground = (url: string) => {
+  setting.background = url
+}
