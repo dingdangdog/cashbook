@@ -30,7 +30,7 @@
 
 - [DISPLAY](./DISPLAY.md)
 
-## 贡献者
+## 贡献者（Contributor）
 
 - 感谢以下大佬的贡献！
 
