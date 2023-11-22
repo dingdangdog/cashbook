@@ -6,6 +6,12 @@ import DictView from '@/views/DictView.vue'
 import BooksView from '@/views/BooksView.vue'
 import SystemView from '@/views/SystemView.vue'
 import AboutView from '@/views/AboutView.vue'
+import LoginView from '@/views/LoginView.vue'
+
+const checkAuth = () => {
+  const isAuth = false
+  return !isAuth
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +20,11 @@ const router = createRouter({
       path: '/',
       name: 'calendar',
       component: CalendarView
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
     },
     {
       path: '/home',
@@ -50,5 +61,18 @@ const router = createRouter({
     }
   ]
 })
+
+// how make loginView under the router-view
+router.beforeEach((to, from, next) => {
+  console.log('to', to)
+  // console.log('checkAuth', checkAuth)
+  if (to.name !== 'login' && checkAuth()) {
+    // next({ name: 'login' })
+    // use another way to redirect
+    router.push({ name: 'login' })
+  }
+  else next()
+})
+
 
 export default router
