@@ -57,3 +57,8 @@ func ChangeKey(c *gin.Context) {
 		c.JSON(200, util.Success(data))
 	}
 }
+
+func GetAllBook(c *gin.Context) {
+	data := dao.GetAllBook()
+	c.JSON(200, util.Success(data))
+}

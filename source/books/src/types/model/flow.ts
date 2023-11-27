@@ -35,7 +35,7 @@ export interface UpdateFlowDto {
 
 export class FlowQuery {
     pageNum: number = 1;
-    pageSize: number = 10;
+    pageSize: number = 20;
     id?: number;
     startDay?: string;
     endDay?: string;

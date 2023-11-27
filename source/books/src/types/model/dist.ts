@@ -29,7 +29,7 @@ export interface UpdateDistDto {
 }
 export class DistQuery {
   pageNum: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 20;
   id?: number;
   type?: string;
   distKey?: string;
