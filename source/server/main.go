@@ -16,6 +16,8 @@ func main() {
 	router := gin.Default()
 	api := router.Group("/api")
 
+	api.POST("/login", controller.Login)
+
 	api.GET("/book/:key", controller.GetBook)
 	api.POST("/book", controller.CreateBook)
 	api.GET("/server", controller.GetServerInfo)
