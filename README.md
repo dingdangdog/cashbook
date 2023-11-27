@@ -32,7 +32,7 @@
 
 ## 贡献者（Contributor）
 
-- 感谢以下大佬的贡献！
+### 感谢以下大佬的代码
 
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
