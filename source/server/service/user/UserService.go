@@ -2,12 +2,11 @@ package user
 
 import (
 	"cashbook-server/types"
+	"cashbook-server/util"
 	"encoding/json"
 	"fmt"
-	"github.com/golang-jwt/jwt"
 	"os"
 	"strings"
-	"time"
 )
 
 // FileName 文件名称
@@ -37,17 +36,19 @@ func loadFile() []types.User {
 	return users
 }
 
-// JTW 密钥
-var jwtSecret = []byte("cash-flow-ddd")
-
-func Login() (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"name": "user.Name",
-		"id":   "user.Id",
-		"exp":  time.Now().Add(time.Hour * 24).Unix(),
-	})
-	tokenString, err := token.SignedString([]byte(jwtSecret))
-	return tokenString, err
+// Login 登录
+func Login(user types.User) types.LogInfo {
+	loginfo := types.LogInfo{}
+	users := FindUsers(user)
+	if len(users) == 1 {
+		token, _ := util.GenerateToken(users[0])
+		loginfo.Token = token
+		loginfo.Id = users[0].Id
+	} else {
+		// throw error
+		loginfo.Token = "error"
+	}
+	return loginfo
 }
 
 // GetAll 获取全部用户
@@ -133,6 +134,7 @@ func FindUsers(u types.User) []types.User {
 func getQuery(u types.User) types.UserQuery {
 	var uQuery types.UserQuery
 	uQuery.ID = u.Id > 0
+	uQuery.Name = len(u.Name) > 0
 	uQuery.UserName = len(u.UserName) > 0
 	uQuery.Password = len(u.Password) > 0
 	return uQuery
