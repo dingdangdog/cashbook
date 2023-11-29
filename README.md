@@ -32,7 +32,13 @@
 
 ## 贡献者（Contributor）
 
-- 感谢以下大佬的贡献！
+### 感谢以下大佬的代码
 
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
+### 感谢以下优秀的开发工具
+<div style="display:flex; align-item:left">
+<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/goland.svg' width='80px' height='80px'/></a> &nbsp;
+<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/get-icon/geticon/blob/master/icons/intellij-idea.svg' width='80px' height='80px'/></a> &nbsp;
+<a href='https://code.visualstudio.com/'><img src='https://github.com/get-icon/geticon/blob/master/icons/visual-studio-code.svg' width='60px' height='80px'/></a>
+</div>
