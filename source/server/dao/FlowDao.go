@@ -57,7 +57,7 @@ func DeleteFlow(id int64) {
 	//util.CheckErr(err)
 }
 
-func GetCountAndMoney(flowQuery types.FlowQuery) types.FlowCount {
+func GetCountAndMoney(flowQuery types.FlowParam) types.FlowCount {
 	sqlGetCountAndMoney := `
 		SELECT COUNT(*) AS 'totalCount', COALESCE(SUM(money),0) AS 'totalMoney' 
 		FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
@@ -79,7 +79,7 @@ func GetCountAndMoney(flowQuery types.FlowQuery) types.FlowCount {
 	return flowCount
 }
 
-func GetFlowsPage(flowQuery types.FlowQuery) *types.Page {
+func GetFlowsPage(flowQuery types.FlowParam) *types.Page {
 	sqlGetFlowPage := "SELECT id, book_key, day, type, money, pay_type, name, description FROM flows WHERE book_key = '" + flowQuery.BookKey + "'"
 
 	sqlWhere := getWhereSql(flowQuery)
@@ -126,7 +126,7 @@ func GetFlowsPage(flowQuery types.FlowQuery) *types.Page {
 	return page
 }
 
-func getWhereSql(flowQuery types.FlowQuery) string {
+func getWhereSql(flowQuery types.FlowParam) string {
 	var allSQL string
 	if 0 != flowQuery.Id {
 		allSQL += ` AND id = ` + strconv.FormatInt(flowQuery.Id, 10)

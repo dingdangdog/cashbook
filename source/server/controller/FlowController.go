@@ -69,7 +69,7 @@ func DeleteFlow(c *gin.Context) {
 
 // GetFlowsPage 分页获取流水数据
 func GetFlowsPage(c *gin.Context) {
-	var query types.FlowQuery
+	var query types.FlowParam
 	if err := c.BindQuery(&query); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{

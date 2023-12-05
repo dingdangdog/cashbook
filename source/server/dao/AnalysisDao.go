@@ -5,7 +5,7 @@ import (
 	"cashbook-server/util"
 )
 
-func GetDailyLine(flowQuery types.FlowQuery) []types.DailyLine {
+func GetDailyLine(flowQuery types.FlowParam) []types.DailyLine {
 	sqlGetFlowPage := `SELECT day, COALESCE(SUM(money),0) AS 'daySum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY day;`
@@ -29,7 +29,7 @@ func GetDailyLine(flowQuery types.FlowQuery) []types.DailyLine {
 	return results
 }
 
-func GetTypePie(flowQuery types.FlowQuery) []types.TypePie {
+func GetTypePie(flowQuery types.FlowParam) []types.TypePie {
 	sqlGetFlowPage := `SELECT type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY type;`
@@ -53,7 +53,7 @@ func GetTypePie(flowQuery types.FlowQuery) []types.TypePie {
 	return results
 }
 
-func GetPayTypeBar(flowQuery types.FlowQuery) []types.TypePie {
+func GetPayTypeBar(flowQuery types.FlowParam) []types.TypePie {
 	sqlGetFlowPage := `SELECT pay_type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
 	sqlWhere := getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY pay_type;`
