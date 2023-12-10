@@ -39,3 +39,12 @@ type FlowQuery struct {
 	Description bool
 	MoneySort   bool
 }
+
+type FlowCount struct {
+	TotalCount int64   `json:"totalCount"`
+	TotalMoney float64 `json:"totalMoney"`
+}
+
+type FlowsImport struct {
+	Flows []Flow `json:"flows"`
+}
