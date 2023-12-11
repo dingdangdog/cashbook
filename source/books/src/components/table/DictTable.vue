@@ -2,18 +2,18 @@
   <!-- 表格查询框与操作按钮 -->
   <el-row class="queryRow">
     <div class="queryParam">
-      <el-select v-model="distQueryRef.type" class="m-2" placeholder="字典类型" clearable>
+      <el-select v-model="dictQueryRef.type" class="m-2" placeholder="字典类型" clearable>
         <el-option
-          v-for="item in distTypeOptions"
-          :key="item.distKey"
-          :label="item.distValue"
-          :value="item.distKey"
+          v-for="item in dictTypeOptions"
+          :key="item.dictKey"
+          :label="item.dictValue"
+          :value="item.dictKey"
         />
       </el-select>
     </div>
 
     <div class="queryParam">
-      <el-input v-model="distQueryRef.distValue" placeholder="字典值" />
+      <el-input v-model="dictQueryRef.dictValue" placeholder="字典值" />
     </div>
 
     <!-- <div class="queryParam">
@@ -34,16 +34,16 @@
   <div class="el-table-div">
     <el-table
       v-loading="loading"
-      :data="distPageRef.pageData"
+      :data="dictPageRef.pageData"
       stripe
       row-key="row"
       max-height="calc(100vh - 20rem)"
     >
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if="false" />
-      <el-table-column prop="type" label="字典类型" :formatter="getDistTypeName" min-width="100" />
-      <el-table-column prop="distKey" label="字典Key" v-if="false" min-width="100" />
-      <el-table-column prop="distValue" label="字典值" min-width="100" />
+      <el-table-column prop="type" label="字典类型" :formatter="getDictTypeName" min-width="100" />
+      <el-table-column prop="dictKey" label="字典Key" v-if="false" min-width="100" />
+      <el-table-column prop="dictValue" label="字典值" min-width="100" />
       <el-table-column prop="sort" label="排序" min-width="60" />
       <el-table-column label="操作" width="120">
         <template v-slot="scop">
@@ -65,9 +65,9 @@
     <span class="pageSpan">
       <!-- {{ flowQuery }},{{ flowPageRef }} -->
       <el-pagination
-        :current-page="distQueryRef.pageNum"
-        :page-size="distQueryRef.pageSize"
-        :total="distPageRef.totalCount"
+        :current-page="dictQueryRef.pageNum"
+        :page-size="dictQueryRef.pageSize"
+        :total="dictPageRef.totalCount"
         :page-sizes="[10, 20, 50, 100]"
         @size-change="pageSizeChange"
         @current-change="pageNumChange"
@@ -81,34 +81,34 @@
   <!-- 弹出框表单：新增和修改通用 -->
   <el-dialog style="width: 30vw" v-model="dialogFormVisible" :title="dialgoFormTitle">
     <div class="el-dialog-main">
-      <el-form ref="dialgoFormRef" :model="distRef" :rules="rules">
+      <el-form ref="dialgoFormRef" :model="dictRef" :rules="rules">
         <el-form-item label="字典类型" :label-width="formLabelWidth" prop="type">
           <el-select
-            v-model="distRef.type"
+            v-model="dictRef.type"
             placeholder="选择"
             clearable
             :disabled="!(isCreate && isAbled)"
-            :change="distTypeChange()"
+            :change="dictTypeChange()"
           >
             <el-option
-              v-for="item in distTypeOptions"
-              :key="item.distKey"
-              :label="item.distValue"
-              :value="item.distKey"
+              v-for="item in dictTypeOptions"
+              :key="item.dictKey"
+              :label="item.dictValue"
+              :value="item.dictKey"
             />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="字典key" :label-width="formLabelWidth" prop="distKey" v-show="false">
-          <el-input v-model="distRef.distKey" :disabled="!(isCreate && isAbled)" />
+        <el-form-item label="字典key" :label-width="formLabelWidth" prop="dictKey" v-show="false">
+          <el-input v-model="dictRef.dictKey" :disabled="!(isCreate && isAbled)" />
         </el-form-item>
 
-        <el-form-item label="字典值" :label-width="formLabelWidth" prop="distValue">
-          <el-input v-model="distRef.distValue" :disabled="!(isCreate && isAbled)" />
+        <el-form-item label="字典值" :label-width="formLabelWidth" prop="dictValue">
+          <el-input v-model="dictRef.dictValue" :disabled="!(isCreate && isAbled)" />
         </el-form-item>
 
         <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input-number v-model="distRef.sort" :min="0" :disabled="!(isCreate && isAbled)" />
+          <el-input-number v-model="dictRef.sort" :min="0" :disabled="!(isCreate && isAbled)" />
         </el-form-item>
       </el-form>
     </div>
@@ -130,27 +130,27 @@ import { Delete, Edit } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 
 // 私有引入
-import { getDistByType, getDistPage, addDist, update, deleteDist } from '@/api/api.dist'
+import { getDictByType, getDictPage, addDict, update, deleteDict } from '@/api/api.dict'
 import { getFlowPage } from '@/api/api.flow'
 import type { Page } from '@/types/page'
-import type { Dist, DistQuery } from '@/types/model/dist'
+import type { Dict, DictQuery } from '@/types/model/dict'
 import type { FlowQuery } from '@/types/model/flow'
 
 // 初始化后自动执行
 onMounted(() => {
   doQuery()
-  getDistByType('distType').then((data) => {
-    distTypeOptions.value = data
+  getDictByType('dictType').then((data) => {
+    dictTypeOptions.value = data
   })
 })
 
 /*
  * 集中定义常量
  */
-const distTypeOptions = ref<Dist[]>([])
+const dictTypeOptions = ref<Dict[]>([])
 
 // 分页数据结果
-const distPage: Page<Dist> = {
+const dictPage: Page<Dict> = {
   pageNum: 1,
   pageSize: 0,
   totalPage: 1,
@@ -160,36 +160,36 @@ const distPage: Page<Dist> = {
 }
 
 // 初始化空对象，用于新增、修改的弹出框数据绑定
-const dist: Dist = {
+const dict: Dict = {
   id: undefined,
   type: undefined,
-  distKey: undefined,
-  distValue: undefined,
+  dictKey: undefined,
+  dictValue: undefined,
   sort: undefined
 }
 
-const distQuery: DistQuery = {
+const dictQuery: DictQuery = {
   pageNum: 1,
   pageSize: 20,
   id: undefined,
   type: undefined,
-  distKey: undefined,
-  distValue: undefined
+  dictKey: undefined,
+  dictValue: undefined
 }
 
-const distQueryRef = ref(distQuery)
+const dictQueryRef = ref(dictQuery)
 
 // 表单输入框校验规则
 const rules = ref<FormRules>({
   type: [{ required: true, message: '请选择字典类型！', trigger: 'blur' }],
-  distValue: [{ required: true, message: '请输入字典值！', trigger: 'blur' }]
+  dictValue: [{ required: true, message: '请输入字典值！', trigger: 'blur' }]
 })
 
-const getDistTypeName = (value: Dist) => {
+const getDictTypeName = (value: Dict) => {
   var label: string | undefined
-  distTypeOptions.value.forEach((distType) => {
-    if (distType.distKey == value.type) {
-      label = distType.distValue
+  dictTypeOptions.value.forEach((dictType) => {
+    if (dictType.dictKey == value.type) {
+      label = dictType.dictValue
       return
     }
   })
@@ -215,26 +215,26 @@ if (document.body.clientWidth <= 480) {
 // 表单实例
 const dialgoFormRef = ref<FormInstance>()
 // 分页数据绑定
-const distPageRef = ref(distPage)
+const dictPageRef = ref(dictPage)
 // 表单弹窗数据绑定
-const distRef = reactive(dist)
+const dictRef = reactive(dict)
 
 // 切换页码
 const pageNumChange = (pageNum: number) => {
-  distQueryRef.value.pageNum = pageNum
+  dictQueryRef.value.pageNum = pageNum
   doQuery()
 }
 
 // 切换分页容量
 const pageSizeChange = (pageSize: number) => {
-  distQueryRef.value.pageSize = pageSize
+  dictQueryRef.value.pageSize = pageSize
   doQuery()
 }
 
 // 执行分页数据查询
 const doQuery = () => {
-  getDistPage(distQueryRef.value).then((res) => {
-    distPageRef.value = res
+  getDictPage(dictQueryRef.value).then((res) => {
+    dictPageRef.value = res
     // console.log(JSON.stringify(flowPage) + "doQuery");
     loading.value = false
   })
@@ -268,22 +268,22 @@ const confirmForm = async (dialgoForm: FormInstance | undefined, closeDialog: bo
 // 重置表单数据
 const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
   if (!formEl) return
-  distRef.id = undefined
+  dictRef.id = undefined
   // flowRef.day = flowRef.day;
-  distRef.type = undefined
-  distRef.distKey = undefined
-  distRef.distValue = undefined
-  distRef.sort = undefined
+  dictRef.type = undefined
+  dictRef.dictKey = undefined
+  dictRef.dictValue = undefined
+  dictRef.sort = undefined
   dialogFormVisible.value = showDialog
 }
 
 // 创建
 const createOne = () => {
-  addDist({
-    type: distRef.type,
-    distKey: distRef.distValue,
-    distValue: distRef.distValue,
-    sort: distRef.sort
+  addDict({
+    type: dictRef.type,
+    dictKey: dictRef.dictValue,
+    dictValue: dictRef.dictValue,
+    sort: dictRef.sort
   })
     .then((res) => {
       if (res.id) {
@@ -292,8 +292,8 @@ const createOne = () => {
           type: 'success',
           message: '新增成功!'
         })
-        getDistByType('distType').then((data) => {
-          distTypeOptions.value = data
+        getDictByType('dictType').then((data) => {
+          dictTypeOptions.value = data
         })
       }
     })
@@ -307,11 +307,11 @@ const createOne = () => {
 
 // 更新
 const updateOne = () => {
-  update(distRef.id || -1, {
-    type: distRef.type,
-    distKey: distRef.distKey,
-    distValue: distRef.distValue,
-    sort: distRef.sort
+  update(dictRef.id || -1, {
+    type: dictRef.type,
+    dictKey: dictRef.dictKey,
+    dictValue: dictRef.dictValue,
+    sort: dictRef.sort
   })
     .then((res) => {
       // console.log(res);
@@ -321,8 +321,8 @@ const updateOne = () => {
           type: 'success',
           message: '修改成功!'
         })
-        getDistByType('distType').then((data) => {
-          distTypeOptions.value = data
+        getDictByType('dictType').then((data) => {
+          dictTypeOptions.value = data
         })
       }
     })
@@ -335,15 +335,15 @@ const updateOne = () => {
 }
 
 // 删除
-const deleteById = (row: Dist) => {
+const deleteById = (row: Dict) => {
   let query: FlowQuery = {
     pageNum: 1,
     pageSize: 1
   }
   if (row.type == 'expenseType') {
-    query.type = row.distKey
+    query.type = row.dictKey
   } else if (row.type == 'paymentType') {
-    query.payType = row.distKey
+    query.payType = row.dictKey
   }
   getFlowPage(query).then((res) => {
     if (res.totalCount > 0) {
@@ -358,15 +358,15 @@ const deleteById = (row: Dist) => {
         type: 'warning'
       })
         .then(() => {
-          deleteDist(row.id || 0)
+          deleteDict(row.id || 0)
             .then(() => {
               doQuery()
               ElMessage({
                 type: 'success',
                 message: '删除成功!'
               })
-              getDistByType('distType').then((data) => {
-                distTypeOptions.value = data
+              getDictByType('dictType').then((data) => {
+                dictTypeOptions.value = data
               })
             })
             .catch(() => {
@@ -395,34 +395,34 @@ const openCreateDialog = (title: string) => {
   dialogFormVisible.value = true
   isCreate.value = true
 
-  distRef.id = undefined
-  distRef.type = undefined
-  distRef.distKey = undefined
-  distRef.distValue = undefined
-  distRef.sort = undefined
+  dictRef.id = undefined
+  dictRef.type = undefined
+  dictRef.dictKey = undefined
+  dictRef.dictValue = undefined
+  dictRef.sort = undefined
 }
 // 打开修改弹窗
-const openUpdateDialog = (title: string, updateDist: Dist) => {
+const openUpdateDialog = (title: string, updateDict: Dict) => {
   dialgoFormTitle.value = title
   dialogFormVisible.value = true
   isCreate.value = false
 
-  distRef.id = updateDist.id
-  distRef.type = updateDist.type
-  distRef.distKey = updateDist.distKey
-  distRef.distValue = updateDist.distValue
-  distRef.sort = updateDist.sort
+  dictRef.id = updateDict.id
+  dictRef.type = updateDict.type
+  dictRef.dictKey = updateDict.dictKey
+  dictRef.dictValue = updateDict.dictValue
+  dictRef.sort = updateDict.sort
 }
 
-const distTypeChange = () => {
-  if (distRef.type == 'distType') {
+const dictTypeChange = () => {
+  if (dictRef.type == 'dictType') {
     isAbled.value = false
   } else {
     isAbled.value = true
   }
 }
 
-watch(distQueryRef.value, () => {
+watch(dictQueryRef.value, () => {
   doQuery()
 })
 </script>

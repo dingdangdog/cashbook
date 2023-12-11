@@ -38,9 +38,9 @@
       <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
         <el-option
           v-for="item in expenseTypeOptions"
-          :key="item.distKey"
-          :label="item.distValue"
-          :value="item.distKey"
+          :key="item.dictKey"
+          :label="item.dictValue"
+          :value="item.dictKey"
         />
       </el-select>
     </div>
@@ -49,9 +49,9 @@
       <el-select v-model="flowQuery.payType" class="m-2" placeholder="支付方式" clearable>
         <el-option
           v-for="item in paymentTypeOptions"
-          :key="item.distKey"
-          :label="item.distValue"
-          :value="item.distKey"
+          :key="item.dictKey"
+          :label="item.dictValue"
+          :value="item.dictKey"
         />
       </el-select>
     </div>
@@ -146,9 +146,9 @@
           <el-select v-model="flowRef.type" placeholder="选择" clearable>
             <el-option
               v-for="item in expenseTypeOptions"
-              :key="item.distKey"
-              :label="item.distValue"
-              :value="item.distKey"
+              :key="item.dictKey"
+              :label="item.dictValue"
+              :value="item.dictKey"
             />
           </el-select>
         </el-form-item>
@@ -161,9 +161,9 @@
           <el-select v-model="flowRef.payType" placeholder="选择" clearable>
             <el-option
               v-for="item in paymentTypeOptions"
-              :key="item.distKey"
-              :label="item.distValue"
-              :value="item.distKey"
+              :key="item.dictKey"
+              :label="item.dictValue"
+              :value="item.dictKey"
             />
           </el-select>
         </el-form-item>
@@ -233,13 +233,13 @@ import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'elemen
 
 // 私有引入
 import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows } from '@/api/api.flow'
-import { getDistByType } from '@/api/api.dist'
+import { getDictByType } from '@/api/api.dict'
 import { dateFormater, deviceAgent, timeFormatter } from '@/utils/common'
 import { exportJson } from '@/utils/fileUtils'
 import { flowQuery } from '@/utils/store'
 import type { Page } from '@/types/page'
 import type { Flow } from '@/types/model/flow'
-import type { Dist } from '@/types/model/dist'
+import type { Dict } from '@/types/model/dict'
 
 import { defineAsyncComponent } from 'vue'
 // 异步组件引用
@@ -248,10 +248,10 @@ const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/F
 // 初始化后自动执行
 onMounted(() => {
   doQuery()
-  getDistByType('expenseType').then((data) => {
+  getDictByType('expenseType').then((data) => {
     expenseTypeOptions.value = data
   })
-  getDistByType('paymentType').then((data) => {
+  getDictByType('paymentType').then((data) => {
     paymentTypeOptions.value = data
   })
 })
@@ -281,9 +281,9 @@ if (document.body.clientWidth <= 480) {
 /*
  * 集中定义常量
  */
-const expenseTypeOptions = ref<Dist[]>([])
+const expenseTypeOptions = ref<Dict[]>([])
 
-const paymentTypeOptions = ref<Dist[]>([])
+const paymentTypeOptions = ref<Dict[]>([])
 
 // 分页数据结果
 const flowPage: Page<Flow> = {

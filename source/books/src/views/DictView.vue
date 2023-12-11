@@ -1,17 +1,17 @@
 <template>
-  <div class="dist-container">
-    <DistTable />
+  <div class="dict-container">
+    <DictTable />
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
 // 异步组件引用
-const DistTable = defineAsyncComponent(() => import('@/components/table/DictTable.vue'))
+const DictTable = defineAsyncComponent(() => import('@/components/table/DictTable.vue'))
 </script>
 
 <style>
-.dist-container {
+.dict-container {
   height: calc(100% - 6.2rem);
   padding: 2rem;
   border-radius: 10px;
