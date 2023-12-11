@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"cashbook-server/dao"
+	"cashbook-server/service/flow"
+	"cashbook-server/service/plan"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -22,11 +23,11 @@ func AddFlow(c *gin.Context) {
 	}
 	data.BookKey = c.Request.Header.Get("bookKey")
 
-	id := dao.CreateFlow(data)
+	id := flow.CreateFlow(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
 
-	go dao.UpdatePlanUsed(data.BookKey)
+	go plan.UpdatePlanUsed(data.BookKey)
 }
 
 // UpdateFlow 更新流水
@@ -47,11 +48,11 @@ func UpdateFlow(c *gin.Context) {
 	num, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
 	data.Id = num
-	dao.UpdateFlow(data)
+	flow.UpdateFlow(data)
 
 	c.JSON(200, util.Success(data))
 
-	go dao.UpdatePlanUsed(data.BookKey)
+	go plan.UpdatePlanUsed(data.BookKey)
 }
 
 // DeleteFlow 删除流水
@@ -59,12 +60,12 @@ func DeleteFlow(c *gin.Context) {
 	id := c.Param("id")
 	num, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
-	dao.DeleteFlow(num)
+	flow.DeleteFlow(num)
 
 	c.JSON(200, util.Success("删除成功："+id))
 
 	bookKey := c.Request.Header.Get("bookKey")
-	go dao.UpdatePlanUsed(bookKey)
+	go plan.UpdatePlanUsed(bookKey)
 }
 
 // GetFlowsPage 分页获取流水数据
@@ -81,14 +82,14 @@ func GetFlowsPage(c *gin.Context) {
 
 	query.BookKey = c.Request.Header.Get("bookKey")
 
-	page := dao.GetFlowsPage(query)
+	page := flow.GetFlowsPage(query)
 
 	c.JSON(200, util.Success(page))
 }
 
 func GetAll(c *gin.Context) {
 	bookKey := c.Request.Header.Get("bookKey")
-	data := dao.GetAll(bookKey)
+	data := flow.GetAll(bookKey)
 
 	c.JSON(200, util.Success(data))
 }
@@ -120,7 +121,7 @@ func ImportFlows(c *gin.Context) {
 
 	bookKey := c.Request.Header.Get("bookKey")
 
-	nums := dao.ImportFlows(bookKey, flag, data.Flows)
+	nums := flow.ImportFlows(bookKey, flag, data.Flows)
 
 	if nums == 0 {
 		c.JSON(500, util.Error("导入失败，请重试", nil))
@@ -128,5 +129,5 @@ func ImportFlows(c *gin.Context) {
 	}
 	c.JSON(200, util.Success(nums))
 
-	go dao.UpdatePlanUsed(bookKey)
+	go plan.UpdatePlanUsed(bookKey)
 }

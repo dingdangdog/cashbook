@@ -3,6 +3,7 @@ package main
 import (
 	"cashbook-server/controller"
 	"cashbook-server/dao"
+	"cashbook-server/service/book"
 	"cashbook-server/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -18,21 +19,21 @@ func main() {
 
 	api.POST("/login", controller.Login)
 
-	api.GET("/book/:key", controller.GetBook)
+	api.GET("/jBook/:key", controller.GetBook)
 	api.GET("/allBook", controller.GetAllBook)
-	api.POST("/book", controller.CreateBook)
+	api.POST("/jBook", controller.CreateBook)
 	api.GET("/server", controller.GetServerInfo)
 
 	adminApi := api.Group("/admin")
 	adminApi.Use(openBook())
 	{
-		adminApi.POST("/book/changeKey", controller.ChangeKey)
+		adminApi.POST("/jBook/changeKey", controller.ChangeKey)
 		// 字典相关
-		adminApi.GET("/dist/:type", controller.GetDistList)
-		adminApi.GET("/dist", controller.GetDistPage)
-		adminApi.POST("/dist", controller.AddDist)
-		adminApi.PUT("/dist/:id", controller.UpdateDist)
-		adminApi.DELETE("/dist/:id", controller.DeleteDist)
+		adminApi.GET("/dict/:type", controller.GetDictList)
+		adminApi.GET("/dict", controller.GetDictPage)
+		adminApi.POST("/dict", controller.AddDict)
+		adminApi.PUT("/dict/:id", controller.UpdateDict)
+		adminApi.DELETE("/dict/:id", controller.DeleteDict)
 		// 分析图表相关
 		adminApi.POST("/analysis/dailyLine", controller.GetDailyLine)
 		adminApi.POST("/analysis/typePie", controller.GetTypePie)
@@ -69,7 +70,7 @@ func openBook() gin.HandlerFunc {
 			return
 		}
 
-		if dao.GetBook(bookKey).Id == 0 {
+		if book.GetBook(bookKey).Id == 0 {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success":      false,
 				"errorMessage": "账本不存在！",

@@ -1,6 +1,8 @@
 package dao
 
 import (
+	"cashbook-server/service/dict"
+	server2 "cashbook-server/service/server"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"database/sql"
@@ -56,18 +58,18 @@ func InitDb() {
 }
 
 func initDist() {
-	data := GetDistList("", "expenseType")
+	data := dict.GetDistList("", "expenseType")
 	if nil == data || len(data) == 0 {
 
 		fmt.Println("------ 开始字典数据初始化 ------")
 		sqlBytes, err := os.ReadFile(exePath + prefix + "/sql/dists.sql")
 		util.CheckErr(err)
-		dist := string(sqlBytes)
+		dict := string(sqlBytes)
 		// 过滤注释内容
 		//var re = regexp.MustCompile(`--.*$|/\*[\s\S]*?\*/`)
-		//dist = re.ReplaceAllString(dist, "")
+		//dict = re.ReplaceAllString(dict, "")
 		// 执行SQL语句
-		_, err = db.Exec(dist)
+		_, err = db.Exec(dict)
 		util.CheckErr(err)
 		fmt.Println("------ 完成字典数据初始化 ------")
 		return
@@ -78,7 +80,7 @@ func initDist() {
 
 // initServerInfo 初始化服务信息
 func initServerInfo(conf types.Server) {
-	server := GetServerInfo()
+	server := server2.GetServerInfo()
 
 	if 0 == server.Id {
 		// 第一次，创建

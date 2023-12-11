@@ -1,125 +1,230 @@
-package book
+package flow
 
 import (
+	"cashbook-server/dao"
 	"cashbook-server/types"
-	"encoding/json"
-	"fmt"
-	"os"
+	"cashbook-server/util"
+	"database/sql"
+	_ "modernc.org/sqlite"
+	"strconv"
 )
 
-// FileName 文件名称
-const FileName = "./data/flow.json"
-
-var flowStatic []types.Flow
-
-var lastId int64
-
-// 初始化数据
-func init() {
-	fmt.Println("------ Loading flowStatic ------")
-	flowStatic = loadFile()
-	initLastId()
-	fmt.Println("------ Loaded flowStatic ------")
+func CreateFlow(flow types.Flow) int64 {
+	sqlCreateFlow := `
+		INSERT INTO flows (book_key, day, type, money, pay_type, name, description)
+		VALUES (?, ?, ?, ?, ?, ?, ?);
+		`
+	stmt, err := dao.db.Prepare(sqlCreateFlow)
+	util.CheckErr(err)
+	res, err := stmt.Exec(flow.BookKey, flow.Day, flow.Type, flow.Money, flow.PayType, flow.Name, flow.Description)
+	util.CheckErr(err)
+	id, err := res.LastInsertId()
+	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
+	return id
+}
+func UpdateFlow(flow types.Flow) {
+	sqlUpdateFlow := `
+		UPDATE flows SET 
+			book_key = ?, 
+			day = ?, 
+			type = ?, 
+			money = ?, 
+			pay_type = ?, 
+			name = ?, 
+			description = ?
+		WHERE id = ? ;
+		`
+	stmt, err := dao.db.Prepare(sqlUpdateFlow)
+	util.CheckErr(err)
+	res, err := stmt.Exec(flow.BookKey, flow.Day, flow.Type, flow.Money, flow.PayType, flow.Name, flow.Description, flow.Id)
+	util.CheckErr(err)
+	_, err = res.RowsAffected()
+	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
 }
 
-// 加载文件
-func loadFile() []types.Flow {
-	fileBytes, _ := os.ReadFile(FileName)
-	var flows []types.Flow
-	if len(fileBytes) != 0 {
-		if err := json.Unmarshal(fileBytes, &flows); err != nil {
-			return nil
+func DeleteFlow(id int64) {
+	sqlDeleteFlow := `delete from flows where id = ? ;`
+	stmt, err := dao.db.Prepare(sqlDeleteFlow)
+	util.CheckErr(err)
+	res, err := stmt.Exec(id)
+	util.CheckErr(err)
+	_, err = res.RowsAffected()
+	util.CheckErr(err)
+	//err = stmt.Close()
+	//util.CheckErr(err)
+}
+
+func GetCountAndMoney(flowQuery types.FlowParam) types.FlowCount {
+	sqlGetCountAndMoney := `
+		SELECT COUNT(*) AS 'totalCount', COALESCE(SUM(money),0) AS 'totalMoney' 
+		FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
+
+	sqlWhere := getWhereSql(flowQuery)
+
+	rows, err := dao.db.Query(sqlGetCountAndMoney + sqlWhere + `;`)
+	util.CheckErr(err)
+	var flowCount types.FlowCount
+	if rows != nil {
+		for rows.Next() {
+			err = rows.Scan(&flowCount.TotalCount, &flowCount.TotalMoney)
+			util.CheckErr(err)
+			break
 		}
+		err = rows.Close()
+		util.CheckErr(err)
 	}
-	return flows
+	return flowCount
 }
 
-// GetAll 获取全部用户
-func GetAll() []types.Flow {
-	return flowStatic
-}
+func GetFlowsPage(flowQuery types.FlowParam) *types.Page {
+	sqlGetFlowPage := "SELECT id, book_key, day, type, money, pay_type, name, description FROM flows WHERE book_key = '" + flowQuery.BookKey + "'"
 
-// Add 添加数据
-func Add(user types.Flow) {
-	user.Id = getNextId()
-	flowStatic = append(flowStatic, user)
-	saveFile()
-}
+	sqlWhere := getWhereSql(flowQuery)
 
-// Delete 按照ID删除数据
-func Delete(id int64) {
-	var index int64
-	var flag = false
-	if len(flowStatic) > 0 {
-		for i, u := range flowStatic {
-			if id == u.Id {
-				index = int64(i)
-				flag = true
-			}
+	sqlOrderBy := ` ORDER BY day DESC`
+	if len(flowQuery.MoneySort) > 0 {
+		sqlOrderBy = `ORDER BY money ` + flowQuery.MoneySort
+	}
+
+	offset := (flowQuery.PageNum - 1) * flowQuery.PageSize
+	sqlPage := ` LIMIT ` + strconv.FormatInt(flowQuery.PageSize, 10) + ` OFFSET ` + strconv.FormatInt(offset, 10) + `;`
+
+	allSQL := sqlGetFlowPage + sqlWhere + sqlOrderBy + sqlPage
+
+	rows, err := dao.db.Query(allSQL)
+	util.CheckErr(err)
+
+	results := make([]interface{}, 0)
+
+	var page = new(types.Page)
+	var flowCount types.FlowCount
+	if rows != nil {
+		for rows.Next() {
+			var flow types.Flow
+			err = rows.Scan(&flow.Id, &flow.BookKey, &flow.Day, &flow.Type, &flow.Money, &flow.PayType, &flow.Name, &flow.Description)
+			util.CheckErr(err)
+			results = append(results, flow)
 		}
+
+		flowCount = GetCountAndMoney(flowQuery)
+		err := rows.Close()
+		util.CheckErr(err)
+	} else {
+		flowCount = types.FlowCount{TotalCount: 0, TotalMoney: 0}
 	}
-	if flag {
-		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
-		saveFile()
-	}
+
+	page.PageData = results
+	page.PageSize = flowQuery.PageSize
+	page.PageNum = flowQuery.PageNum
+	page.TotalCount = flowCount.TotalCount
+	page.TotalPage = 0 // TODO 留个坑
+	page.TotalMoney = flowCount.TotalMoney
+
+	return page
 }
 
-// FindLists 条件查询：按条件筛选数据，返回符合条件的数据
-func FindLists(u types.Flow) []types.Flow {
-	uQuery := getQuery(u)
-
-	var results []types.Flow
-	if len(flowStatic) > 0 {
-		for _, ui := range flowStatic {
-			// 字符串模糊
-			var flag = true
-			if uQuery.ID {
-				flag = ui.Id == u.Id
-			}
-			// TODO 补全其他条件
-			//if flag && uQuery.BookName {
-			//	flag = strings.Contains(ui.BookName, u.BookName)
-			//}
-			//if flag && uQuery.UserId {
-			//	flag = ui.UserId == u.UserId
-			//}
-			if flag {
-				results = append(results, ui)
-			}
-		}
+func getWhereSql(flowQuery types.FlowParam) string {
+	var allSQL string
+	if 0 != flowQuery.Id {
+		allSQL += ` AND id = ` + strconv.FormatInt(flowQuery.Id, 10)
 	}
+	if 0 != len(flowQuery.StartDay) {
+		allSQL += ` AND day >= '` + flowQuery.StartDay + `'`
+	}
+	if 0 != len(flowQuery.EndDay) {
+		allSQL += ` AND day <= '` + flowQuery.EndDay + `'`
+	}
+	if 0 != len(flowQuery.Type) {
+		allSQL += ` AND type = '` + flowQuery.Type + `'`
+	}
+	if 0 != len(flowQuery.PayType) {
+		allSQL += ` AND pay_type = '` + flowQuery.PayType + `'`
+	}
+	if 0 != len(flowQuery.Name) {
+		allSQL += ` AND name LIKE '%'||'` + flowQuery.Name + `'||'%'`
+	}
+	if 0 != len(flowQuery.Description) {
+		allSQL += ` AND description LIKE '%'||'` + flowQuery.Description + `'||'%'`
+	}
+	return allSQL
+}
+
+func GetAll(bookKey string) []types.Flow {
+	sqlGetAll := `SELECT id, book_key, day, type, money, pay_type, name, description FROM flows WHERE book_key = '` + bookKey + `';`
+
+	rows, err := dao.db.Query(sqlGetAll, bookKey)
+	util.CheckErr(err)
+
+	results := make([]types.Flow, 0)
+	if rows != nil {
+		for rows.Next() {
+			var flow types.Flow
+			err = rows.Scan(&flow.Id, &flow.BookKey, &flow.Day, &flow.Type, &flow.Money, &flow.PayType, &flow.Name, &flow.Description)
+			util.CheckErr(err)
+			results = append(results, flow)
+		}
+		err = rows.Close()
+		util.CheckErr(err)
+	}
+
 	return results
 }
 
-// 初始化获取最大的ID
-func initLastId() {
-	lastId = 0
-	if len(flowStatic) > 0 {
-		for _, u := range flowStatic {
-			if lastId < u.Id {
-				lastId = u.Id
-			}
+func ImportFlows(bookKey string, flag string, flows []types.Flow) int64 {
+	tx, err := dao.db.Begin()
+	num := util.CheckErr(err)
+	nums := ImportFlowsDB(bookKey, flag, flows, tx)
+	if nums == 0 {
+		return 0
+	}
+	err = tx.Commit()
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	return nums
+}
+
+func ImportFlowsDB(bookKey string, flag string, flows []types.Flow, tx *sql.Tx) int64 {
+	var num int64
+	if flag == "overwrite" {
+		_, err := tx.Exec(`DELETE FROM flows WHERE book_key = '` + bookKey + `';`)
+		num = util.CheckTxErr(tx, err)
+		if num == 0 {
+			return 0
 		}
 	}
-}
 
-// 获取下一个ID
-func getNextId() int64 {
-	return lastId + 1
-}
+	sqlInsertPatch := `INSERT INTO flows (book_key, day, type, money, pay_type, name, description) VALUES `
 
-// 保存文件
-func saveFile() {
-	jsonData, _ := json.Marshal(flowStatic)
-	_ = os.WriteFile(FileName, jsonData, os.ModePerm)
-}
-
-// 查询条件前置判断，明确哪些条件需要判断
-func getQuery(u types.Flow) types.BookQuery {
-	var uQuery types.BookQuery
-	uQuery.ID = u.Id > 0
-	// TODO 补全其他条件
-	//uQuery.UserId = u.UserId > 0
-	//uQuery.BookName = len(u.BookName) > 0
-	return uQuery
+	// 组装批量插入sql
+	for index, flow := range flows {
+		sqlInsertPatch += `('` + bookKey + `','` + flow.Day + `','` + flow.Type + `',` +
+			strconv.FormatFloat(flow.Money, 'f', -1, 64) + `,'` +
+			flow.PayType + `','` + flow.Name + `','` + flow.Description + `')`
+		if index != (len(flows) - 1) {
+			sqlInsertPatch += `,`
+		} else {
+			sqlInsertPatch += `;`
+		}
+	}
+	res, err := tx.Exec(sqlInsertPatch)
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	nums, err := res.RowsAffected()
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	num = util.CheckTxErr(tx, err)
+	if num == 0 {
+		return 0
+	}
+	return nums
 }

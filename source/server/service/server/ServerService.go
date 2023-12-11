@@ -1,6 +1,7 @@
-package dao
+package server
 
 import (
+	"cashbook-server/dao"
 	"cashbook-server/types"
 	"cashbook-server/util"
 )
@@ -8,7 +9,7 @@ import (
 func GetServerInfo() types.Server {
 	sqlGetServerInfo := `SELECT id, version, environment, create_date FROM server ;`
 
-	rows, err := db.Query(sqlGetServerInfo)
+	rows, err := dao.db.Query(sqlGetServerInfo)
 	util.CheckErr(err)
 
 	var server types.Server

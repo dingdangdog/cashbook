@@ -58,3 +58,22 @@ func ErrorAll(code int64, message string, data any) *types.Result {
 	res.Data = data
 	return res
 }
+
+func GetPage(pageNum int64, pageSize int64, data []interface{}) types.Page {
+	startIndex := (pageNum - 1) * pageSize
+	endIndex := pageNum * pageSize
+	total := int64(len(data))
+	if total < startIndex {
+		startIndex = total
+	}
+	if total < endIndex {
+		endIndex = total
+	}
+
+	var page types.Page
+	page.PageSize = pageSize
+	page.TotalCount = total
+	page.PageData = data[startIndex:endIndex]
+
+	return page
+}

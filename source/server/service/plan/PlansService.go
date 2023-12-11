@@ -1,6 +1,8 @@
-package dao
+package plan
 
 import (
+	"cashbook-server/dao"
+	"cashbook-server/service/analysis"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"database/sql"
@@ -13,7 +15,7 @@ func SetPlan(plan types.Plan) {
 		INSERT INTO Plans (month, book_key, limit_money, used_money)
 		VALUES (?, ?, ?, ?);
 		`
-	stmt, err := db.Prepare(sqlCreateFlow)
+	stmt, err := dao.db.Prepare(sqlCreateFlow)
 	util.CheckErr(err)
 	_, err = stmt.Exec(plan.Month, plan.BookKey, plan.LimitMoney, plan.UsedMoney)
 	util.CheckErr(err)
@@ -26,7 +28,7 @@ func UpdatePlan(plan types.Plan) {
 		WHERE month = ? 
 		AND book_key = ?;
 		`
-	stmt, err := db.Prepare(sqlUpdatePlan)
+	stmt, err := dao.db.Prepare(sqlUpdatePlan)
 	util.CheckErr(err)
 	res, err := stmt.Exec(plan.LimitMoney, plan.Month, plan.BookKey)
 	util.CheckErr(err)
@@ -42,7 +44,7 @@ func GetPlan(bookKey string, month string) types.Plan {
 		AND book_key = ?;
 		`
 
-	rows, err := db.Query(sqlGetPlan, month, bookKey)
+	rows, err := dao.db.Query(sqlGetPlan, month, bookKey)
 	util.CheckErr(err)
 
 	var plan types.Plan
@@ -66,7 +68,7 @@ func GetAllPlan(bookKey string) []types.Plan {
 		WHERE book_key = ?;
 		`
 
-	rows, err := db.Query(sqlGetPlan, bookKey)
+	rows, err := dao.db.Query(sqlGetPlan, bookKey)
 	util.CheckErr(err)
 
 	results := make([]types.Plan, 0)
@@ -85,7 +87,7 @@ func GetAllPlan(bookKey string) []types.Plan {
 }
 
 func UpdatePlanUsed(bookKey string) {
-	used := MonthBar(bookKey)
+	used := analysis.MonthBar(bookKey)
 
 	sqlUpdateBatch := ""
 	for _, use := range used {
@@ -97,7 +99,7 @@ func UpdatePlanUsed(bookKey string) {
 		`
 	}
 
-	tx, err := db.Begin()
+	tx, err := dao.db.Begin()
 	util.CheckErr(err)
 	res, err := tx.Exec(sqlUpdateBatch)
 	util.CheckTxErr(tx, err)

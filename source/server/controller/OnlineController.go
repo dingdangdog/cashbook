@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"cashbook-server/dao"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"encoding/json"
@@ -28,7 +27,7 @@ func Upload(c *gin.Context) {
 		return
 	}
 
-	data := dao.GetUploadData(online)
+	data := online.GetUploadData(online)
 	// 将请求体转换为 JSON 字节
 	jsonData, err := json.Marshal(data)
 	if util.CheckErr(err) == 0 {
@@ -91,7 +90,7 @@ func Download(c *gin.Context) {
 		return
 	}
 
-	flag := dao.SaveDownload(online, data)
+	flag := online.SaveDownload(online, data)
 	if flag == 0 {
 		c.JSON(http.StatusNonAuthoritativeInfo, util.Error("数据保存出错", nil))
 		return

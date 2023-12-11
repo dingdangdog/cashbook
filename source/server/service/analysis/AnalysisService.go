@@ -1,17 +1,18 @@
-package dao
+package analysis
 
 import (
+	"cashbook-server/dao"
 	"cashbook-server/types"
 	"cashbook-server/util"
 )
 
 func GetDailyLine(flowQuery types.FlowParam) []types.DailyLine {
 	sqlGetFlowPage := `SELECT day, COALESCE(SUM(money),0) AS 'daySum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
-	sqlWhere := getWhereSql(flowQuery)
+	sqlWhere := dao.getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY day;`
 
 	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := db.Query(sql)
+	rows, err := dao.db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]types.DailyLine, 0)
@@ -31,11 +32,11 @@ func GetDailyLine(flowQuery types.FlowParam) []types.DailyLine {
 
 func GetTypePie(flowQuery types.FlowParam) []types.TypePie {
 	sqlGetFlowPage := `SELECT type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
-	sqlWhere := getWhereSql(flowQuery)
+	sqlWhere := dao.getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY type;`
 
 	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := db.Query(sql)
+	rows, err := dao.db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]types.TypePie, 0)
@@ -55,11 +56,11 @@ func GetTypePie(flowQuery types.FlowParam) []types.TypePie {
 
 func GetPayTypeBar(flowQuery types.FlowParam) []types.TypePie {
 	sqlGetFlowPage := `SELECT pay_type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
-	sqlWhere := getWhereSql(flowQuery)
+	sqlWhere := dao.getWhereSql(flowQuery)
 	sqlGroupBy := ` GROUP BY pay_type;`
 
 	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := db.Query(sql)
+	rows, err := dao.db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]types.TypePie, 0)
@@ -82,7 +83,7 @@ func MonthBar(bookKey string) []types.TypePie {
 		`' GROUP BY SUBSTR(day, 6, 2) ORDER BY SUBSTR(day, 1, 7);`
 
 	sql := sqlGetFlowPage
-	rows, err := db.Query(sql)
+	rows, err := dao.db.Query(sql)
 	util.CheckErr(err)
 
 	results := make([]types.TypePie, 0)

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"cashbook-server/dao"
+	sDict "cashbook-server/service/dict"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -9,20 +9,20 @@ import (
 	"strconv"
 )
 
-func GetDistList(c *gin.Context) {
-	Type := c.Param("type")
+func GetDictList(c *gin.Context) {
+	dictType := c.Param("type")
 	bookKey := c.Request.Header.Get("bookKey")
 
-	dao.CheckAndInitBookDist(bookKey)
+	sDict.CheckAndInitBookDict(bookKey)
 
-	data := dao.GetDistList(bookKey, Type)
+	data := sDict.GetDictList(bookKey, dictType)
 
 	c.JSON(200, util.Success(data))
 
 }
 
-func GetDistPage(c *gin.Context) {
-	var query types.DistQuery
+func GetDictPage(c *gin.Context) {
+	var query types.DictParam
 	if err := c.BindQuery(&query); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -33,13 +33,13 @@ func GetDistPage(c *gin.Context) {
 	}
 
 	query.BookKey = c.Request.Header.Get("bookKey")
-	page := dao.GetDistPage(query)
+	page := sDict.GetDictPage(query)
 
 	c.JSON(200, util.Success(page))
 }
 
-func AddDist(c *gin.Context) {
-	var data types.Dist
+func AddDict(c *gin.Context) {
+	var data types.Dict
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -51,13 +51,13 @@ func AddDist(c *gin.Context) {
 
 	data.BookKey = c.Request.Header.Get("bookKey")
 
-	id := dao.AddDist(data)
+	id := sDict.AddDict(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
 }
 
-func UpdateDist(c *gin.Context) {
-	var data types.Dist
+func UpdateDict(c *gin.Context) {
+	var data types.Dict
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
@@ -74,16 +74,16 @@ func UpdateDist(c *gin.Context) {
 	data.Id = num
 
 	data.BookKey = c.Request.Header.Get("bookKey")
-	dao.UpdateDist(data)
+	sDict.UpdateDict(data)
 
 	c.JSON(200, util.Success(data))
 }
 
-func DeleteDist(c *gin.Context) {
+func DeleteDict(c *gin.Context) {
 	id := c.Param("id")
 	num, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
-	dao.DeleteDist(num)
+	sDict.DeleteDict(num)
 
 	c.JSON(200, util.Success("删除成功："+id))
 }

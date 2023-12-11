@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"cashbook-server/dao"
+	sBook "cashbook-server/service/book"
+	sDist "cashbook-server/service/dict"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -19,21 +20,21 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	id := dao.CreateBook(data)
+	id := sBook.CreateBook(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
 }
 
 func GetBook(c *gin.Context) {
 	bookKey := c.Param("key")
-	data := dao.GetBook(bookKey)
+	data := sBook.GetBook(bookKey)
 
 	if data.Id == 0 {
 		c.JSON(200, util.Error("账本不存在！", nil))
 	} else {
 		c.JSON(200, util.Success(data))
 
-		dao.CheckAndInitBookDist(bookKey)
+		sDist.CheckAndInitBookDist(bookKey)
 	}
 }
 
@@ -50,7 +51,7 @@ func ChangeKey(c *gin.Context) {
 
 	data.OldKey = c.Request.Header.Get("bookKey")
 
-	id := dao.ChangeKey(data)
+	id := sBook.ChangeKey(data)
 	if id == 0 {
 		c.JSON(200, util.Error("修改失败，可能存在相同密钥，请修改后再试", nil))
 	} else {
@@ -59,6 +60,6 @@ func ChangeKey(c *gin.Context) {
 }
 
 func GetAllBook(c *gin.Context) {
-	data := dao.GetAllBook()
+	data := sBook.GetAllBook()
 	c.JSON(200, util.Success(data))
 }

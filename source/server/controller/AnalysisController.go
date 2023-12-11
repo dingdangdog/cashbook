@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"cashbook-server/dao"
+	"cashbook-server/service/analysis"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -21,7 +21,7 @@ func GetDailyLine(c *gin.Context) {
 
 	query.BookKey = c.Request.Header.Get("bookKey")
 
-	data := dao.GetDailyLine(query)
+	data := analysis.GetDailyLine(query)
 
 	c.JSON(200, util.Success(data))
 }
@@ -39,7 +39,7 @@ func GetTypePie(c *gin.Context) {
 
 	query.BookKey = c.Request.Header.Get("bookKey")
 
-	data := dao.GetTypePie(query)
+	data := analysis.GetTypePie(query)
 
 	c.JSON(200, util.Success(data))
 }
@@ -57,7 +57,7 @@ func GetPayTypeBar(c *gin.Context) {
 
 	query.BookKey = c.Request.Header.Get("bookKey")
 
-	data := dao.GetPayTypeBar(query)
+	data := analysis.GetPayTypeBar(query)
 
 	c.JSON(200, util.Success(data))
 }
@@ -65,7 +65,7 @@ func GetPayTypeBar(c *gin.Context) {
 func MonthBar(c *gin.Context) {
 	bookKey := c.Request.Header.Get("bookKey")
 
-	data := dao.MonthBar(bookKey)
+	data := analysis.MonthBar(bookKey)
 
 	c.JSON(200, util.Success(data))
 }
