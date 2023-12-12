@@ -1,0 +1,6 @@
+{
+    "version": "1.0.4",
+    "environment": "personal",
+    "serverPath": ".",
+    "secret": "spend-money-like-water"
+}

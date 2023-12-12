@@ -40,9 +40,11 @@ func GetAll() []types.Book {
 	return bookStatic
 }
 
-// Add 添加数据
-func Add(book types.Book) int64 {
-	book.Id = getNextId()
+// AddOrUpdate 添加或更新数据
+func AddOrUpdate(book types.Book) int64 {
+	if book.Id == 0 {
+		book.Id = getNextId()
+	}
 	bookStatic = append(bookStatic, book)
 	saveFile()
 	return book.Id

@@ -2,14 +2,15 @@ package controller
 
 import (
 	sBook "cashbook-server/service/book"
-	sDist "cashbook-server/service/dict"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
-func CreateBook(c *gin.Context) {
+// CreateOrUpdateBook 创建或更新账本
+func CreateOrUpdateBook(c *gin.Context) {
 	var data types.Book
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
@@ -20,46 +21,24 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	id := sBook.CreateBook(data)
+	id := sBook.CreateOrUpdateBook(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
 }
 
-func GetBook(c *gin.Context) {
-	bookKey := c.Param("key")
-	data := sBook.GetBook(bookKey)
+// DeleteBook 删除账本
+func DeleteBook(c *gin.Context) {
+	id := c.Param("id")
+	intId, _ := strconv.ParseInt(id, 10, 64)
+	sBook.DeleteBook(intId)
 
-	if data.Id == 0 {
-		c.JSON(200, util.Error("账本不存在！", nil))
-	} else {
-		c.JSON(200, util.Success(data))
-
-		sDist.CheckAndInitBookDist(bookKey)
-	}
+	c.JSON(200, util.Success("删除成功："+id))
 }
 
-func ChangeKey(c *gin.Context) {
-	var data types.ChangeBookKey
-	if err := c.ShouldBindJSON(&data); err != nil {
-		util.CheckErr(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"success":      false,
-			"errorMessage": err.Error(),
-		})
-		return
-	}
-
-	data.OldKey = c.Request.Header.Get("bookKey")
-
-	id := sBook.ChangeKey(data)
-	if id == 0 {
-		c.JSON(200, util.Error("修改失败，可能存在相同密钥，请修改后再试", nil))
-	} else {
-		c.JSON(200, util.Success(data))
-	}
-}
-
-func GetAllBook(c *gin.Context) {
-	data := sBook.GetAllBook()
+// GetBookList 根据用户ID获取全部账本
+func GetBookList(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	userId := util.GetUserId(token)
+	data := sBook.GetBookList(userId)
 	c.JSON(200, util.Success(data))
 }

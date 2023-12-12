@@ -1,16 +1,15 @@
 package util
 
 import (
+	"cashbook-server/service/server"
 	"cashbook-server/types"
 	"github.com/golang-jwt/jwt"
 	"time"
 )
 
-// JWT 密钥
-var jwtSecret = []byte("cash-flow-ddd")
-
 // GenerateToken 生成JWT
 func GenerateToken(user types.User) (string, error) {
+	jwtSecret := []byte(server.GetServerInfo().Secret)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"name": user.Name,
 		"id":   user.Id,
@@ -22,6 +21,7 @@ func GenerateToken(user types.User) (string, error) {
 
 // ParseToken 解析JWT
 func ParseToken(tokenString string) (*jwt.Token, *jwt.MapClaims, error) {
+	jwtSecret := []byte(server.GetServerInfo().Secret)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
