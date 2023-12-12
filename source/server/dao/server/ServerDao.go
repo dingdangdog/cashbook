@@ -10,31 +10,28 @@ import (
 // FileName 文件名称
 const FileName = "./resources/config/server.json"
 
-var serverStatic []types.Server
-
-var lastId int64
+var serverInfo types.Server
 
 // 初始化数据
 func init() {
-	fmt.Println("------ Loading serverStatic ------")
-	serverStatic = loadFile()
-	fmt.Println("------ Loaded serverStatic ------")
+	fmt.Println("------ Loading server ------")
+	serverInfo = loadFile()
+	fmt.Println("------ Loaded server ------")
 }
 
 // 加载文件
-func loadFile() []types.Server {
+func loadFile() types.Server {
 	fileBytes, _ := os.ReadFile(FileName)
-	var servers []types.Server
+	var server types.Server
 	if len(fileBytes) != 0 {
-		if err := json.Unmarshal(fileBytes, &servers); err != nil {
-			return nil
+		if err := json.Unmarshal(fileBytes, &server); err != nil {
+			return types.Server{}
 		}
 	}
-	return servers
+	return server
 }
 
-// 保存文件
-func saveFile() {
-	jsonData, _ := json.Marshal(serverStatic)
-	_ = os.WriteFile(FileName, jsonData, os.ModePerm)
+// GetServerInfo 获取服务信息
+func GetServerInfo() types.Server {
+	return serverInfo
 }
