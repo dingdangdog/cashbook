@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "type": "distType",
+    "distKey": "distType",
+    "distValue": "字典类型",
+    "sort": 1,
+    "bookId": -1
+  },
+  {
+    "id": 2,
+    "type": "distType",
+    "distKey": "expenseType",
+    "distValue": "消费类型",
+    "sort": 2,
+    "bookId": -1
+  },
+  {
+    "id": 3,
+    "type": "distType",
+    "distKey": "paymentType",
+    "distValue": "支付方式",
+    "sort": 3,
+    "bookId": -1
+  },
+  {
+    "id": 4,
+    "type": "expenseType",
+    "distKey": "饮食",
+    "distValue": "饮食",
+    "sort": 1,
+    "bookId": -1
+  },
+  {
+    "id": 5,
+    "type": "expenseType",
+    "distKey": "娱乐",
+    "distValue": "娱乐",
+    "sort": 2,
+    "bookId": -1
+  },
+  {
+    "id": 6,
+    "type": "expenseType",
+    "distKey": "生活",
+    "distValue": "生活",
+    "sort": 3,
+    "bookId": -1
+  },
+  {
+    "id": 7,
+    "type": "expenseType",
+    "distKey": "鞋服",
+    "distValue": "鞋服",
+    "sort": 4,
+    "bookId": -1
+  },
+  {
+    "id": 8,
+    "type": "expenseType",
+    "distKey": "医护",
+    "distValue": "医护",
+    "sort": 5,
+    "bookId": -1
+  },
+  {
+    "id": 9,
+    "type": "expenseType",
+    "distKey": "学习",
+    "distValue": "学习",
+    "sort": 6,
+    "bookId": -1
+  },
+  {
+    "id": 10,
+    "type": "expenseType",
+    "distKey": "社交",
+    "distValue": "社交",
+    "sort": 7,
+    "bookId": -1
+  },
+  {
+    "id": 11,
+    "type": "expenseType",
+    "distKey": "通讯",
+    "distValue": "通讯",
+    "sort": 8,
+    "bookId": -1
+  },
+  {
+    "id": 12,
+    "type": "expenseType",
+    "distKey": "交通",
+    "distValue": "交通",
+    "sort": 9,
+    "bookId": -1
+  },
+  {
+    "id": 13,
+    "type": "expenseType",
+    "distKey": "住宿",
+    "distValue": "住宿",
+    "sort": 10,
+    "bookId": -1
+  },
+  {
+    "id": 14,
+    "type": "expenseType",
+    "distKey": "其他",
+    "distValue": "其他",
+    "sort": 11,
+    "bookId": -1
+  },
+  {
+    "id": 15,
+    "type": "paymentType",
+    "distKey": "支付宝",
+    "distValue": "支付宝",
+    "sort": 1,
+    "bookId": -1
+  },
+  {
+    "id": 16,
+    "type": "paymentType",
+    "distKey": "微信",
+    "distValue": "微信",
+    "sort": 2,
+    "bookId": -1
+  },
+  {
+    "id": 17,
+    "type": "paymentType",
+    "distKey": "京东白条",
+    "distValue": "京东白条",
+    "sort": 3,
+    "bookId": -1
+  },
+  {
+    "id": 18,
+    "type": "paymentType",
+    "distKey": "刷卡",
+    "distValue": "刷卡",
+    "sort": 4,
+    "bookId": -1
+  },
+  {
+    "id": 19,
+    "type": "paymentType",
+    "distKey": "现金",
+    "distValue": "现金",
+    "sort": 5,
+    "bookId": -1
+  },
+  {
+    "id": 20,
+    "type": "paymentType",
+    "distKey": "其他",
+    "distValue": "其他",
+    "sort": 6,
+    "bookId": -1
+  }
+]

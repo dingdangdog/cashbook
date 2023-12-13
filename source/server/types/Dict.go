@@ -4,16 +4,16 @@ package types
 type Dict struct {
 	Id        int64  `json:"id"`
 	Type      string `json:"type"`
+	BookId    int64  `json:"bookId"`
 	DictKey   string `json:"dictKey"`
 	DictValue string `json:"dictValue"`
 	Sort      int64  `json:"sort"`
-	BookKey   string `json:"bookKey"`
 }
 
 type DictParam struct {
 	Id        int64  `json:"id" form:"id"`
 	Type      string `json:"type" form:"type"`
-	BookKey   string `json:"bookKey"`
+	BookId    int64  `json:"bookId" form:"bookId"`
 	DictKey   string `json:"dictKey" form:"dictKey"`
 	DictValue string `json:"dictValue" form:"dictValue"`
 	PageNum   int64  `json:"pageNum" uri:"pageNum" form:"pageNum"`
@@ -23,7 +23,7 @@ type DictParam struct {
 type DictQuery struct {
 	Id        bool
 	Type      bool
-	BookKey   bool
+	BookId    bool
 	DictKey   bool
 	DictValue bool
 	PageNum   bool

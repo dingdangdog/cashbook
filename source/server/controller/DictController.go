@@ -9,18 +9,21 @@ import (
 	"strconv"
 )
 
+// GetDictList 获取字典列表
 func GetDictList(c *gin.Context) {
 	dictType := c.Param("type")
-	bookKey := c.Request.Header.Get("bookKey")
+	bookId := c.Param("bookId")
+	bookIdNum, _ := strconv.ParseInt(bookId, 10, 64)
 
-	sDict.CheckAndInitBookDict(bookKey)
+	sDict.CheckAndInitBookDict(bookIdNum)
 
-	data := sDict.GetDictList(bookKey, dictType)
+	data := sDict.GetDictList(bookIdNum, dictType)
 
 	c.JSON(200, util.Success(data))
 
 }
 
+// GetDictPage 获取字典分页
 func GetDictPage(c *gin.Context) {
 	var query types.DictParam
 	if err := c.BindQuery(&query); err != nil {
@@ -32,12 +35,12 @@ func GetDictPage(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
 	page := sDict.GetDictPage(query)
 
 	c.JSON(200, util.Success(page))
 }
 
+// AddDict 添加字典
 func AddDict(c *gin.Context) {
 	var data types.Dict
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -49,16 +52,14 @@ func AddDict(c *gin.Context) {
 		return
 	}
 
-	data.BookKey = c.Request.Header.Get("bookKey")
-
-	id := sDict.AddDict(data)
+	id := sDict.AddOrUpdateDict(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
 }
 
+// UpdateDict 更新字典
 func UpdateDict(c *gin.Context) {
 	var data types.Dict
-
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -69,21 +70,20 @@ func UpdateDict(c *gin.Context) {
 	}
 
 	id := c.Param("id")
-	num, err := strconv.ParseInt(id, 10, 64)
+	idNum, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
-	data.Id = num
-
-	data.BookKey = c.Request.Header.Get("bookKey")
-	sDict.UpdateDict(data)
+	data.Id = idNum
+	sDict.AddOrUpdateDict(data)
 
 	c.JSON(200, util.Success(data))
 }
 
+// DeleteDict 删除字典
 func DeleteDict(c *gin.Context) {
 	id := c.Param("id")
-	num, err := strconv.ParseInt(id, 10, 64)
+	idNum, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
-	sDict.DeleteDict(num)
+	sDict.DeleteDict(idNum)
 
 	c.JSON(200, util.Success("删除成功："+id))
 }
