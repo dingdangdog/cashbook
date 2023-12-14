@@ -5,86 +5,89 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // FileName 文件名称
-const FileName = "./data/flow.json"
+const FileName = "./data/plan.json"
 
-var flowStatic []types.Flow
+var planStatic []types.Plan
 
 var lastId int64
 
 // 初始化数据
 func init() {
-	fmt.Println("------ Loading flowStatic ------")
-	flowStatic = loadFile()
+	fmt.Println("------ Loading planStatic ------")
+	planStatic = loadFile()
 	initLastId()
-	fmt.Println("------ Loaded flowStatic ------")
+	fmt.Println("------ Loaded planStatic ------")
 }
 
 // 加载文件
-func loadFile() []types.Flow {
+func loadFile() []types.Plan {
 	fileBytes, _ := os.ReadFile(FileName)
-	var flows []types.Flow
+	var plans []types.Plan
 	if len(fileBytes) != 0 {
-		if err := json.Unmarshal(fileBytes, &flows); err != nil {
+		if err := json.Unmarshal(fileBytes, &plans); err != nil {
 			return nil
 		}
 	}
-	return flows
+	return plans
 }
 
 // GetAll 获取全部用户
-func GetAll() []types.Flow {
-	return flowStatic
+func GetAll() []types.Plan {
+	return planStatic
 }
 
-// Add 添加数据
-func Add(user types.Flow) {
-	user.Id = getNextId()
-	flowStatic = append(flowStatic, user)
+// AddOrUpdate 添加数据
+func AddOrUpdate(plan types.Plan) int64 {
+	if plan.Id == 0 {
+		plan.Id = getNextId()
+	}
+	planStatic = append(planStatic, plan)
 	saveFile()
+	return plan.Id
 }
 
 // Delete 按照ID删除数据
 func Delete(id int64) {
 	var index int64
 	var flag = false
-	if len(flowStatic) > 0 {
-		for i, u := range flowStatic {
-			if id == u.Id {
+	if len(planStatic) > 0 {
+		for i, data := range planStatic {
+			if id == data.Id {
 				index = int64(i)
 				flag = true
 			}
 		}
 	}
 	if flag {
-		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
+		planStatic = append(planStatic[:index], planStatic[index+1:]...)
 		saveFile()
 	}
 }
 
 // FindLists 条件查询：按条件筛选数据，返回符合条件的数据
-func FindLists(u types.Flow) []types.Flow {
-	uQuery := getQuery(u)
+func FindLists(param types.Plan) []types.Plan {
+	query := getQuery(param)
 
-	var results []types.Flow
-	if len(flowStatic) > 0 {
-		for _, ui := range flowStatic {
-			// 字符串模糊
+	var results []types.Plan
+	if len(planStatic) > 0 {
+		for _, data := range planStatic {
 			var flag = true
-			if uQuery.ID {
-				flag = ui.Id == u.Id
+			if query.ID {
+				flag = data.Id == param.Id
 			}
-			// TODO 补全其他条件
-			//if flag && uQuery.BookName {
-			//	flag = strings.Contains(ui.BookName, u.BookName)
-			//}
-			//if flag && uQuery.UserId {
-			//	flag = ui.UserId == u.UserId
-			//}
+			if flag && query.BookId {
+				flag = data.BookId == param.BookId
+			}
+			// 字符串模糊
+			if flag && query.Month {
+				flag = strings.Contains(data.Month, param.Month)
+			}
 			if flag {
-				results = append(results, ui)
+				results = append(results, data)
 			}
 		}
 	}
@@ -94,10 +97,10 @@ func FindLists(u types.Flow) []types.Flow {
 // 初始化获取最大的ID
 func initLastId() {
 	lastId = 0
-	if len(flowStatic) > 0 {
-		for _, u := range flowStatic {
-			if lastId < u.Id {
-				lastId = u.Id
+	if len(planStatic) > 0 {
+		for _, data := range planStatic {
+			if lastId < data.Id {
+				lastId = data.Id
 			}
 		}
 	}
@@ -110,16 +113,15 @@ func getNextId() int64 {
 
 // 保存文件
 func saveFile() {
-	jsonData, _ := json.Marshal(flowStatic)
+	jsonData, _ := json.Marshal(planStatic)
 	_ = os.WriteFile(FileName, jsonData, os.ModePerm)
 }
 
 // 查询条件前置判断，明确哪些条件需要判断
-func getQuery(u types.Flow) types.BookQuery {
-	var uQuery types.BookQuery
-	uQuery.ID = u.Id > 0
-	// TODO 补全其他条件
-	//uQuery.UserId = u.UserId > 0
-	//uQuery.BookName = len(u.BookName) > 0
-	return uQuery
+func getQuery(param types.Plan) types.PlanQuery {
+	var query types.PlanQuery
+	query.ID = param.Id > 0
+	query.BookId = param.BookId > 0
+	query.Month = len(param.Month) > 0
+	return query
 }
