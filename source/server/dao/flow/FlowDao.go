@@ -3,34 +3,28 @@ package book
 import (
 	"cashbook-server/types"
 	"encoding/json"
-	"fmt"
 	"os"
+	"strconv"
+	"strings"
 )
 
-// FileName 文件名称
-const FileName = "./data/flow.json"
+// FilePath 文件名称
+const FilePath = "./data/flow"
 
 var flowStatic []types.Flow
 
 var lastId int64
 
-// 初始化数据
-func init() {
-	fmt.Println("------ Loading flowStatic ------")
-	flowStatic = loadFile()
-	initLastId()
-	fmt.Println("------ Loaded flowStatic ------")
-}
-
 // 加载文件
-func loadFile() []types.Flow {
-	fileBytes, _ := os.ReadFile(FileName)
+func loadFile(fileName string) []types.Flow {
+	fileBytes, _ := os.ReadFile(FilePath + "/" + fileName)
 	var flows []types.Flow
 	if len(fileBytes) != 0 {
 		if err := json.Unmarshal(fileBytes, &flows); err != nil {
 			return nil
 		}
 	}
+	initLastId()
 	return flows
 }
 
@@ -39,20 +33,25 @@ func GetAll() []types.Flow {
 	return flowStatic
 }
 
-// Add 添加数据
-func Add(user types.Flow) {
-	user.Id = getNextId()
-	flowStatic = append(flowStatic, user)
-	saveFile()
+// AddOrUpdate 添加或更新数据
+func AddOrUpdate(flow types.Flow) int64 {
+	getFileData(flow.BookId)
+	if flow.Id == 0 {
+		flow.Id = getNextId()
+	}
+	flowStatic = append(flowStatic, flow)
+	go saveFile(flow.BookId)
+	return flow.Id
 }
 
 // Delete 按照ID删除数据
-func Delete(id int64) {
+func Delete(id int64, bookId int64) {
+	getFileData(bookId)
 	var index int64
 	var flag = false
 	if len(flowStatic) > 0 {
-		for i, u := range flowStatic {
-			if id == u.Id {
+		for i, param := range flowStatic {
+			if id == param.Id {
 				index = int64(i)
 				flag = true
 			}
@@ -60,34 +59,70 @@ func Delete(id int64) {
 	}
 	if flag {
 		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
-		saveFile()
+		go saveFile(bookId)
 	}
 }
 
 // FindLists 条件查询：按条件筛选数据，返回符合条件的数据
-func FindLists(u types.Flow) []types.Flow {
-	uQuery := getQuery(u)
+func FindLists(param types.FlowParam) []types.Flow {
+	getFileData(param.BookId)
+	query := getQuery(param)
 
 	var results []types.Flow
 	if len(flowStatic) > 0 {
-		for _, ui := range flowStatic {
+		for _, data := range flowStatic {
 			// 字符串模糊
 			var flag = true
-			if uQuery.ID {
-				flag = ui.Id == u.Id
+			if query.Id {
+				flag = data.Id == param.Id
 			}
-			// TODO 补全其他条件
-			//if flag && uQuery.BookName {
-			//	flag = strings.Contains(ui.BookName, u.BookName)
-			//}
-			//if flag && uQuery.UserId {
-			//	flag = ui.UserId == u.UserId
-			//}
+			if flag && query.BookId {
+				flag = data.BookId == param.BookId
+			}
+			if flag && query.Name {
+				flag = strings.Contains(data.Name, param.Name)
+			}
+			if flag && query.Type {
+				flag = strings.Contains(data.Type, param.Type)
+			}
+			if flag && query.PayType {
+				flag = strings.Contains(data.PayType, param.PayType)
+			}
+			if flag && query.Description {
+				flag = strings.Contains(data.Description, param.Description)
+			}
+			if flag && query.StartDay {
+				flag = data.Day >= param.StartDay
+			}
+			if flag && query.EndDay {
+				flag = data.Day <= param.EndDay
+			}
 			if flag {
-				results = append(results, ui)
+				results = append(results, data)
 			}
 		}
 	}
+
+	if query.MoneySort {
+		if param.MoneySort == "asc" {
+			for i := 0; i < len(results); i++ {
+				for j := 0; j < len(results)-i-1; j++ {
+					if results[j].Money > results[j+1].Money {
+						results[j], results[j+1] = results[j+1], results[j]
+					}
+				}
+			}
+		} else if param.MoneySort == "desc" {
+			for i := 0; i < len(results); i++ {
+				for j := 0; j < len(results)-i-1; j++ {
+					if results[j].Money < results[j+1].Money {
+						results[j], results[j+1] = results[j+1], results[j]
+					}
+				}
+			}
+		}
+	}
+
 	return results
 }
 
@@ -95,9 +130,9 @@ func FindLists(u types.Flow) []types.Flow {
 func initLastId() {
 	lastId = 0
 	if len(flowStatic) > 0 {
-		for _, u := range flowStatic {
-			if lastId < u.Id {
-				lastId = u.Id
+		for _, param := range flowStatic {
+			if lastId < param.Id {
+				lastId = param.Id
 			}
 		}
 	}
@@ -109,17 +144,28 @@ func getNextId() int64 {
 }
 
 // 保存文件
-func saveFile() {
+func saveFile(bookId int64) {
+	fileName := "flow" + strconv.Itoa(int(bookId)) + ".json"
 	jsonData, _ := json.Marshal(flowStatic)
-	_ = os.WriteFile(FileName, jsonData, os.ModePerm)
+	_ = os.WriteFile(FilePath+"/"+fileName, jsonData, os.ModePerm)
+}
+
+func getFileData(bookId int64) []types.Flow {
+	fileName := "flow" + strconv.Itoa(int(bookId)) + ".json"
+	return loadFile(fileName)
 }
 
 // 查询条件前置判断，明确哪些条件需要判断
-func getQuery(u types.Flow) types.BookQuery {
-	var uQuery types.BookQuery
-	uQuery.ID = u.Id > 0
-	// TODO 补全其他条件
-	//uQuery.UserId = u.UserId > 0
-	//uQuery.BookName = len(u.BookName) > 0
-	return uQuery
+func getQuery(param types.FlowParam) types.FlowQuery {
+	var query types.FlowQuery
+	query.Id = param.Id > 0
+	query.BookId = param.BookId > 0
+	query.Name = len(param.Name) > 0
+	query.Type = len(param.Type) > 0
+	query.PayType = len(param.PayType) > 0
+	query.Description = len(param.Description) > 0
+	query.StartDay = len(param.StartDay) > 0
+	query.EndDay = len(param.StartDay) > 0
+	query.MoneySort = len(param.MoneySort) > 0
+	return query
 }

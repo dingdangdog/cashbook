@@ -3,7 +3,7 @@ package types
 // Flow 流水信息表
 type Flow struct {
 	Id          int64   `json:"id"`
-	BookKey     string  `json:"bookKey"`
+	BookId      int64   `json:"bookId"`
 	Day         string  `json:"day"`
 	Type        string  `json:"type"`
 	Money       float64 `json:"money"`
@@ -16,7 +16,7 @@ type FlowParam struct {
 	PageNum     int64  `json:"pageNum" uri:"pageNum" form:"pageNum"`
 	PageSize    int64  `json:"pageSize" uri:"pageSize" form:"pageSize"`
 	Id          int64  `json:"id" uri:"id" form:"id"`
-	BookKey     string `json:"bookKey" uri:"bookKey" form:"bookKey"`
+	BookId      int64  `json:"bookId" uri:"bookId" form:"bookId"`
 	StartDay    string `json:"startDay" uri:"startDay" form:"startDay"`
 	EndDay      string `json:"endDay" uri:"endDay" form:"endDay"`
 	Type        string `json:"type" uri:"type" form:"type"`
@@ -30,7 +30,7 @@ type FlowQuery struct {
 	PageNum     bool
 	PageSize    bool
 	Id          bool
-	BookKey     bool
+	BookId      bool
 	StartDay    bool
 	EndDay      bool
 	Type        bool

@@ -21,13 +21,12 @@ func AddFlow(c *gin.Context) {
 		})
 		return
 	}
-	data.BookKey = c.Request.Header.Get("bookKey")
 
-	id := flow.CreateFlow(data)
+	id := flow.AddFlow(data)
 	data.Id = id
 	c.JSON(200, util.Success(data))
 
-	go plan.UpdatePlanUsed(data.BookKey)
+	go plan.UpdatePlanUsed(data.BookId)
 }
 
 // UpdateFlow 更新流水
@@ -43,7 +42,6 @@ func UpdateFlow(c *gin.Context) {
 		return
 	}
 
-	data.BookKey = c.Request.Header.Get("bookKey")
 	id := c.Param("id")
 	num, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
@@ -52,20 +50,21 @@ func UpdateFlow(c *gin.Context) {
 
 	c.JSON(200, util.Success(data))
 
-	go plan.UpdatePlanUsed(data.BookKey)
+	go plan.UpdatePlanUsed(data.BookId)
 }
 
 // DeleteFlow 删除流水
 func DeleteFlow(c *gin.Context) {
 	id := c.Param("id")
-	num, err := strconv.ParseInt(id, 10, 64)
+	idNum, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
-	flow.DeleteFlow(num)
+	bookId := c.Param("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	util.CheckErr(err)
 
+	flow.DeleteFlow(idNum, bookIdNum)
+	go plan.UpdatePlanUsed(bookIdNum)
 	c.JSON(200, util.Success("删除成功："+id))
-
-	bookKey := c.Request.Header.Get("bookKey")
-	go plan.UpdatePlanUsed(bookKey)
 }
 
 // GetFlowsPage 分页获取流水数据
@@ -80,16 +79,16 @@ func GetFlowsPage(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
-
 	page := flow.GetFlowsPage(query)
 
 	c.JSON(200, util.Success(page))
 }
 
-func GetAll(c *gin.Context) {
-	bookKey := c.Request.Header.Get("bookKey")
-	data := flow.GetAll(bookKey)
+func GetBookAll(c *gin.Context) {
+	bookId := c.Param("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	util.CheckErr(err)
+	data := flow.GetBookAll(bookIdNum)
 
 	c.JSON(200, util.Success(data))
 }
@@ -119,9 +118,7 @@ func ImportFlows(c *gin.Context) {
 		return
 	}
 
-	bookKey := c.Request.Header.Get("bookKey")
-
-	nums := flow.ImportFlows(bookKey, flag, data.Flows)
+	nums := flow.ImportFlows(flag, data.Flows)
 
 	if nums == 0 {
 		c.JSON(500, util.Error("导入失败，请重试", nil))
@@ -129,5 +126,5 @@ func ImportFlows(c *gin.Context) {
 	}
 	c.JSON(200, util.Success(nums))
 
-	go plan.UpdatePlanUsed(bookKey)
+	go plan.UpdatePlanUsed(data.Flows[0].BookId)
 }
