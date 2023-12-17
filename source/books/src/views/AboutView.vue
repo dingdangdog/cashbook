@@ -25,7 +25,6 @@ const openOldmoon = () => {
 
 <style>
 .about {
-  height: calc(100% - 4.2rem);
   padding: 1rem;
   border-radius: 10px;
   margin: 1rem;
