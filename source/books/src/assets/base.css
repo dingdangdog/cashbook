@@ -28,3 +28,10 @@ body{
 .el-main{
   --el-main-padding: 0 !important;
 }
+
+.common-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
