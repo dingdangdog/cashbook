@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import Index from '@/views/IndexView.vue';
+// import Index from '@/views/IndexView.vue';
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <Index/>
+  <RouterView />
+  <!-- <Index/> -->
 </template>
 
 <style scoped>

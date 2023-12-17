@@ -2,7 +2,7 @@
  * 封装http请求工具
  */
 import axios from 'axios'
-import openSet from '../utils/setKey'
+import { toLogin } from '../utils/common'
 import { ElMessage } from 'element-plus'
 
 // 创建http调用者
@@ -21,9 +21,11 @@ const $http = axios.create({
 $http.interceptors.request.use(async config => {
 
     const bookKey: any = localStorage.getItem('bookKey');
+    const token: any = localStorage.getItem('token');
 
-    if (!bookKey && !($http.getUri.toString().indexOf('createUser') > 0)) {
-        await openSet();
+    if (!token && $http.getUri.toString().indexOf('admin') > 0) {
+        await toLogin();
+        return Promise.reject('请先登录');
     }
 
     // baseURL/headers 属性可能不存在，若不存在设置默认值

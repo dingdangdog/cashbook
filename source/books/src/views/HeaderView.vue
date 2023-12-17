@@ -23,7 +23,8 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="changeBookKey()"> 密钥修改 </el-dropdown-item>
-            <el-dropdown-item @click="clearUser()">关闭账本</el-dropdown-item>
+            <el-dropdown-item @click="clearUser()">切换账本</el-dropdown-item>
+            <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -504,6 +505,25 @@ const toDownload = async (form: FormInstance | undefined) => {
       ElMessage({
         type: 'info',
         message: '取消下载'
+      })
+    })
+}
+
+const logout = () => {
+  ElMessageBox.confirm('确定退出登录？', '退出登录', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      localStorage.removeItem('userId')
+      localStorage.removeItem('token')
+      location.reload()
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消退出'
       })
     })
 }
