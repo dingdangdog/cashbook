@@ -2,7 +2,6 @@ package util
 
 import (
 	"cashbook-server/types"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -11,15 +10,6 @@ import (
 func CheckErr(err error) int64 {
 	if err != nil {
 		fmt.Println("------ Something Error: ", err)
-		return 0
-	}
-	return 1
-}
-
-func CheckTxErr(tx *sql.Tx, err error) int64 {
-	if err != nil {
-		fmt.Println("------ Something Error: ", err)
-		err = tx.Rollback()
 		return 0
 	}
 	return 1
