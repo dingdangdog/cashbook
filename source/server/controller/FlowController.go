@@ -58,12 +58,9 @@ func DeleteFlow(c *gin.Context) {
 	id := c.Param("id")
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
-	bookId := c.Param("bookId")
-	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
-	util.CheckErr(err)
-
-	flow.DeleteFlow(idNum, bookIdNum)
-	go plan.UpdatePlanUsed(bookIdNum)
+	bookId := util.GetBookId(c)
+	flow.DeleteFlow(idNum, bookId)
+	go plan.UpdatePlanUsed(bookId)
 	c.JSON(200, util.Success("删除成功："+id))
 }
 
@@ -79,16 +76,16 @@ func GetFlowsPage(c *gin.Context) {
 		return
 	}
 
+	query.BookId = util.GetBookId(c)
+
 	page := flow.GetFlowsPage(query)
 
 	c.JSON(200, util.Success(page))
 }
 
 func GetBookAll(c *gin.Context) {
-	bookId := c.Param("bookId")
-	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
-	util.CheckErr(err)
-	data := flow.GetBookAll(bookIdNum)
+	bookId := util.GetBookId(c)
+	data := flow.GetBookAll(bookId)
 
 	c.JSON(200, util.Success(data))
 }
