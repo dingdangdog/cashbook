@@ -15,13 +15,13 @@ type AuthInfo struct {
 type Online struct {
 	ServerAddress string `json:"serverAddress"`
 	Secret        string `json:"secret"`
-	BookKey       string `json:"bookKey"`
+	BookId        int64  `json:"bookId"`
 }
 
 type OnlineData struct {
 	Flows []Flow `json:"flows"`
 	Plans []Plan `json:"plans"`
-	Dists []Dist `json:"dists"`
+	Dicts []Dict `json:"dicts"`
 }
 
 type OnlineUpload struct {

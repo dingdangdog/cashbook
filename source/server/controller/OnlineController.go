@@ -1,6 +1,7 @@
 package controller
 
 import (
+	sOnline "cashbook-server/service/online"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"encoding/json"
@@ -15,7 +16,6 @@ func Upload(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, util.Error("参数处理异常", nil))
 		return
 	}
-	online.BookKey = c.Request.Header.Get("bookKey")
 
 	authJson := util.Get(online.ServerAddress + "/online/checkAuth?key=" + online.Secret)
 
@@ -27,7 +27,7 @@ func Upload(c *gin.Context) {
 		return
 	}
 
-	data := online.GetUploadData(online)
+	data := sOnline.GetUploadData(online)
 	// 将请求体转换为 JSON 字节
 	jsonData, err := json.Marshal(data)
 	if util.CheckErr(err) == 0 {
@@ -58,7 +58,6 @@ func Download(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, util.Error("参数处理异常", nil))
 		return
 	}
-	online.BookKey = c.Request.Header.Get("bookKey")
 
 	authJson := util.Get(online.ServerAddress + "/online/checkAuth?key=" + online.Secret)
 
@@ -90,7 +89,7 @@ func Download(c *gin.Context) {
 		return
 	}
 
-	flag := online.SaveDownload(online, data)
+	flag := sOnline.SaveDownload(online, data)
 	if flag == 0 {
 		c.JSON(http.StatusNonAuthoritativeInfo, util.Error("数据保存出错", nil))
 		return
