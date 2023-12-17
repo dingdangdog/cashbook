@@ -1,29 +1,119 @@
 <template>
   <div class="el-dialog-main">
     <div class="book-cards common-center">
-      <el-card class="book-card" shadow="hover"> Always </el-card>
-      <el-card class="book-card" shadow="hover"> Hover </el-card>
-      <el-card class="book-card" shadow="hover"> Never </el-card>
+      <el-card v-for="book in books" class="book-card" shadow="hover" @click="openBook(book.id)">
+        {{ book.bookName }}
+      </el-card>
     </div>
   </div>
-  <hr/>
+  <hr />
   <footer class="custom-dialog-footer common-center">
-    <el-button type="primary">添加账本</el-button>
+    <el-button type="primary" @click="addBook">添加账本</el-button>
   </footer>
+  <el-dialog style="width: 30vw" v-model="addBookDialog.visable" :title="addBookDialog.title">
+    <div class="el-dialog-main">
+      <el-form ref="bookFormRef" :model="newBook" :rules="bookFormRules">
+        <el-form-item label="账本名称" :label-width="formLabelWidth" prop="bookName">
+          <el-input v-model="newBook.bookName" />
+        </el-form-item>
+      </el-form>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="confirmBookForm(bookFormRef)"> 确定 </el-button>
+        <el-button @click="resetBookForm"> 重置 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import type { Book } from '@/types/model/book'
+
+import { createBook, getBook } from '@/api/api.book'
+
+onMounted(() => {
+  initBooks()
+})
+
+const books = ref<Book[]>([])
+
+const initBooks = () => {
+  getBook()
+    .then((res) => {
+      books.value = res
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+const openBook = (id: number) => {
+  localStorage.setItem('bookId', id.toString())
+  window.location.href = '/'
+}
+
+// 表单输入框宽度
+const formLabelWidth = ref('100px')
+if (document.body.clientWidth <= 480) {
+  formLabelWidth.value = '60px'
+}
+
+const addBookDialog = ref({
+  visable: false,
+  title: '添加账本'
+})
+
+const addBook = () => {
+  addBookDialog.value.visable = true
+}
+
+const newBook = ref<Book>({
+  id: 0,
+  bookName: '',
+  userId: 0,
+  createDate: ''
+})
+// 额度设置表单实例
+const bookFormRef = ref<FormInstance>()
+
+// 表单输入框校验规则
+const bookFormRules = ref<FormRules>({
+  bookName: [{ required: true, message: '请输入账本名称', trigger: 'blur' }]
+})
+
+const confirmBookForm = async (form: FormInstance | undefined) => {
+  if (!form) return
+  if (await form.validate()) {
+    createBook({ bookName: newBook.value.bookName })
+      .then((res) => {
+        ElMessage.success('添加成功')
+        addBookDialog.value.visable = false
+        initBooks()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  } else {
+    return false
+  }
+}
+const resetBookForm = () => {
+  if (!bookFormRef.value) return
+  bookFormRef.value.resetFields()
+}
 </script>
 
 <style scoped>
-
-.book-card{
+.book-card {
   width: 10rem;
   height: 4rem;
   margin: 1rem;
 }
-.book-card:hover{
-  background-color: rgba(115, 204, 229, 0.473)
+.book-card:hover {
+  background-color: rgba(115, 204, 229, 0.473);
 }
 </style>

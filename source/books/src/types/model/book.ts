@@ -1,12 +1,13 @@
 export interface Book {
   id: number;
+  userId: number;
   bookName: string;
-  bookKey: string;
   createDate: string;
 }
 
 export class BookQuery {
   id?: number;
+  userId?: number;
   bookName?: string;
   createDate?: string;
 }
@@ -15,5 +16,4 @@ export class BookQuery {
 */
 export interface CreateBookDto {
   bookName: string;
-  bookKey: string;
 }
