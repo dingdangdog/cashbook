@@ -23,3 +23,6 @@
 /**/cashbook-*.exe
 ### Mac OS ###
 .DS_Store
+
+/source/server/resources/data/user.json
+/source/server/resources/data/flow/*
