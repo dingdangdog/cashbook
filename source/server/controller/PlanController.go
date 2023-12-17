@@ -6,7 +6,6 @@ import (
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 func SetPlan(c *gin.Context) {
@@ -34,11 +33,9 @@ func SetPlan(c *gin.Context) {
 
 func GetPlan(c *gin.Context) {
 	month := c.Param("month")
-	bookId := c.Param("bookId")
-	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
-	util.CheckErr(err)
+	bookId := util.GetBookId(c)
 
-	data := plan.GetPlan(bookIdNum, month)
+	data := plan.GetPlan(bookId, month)
 
 	c.JSON(200, util.Success(data))
 }
