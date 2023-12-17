@@ -5,7 +5,7 @@
       <template #title>消费日历</template>
     </el-menu-item>
 
-    <el-menu-item index="/home">
+    <el-menu-item index="/analytics">
       <el-icon><Monitor /></el-icon>
       <template #title>分析概览</template>
     </el-menu-item>
