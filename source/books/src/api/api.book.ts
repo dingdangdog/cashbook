@@ -1,7 +1,7 @@
 import $http from './index'
 import type { Book, CreateBookDto } from '../types/model/book';
 
-const prefix = '/book';
+const prefix = '/admin/book';
 
 /**
  * 查询用户信息
