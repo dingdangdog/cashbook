@@ -13,6 +13,7 @@ func main() {
 	router := gin.Default()
 	api := router.Group("/api")
 	api.GET("/server", controller.GetServerInfo)
+	api.POST("/register", controller.Register)
 	api.POST("/login", controller.Login)
 
 	adminApi := api.Group("/admin")
@@ -66,7 +67,7 @@ func checkToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if util.IsTokenExpired(token) {
+		if !util.IsTokenExpired(token) {
 			c.Next()
 			return
 		} else {
