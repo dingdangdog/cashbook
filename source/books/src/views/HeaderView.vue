@@ -12,6 +12,7 @@
     <div class="header-info header-buttons">
       <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button>
       <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
+      <el-button plain @click="showBookDialog()"> 切换账本 </el-button>
     </div>
 
     <!-- 其他信息 -->
@@ -23,7 +24,6 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="changeBookKey()"> 密钥修改 </el-dropdown-item>
-            <el-dropdown-item @click="clearUser()">切换账本</el-dropdown-item>
             <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -55,29 +55,12 @@
 
   <!-- 弹出框表单：额度设置 -->
   <el-dialog style="width: 30vw" v-model="planDialog.visable" :title="planDialog.title">
-    <div class="el-dialog-main">
-      <el-form ref="planFormRef" :model="planRef" :rules="planFormRules">
-        <el-form-item label="月份" :label-width="formLabelWidth" prop="month">
-          <el-date-picker
-            v-model="planRef.month"
-            type="month"
-            format="YYYY-MM"
-            placeholder="月份"
-          />
-        </el-form-item>
-
-        <el-form-item label="额度" :label-width="formLabelWidth" prop="limitMoney">
-          <el-input-number v-model="planRef.limitMoney" :min="0" />
-        </el-form-item>
-      </el-form>
-    </div>
-    <!-- 表单确认按钮 -->
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="resetPlanForm()"> 取消 </el-button>
-        <el-button type="primary" @click="confirmPlanForm(planFormRef)"> 确定 </el-button>
-      </span>
-    </template>
+    <PlanDialog />
+  </el-dialog>
+  
+  <!-- 弹出框：账本设置 -->
+  <el-dialog style="width: 50vw" v-model="bookDialog.visable" :title="bookDialog.title">
+    <BookDialog />
   </el-dialog>
 
   <!-- 弹出框表单：在线同步 -->
@@ -114,16 +97,15 @@ import { ref, reactive } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 
+import BookDialog from '@/views/dialogs/BookDialog.vue'
+import PlanDialog from '@/views/dialogs/PlanDialog.vue'
+
 import { changeKey } from '@/api/api.book'
-import { setPlans, getPlan } from '@/api/api.plan'
 import { upload, download } from '@/api/api.online'
 import { getServerInfo } from '@/api/api.server'
 
-import { dateFormater } from '@/utils/common'
-import { clearUser } from '@/utils/setKey'
 import type { OnlineSync } from '@/types/model/online'
 import type { Book } from '@/types/model/book'
-import type { Plan } from '@/types/model/plan'
 
 // 服务器信息封装
 const serverInfo = ref({
@@ -266,23 +248,6 @@ const resetKeyForm = () => {
   newKey.value.keyAgain = ''
 }
 
-// 额度设置表单实例
-const planFormRef = ref<FormInstance>()
-
-const planModel: Plan = {
-  month: new Date(),
-  limitMoney: 0,
-  usedMoney: undefined
-}
-
-const planRef = reactive(planModel)
-
-// 表单输入框校验规则
-const planFormRules = ref<FormRules>({
-  month: [{ required: true, message: '请选择额度月份', trigger: 'blur' }],
-  limitMoney: [{ required: true, message: '请填入额度', trigger: 'blur' }]
-})
-
 const planDialog = ref({
   visable: false,
   title: ''
@@ -292,63 +257,13 @@ const showPlanDialog = () => {
   planDialog.value.title = '额度设置'
 }
 
-// 提交表单（新增或修改）
-const confirmPlanForm = async (form: FormInstance | undefined) => {
-  if (!form) return
-  if (
-    !(await form.validate((valid, fields) => {
-      if (valid) {
-        console.log('submit!')
-      } else {
-        console.log('error submit!', fields)
-        return false
-      }
-    }))
-  ) {
-    return
-  }
-  getPlan(dateFormater('YYYY-MM', planRef.month) || '').then((plan) => {
-    if (plan && plan.month) {
-      ElMessageBox.confirm(
-        '已存在额度设置(' + plan.month + '：' + plan.limitMoney + ')，是否修改设置？',
-        '通知',
-        {
-          confirmButtonText: '确定',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          toSetPlan(planRef, 1)
-        })
-        .catch(() => {
-          ElMessage({
-            type: 'info',
-            message: '取消设置!'
-          })
-        })
-    } else {
-      toSetPlan(planRef, 0)
-    }
-  })
-}
-
-const toSetPlan = (plan: Plan, o: number) => {
-  plan.month = dateFormater('YYYY-MM', plan.month || new Date())
-  setPlans(plan, o).then(() => {
-    ElMessage({
-      type: 'success',
-      message: '设置成功!'
-    })
-
-    resetPlanForm()
-  })
-}
-
-// 重置表单数据
-const resetPlanForm = () => {
-  planDialog.value.visable = false
-  planRef.month = ''
-  planRef.limitMoney = 0
+const bookDialog = ref({
+  visable: false,
+  title: ''
+})
+const showBookDialog = () => {
+  bookDialog.value.visable = true
+  bookDialog.value.title = '账本切换'
 }
 
 // 额度设置表单实例
@@ -573,4 +488,5 @@ const logout = () => {
   float: left;
   width: auto;
 }
+
 </style>
