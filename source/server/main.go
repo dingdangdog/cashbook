@@ -2,8 +2,6 @@ package main
 
 import (
 	"cashbook-server/controller"
-	"cashbook-server/dao"
-	"cashbook-server/service/book"
 	"cashbook-server/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -12,22 +10,20 @@ import (
 
 func main() {
 
-	dao.InitDb()
-
 	router := gin.Default()
 	api := router.Group("/api")
-
+	api.GET("/server", controller.GetServerInfo)
 	api.POST("/login", controller.Login)
 
-	api.GET("/jBook/:key", controller.GetBook)
-	api.GET("/allBook", controller.GetAllBook)
-	api.POST("/jBook", controller.CreateBook)
-	api.GET("/server", controller.GetServerInfo)
-
 	adminApi := api.Group("/admin")
-	adminApi.Use(openBook())
+	adminApi.Use(checkToken())
 	{
-		adminApi.POST("/jBook/changeKey", controller.ChangeKey)
+		// 账本相关
+		adminApi.GET("/book", controller.GetBookList)
+		adminApi.POST("/book", controller.CreateBook)
+		adminApi.PUT("/book/:id", controller.UpdateBook)
+		adminApi.DELETE("/book/:id", controller.DeleteBook)
+
 		// 字典相关
 		adminApi.GET("/dict/:type", controller.GetDictList)
 		adminApi.GET("/dict", controller.GetDictPage)
@@ -40,7 +36,7 @@ func main() {
 		adminApi.POST("/analysis/payTypeBar", controller.GetPayTypeBar)
 		adminApi.POST("/analysis/monthBar", controller.MonthBar)
 		// 流水相关
-		adminApi.GET("/flow/getAll", controller.GetAll)
+		adminApi.GET("/flow/getAll", controller.GetBookAll)
 		adminApi.POST("/flow/importFlows", controller.ImportFlows)
 		adminApi.GET("/flow", controller.GetFlowsPage)
 		adminApi.POST("/flow", controller.AddFlow)
@@ -58,27 +54,27 @@ func main() {
 	util.CheckErr(err)
 }
 
-func openBook() gin.HandlerFunc {
+// checkToken 校验token
+func checkToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		bookKey := c.Request.Header.Get("bookKey")
-		if 0 == len(bookKey) {
+		token := c.Request.Header.Get("token")
+		if len(token) <= 0 {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success":      false,
-				"errorMessage": "请输入账本密钥！",
+				"errorMessage": "请先登录！",
 			})
 			c.Abort()
 			return
 		}
-
-		if book.GetBook(bookKey).Id == 0 {
+		if util.IsTokenExpired(token) {
+			c.Next()
+			return
+		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"success":      false,
-				"errorMessage": "账本不存在！",
+				"errorMessage": "登录超时，请重新登录！",
 			})
 			c.Abort()
-			return
 		}
-
-		c.Next()
 	}
 }

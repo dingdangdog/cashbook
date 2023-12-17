@@ -5,7 +5,6 @@ import (
 	sAnalysis "cashbook-server/service/analysis"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"database/sql"
 	_ "modernc.org/sqlite"
 	"strconv"
 )
@@ -53,6 +52,6 @@ func UpdatePlanUsed(bookId int64) {
 }
 
 // ImportPlans 导入计划 TODO
-func ImportPlans(bookKey string, plans []types.Plan, tx *sql.Tx) int64 {
+func ImportPlans(plans []types.Plan) int64 {
 	return 1
 }

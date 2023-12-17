@@ -9,8 +9,8 @@ import (
 	"strconv"
 )
 
-// CreateOrUpdateBook 创建或更新账本
-func CreateOrUpdateBook(c *gin.Context) {
+// CreateBook 创建账本
+func CreateBook(c *gin.Context) {
 	var data types.Book
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
@@ -26,10 +26,31 @@ func CreateOrUpdateBook(c *gin.Context) {
 	c.JSON(200, util.Success(data))
 }
 
+// UpdateBook 更新账本
+func UpdateBook(c *gin.Context) {
+	var data types.Book
+	if err := c.ShouldBindJSON(&data); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+
+	id := c.Param("id")
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	util.CheckErr(err)
+	data.Id = idNum
+	sBook.CreateOrUpdateBook(data)
+	c.JSON(200, util.Success(data))
+}
+
 // DeleteBook 删除账本
 func DeleteBook(c *gin.Context) {
 	id := c.Param("id")
-	intId, _ := strconv.ParseInt(id, 10, 64)
+	intId, err := strconv.ParseInt(id, 10, 64)
+	util.CheckErr(err)
 	sBook.DeleteBook(intId)
 
 	c.JSON(200, util.Success("删除成功："+id))
