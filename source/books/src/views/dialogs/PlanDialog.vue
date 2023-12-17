@@ -119,11 +119,5 @@ const confirmPlanForm = async (form: FormInstance | undefined) => {
 </script>
 
 <style scoped>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
+
 </style>
