@@ -8,7 +8,7 @@
       <el-form-item label="Password" prop="pass" class="login-input">
         <el-input v-model="formData.password" type="password" autocomplete="off" />
       </el-form-item>
-      <el-checkbox v-model="remeberUser" class="login-button">remember</el-checkbox>
+      <el-checkbox v-model="remeberUser" class="login-button">Remember me</el-checkbox>
       <el-button type="success" class="login-button">Regiter</el-button>
       <el-button type="primary" class="login-button" @click="submitForm(loginForm)">Login</el-button>
     </el-form>
@@ -74,11 +74,12 @@ const submitForm = async (form: FormInstance | undefined) => {
 <style scoped>
 /* Your CSS code here */
 
+
 .chart-container {
   padding: 2rem;
   border-radius: 10px;
   margin: 1rem;
-  height: 100%;
+  height: 90vh;
   border: solid 1px var(--el-menu-border-color);
   display: flex;
   align-items: center;
