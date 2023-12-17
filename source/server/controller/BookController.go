@@ -20,6 +20,8 @@ func CreateBook(c *gin.Context) {
 		})
 		return
 	}
+	userId := util.GetUserId(c)
+	data.UserId = userId
 
 	id := sBook.CreateOrUpdateBook(data)
 	data.Id = id
@@ -58,8 +60,7 @@ func DeleteBook(c *gin.Context) {
 
 // GetBookList 根据用户ID获取全部账本
 func GetBookList(c *gin.Context) {
-	token := c.Request.Header.Get("token")
-	userId := util.GetUserId(token)
+	userId := util.GetUserId(c)
 	data := sBook.GetBookList(userId)
 	c.JSON(200, util.Success(data))
 }
