@@ -3,6 +3,7 @@ package util
 import (
 	"cashbook-server/service/server"
 	"cashbook-server/types"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"time"
 )
@@ -46,7 +47,8 @@ func IsTokenExpired(tokenString string) bool {
 }
 
 // GetUserId 获取token中的用户
-func GetUserId(tokenString string) int64 {
-	_, claims, _ := ParseToken(tokenString)
+func GetUserId(c *gin.Context) int64 {
+	token := c.Request.Header.Get("token")
+	_, claims, _ := ParseToken(token)
 	return int64((*claims)["id"].(float64))
 }
