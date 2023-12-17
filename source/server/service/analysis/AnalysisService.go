@@ -1,102 +1,120 @@
 package analysis
 
 import (
-	"cashbook-server/dao"
+	dFlow "cashbook-server/dao/flow"
 	"cashbook-server/types"
-	"cashbook-server/util"
+	"strconv"
 )
 
-func GetDailyLine(flowQuery types.FlowParam) []types.DailyLine {
-	sqlGetFlowPage := `SELECT day, COALESCE(SUM(money),0) AS 'daySum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
-	sqlWhere := dao.getWhereSql(flowQuery)
-	sqlGroupBy := ` GROUP BY day;`
+// GetDailyLine 获取每日流水折线图数据
+func GetDailyLine(param types.FlowParam) []types.DailyLine {
+	flowList := dFlow.FindLists(param)
+	sumMap := make(map[string]float64)
 
-	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := dao.db.Query(sql)
-	util.CheckErr(err)
-
-	results := make([]types.DailyLine, 0)
-	if rows != nil {
-		for rows.Next() {
-			var daily types.DailyLine
-			err = rows.Scan(&daily.Day, &daily.DaySum)
-			util.CheckErr(err)
-			results = append(results, daily)
+	// asc sort flowList by day
+	for i := 0; i < len(flowList); i++ {
+		for j := i + 1; j < len(flowList); j++ {
+			if flowList[i].Day > flowList[j].Day {
+				flowList[i], flowList[j] = flowList[j], flowList[i]
+			}
 		}
-		err := rows.Close()
-		util.CheckErr(err)
 	}
 
-	return results
+	for _, flow := range flowList {
+		if sumMap[flow.Day] == 0 {
+			sumMap[flow.Day] = flow.Money
+		} else {
+			sumMap[flow.Day] += flow.Money
+		}
+	}
+	lines := make([]types.DailyLine, len(sumMap))
+	for day, money := range sumMap {
+		dailyLine := types.DailyLine{
+			Day:    day,
+			DaySum: strconv.FormatFloat(money, 'f', 2, 64),
+		}
+		lines = append(lines, dailyLine)
+	}
+
+	return lines
 }
 
-func GetTypePie(flowQuery types.FlowParam) []types.TypePie {
-	sqlGetFlowPage := `SELECT type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
-	sqlWhere := dao.getWhereSql(flowQuery)
-	sqlGroupBy := ` GROUP BY type;`
+// GetTypePie 获取消费类型饼图数据
+func GetTypePie(param types.FlowParam) []types.TypePie {
+	flowList := dFlow.FindLists(param)
+	sumMap := make(map[string]float64)
 
-	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := dao.db.Query(sql)
-	util.CheckErr(err)
-
-	results := make([]types.TypePie, 0)
-	if rows != nil {
-		for rows.Next() {
-			var typePie types.TypePie
-			err = rows.Scan(&typePie.Type, &typePie.TypeSum)
-			util.CheckErr(err)
-			results = append(results, typePie)
+	for _, flow := range flowList {
+		if sumMap[flow.Type] == 0 {
+			sumMap[flow.Type] = flow.Money
+		} else {
+			sumMap[flow.Type] += flow.Money
 		}
-		err := rows.Close()
-		util.CheckErr(err)
+	}
+	pies := make([]types.TypePie, len(sumMap))
+	for t, money := range sumMap {
+		typePie := types.TypePie{
+			Type:    t,
+			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
+		}
+		pies = append(pies, typePie)
 	}
 
-	return results
+	return pies
 }
 
-func GetPayTypeBar(flowQuery types.FlowParam) []types.TypePie {
-	sqlGetFlowPage := `SELECT pay_type, COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + flowQuery.BookKey + "'"
-	sqlWhere := dao.getWhereSql(flowQuery)
-	sqlGroupBy := ` GROUP BY pay_type;`
-
-	sql := sqlGetFlowPage + sqlWhere + sqlGroupBy
-	rows, err := dao.db.Query(sql)
-	util.CheckErr(err)
-
-	results := make([]types.TypePie, 0)
-	if rows != nil {
-		for rows.Next() {
-			var typePie types.TypePie
-			err = rows.Scan(&typePie.Type, &typePie.TypeSum)
-			util.CheckErr(err)
-			results = append(results, typePie)
+// GetPayTypeBar 获取支付类型饼图数据
+func GetPayTypeBar(param types.FlowParam) []types.TypePie {
+	flowList := dFlow.FindLists(param)
+	sumMap := make(map[string]float64)
+	// asc sort flowList by day
+	for i := 0; i < len(flowList); i++ {
+		for j := i + 1; j < len(flowList); j++ {
+			if flowList[i].Day > flowList[j].Day {
+				flowList[i], flowList[j] = flowList[j], flowList[i]
+			}
 		}
-		err := rows.Close()
-		util.CheckErr(err)
+	}
+	for _, flow := range flowList {
+		if sumMap[flow.PayType] == 0 {
+			sumMap[flow.PayType] = flow.Money
+		} else {
+			sumMap[flow.PayType] += flow.Money
+		}
+	}
+	pies := make([]types.TypePie, len(sumMap))
+	for t, money := range sumMap {
+		typePie := types.TypePie{
+			Type:    t,
+			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
+		}
+		pies = append(pies, typePie)
 	}
 
-	return results
+	return pies
 }
 
-func MonthBar(bookKey string) []types.TypePie {
-	sqlGetFlowPage := `SELECT SUBSTR(day, 1, 7) AS 'type', COALESCE(SUM(money),0) AS 'typeSum' FROM flows WHERE book_key = '` + bookKey +
-		`' GROUP BY SUBSTR(day, 6, 2) ORDER BY SUBSTR(day, 1, 7);`
+// MonthBar 获取月度统计数据
+func MonthBar(bookId int64) []types.TypePie {
+	flowList := dFlow.FindLists(types.FlowParam{BookId: bookId})
+	sumMap := make(map[string]float64)
 
-	sql := sqlGetFlowPage
-	rows, err := dao.db.Query(sql)
-	util.CheckErr(err)
-
-	results := make([]types.TypePie, 0)
-	if rows != nil {
-		for rows.Next() {
-			var typePie types.TypePie
-			err = rows.Scan(&typePie.Type, &typePie.TypeSum)
-			util.CheckErr(err)
-			results = append(results, typePie)
+	for _, flow := range flowList {
+		month := flow.Day[0:7]
+		if sumMap[month] == 0 {
+			sumMap[month] = flow.Money
+		} else {
+			sumMap[month] += flow.Money
 		}
-		err := rows.Close()
-		util.CheckErr(err)
+	}
+	months := make([]types.TypePie, len(sumMap))
+	for month, money := range sumMap {
+		typePie := types.TypePie{
+			Type:    month,
+			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
+		}
+		months = append(months, typePie)
 	}
 
-	return results
+	return months
 }

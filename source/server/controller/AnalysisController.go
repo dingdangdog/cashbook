@@ -6,6 +6,7 @@ import (
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func GetDailyLine(c *gin.Context) {
@@ -19,7 +20,10 @@ func GetDailyLine(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	bookId := c.Request.Header.Get("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	util.CheckErr(err)
+	query.BookId = bookIdNum
 
 	data := analysis.GetDailyLine(query)
 
@@ -37,7 +41,10 @@ func GetTypePie(c *gin.Context) {
 		return
 	}
 
-	query.BookKey = c.Request.Header.Get("bookKey")
+	bookId := c.Request.Header.Get("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	util.CheckErr(err)
+	query.BookId = bookIdNum
 
 	data := analysis.GetTypePie(query)
 
@@ -54,8 +61,10 @@ func GetPayTypeBar(c *gin.Context) {
 		})
 		return
 	}
-
-	query.BookKey = c.Request.Header.Get("bookKey")
+	bookId := c.Request.Header.Get("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	util.CheckErr(err)
+	query.BookId = bookIdNum
 
 	data := analysis.GetPayTypeBar(query)
 
@@ -63,9 +72,11 @@ func GetPayTypeBar(c *gin.Context) {
 }
 
 func MonthBar(c *gin.Context) {
-	bookKey := c.Request.Header.Get("bookKey")
+	bookId := c.Request.Header.Get("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	util.CheckErr(err)
 
-	data := analysis.MonthBar(bookKey)
+	data := analysis.MonthBar(bookIdNum)
 
 	c.JSON(200, util.Success(data))
 }
