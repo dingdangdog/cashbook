@@ -3,8 +3,10 @@ package util
 import (
 	"cashbook-server/types"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func CheckErr(err error) int64 {
@@ -66,4 +68,11 @@ func GetPage(pageNum int64, pageSize int64, data []interface{}) types.Page {
 	page.PageData = data[startIndex:endIndex]
 
 	return page
+}
+
+func GetBookId(c *gin.Context) int64 {
+	bookId := c.Request.Header.Get("bookId")
+	bookIdNum, err := strconv.ParseInt(bookId, 10, 64)
+	CheckErr(err)
+	return bookIdNum
 }
