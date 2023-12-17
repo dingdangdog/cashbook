@@ -72,3 +72,8 @@ export const dateFormater = (format: string, date: string | Date) => {
   }
   return format
 }
+
+
+export const toLogin = () => {
+  window.location.href = '/login';
+}
