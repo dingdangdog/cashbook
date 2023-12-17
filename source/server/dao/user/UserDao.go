@@ -2,6 +2,7 @@ package user
 
 import (
 	"cashbook-server/types"
+	"cashbook-server/util"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -9,7 +10,7 @@ import (
 )
 
 // FileName 文件名称
-const FileName = "./data/user.json"
+const FileName = "./resources/data/user.json"
 
 var userStatic []types.User
 
@@ -43,14 +44,16 @@ func GetAll() []types.User {
 // 保存文件
 func saveFile() {
 	jsonData, _ := json.Marshal(userStatic)
-	_ = os.WriteFile(FileName, jsonData, os.ModePerm)
+	err := os.WriteFile(FileName, jsonData, os.ModePerm)
+	util.CheckErr(err)
 }
 
 // AddUser 添加数据
-func AddUser(user types.User) {
+func AddUser(user types.User) int64 {
 	user.Id = getNextId()
 	userStatic = append(userStatic, user)
 	saveFile()
+	return user.Id
 }
 
 // 初始化获取最大的ID
