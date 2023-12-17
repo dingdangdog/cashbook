@@ -5,7 +5,7 @@ import HeaderView from '@/views/HeaderView.vue'
 </script>
 
 <template>
-  <el-container style="height: 100%">
+  <el-container style="height: 100vh">
     <!-- 头部-基础功能 -->
     <el-header id="main-header">
       <HeaderView />
@@ -16,7 +16,7 @@ import HeaderView from '@/views/HeaderView.vue'
         <MenuView />
       </el-aside>
       <!-- 页面主体-路由页面 -->
-      <el-main style="padding: 0.5rem;">
+      <el-main>
         <RouterView />
       </el-main>
     </el-container>

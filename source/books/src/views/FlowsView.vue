@@ -12,8 +12,8 @@ const FlowTable = defineAsyncComponent(() => import('@/components/table/FlowTabl
 
 <style>
 .flow-container {
-  height: calc(100% - 6.2rem);
-  padding: 2rem;
+  height: calc(100% - 4.2rem);
+  padding: 1rem;
   border-radius: 10px;
   margin: 1rem;
   border: solid 1px var(--el-menu-border-color);

@@ -9,4 +9,9 @@ import { defineAsyncComponent } from 'vue'
 const CalendarChart = defineAsyncComponent(() => import('@/components/charts/CalendarChart.vue'))
 </script>
 
-<style></style>
+<style>
+.calendar-container {
+  height: calc(100% - 2rem);
+  padding: 1rem;
+}
+</style>

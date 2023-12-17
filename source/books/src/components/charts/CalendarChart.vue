@@ -121,10 +121,8 @@ const moneyClass = (money: any) => {
 </script>
 <style>
 .calendar-main {
-  height: 100%;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 10px;
-  margin: 1rem;
   border: solid 1px var(--el-menu-border-color);
 }
 

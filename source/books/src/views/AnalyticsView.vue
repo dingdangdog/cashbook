@@ -31,7 +31,7 @@ const MonthBar = defineAsyncComponent(() => import('@/components/charts/MonthBar
 
 <style scoped>
 .chart-container {
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 10px;
   margin: 1rem;
   border: solid 1px var(--el-menu-border-color);
