@@ -7,8 +7,8 @@ const prefix = '/admin/book';
  * 查询用户信息
  * @returns book
  */
-export function getBook(bookKey: string): Promise<Book> {
-  return $http({ url: prefix + "/" + bookKey, method: "get"})
+export function getBook(): Promise<Book[]> {
+  return $http({ url: prefix, method: "get"})
 }
 
 /**
