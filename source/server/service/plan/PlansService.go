@@ -5,7 +5,6 @@ import (
 	sAnalysis "cashbook-server/service/analysis"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	_ "modernc.org/sqlite"
 	"strconv"
 )
 

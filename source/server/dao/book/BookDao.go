@@ -9,7 +9,7 @@ import (
 )
 
 // FileName 文件名称
-const FileName = "./data/jBook.json"
+const FileName = "./resources/data/book.json"
 
 var bookStatic []types.Book
 
