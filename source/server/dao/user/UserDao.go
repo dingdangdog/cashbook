@@ -70,7 +70,8 @@ func initLastId() {
 
 // 获取下一个ID
 func getNextId() int64 {
-	return lastId + 1
+	lastId = lastId + 1
+	return lastId
 }
 
 // Delete 按照ID删除数据

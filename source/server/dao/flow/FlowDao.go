@@ -162,7 +162,8 @@ func initLastId() {
 
 // 获取下一个ID
 func getNextId() int64 {
-	return lastId + 1
+	lastId = lastId + 1
+	return lastId
 }
 
 // 保存文件
