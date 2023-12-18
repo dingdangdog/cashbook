@@ -27,7 +27,7 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 			sumMap[flow.Day] += flow.Money
 		}
 	}
-	lines := make([]types.DailyLine, len(sumMap))
+	lines := make([]types.DailyLine, 0)
 	for day, money := range sumMap {
 		dailyLine := types.DailyLine{
 			Day:    day,
@@ -51,7 +51,7 @@ func GetTypePie(param types.FlowParam) []types.TypePie {
 			sumMap[flow.Type] += flow.Money
 		}
 	}
-	pies := make([]types.TypePie, len(sumMap))
+	pies := make([]types.TypePie, 0)
 	for t, money := range sumMap {
 		typePie := types.TypePie{
 			Type:    t,
@@ -82,7 +82,7 @@ func GetPayTypeBar(param types.FlowParam) []types.TypePie {
 			sumMap[flow.PayType] += flow.Money
 		}
 	}
-	pies := make([]types.TypePie, len(sumMap))
+	pies := make([]types.TypePie, 0)
 	for t, money := range sumMap {
 		typePie := types.TypePie{
 			Type:    t,
@@ -107,7 +107,7 @@ func MonthBar(bookId int64) []types.TypePie {
 			sumMap[month] += flow.Money
 		}
 	}
-	months := make([]types.TypePie, len(sumMap))
+	months := make([]types.TypePie, 0)
 	for month, money := range sumMap {
 		typePie := types.TypePie{
 			Type:    month,
