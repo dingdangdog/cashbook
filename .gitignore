@@ -25,3 +25,4 @@
 .DS_Store
 
 /source/server/resources/data/**/*
+/source/server/cashbook.log
