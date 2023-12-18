@@ -65,6 +65,7 @@ import { onMounted, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 import { showBookDialogFlag } from '@/stores/flag'
+import { userInfo } from '@/stores/counter'
 
 import BookDialog from '@/views/dialogs/BookDialog.vue'
 import PlanDialog from '@/views/dialogs/PlanDialog.vue'
@@ -72,6 +73,8 @@ import OnlineDialog from '@/views/dialogs/OnlineDialog.vue'
 import ChangePasswordDialog from '@/views/dialogs/ChangePasswordDialog.vue'
 
 import { getServerInfo } from '@/api/api.server'
+
+import router from '@/router/index'
 
 onMounted(() => {
   if (!localStorage.getItem('bookId')) {
@@ -119,10 +122,10 @@ if (document.body.clientWidth <= 480) {
 }
 
 // 用户名
-const name = localStorage.getItem('name')
+const name = userInfo.value.name
 
 // 账本名
-const bookName = localStorage.getItem('bookName')
+const bookName = userInfo.value.bookName
 
 const keyDialog = ref({
   visable: false,
@@ -178,7 +181,7 @@ const logout = () => {
       localStorage.removeItem('bookId')
       localStorage.removeItem('bookName')
       localStorage.removeItem('token')
-      location.reload()
+      router.push({ path: '/login' })
     })
     .catch(() => {
       ElMessage({
