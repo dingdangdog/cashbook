@@ -9,7 +9,7 @@ import (
 )
 
 // FileName 文件名称
-const FileName = "./resources/data/plan.json"
+const FileName = "./data/plan.json"
 
 var planStatic []types.Plan
 

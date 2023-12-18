@@ -9,7 +9,7 @@ import (
 )
 
 // FileName 文件名称
-const FileName = "./resources/data/dict.json"
+const FileName = "./data/dict.json"
 
 var dictStatic []types.Dict
 

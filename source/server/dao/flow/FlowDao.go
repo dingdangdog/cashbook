@@ -10,7 +10,7 @@ import (
 )
 
 // FilePath 文件名称
-const FilePath = "./resources/data/flow"
+const FilePath = "./data/flow"
 
 var flowStatic []types.Flow
 

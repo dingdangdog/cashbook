@@ -8,7 +8,7 @@ import (
 )
 
 // FileName 文件名称
-const FileName = "./resources/config/server.json"
+const FileName = "./config/server.json"
 
 var serverInfo types.Server
 
