@@ -14,8 +14,6 @@ func GetDictList(c *gin.Context) {
 	dictType := c.Param("type")
 	bookId := util.GetBookId(c)
 
-	sDict.CheckAndInitBookDict(bookId)
-
 	data := sDict.GetDictList(bookId, dictType)
 
 	c.JSON(200, util.Success(data))
@@ -33,7 +31,6 @@ func GetDictPage(c *gin.Context) {
 		return
 	}
 
-	sDict.CheckAndInitBookDict(query.BookId)
 	page := sDict.GetDictPage(query)
 
 	c.JSON(200, util.Success(page))

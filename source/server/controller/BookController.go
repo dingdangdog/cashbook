@@ -2,6 +2,7 @@ package controller
 
 import (
 	sBook "cashbook-server/service/book"
+	sDict "cashbook-server/service/dict"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,8 @@ func CreateBook(c *gin.Context) {
 
 	id := sBook.CreateOrUpdateBook(data)
 	data.Id = id
+	sDict.CheckAndInitBookDict(id)
+
 	c.JSON(200, util.Success(data))
 }
 
