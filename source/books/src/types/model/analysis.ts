@@ -1,5 +1,5 @@
 export interface DailyLineChartQuery {
-  bookKey?: string;
+  bookId?: number;
   startDay?: string;
   endDay?: string;
 }
@@ -10,7 +10,7 @@ export interface DailyLineChart {
 }
 
 export interface TypePieChartQuery {
-  bookKey?: string;
+  bookId?: number;
   startDay?: string;
   endDay?: string;
 }

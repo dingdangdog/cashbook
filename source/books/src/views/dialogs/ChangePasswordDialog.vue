@@ -44,7 +44,6 @@ const newKey = ref({
 var book: Book = {
   id: 0,
   bookName: localStorage.getItem('bookName') || '',
-  bookKey: '',
   createDate: ''
 }
 
@@ -83,20 +82,20 @@ const confirmKeyForm = async (dialgoForm: FormInstance | undefined) => {
   ) {
     return
   }
-  book.bookKey = newKey.value.key
+  book.bookName = newKey.value.key
   changeKey(book)
     .then((res) => {
-      ElMessageBox.confirm('修改成功，新密钥(' + res.bookKey + ')，请重新登录', '通知', {
+      ElMessageBox.confirm('修改成功，新密钥(' + res.bookName + ')，请重新登录', '通知', {
         confirmButtonText: '确定',
         type: 'warning'
       })
         .then(() => {
-          localStorage.removeItem('bookKey')
+          localStorage.removeItem('bookId')
           localStorage.removeItem('bookName')
           location.reload()
         })
         .catch(() => {
-          localStorage.removeItem('bookKey')
+          localStorage.removeItem('bookId')
           localStorage.removeItem('bookName')
           location.reload()
         })

@@ -150,7 +150,7 @@ const toDownload = async (form: FormInstance | undefined) => {
             message: '下载成功!'
           })
           ElMessageBox.confirm(
-            '下载成功，请重新登录当前账本。当前账本密码：' + window.localStorage.getItem('bookKey'),
+            '下载成功，请重新登录当前账本。当前账本密码：' + window.localStorage.getItem('bookId'),
             '下载成功',
             {
               confirmButtonText: '确定',
@@ -159,12 +159,12 @@ const toDownload = async (form: FormInstance | undefined) => {
             }
           )
             .then(() => {
-              localStorage.removeItem('bookKey')
+              localStorage.removeItem('bookId')
               localStorage.removeItem('bookName')
               location.reload()
             })
             .catch(() => {
-              localStorage.removeItem('bookKey')
+              localStorage.removeItem('bookId')
               localStorage.removeItem('bookName')
               location.reload()
             })

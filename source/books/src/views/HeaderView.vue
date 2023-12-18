@@ -118,7 +118,7 @@ if (document.body.clientWidth <= 480) {
 
 const changeBookKey = () => {
   keyDialog.value.visable = true
-  keyDialog.value.title = '修改密钥，原密钥：(' + localStorage.getItem('bookKey') + ')'
+  keyDialog.value.title = '修改密钥，原密钥：(' + localStorage.getItem('bookId') + ')'
 }
 
 const planDialog = ref({

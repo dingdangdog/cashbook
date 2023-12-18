@@ -536,7 +536,7 @@ const readJsonInfo = (flie: UploadFile) => {
         id: flow.id,
         day: flow.day,
         type: flow.type,
-        bookKey: bookKey,
+        bookId: parseInt(bookId || '0'),
         payType: flow.payType,
         money: flow.money,
         name: flow.name,
@@ -561,7 +561,7 @@ const readJsonInfo = (flie: UploadFile) => {
 }
 
 const bookName = localStorage.getItem('bookName')
-const bookKey = localStorage.getItem('bookKey')
+const bookId = localStorage.getItem('bookId')
 // 导出方法(前台导出，后台负责要导出的查询数据)
 const exportFlows = () => {
   getAll(flowQuery)
