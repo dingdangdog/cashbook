@@ -178,7 +178,8 @@ func saveFile(bookId int64) {
 
 func getFileData(bookId int64) []types.Flow {
 	fileName := "flow" + strconv.Itoa(int(bookId)) + ".json"
-	return loadFile(fileName)
+	flowStatic = loadFile(fileName)
+	return flowStatic
 }
 
 // 查询条件前置判断，明确哪些条件需要判断
