@@ -24,11 +24,12 @@
 
 ## 重要说明
 
-- [NOTICE](./NOTICE.md)
+- 1.1.0-BETA版本前：[NOTICE](./NOTICE.md)
 
 ## 截图展示
 
-- [DISPLAY](./DISPLAY.md)
+- 1.1.0-BETA版本前：[DISPLAY](./DISPLAY.md)
+- 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/json_db/images/1.1.0-BETA.mp4
 
 ## 贡献者（Contributor）
 
