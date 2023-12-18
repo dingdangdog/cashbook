@@ -44,6 +44,19 @@ func AddOrUpdate(flow types.Flow) int64 {
 	return flow.Id
 }
 
+// AddByBatch 批量添加数据
+func AddByBatch(flows []types.Flow) int {
+	getFileData(flows[0].BookId)
+	for _, flow := range flows {
+		if flow.Id == 0 {
+			flow.Id = getNextId()
+		}
+		flowStatic = append(flowStatic, flow)
+	}
+	saveFile(flows[0].BookId)
+	return len(flows)
+}
+
 // Delete 按照ID删除数据
 func Delete(id int64, bookId int64) {
 	getFileData(bookId)
@@ -61,6 +74,14 @@ func Delete(id int64, bookId int64) {
 		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
 		go saveFile(bookId)
 	}
+}
+
+// DeleteBatch 按照bookId删除数据
+func DeleteBatch(bookId int64) {
+	getFileData(bookId)
+	// delete all flowStatic data
+	flowStatic = nil
+	go saveFile(bookId)
 }
 
 // FindLists 条件查询：按条件筛选数据，返回符合条件的数据

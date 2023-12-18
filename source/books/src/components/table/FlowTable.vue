@@ -545,7 +545,8 @@ const readJsonInfo = (flie: UploadFile) => {
     })
     // 调用导入接口
     importFlows(importFlag.value, importFlowList)
-      .then(() => {
+      .then((res) => {
+        console.log(res)
         ElMessageBox.alert('', '导入成功', {
           confirmButtonText: '确定',
           callback: () => {
