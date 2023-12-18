@@ -22,6 +22,7 @@ func Login(u types.User) (types.LogInfo, error) {
 		token, _ := util.GenerateToken(users[0])
 		loginfo.Token = token
 		loginfo.Id = users[0].Id
+		loginfo.Name = users[0].Name
 	} else {
 		// throw error
 		loginfo.Token = "error"

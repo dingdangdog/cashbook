@@ -18,5 +18,6 @@ type UserQuery struct {
 // LogInfo 登录后返回的用户信息
 type LogInfo struct {
 	Id    int64  `json:"id"`
+	Name  string `json:"name"`
 	Token string `json:"token"`
 }

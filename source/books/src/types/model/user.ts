@@ -8,5 +8,6 @@ export interface User {
 
 export interface LoginUser {
   id: number;
+  name: string;
   token: string;
 }

@@ -1,33 +1,41 @@
 <template>
   <div class="header-container">
-    <!-- 图标 -->
-    <div id="iconTitle">
-      <img alt="cashbook logo" src="@/assets/images/cashbook.png" width="45" />
+    <div class="header-left">
+      <!-- 图标 -->
+      <div id="iconTitle">
+        <img alt="cashbook logo" src="@/assets/images/cashbook.png" width="45" />
+      </div>
+      <!-- 页面标题 -->
+      <h3 style="padding-top: 0.3rem">Cashbook</h3>
     </div>
 
-    <!-- 页面标题 -->
-    <h3 style="padding-top: 0.3rem">Cashbook</h3>
-
-    <!-- 其他按钮 -->
-    <div class="header-info header-buttons">
-      <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button>
-      <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
-      <el-button plain @click="showBookDialog()"> 切换账本 </el-button>
+    <div class="header-center">
+      <span v-if="haveUserIdRef()">当前用户：{{ name }}&nbsp;&nbsp;</span>
+      <span v-if="haveBookIdRef()">当前账本：{{ bookName }}&nbsp;&nbsp;</span>
     </div>
 
-    <!-- 其他信息 -->
-    <div class="header-info header-setting">
-      <el-dropdown id="setting-dropdown">
-        <span class="el-dropdown-link">
-          <span v-if="haveUserIdRef()">{{ bookName }}&nbsp;&nbsp;</span><el-icon><Tools /></el-icon>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="changeBookKey()"> 密钥修改 </el-dropdown-item>
-            <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+    <div class="header-right">
+      <!-- 其他按钮 -->
+      <div class="header-info header-buttons">
+        <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button>
+        <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
+        <el-button plain @click="showBookDialog()"> 切换账本 </el-button>
+      </div>
+
+      <!-- 其他信息 -->
+      <div class="header-info header-setting">
+        <el-dropdown id="setting-dropdown">
+          <span class="el-dropdown-link">
+            <el-icon><Tools /></el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="changeBookKey()"> 密钥修改 </el-dropdown-item>
+              <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 
@@ -53,7 +61,7 @@
 </template>
 <script setup lang="ts">
 import { Tools } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 import BookDialog from '@/views/dialogs/BookDialog.vue'
@@ -62,6 +70,21 @@ import OnlineDialog from '@/views/dialogs/OnlineDialog.vue'
 import ChangePasswordDialog from '@/views/dialogs/ChangePasswordDialog.vue'
 
 import { getServerInfo } from '@/api/api.server'
+
+onMounted(() => {
+  if (!localStorage.getItem('bookId')) {
+    ElMessageBox.confirm('尚未打开账本，请前往选择并打开账本。', '提示', {
+    confirmButtonText: '确定',
+    type: 'warning'
+  })
+    .then(() => {
+      showBookDialog()
+    })
+    .catch(() => {
+      showBookDialog()
+    })
+  }
+})
 
 // 服务器信息封装
 const serverInfo = ref({
@@ -94,16 +117,28 @@ if (document.body.clientWidth <= 480) {
 }
 
 // 设置账本
-const bookName = localStorage.getItem('bookName')
+const name = localStorage.getItem('name')
 // 判断是否打开账本
 const haveUserId = (): boolean => {
-  if (bookName && 'none' !== bookName) {
+  if (name) {
     return true
   } else {
     return false
   }
 }
 const haveUserIdRef = ref(haveUserId)
+
+// 设置账本
+const bookName = localStorage.getItem('bookName')
+// 判断是否打开账本
+const haveBookId = (): boolean => {
+  if (bookName) {
+    return true
+  } else {
+    return false
+  }
+}
+const haveBookIdRef = ref(haveBookId)
 
 const keyDialog = ref({
   visable: false,
@@ -156,6 +191,9 @@ const logout = () => {
   })
     .then(() => {
       localStorage.removeItem('userId')
+      localStorage.removeItem('name')
+      localStorage.removeItem('bookId')
+      localStorage.removeItem('bookName')
       localStorage.removeItem('token')
       location.reload()
     })
@@ -173,6 +211,7 @@ const logout = () => {
   display: flex;
   justify-content: left;
   align-items: center;
+  width: 100%;
 }
 
 .header-info {
@@ -184,12 +223,21 @@ const logout = () => {
   margin-bottom: 0.8rem;
 }
 
-.header-buttons {
-  min-width: 80vw;
-
+.header-left {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+}
+.header-center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header-right {
+  width: 100%;
   display: flex;
   justify-content: right;
-  /* align-items: right; */
 }
 
 #theme-button {

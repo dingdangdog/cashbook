@@ -54,7 +54,8 @@ const submitForm = async (form: FormInstance | undefined) => {
             message: '登录成功!'
           })
           localStorage.setItem('userId', res.id.toString());
-          localStorage.setItem('token', res.token)
+          localStorage.setItem('name', res.name);
+          localStorage.setItem('token', res.token);
           // 跳转到首页
           router.push({ path: '/' })
         } else {

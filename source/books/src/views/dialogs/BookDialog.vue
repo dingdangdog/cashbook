@@ -1,7 +1,7 @@
 <template>
   <div class="el-dialog-main">
     <div class="book-cards common-center">
-      <el-card v-for="book in books" :class="checkSelectBook(book.id)" shadow="hover" @click="openBook(book.id)">
+      <el-card v-for="book in books" :class="checkSelectBook(book.id)" shadow="hover" @click="openBook(book)">
         {{ book.bookName }}
       </el-card>
     </div>
@@ -51,9 +51,10 @@ const initBooks = () => {
     })
 }
 
-const openBook = (id: number) => {
-  if (localStorage.getItem('bookId') === id.toString()) return
-  localStorage.setItem('bookId', id.toString())
+const openBook = (book: Book) => {
+  if (localStorage.getItem('bookId') === book.id.toString()) return
+  localStorage.setItem('bookId', book.id.toString())
+  localStorage.setItem('bookName', book.bookName)
   window.location.href = '/'
 }
 
