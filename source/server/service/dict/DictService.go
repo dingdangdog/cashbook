@@ -38,9 +38,11 @@ func DeleteDict(id int64) {
 func CheckAndInitBookDict(bookId int64) {
 	dictList := dDict.FindList(types.Dict{BookId: bookId})
 	if len(dictList) == 0 {
-		for _, dict := range dictList {
+		defaultDict := dDict.FindList(types.Dict{BookId: -1})
+		for _, dict := range defaultDict {
 			dict.Id = 0
 			dict.BookId = bookId
+			dictList = append(dictList, dict)
 		}
 		dDict.AddByBatch(dictList)
 	}

@@ -3,7 +3,7 @@ export interface Dict {
   type?: string;
   dictKey?: string;
   dictValue?: string;
-  bookKey?: string;
+  bookId?: number;
   sort?: number;
 }
 
@@ -31,6 +31,7 @@ export class DictQuery {
   pageNum: number = 1;
   pageSize: number = 20;
   id?: number;
+  bookId?: number;
   type?: string;
   dictKey?: string;
   dictValue?: string;

@@ -173,6 +173,7 @@ const dictQuery: DictQuery = {
   pageSize: 20,
   id: undefined,
   type: undefined,
+  bookId: parseInt(localStorage.getItem('bookId') || '0') ,
   dictKey: undefined,
   dictValue: undefined
 }

@@ -12,15 +12,13 @@ import (
 // GetDictList 获取字典列表
 func GetDictList(c *gin.Context) {
 	dictType := c.Param("type")
-	bookId := c.Param("bookId")
-	bookIdNum, _ := strconv.ParseInt(bookId, 10, 64)
+	bookId := util.GetBookId(c)
 
-	sDict.CheckAndInitBookDict(bookIdNum)
+	sDict.CheckAndInitBookDict(bookId)
 
-	data := sDict.GetDictList(bookIdNum, dictType)
+	data := sDict.GetDictList(bookId, dictType)
 
 	c.JSON(200, util.Success(data))
-
 }
 
 // GetDictPage 获取字典分页
@@ -35,6 +33,7 @@ func GetDictPage(c *gin.Context) {
 		return
 	}
 
+	sDict.CheckAndInitBookDict(query.BookId)
 	page := sDict.GetDictPage(query)
 
 	c.JSON(200, util.Success(page))
