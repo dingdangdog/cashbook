@@ -1,17 +1,20 @@
 <template>
   <div class="chart-container">
     <!-- set input width -->
-    <el-form ref="loginForm" :model="formData" :rules="rules" label-width="120px">
-      <el-form-item label="UserName" prop="name" class="login-input">
-        <el-input v-model="formData.userName" />
-      </el-form-item>
-      <el-form-item label="Password" prop="pass" class="login-input">
-        <el-input v-model="formData.password" type="password" autocomplete="off" />
-      </el-form-item>
-      <el-checkbox v-model="remeberUser" class="login-button">Remember me</el-checkbox>
-      <el-button type="success" class="login-button" @click="toRegister">Regiter</el-button>
-      <el-button type="primary" class="login-button" @click="submitForm(loginForm)">Login</el-button>
-    </el-form>
+    <div class="icon-container"><img src="@/assets/images/cashbook.png" width="60" /><h1 style="margin-left: 2rem;">Casbook-Desktop</h1></div>
+    <div class="form-container">
+      <el-form ref="loginForm" :model="formData" :rules="rules" label-width="10rem">
+        <el-form-item label="帐号（UserName）" prop="name" class="login-input">
+          <el-input v-model="formData.userName" />
+        </el-form-item>
+        <el-form-item label="密码（Password）" prop="pass" class="login-input">
+          <el-input v-model="formData.password" type="password" autocomplete="off" />
+        </el-form-item>
+        <el-checkbox v-model="remeberUser" class="login-button">Remember me</el-checkbox>
+        <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
+        <el-button type="primary" class="login-button" @click="submitForm(loginForm)">登录</el-button>
+      </el-form>
+    </div>
   </div>
 
   <!-- 弹出框表单：注册用户 -->
@@ -19,15 +22,15 @@
     <div class="el-dialog-main">
       <el-form ref="registerFormRef" :model="registerUser" :rules="registerUserRules">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="registerUser.name" :min="0" />
+          <el-input v-model="registerUser.name" />
         </el-form-item>
 
-        <el-form-item label="密码（UserName）" :label-width="formLabelWidth" prop="userName">
-          <el-input v-model="registerUser.userName" :min="0" />
+        <el-form-item label="帐号（UserName）" :label-width="formLabelWidth" prop="userName">
+          <el-input v-model="registerUser.userName" />
         </el-form-item>
 
         <el-form-item label="密码（Password）" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="registerUser.password" :min="0" />
+          <el-input v-model="registerUser.password" type="password" autocomplete="off" />
         </el-form-item>
       </el-form>
     </div>
@@ -89,7 +92,7 @@ const submitForm = async (form: FormInstance | undefined) => {
           localStorage.setItem('name', res.name)
           localStorage.setItem('token', res.token)
           // 跳转到首页
-          router.push({ path: '/' })
+          router.push({ path: '/index/' })
         } else {
           ElMessage({
             type: 'error',
@@ -177,6 +180,19 @@ const cancel = () => {
   margin: 1rem;
   height: 90vh;
   border: solid 1px var(--el-menu-border-color);
+  text-align: center;
+}
+
+.form-container {
+  margin-top: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-container {
+  margin-top: 10rem;
+  /* margin-left: -3rem; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -184,7 +200,7 @@ const cancel = () => {
 
 .login-input {
   width: 24rem;
-  margin-left: -4rem;
+  /* margin-left: -3rem; */
 }
 
 .login-button {
