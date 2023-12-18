@@ -23,42 +23,42 @@ const publicRoutes= [
     meta: { public: true }
   },
   {
-    path: '/',
+    path: '/index',
     name: 'index',
     component: IndexView,
     children: [
       {
-        path: '/',
+        path: '/index/',
         name: 'calendar',
         component: CalendarView
       },
       {
-        path: '/analytics',
+        path: '/index/analytics',
         name: 'analytics',
         component: AnalyticsView
       },
       {
-        path: '/flows',
+        path: '/index/flows',
         name: 'flows',
         component: FlowsView
       },
       {
-        path: '/dict',
+        path: '/index/dict',
         name: 'dict',
         component: DictView
       },
       {
-        path: '/books',
+        path: '/index/books',
         name: 'books',
         component: BooksView
       },
       {
-        path: '/system',
+        path: '/index/system',
         name: 'system',
         component: SystemView
       },
       {
-        path: '/about',
+        path: '/index/about',
         name: 'about',
         component: AboutView
       }
