@@ -1,11 +1,9 @@
 <script setup lang="ts">
-// import Index from '@/views/IndexView.vue';
-import { RouterView } from 'vue-router'
+import MainView from '@/views/MainView.vue';
 </script>
 
 <template>
-  <RouterView />
-  <!-- <Index/> -->
+  <MainView />
 </template>
 
 <style scoped>
