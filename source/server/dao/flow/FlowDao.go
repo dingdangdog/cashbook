@@ -2,6 +2,7 @@ package book
 
 import (
 	"cashbook-server/types"
+	"cashbook-server/util"
 	"encoding/json"
 	"os"
 	"strconv"
@@ -168,7 +169,11 @@ func getNextId() int64 {
 func saveFile(bookId int64) {
 	fileName := "flow" + strconv.Itoa(int(bookId)) + ".json"
 	jsonData, _ := json.Marshal(flowStatic)
-	_ = os.WriteFile(FilePath+"/"+fileName, jsonData, os.ModePerm)
+	// check FilePath exists, if not, create it
+	util.PathExistsOrCreate(FilePath)
+
+	err := os.WriteFile(FilePath+"/"+fileName, jsonData, os.ModePerm)
+	util.CheckErr(err)
 }
 
 func getFileData(bookId int64) []types.Flow {
