@@ -10,6 +10,7 @@ import (
 )
 
 // FileName 文件名称
+// const FileName = "./resources/app/data/user.json"
 const FileName = "./data/user.json"
 
 var userStatic []types.User

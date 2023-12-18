@@ -9,6 +9,7 @@ import (
 )
 
 // FileName 文件名称
+// const FileName = "./resources/app/data/dict.json"
 const FileName = "./data/dict.json"
 
 var dictStatic []types.Dict

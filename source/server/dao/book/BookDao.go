@@ -9,6 +9,7 @@ import (
 )
 
 // FileName 文件名称
+// const FileName = "./resources/app/data/book.json"
 const FileName = "./data/book.json"
 
 var bookStatic []types.Book
