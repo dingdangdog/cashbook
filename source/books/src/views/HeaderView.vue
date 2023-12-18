@@ -50,7 +50,7 @@
   </el-dialog>
 
   <!-- 弹出框：账本设置 -->
-  <el-dialog style="width: 50vw" v-model="bookDialog.visable" :title="bookDialog.title">
+  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visable" :title="bookDialog.title">
     <BookDialog />
   </el-dialog>
 
@@ -63,6 +63,8 @@
 import { Tools } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
+
+import { showBookDialogFlag } from '@/stores/flag'
 
 import BookDialog from '@/views/dialogs/BookDialog.vue'
 import PlanDialog from '@/views/dialogs/PlanDialog.vue'
@@ -148,12 +150,11 @@ const showPlanDialog = () => {
 }
 
 const bookDialog = ref({
-  visable: false,
-  title: ''
+  visable: showBookDialogFlag.value.visable,
+  title: '切换账本'
 })
 const showBookDialog = () => {
-  bookDialog.value.visable = true
-  bookDialog.value.title = '账本切换'
+  showBookDialogFlag.value.visable = true
 }
 
 const onlineDialog = ref({

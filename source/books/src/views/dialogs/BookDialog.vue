@@ -1,7 +1,12 @@
 <template>
   <div class="el-dialog-main">
     <div class="book-cards common-center">
-      <el-card v-for="book in books" :class="checkSelectBook(book.id)" shadow="hover" @click="openBook(book)">
+      <el-card
+        v-for="book in books"
+        :class="checkSelectBook(book.id)"
+        shadow="hover"
+        @click="openBook(book)"
+      >
         {{ book.bookName }}
       </el-card>
     </div>
@@ -34,6 +39,7 @@ import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import type { Book } from '@/types/model/book'
 
 import { createBook, getBook } from '@/api/api.book'
+import { showBookDialogFlag } from '@/stores/flag'
 
 onMounted(() => {
   initBooks()
@@ -52,10 +58,14 @@ const initBooks = () => {
 }
 
 const openBook = (book: Book) => {
-  if (localStorage.getItem('bookId') === book.id.toString()) return
+  if (localStorage.getItem('bookId') === book.id.toString()) {
+    showBookDialogFlag.value.visable = false
+    return
+  }
   localStorage.setItem('bookId', book.id.toString())
   localStorage.setItem('bookName', book.bookName)
-  window.location.href = '/'
+  // close book dialog
+  showBookDialogFlag.value.visable = false
 }
 
 // 表单输入框宽度
@@ -118,7 +128,7 @@ const checkSelectBook = (bookId: number) => {
 </script>
 
 <style scoped>
-.book-card-selected{
+.book-card-selected {
   background-color: rgba(18, 255, 0, 0.1);
 }
 .book-card {
