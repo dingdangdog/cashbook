@@ -6,9 +6,23 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 )
 
 func main() {
+	// 打开或创建日志文件
+	file, err := os.OpenFile("./cashbook.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Println("Error opening log file:", err)
+		return
+	}
+	defer func(file *os.File) {
+		err = file.Close()
+		util.CheckErr(err)
+	}(file)
+
+	// 重定向标准输出到文件
+	os.Stdout = file
 
 	router := gin.Default()
 	api := router.Group("/api")
@@ -51,7 +65,7 @@ func main() {
 		adminApi.POST("/online/download", controller.Download)
 	}
 	fmt.Println("-------- 服务启动成功：http://localhost:13303 --------")
-	err := router.Run("0.0.0.0:13303")
+	err = router.Run("0.0.0.0:13303")
 	util.CheckErr(err)
 }
 
