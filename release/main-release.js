@@ -1,14 +1,15 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu, shell } = require("electron");
 const child_process = require("child_process");
 const { spawn } = require("child_process");
 const path = require("path");
 
 let serverWindowPid;
 let timeOut;
+let window;
 
 function createWindow() {
   // 创建浏览器窗口
-  const win = new BrowserWindow({
+  window = new BrowserWindow({
     width: 1200,
     height: 960,
     //绝对路径
@@ -19,12 +20,12 @@ function createWindow() {
   });
 
   // 最大化窗口
-  win.maximize()
+  window.maximize()
 
-  win.loadFile(path.join(__dirname, "dist/index.html"));
+  window.loadFile(path.join(__dirname, "dist/index.html"));
 
   // 关闭窗口时
-  win.on("close", () => {
+  window.on("close", () => {
     clearTimeout(timeOut);
     if (serverWindowPid) {
       // 根据pid停止关闭后台服务
@@ -86,3 +87,23 @@ app.on("window-all-closed", () => {
 function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 }
+
+// 创建自定义菜单
+const customMenu = Menu.buildFromTemplate([
+  {
+    label: 'Window',
+    submenu: [
+      { label: 'Minimize', click: () => { window.minimize(); } },
+      { label: 'Close', click: () => { window.close(); } },
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: [
+      { label: 'Github', click: () => { shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');} }
+    ]
+  }
+]);
+
+// 设置应用菜单
+Menu.setApplicationMenu(customMenu);
