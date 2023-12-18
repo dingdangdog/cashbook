@@ -15,6 +15,6 @@ export function login(user: User): Promise<LoginUser> {
  * 注册
  * @returns Page<number>
  */
-export function register(user: User): Promise<number> {
+export function registerApi(user: User): Promise<number> {
   return $http({ url: "/register", method: "post", data: user })
 }
