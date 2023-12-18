@@ -1,16 +1,16 @@
 <template>
-  <el-menu default-active="/" :collapse="isCollapse" @select="selectMenu">
-    <el-menu-item index="/">
+  <el-menu default-active="/index/" :collapse="isCollapse" @select="selectMenu">
+    <el-menu-item index="/index/">
       <el-icon><Calendar /></el-icon>
       <template #title>消费日历</template>
     </el-menu-item>
 
-    <el-menu-item index="/analytics">
+    <el-menu-item index="/index/analytics">
       <el-icon><Monitor /></el-icon>
       <template #title>分析概览</template>
     </el-menu-item>
 
-    <el-menu-item index="flows">
+    <el-menu-item index="/index/flows">
       <el-icon><EditPen /></el-icon>
       <template #title>流水管理</template>
     </el-menu-item>
@@ -21,13 +21,13 @@
     </el-menu-item> -->
 
     <!-- 多级菜单 -->
-    <el-sub-menu index="setting">
+    <el-sub-menu index="/index/setting">
       <template #title>
         <el-icon><Operation /></el-icon>
         <span>系统管理</span>
       </template>
 
-      <el-menu-item index="dict">
+      <el-menu-item index="/index/dict">
         <el-icon><List /></el-icon>
         <template #title>字典管理</template>
       </el-menu-item>
@@ -37,7 +37,7 @@
         <template #title>帐号管理</template>
       </el-menu-item> -->
 
-      <el-menu-item index="system">
+      <el-menu-item index="/index/system">
         <el-icon><Setting /></el-icon>
         <template #title>系统设置</template>
       </el-menu-item>
@@ -51,7 +51,7 @@
       <template #title>{{ isDark ? '夜间模式' : '白天模式' }}</template>
     </el-menu-item>
 
-    <el-menu-item index="about">
+    <el-menu-item index="/index/about">
       <el-icon><Reading /></el-icon>
       <template #title>关于</template>
     </el-menu-item>
