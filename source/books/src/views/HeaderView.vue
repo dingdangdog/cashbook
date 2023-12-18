@@ -10,14 +10,14 @@
     </div>
 
     <div class="header-center">
-      <span v-if="haveUserIdRef()">当前用户：{{ name }}&nbsp;&nbsp;</span>
-      <span v-if="haveBookIdRef()">当前账本：{{ bookName }}&nbsp;&nbsp;</span>
+      <span>当前用户：{{ name }}&nbsp;&nbsp;</span>
+      <span>当前账本：{{ bookName }}&nbsp;&nbsp;</span>
     </div>
 
     <div class="header-right">
       <!-- 其他按钮 -->
       <div class="header-info header-buttons">
-        <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button>
+        <!-- <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button> -->
         <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
         <el-button plain @click="showBookDialog()"> 切换账本 </el-button>
       </div>
@@ -116,29 +116,11 @@ if (document.body.clientWidth <= 480) {
   icon.value.height = 40
 }
 
-// 设置账本
+// 用户名
 const name = localStorage.getItem('name')
-// 判断是否打开账本
-const haveUserId = (): boolean => {
-  if (name) {
-    return true
-  } else {
-    return false
-  }
-}
-const haveUserIdRef = ref(haveUserId)
 
-// 设置账本
+// 账本名
 const bookName = localStorage.getItem('bookName')
-// 判断是否打开账本
-const haveBookId = (): boolean => {
-  if (bookName) {
-    return true
-  } else {
-    return false
-  }
-}
-const haveBookIdRef = ref(haveBookId)
 
 const keyDialog = ref({
   visable: false,
