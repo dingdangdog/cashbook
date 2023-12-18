@@ -15,10 +15,10 @@
       <template #title>流水管理</template>
     </el-menu-item>
 
-    <el-menu-item index="books">
+    <!-- <el-menu-item index="books">
       <el-icon><Collection /></el-icon>
       <template #title>账本管理</template>
-    </el-menu-item>
+    </el-menu-item> -->
 
     <!-- 多级菜单 -->
     <el-sub-menu index="setting">
