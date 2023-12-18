@@ -550,7 +550,8 @@ const readJsonInfo = (flie: UploadFile) => {
         ElMessageBox.alert('', '导入成功', {
           confirmButtonText: '确定',
           callback: () => {
-            location.reload()
+            dialogFormVisible.value = false
+            doQuery()
           }
         })
       })
