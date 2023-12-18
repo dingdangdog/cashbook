@@ -1,15 +1,15 @@
 [
   {
     "id": 1,
-    "type": "distType",
-    "dictKey": "distType",
+    "type": "dictType",
+    "dictKey": "dictType",
     "dictValue": "字典类型",
     "sort": 1,
     "bookId": -1
   },
   {
     "id": 2,
-    "type": "distType",
+    "type": "dictType",
     "dictKey": "expenseType",
     "dictValue": "消费类型",
     "sort": 2,
@@ -17,7 +17,7 @@
   },
   {
     "id": 3,
-    "type": "distType",
+    "type": "dictType",
     "dictKey": "paymentType",
     "dictValue": "支付方式",
     "sort": 3,
