@@ -1,7 +1,7 @@
 <template>
   <div class="el-dialog-main">
     <div class="book-cards common-center">
-      <el-card v-for="book in books" class="book-card" shadow="hover" @click="openBook(book.id)">
+      <el-card v-for="book in books" :class="checkSelectBook(book.id)" shadow="hover" @click="openBook(book.id)">
         {{ book.bookName }}
       </el-card>
     </div>
@@ -52,6 +52,7 @@ const initBooks = () => {
 }
 
 const openBook = (id: number) => {
+  if (localStorage.getItem('bookId') === id.toString()) return
   localStorage.setItem('bookId', id.toString())
   window.location.href = '/'
 }
@@ -105,15 +106,27 @@ const resetBookForm = () => {
   if (!bookFormRef.value) return
   bookFormRef.value.resetFields()
 }
+
+const checkSelectBook = (bookId: number) => {
+  if (localStorage.getItem('bookId') === bookId.toString()) {
+    return 'book-card book-card-selected'
+  } else {
+    return 'book-card'
+  }
+}
 </script>
 
 <style scoped>
+.book-card-selected{
+  background-color: rgba(18, 255, 0, 0.1);
+}
 .book-card {
   width: 10rem;
   height: 4rem;
   margin: 1rem;
 }
 .book-card:hover {
+  cursor: pointer;
   background-color: rgba(115, 204, 229, 0.473);
 }
 </style>
