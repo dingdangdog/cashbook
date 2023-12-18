@@ -21,7 +21,11 @@ func UpdatePlan(plan types.Plan) {
 
 // GetPlan 获取当月计划
 func GetPlan(bookId int64, month string) types.Plan {
-	return dPlan.FindLists(types.Plan{BookId: bookId, Month: month})[0]
+	plans := dPlan.FindLists(types.Plan{BookId: bookId, Month: month})
+	if len(plans) == 0 {
+		return types.Plan{}
+	}
+	return plans[0]
 }
 
 // GetAllPlan 获取全部计划

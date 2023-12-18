@@ -44,6 +44,7 @@ const planFormRef = ref<FormInstance>()
 
 const planModel: Plan = {
   month: new Date(),
+  bookId: parseInt(localStorage.getItem('bookId') || '0'), 
   limitMoney: 0,
   usedMoney: undefined
 }
