@@ -1,7 +1,12 @@
 {
   "name": "cashbook-books",
-  "version": "1.0.6",
+  "description": "cashbook application by Windows Desktop",
+  "version": "1.1.0-BETA",
   "main": "main.js",
+  "author": {
+    "name": "dingdangdog",
+    "email": "dddogx@outlook.com"
+  },
   "build": {
     "asar": false,
     "appId": "cashbook",
@@ -24,8 +29,8 @@
         "to": "app/config/"
       },
       {
-        "from": "resources/sql/",
-        "to": "app/sql/"
+        "from": "resources/data/",
+        "to": "app/data/"
       },
       {
         "from": "resources/cashbook-server.exe",
