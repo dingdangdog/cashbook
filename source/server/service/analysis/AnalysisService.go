@@ -11,15 +11,6 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 	flowList := dFlow.FindLists(param)
 	sumMap := make(map[string]float64)
 
-	// asc sort flowList by day
-	for i := 0; i < len(flowList); i++ {
-		for j := i + 1; j < len(flowList); j++ {
-			if flowList[i].Day > flowList[j].Day {
-				flowList[i], flowList[j] = flowList[j], flowList[i]
-			}
-		}
-	}
-
 	for _, flow := range flowList {
 		if sumMap[flow.Day] == 0 {
 			sumMap[flow.Day] = flow.Money
@@ -34,6 +25,15 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 			DaySum: strconv.FormatFloat(money, 'f', 2, 64),
 		}
 		lines = append(lines, dailyLine)
+	}
+
+	// sort by day
+	for i := 0; i < len(lines); i++ {
+		for j := i + 1; j < len(lines); j++ {
+			if lines[i].Day > lines[j].Day {
+				lines[i], lines[j] = lines[j], lines[i]
+			}
+		}
 	}
 
 	return lines
@@ -67,14 +67,6 @@ func GetTypePie(param types.FlowParam) []types.TypePie {
 func GetPayTypeBar(param types.FlowParam) []types.TypePie {
 	flowList := dFlow.FindLists(param)
 	sumMap := make(map[string]float64)
-	// asc sort flowList by day
-	for i := 0; i < len(flowList); i++ {
-		for j := i + 1; j < len(flowList); j++ {
-			if flowList[i].Day > flowList[j].Day {
-				flowList[i], flowList[j] = flowList[j], flowList[i]
-			}
-		}
-	}
 	for _, flow := range flowList {
 		if sumMap[flow.PayType] == 0 {
 			sumMap[flow.PayType] = flow.Money
@@ -114,6 +106,15 @@ func MonthBar(bookId int64) []types.TypePie {
 			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
 		}
 		months = append(months, typePie)
+	}
+
+	// sort by month
+	for i := 0; i < len(months); i++ {
+		for j := i + 1; j < len(months); j++ {
+			if months[i].Type > months[j].Type {
+				months[i], months[j] = months[j], months[i]
+			}
+		}
 	}
 
 	return months
