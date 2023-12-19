@@ -74,10 +74,7 @@ func checkToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
 		if len(token) <= 0 {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "请先登录！",
-			})
+			c.JSON(http.StatusUnauthorized, util.Error("请先登录！", nil))
 			c.Abort()
 			return
 		}
@@ -85,10 +82,7 @@ func checkToken() gin.HandlerFunc {
 			c.Next()
 			return
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"success":      false,
-				"errorMessage": "登录超时，请重新登录！",
-			})
+			c.JSON(http.StatusUnauthorized, util.Error("登录超时，请重新登录！", nil))
 			c.Abort()
 		}
 	}
