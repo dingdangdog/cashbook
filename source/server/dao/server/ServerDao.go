@@ -9,7 +9,7 @@ import (
 )
 
 // FileName 文件名称
-const FileName = config.DataPath + "server.json"
+const FileName = config.ConfigPath + "server.json"
 
 //const FileName = "./config/server.json"
 
