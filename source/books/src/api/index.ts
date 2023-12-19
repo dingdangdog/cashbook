@@ -42,13 +42,14 @@ $http.interceptors.request.use(async (config) => {
 $http.interceptors.response.use(
   (res) => {
     if (res.data.code != 200) {
-      ElMessage.error('接口异常')
+      ElMessage.error(res.data.message)
       return Promise.reject(res.data)
       // return res.data
     }
     return res.data.data
   },
   (err) => {
+    ElMessage.error("接口异常，请联系管理员！")
     console.log(err)
   }
 )
