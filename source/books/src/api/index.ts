@@ -49,6 +49,10 @@ $http.interceptors.response.use(
     return res.data.data
   },
   (err) => {
+    if (err.response.status === 401) {
+      toLogin()
+      return Promise.reject('请先登录')
+    }
     ElMessage.error("接口异常，请联系管理员！")
     console.log(err)
   }
