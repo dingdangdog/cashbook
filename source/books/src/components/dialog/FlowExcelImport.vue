@@ -79,7 +79,7 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
       const xlsxSheet = workbook.Sheets[sheetName];
       console.log(xlsxSheet)
       // dateNF不管用啊！！！
-      const data = XLSX.utils.sheet_to_json<any[]>(xlsxSheet, { header: 1, defval: '', dateNF:'yyyy-mm-dd', cellText: true});
+      const data = XLSX.utils.sheet_to_json<any[]>(xlsxSheet, { header: 1, defval: '', dateNF:'yyyy-mm-dd'});
       return {
         name: sheetName,
         data: data,
