@@ -44,7 +44,7 @@ func AddOrUpdate(flow types.Flow) int64 {
 		flow.Id = getNextId()
 	}
 	flowStatic = append(flowStatic, flow)
-	go saveFile(flow.BookId)
+	saveFile(flow.BookId)
 	return flow.Id
 }
 
@@ -71,12 +71,13 @@ func Delete(id int64, bookId int64) {
 			if id == param.Id {
 				index = int64(i)
 				flag = true
+				break
 			}
 		}
 	}
 	if flag {
 		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
-		go saveFile(bookId)
+		saveFile(bookId)
 	}
 }
 
@@ -85,7 +86,7 @@ func DeleteBatch(bookId int64) {
 	getFileData(bookId)
 	// delete all flowStatic data
 	flowStatic = nil
-	go saveFile(bookId)
+	saveFile(bookId)
 }
 
 // FindLists 条件查询：按条件筛选数据，返回符合条件的数据
