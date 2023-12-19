@@ -42,7 +42,7 @@ func Login(c *gin.Context) {
 
 	data, err := user.Login(u)
 	if err != nil {
-		c.JSON(500, util.Error(err.Error(), data))
+		c.JSON(200, util.Error(err.Error(), data))
 		return
 	}
 	c.JSON(200, util.Success(data))
