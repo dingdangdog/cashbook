@@ -82,18 +82,6 @@ const changeDate = (value: any) => {
 const query: DailyLineChartQuery = {}
 const queryRef = ref(query)
 
-doQuery(queryRef.value).then((res) => {
-  res.forEach((data) => {
-    // 天集合
-    allCount.value[data.day] = data.daySum
-    // 月集合
-    let month = dayToMonth(data.day)
-    let count = monthCount.value[month] ? monthCount.value[month] : 0
-    monthCount.value[month] = count + Number(data.daySum)
-  })
-  console.log(monthCount.value)
-})
-
 const dayToMonth = (day: string) => {
   let date = new Date(day)
   let year = date.getFullYear().toString()
@@ -103,9 +91,6 @@ const dayToMonth = (day: string) => {
 
 const plan = ref<Plan>({})
 
-getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
-  plan.value = res
-})
 
 const moneyClass = (money: any) => {
   if (!money || money == 0) {
@@ -118,6 +103,24 @@ const moneyClass = (money: any) => {
     return 'have-flow'
   }
 }
+
+
+doQuery(queryRef.value).then((res) => {
+  res.forEach((data) => {
+    // 天集合
+    allCount.value[data.day] = data.daySum
+    // 月集合
+    let month = dayToMonth(data.day)
+    let count = monthCount.value[month] ? monthCount.value[month] : 0
+    monthCount.value[month] = count + Number(data.daySum)
+  })
+  console.log(monthCount.value)
+})
+
+getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
+  plan.value = res
+})
+
 </script>
 <style>
 .calendar-main {
