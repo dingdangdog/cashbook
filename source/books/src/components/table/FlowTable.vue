@@ -8,9 +8,6 @@
       <el-button type="success" @click="exportFlows()">导出</el-button>
     </div>
     
-    <!-- <div class="queryParam pc-button">
-      <el-button type="primary"  @click="excelImportVisible = true">Excel导入</el-button>
-    </div> -->
 
     <div class="queryParam">
       <el-date-picker
@@ -70,6 +67,10 @@
 
     <div class="queryParam pc-button">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
+    </div>
+
+    <div class="queryParam pc-button">
+      <el-button type="primary"  @click="excelImportVisible = true">Excel导入</el-button>
     </div>
   </el-row>
   <hr />
@@ -219,7 +220,7 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="excelImportVisible" title="Excel导入流水" :fullscreen="miniScreen">
+  <el-dialog v-model="excelImportVisible" title="Excel导入流水" :fullscreen="true" :close-on-click-modal="false">
     <FlowExcelImport />
   </el-dialog>
 </template>
