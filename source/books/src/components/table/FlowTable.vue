@@ -127,9 +127,9 @@
   </div>
 
   <!-- 弹出框表单：新增和修改通用 -->
-  <el-dialog v-model="dialogFormVisible" :title="dialgoFormTitle" :fullscreen="miniScreen">
+  <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" :fullscreen="miniScreen">
     <div class="el-dialog-main">
-      <el-form ref="dialgoFormRef" :model="flowRef" :rules="rules">
+      <el-form ref="dialogFormRef" :model="flowRef" :rules="rules">
         <el-form-item label="日期" :label-width="formLabelWidth" prop="day">
           <el-date-picker
             v-model="flowRef.day"
@@ -180,12 +180,12 @@
     <!-- 表单确认按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="resetForm(dialgoFormRef, false)"> 取消 </el-button>
-        <el-button type="primary" @click="confirmForm(dialgoFormRef, false)"> 确定 </el-button>
+        <el-button @click="resetForm(dialogFormRef, false)"> 取消 </el-button>
+        <el-button type="primary" @click="confirmForm(dialogFormRef, false)"> 确定 </el-button>
         <el-button
           type="success"
-          v-if="formTitle[0] === dialgoFormTitle"
-          @click="confirmForm(dialgoFormRef, true)"
+          v-if="formTitle[0] === dialogFormTitle"
+          @click="confirmForm(dialogFormRef, true)"
         >
           确定并继续
         </el-button>
@@ -242,6 +242,7 @@ import type { Flow } from '@/types/model/flow'
 import type { Dict } from '@/types/model/dict'
 
 import { defineAsyncComponent } from 'vue'
+import { pa } from 'element-plus/lib/locale/index.js'
 // 异步组件引用
 const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/FlowExcelImport.vue'))
 
@@ -328,14 +329,14 @@ const dialogUpdateVisible = ref(false)
 // 导入弹窗显示控制器
 const excelImportVisible = ref(false)
 // 表单弹窗标题
-const dialgoFormTitle = ref(formTitle[0])
+const dialogFormTitle = ref(formTitle[0])
 // 表单输入框宽度
 const formLabelWidth = ref('200px')
 if (document.body.clientWidth <= 480) {
   formLabelWidth.value = '100px'
 }
 // 表单实例
-const dialgoFormRef = ref<FormInstance>()
+const dialogFormRef = ref<FormInstance>()
 // 分页数据绑定
 const flowPageRef = ref(flowPage)
 // 表单弹窗数据绑定
@@ -376,10 +377,10 @@ const moneySortFunc = (obj: any) => {
 }
 
 // 提交表单（新增或修改）
-const confirmForm = async (dialgoForm: FormInstance | undefined, closeDialog: boolean) => {
-  if (!dialgoForm) return
+const confirmForm = async (dialogForm: FormInstance | undefined, closeDialog: boolean) => {
+  if (!dialogForm) return
   if (
-    !(await dialgoForm.validate((valid, fields) => {
+    !(await dialogForm.validate((valid, fields) => {
       if (valid) {
         console.log('submit!')
       } else {
@@ -390,14 +391,14 @@ const confirmForm = async (dialgoForm: FormInstance | undefined, closeDialog: bo
   ) {
     return
   }
-  if (formTitle[0] === dialgoFormTitle.value) {
+  if (formTitle[0] === dialogFormTitle.value) {
     // 新增
     createOne()
   } else {
     // 修改
     updateOne()
   }
-  resetForm(dialgoForm, closeDialog)
+  resetForm(dialogForm, closeDialog)
 }
 
 // 重置表单数据
@@ -417,6 +418,7 @@ const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
 const createOne = () => {
   createFlow({
     day: dateFormater('YYYY-MM-dd', flowRef.day || new Date()),
+    bookId: parseInt(bookId || '0'),
     type: flowRef.type,
     money: flowRef.money,
     payType: flowRef.payType,
@@ -444,6 +446,7 @@ const createOne = () => {
 const updateOne = () => {
   update(flowRef.id || -1, {
     day: dateFormater('YYYY-MM-dd', flowRef.day || new Date()),
+    bookId: parseInt(bookId || '0'),
     type: flowRef.type,
     money: flowRef.money,
     payType: flowRef.payType,
@@ -501,15 +504,16 @@ const deleteById = (id: number) => {
 
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
-  dialgoFormTitle.value = title
+  dialogFormTitle.value = title
   dialogFormVisible.value = true
 }
 // 打开修改弹窗
 const openUpdateDialog = (title: string, updateFlow: Flow) => {
-  dialgoFormTitle.value = title
+  dialogFormTitle.value = title
   dialogFormVisible.value = true
 
   flowRef.id = updateFlow.id
+  flowRef.bookId= updateFlow.bookId,
   flowRef.day = updateFlow.day
   flowRef.type = updateFlow.type
   flowRef.payType = updateFlow.payType
@@ -551,6 +555,7 @@ const readJsonInfo = (flie: UploadFile) => {
           confirmButtonText: '确定',
           callback: () => {
             dialogFormVisible.value = false
+            dialogUpdateVisible.value = false
             doQuery()
           }
         })
