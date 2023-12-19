@@ -204,7 +204,7 @@ func getQuery(param types.FlowParam) types.FlowQuery {
 	query.PayType = len(param.PayType) > 0
 	query.Description = len(param.Description) > 0
 	query.StartDay = len(param.StartDay) > 0
-	query.EndDay = len(param.StartDay) > 0
+	query.EndDay = len(param.EndDay) > 0
 	query.MoneySort = len(param.MoneySort) > 0
 	return query
 }
