@@ -242,7 +242,7 @@ import type { Flow } from '@/types/model/flow'
 import type { Dict } from '@/types/model/dict'
 
 import { defineAsyncComponent } from 'vue'
-import { pa } from 'element-plus/lib/locale/index.js'
+
 // 异步组件引用
 const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/FlowExcelImport.vue'))
 
