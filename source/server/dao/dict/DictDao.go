@@ -1,6 +1,7 @@
 package book
 
 import (
+	"cashbook-server/config"
 	"cashbook-server/types"
 	"encoding/json"
 	"fmt"
@@ -9,8 +10,9 @@ import (
 )
 
 // FileName 文件名称
-// const FileName = "./resources/app/data/dict.json"
-const FileName = "./data/dict.json"
+const FileName = config.DataPath + "/dict.json"
+
+//const FileName = "./data/dict.json"
 
 var dictStatic []types.Dict
 

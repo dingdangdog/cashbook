@@ -1,6 +1,7 @@
 package book
 
 import (
+	"cashbook-server/config"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"encoding/json"
@@ -10,8 +11,9 @@ import (
 )
 
 // FilePath 文件名称
-// const FilePath = "./resources/app/data/flow"
-const FilePath = "./data/flow"
+const FilePath = config.DataPath + "flow"
+
+//const FilePath = "./data/flow"
 
 var flowStatic []types.Flow
 

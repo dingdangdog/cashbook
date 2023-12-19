@@ -1,6 +1,7 @@
 package user
 
 import (
+	"cashbook-server/config"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"encoding/json"
@@ -10,8 +11,9 @@ import (
 )
 
 // FileName 文件名称
-// const FileName = "./resources/app/data/user.json"
-const FileName = "./data/user.json"
+const FileName = config.DataPath + "user.json"
+
+//const FileName = "./data/user.json"
 
 var userStatic []types.User
 
