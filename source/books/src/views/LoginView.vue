@@ -82,7 +82,7 @@ const submitForm = async (form: FormInstance | undefined) => {
   await form.validate((valid, data) => {
     if (valid) {
       //alert('submit!')
-      login(formData.value).then((res) => {
+      login(remeberUser.value,formData.value).then((res) => {
         if (res.id != 0) {
           ElMessage({
             type: 'success',

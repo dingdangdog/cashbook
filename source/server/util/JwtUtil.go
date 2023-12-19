@@ -9,12 +9,17 @@ import (
 )
 
 // GenerateToken 生成JWT
-func GenerateToken(user types.User) (string, error) {
+func GenerateToken(rememberFlag bool, user types.User) (string, error) {
 	jwtSecret := []byte(server.GetServerInfo().Secret)
+	defaultExpiredTime := time.Now().Add(time.Hour * 24).Unix()
+	if rememberFlag {
+		// set default expired time to forever(100 years)
+		defaultExpiredTime = time.Now().Add(time.Hour * 24 * 365 * 100).Unix()
+	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"name": user.Name,
 		"id":   user.Id,
-		"exp":  time.Now().Add(time.Hour * 24).Unix(),
+		"exp":  defaultExpiredTime,
 	})
 	tokenString, err := token.SignedString(jwtSecret)
 	return tokenString, err

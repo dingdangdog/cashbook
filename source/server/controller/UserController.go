@@ -6,6 +6,7 @@ import (
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func Register(c *gin.Context) {
@@ -39,8 +40,12 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+	flag := c.Query("flag")
 
-	data, err := user.Login(u)
+	boolFlag, err := strconv.ParseBool(flag)
+	util.CheckErr(err)
+
+	data, err := user.Login(boolFlag, u)
 	if err != nil {
 		c.JSON(200, util.Error(err.Error(), data))
 		return
