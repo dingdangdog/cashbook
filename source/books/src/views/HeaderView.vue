@@ -65,7 +65,6 @@ import { onMounted, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 import { showBookDialogFlag } from '@/stores/flag'
-import { userInfo } from '@/stores/counter'
 
 import BookDialog from '@/views/dialogs/BookDialog.vue'
 import PlanDialog from '@/views/dialogs/PlanDialog.vue'
@@ -89,6 +88,12 @@ onMounted(() => {
       showBookDialog()
     })
   }
+  
+  setInterval(() => {
+    name.value = localStorage.getItem('name') || ''
+    bookName.value = localStorage.getItem('bookName') || ''
+  }, 500)
+
 })
 
 // 服务器信息封装
@@ -122,10 +127,10 @@ if (document.body.clientWidth <= 480) {
 }
 
 // 用户名
-const name = userInfo.value.name
+const name = ref(localStorage.getItem('name') || '')
 
 // 账本名
-const bookName = userInfo.value.bookName
+const bookName = ref(localStorage.getItem('bookName') || '')
 
 const keyDialog = ref({
   visable: false,

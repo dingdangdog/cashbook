@@ -40,7 +40,6 @@ import type { Book } from '@/types/model/book'
 
 import { createBook, getBook } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
-import { userInfo } from '@/stores/counter'
 
 import router from '@/router/index'
 
@@ -67,8 +66,6 @@ const openBook = (book: Book) => {
   }
   localStorage.setItem('bookId', book.id.toString())
   localStorage.setItem('bookName', book.bookName)
-  userInfo.value.bookId = book.id
-  userInfo.value.bookName = book.bookName
   // close book dialog
   showBookDialogFlag.value.visable = false
   // window.location.href = "/index"
