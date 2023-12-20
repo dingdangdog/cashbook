@@ -32,6 +32,16 @@
       />
     </div>
     <div class="queryParam">
+      <el-select v-model="flowQuery.flowType" class="m-2" placeholder="流水类型" clearable>
+        <el-option
+          v-for="item in flowTypeOptions"
+          :key="item.dictKey"
+          :label="item.dictValue"
+          :value="item.dictKey"
+        />
+      </el-select>
+    </div>
+    <div class="queryParam">
       <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
         <el-option
           v-for="item in expenseTypeOptions"
@@ -88,6 +98,7 @@
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if="false" />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="100" />
+      <el-table-column prop="flowType" label="流水类型" min-width="60" />
       <el-table-column prop="type" label="消费类型" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
       <el-table-column prop="payType" label="支付方式" min-width="80" />
@@ -141,6 +152,17 @@
             placeholder="选择"
           >
           </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="流水类型" :label-width="formLabelWidth" prop="type">
+          <el-select v-model="flowRef.flowType" placeholder="选择" clearable>
+            <el-option
+              v-for="item in flowTypeOptions"
+              :key="item.dictKey"
+              :label="item.dictValue"
+              :value="item.dictKey"
+            />
+          </el-select>
         </el-form-item>
 
         <el-form-item label="消费类型" :label-width="formLabelWidth" prop="type">
@@ -250,6 +272,9 @@ const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/F
 // 初始化后自动执行
 onMounted(() => {
   doQuery()
+  getDictByType('flowType').then((data) => {
+    flowTypeOptions.value = data
+  })
   getDictByType('expenseType').then((data) => {
     expenseTypeOptions.value = data
   })
@@ -283,8 +308,8 @@ if (document.body.clientWidth <= 480) {
 /*
  * 集中定义常量
  */
+const flowTypeOptions = ref<Dict[]>([])
 const expenseTypeOptions = ref<Dict[]>([])
-
 const paymentTypeOptions = ref<Dict[]>([])
 
 // 分页数据结果
@@ -301,6 +326,7 @@ const flowPage: Page<Flow> = {
 const flow: Flow = {
   id: undefined,
   day: undefined,
+  flowType: undefined,
   type: undefined,
   payType: undefined,
   money: undefined,
@@ -311,6 +337,7 @@ const flow: Flow = {
 // 表单输入框校验规则
 const rules = ref<FormRules>({
   day: [{ required: true, type: 'date', message: '请选择日期！', trigger: 'blur' }],
+  flowType: [{ required: true, message: '请选择流水类型！', trigger: 'blur' }],
   type: [{ required: true, message: '请选择消费类型！', trigger: 'blur' }],
   money: [{ required: true, message: '请输入金额！', trigger: 'blur' }],
   payType: [{ required: true, message: '请选择支付方式！', trigger: 'blur' }]
@@ -406,7 +433,7 @@ const confirmForm = async (dialogForm: FormInstance | undefined, closeDialog: bo
 const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
   if (!formEl) return
   flowRef.id = undefined
-  // flowRef.day = flowRef.day;
+  flowRef.flowType = undefined;
   flowRef.type = undefined
   flowRef.payType = undefined
   flowRef.money = undefined
@@ -420,6 +447,7 @@ const createOne = () => {
   createFlow({
     day: dateFormater('YYYY-MM-dd', flowRef.day || new Date()),
     bookId: parseInt(bookId || '0'),
+    flowType: flowRef.flowType,
     type: flowRef.type,
     money: flowRef.money,
     payType: flowRef.payType,
@@ -448,6 +476,7 @@ const updateOne = () => {
   update(flowRef.id || -1, {
     day: dateFormater('YYYY-MM-dd', flowRef.day || new Date()),
     bookId: parseInt(bookId || '0'),
+    flowType: flowRef.flowType,
     type: flowRef.type,
     money: flowRef.money,
     payType: flowRef.payType,
@@ -516,6 +545,7 @@ const openUpdateDialog = (title: string, updateFlow: Flow) => {
   flowRef.id = updateFlow.id
   flowRef.bookId= updateFlow.bookId,
   flowRef.day = updateFlow.day
+  flowRef.flowType = updateFlow.flowType
   flowRef.type = updateFlow.type
   flowRef.payType = updateFlow.payType
   flowRef.money = updateFlow.money
@@ -540,6 +570,7 @@ const readJsonInfo = (flie: UploadFile) => {
       importFlowList.push({
         id: flow.id,
         day: flow.day,
+        flowType: flow.flowType,
         type: flow.type,
         bookId: parseInt(bookId || '0'),
         payType: flow.payType,

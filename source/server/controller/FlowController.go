@@ -60,6 +60,7 @@ func DeleteFlow(c *gin.Context) {
 	util.CheckErr(err)
 	bookId := util.GetBookId(c)
 	flow.DeleteFlow(idNum, bookId)
+	// 更新计划中本月已用金额
 	go plan.UpdatePlanUsed(bookId)
 	c.JSON(200, util.Success("删除成功："+id))
 }

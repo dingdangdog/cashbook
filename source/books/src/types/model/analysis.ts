@@ -1,5 +1,6 @@
 export interface DailyLineChartQuery {
   bookId?: number;
+  flowType: string;
   startDay?: string;
   endDay?: string;
 }
@@ -11,6 +12,7 @@ export interface DailyLineChart {
 
 export interface TypePieChartQuery {
   bookId?: number;
+  flowType: string;
   startDay?: string;
   endDay?: string;
 }

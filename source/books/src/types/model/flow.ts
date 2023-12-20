@@ -1,6 +1,7 @@
 export interface Flow {
     id?: number;
     day?: string;
+    flowType?: string;
     type?: string;
     bookId?: number;
     payType?: string;
@@ -13,6 +14,7 @@ export interface Flow {
  */
 export interface CreateFlowDto {
     day?: string;
+    flowType?: string;
     bookId?: number;
     type?: string;
     payType?: string;
@@ -28,6 +30,7 @@ export interface CreateFlowDto {
 export interface UpdateFlowDto {
     day?: string;
     bookId?: number;
+    flowType?: string;
     type?: string;
     payType?: string;
     money?: number;
@@ -42,6 +45,7 @@ export class FlowQuery {
     bookId?: number;
     startDay?: string;
     endDay?: string;
+    flowType?: string;
     type?: string;
     payType?: string;
     name?: string;

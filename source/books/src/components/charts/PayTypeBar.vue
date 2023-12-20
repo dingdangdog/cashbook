@@ -51,7 +51,9 @@ import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 
-const query: TypePieChartQuery = {}
+const query: TypePieChartQuery = {
+  flowType: '支出'
+}
 const queryRef = ref(query)
 
 const dataList: any[] = []

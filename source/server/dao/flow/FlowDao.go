@@ -55,6 +55,9 @@ func AddByBatch(flows []types.Flow) int {
 		if flow.Id == 0 {
 			flow.Id = getNextId()
 		}
+		if len(flow.FlowType) == 0 {
+			flow.FlowType = "支出"
+		}
 		flowStatic = append(flowStatic, flow)
 	}
 	saveFile(flows[0].BookId)
@@ -107,6 +110,12 @@ func FindLists(param types.FlowParam) []types.Flow {
 			}
 			if flag && query.Name {
 				flag = strings.Contains(data.Name, param.Name)
+			}
+			if param.FlowType == "支出" {
+				// 兼容历史版本数据，历史版本无FlowType，默认为支出数据
+				flag = strings.Contains(data.FlowType, param.FlowType) || len(data.FlowType) == 0
+			} else if flag && query.FlowType {
+				flag = strings.Contains(data.FlowType, param.FlowType)
 			}
 			if flag && query.Type {
 				flag = strings.Contains(data.Type, param.Type)
@@ -202,6 +211,7 @@ func getQuery(param types.FlowParam) types.FlowQuery {
 	query.BookId = param.BookId > 0
 	query.Name = len(param.Name) > 0
 	query.Type = len(param.Type) > 0
+	query.FlowType = len(param.FlowType) > 0
 	query.PayType = len(param.PayType) > 0
 	query.Description = len(param.Description) > 0
 	query.StartDay = len(param.StartDay) > 0

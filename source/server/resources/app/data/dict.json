@@ -24,6 +24,22 @@
     "bookId": -1
   },
   {
+    "id": 23,
+    "type": "dictType",
+    "dictKey": "flowType",
+    "dictValue": "流水类型",
+    "sort": 4,
+    "bookId": -1
+  },
+  {
+    "id": 24,
+    "type": "dictType",
+    "dictKey": "incomeType",
+    "dictValue": "收入类型",
+    "sort": 5,
+    "bookId": -1
+  },
+  {
     "id": 4,
     "type": "expenseType",
     "dictKey": "饮食",
@@ -157,6 +173,54 @@
     "dictKey": "其他",
     "dictValue": "其他",
     "sort": 6,
+    "bookId": -1
+  },
+  {
+    "id": 21,
+    "type": "flowType",
+    "dictKey": "支出",
+    "dictValue": "支出",
+    "sort": 1,
+    "bookId": -1
+  },
+  {
+    "id": 22,
+    "type": "flowType",
+    "dictKey": "收入",
+    "dictValue": "收入",
+    "sort": 2,
+    "bookId": -1
+  },
+  {
+    "id": 25,
+    "type": "incomeType",
+    "dictKey": "全职薪资",
+    "dictValue": "全职薪资",
+    "sort": 1,
+    "bookId": -1
+  },
+  {
+    "id": 26,
+    "type": "incomeType",
+    "dictKey": "副业",
+    "dictValue": "副业",
+    "sort": 2,
+    "bookId": -1
+  },
+  {
+    "id": 27,
+    "type": "incomeType",
+    "dictKey": "社交",
+    "dictValue": "社交",
+    "sort": 3,
+    "bookId": -1
+  },
+  {
+    "id": 28,
+    "type": "incomeType",
+    "dictKey": "其他",
+    "dictValue": "其他",
+    "sort": 4,
     "bookId": -1
   }
 ]
