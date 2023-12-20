@@ -79,7 +79,9 @@ const changeDate = (value: any) => {
   }
 }
 
-const query: DailyLineChartQuery = {}
+const query: DailyLineChartQuery = {
+  flowType: '支出'
+}
 const queryRef = ref(query)
 
 doQuery(queryRef.value).then((res) => {

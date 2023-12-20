@@ -12,7 +12,9 @@ import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { dateFormater } from '@/utils/common'
 import type { DailyLineChartQuery } from '@/types/model/analysis'
 
-const query: DailyLineChartQuery = {}
+const query: DailyLineChartQuery = {
+  flowType: '支出'
+}
 const queryRef = ref(query)
 
 // 横轴数据

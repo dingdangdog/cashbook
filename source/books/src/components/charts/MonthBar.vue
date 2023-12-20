@@ -11,7 +11,9 @@ import { monthBar } from '@/api/api.analysis'
 import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 
-const query: TypePieChartQuery = {}
+const query: TypePieChartQuery = {
+  flowType: '支出'
+}
 const queryRef = ref(query)
 
 const dataList: any[] = []
