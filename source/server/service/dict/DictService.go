@@ -4,6 +4,7 @@ import (
 	dDict "cashbook-server/dao/dict"
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"sync"
 )
 
 // GetDictList 获取字典列表
@@ -34,8 +35,11 @@ func DeleteDict(id int64) {
 	dDict.Delete(id)
 }
 
+var mu sync.Mutex
+
 // CheckAndInitBookDict 检查并初始化账本字典
 func CheckAndInitBookDict(bookId int64) {
+	mu.Lock()
 	dictList := dDict.FindList(types.Dict{BookId: bookId})
 	if len(dictList) == 0 {
 		defaultDict := dDict.FindList(types.Dict{BookId: -1})
@@ -46,6 +50,7 @@ func CheckAndInitBookDict(bookId int64) {
 		}
 		dDict.AddByBatch(dictList)
 	}
+	mu.Unlock()
 }
 
 // ImportDict 导入字典表

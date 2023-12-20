@@ -14,6 +14,8 @@ func GetDictList(c *gin.Context) {
 	dictType := c.Param("type")
 	bookId := util.GetBookId(c)
 
+	sDict.CheckAndInitBookDict(bookId)
+
 	data := sDict.GetDictList(bookId, dictType)
 
 	c.JSON(200, util.Success(data))
