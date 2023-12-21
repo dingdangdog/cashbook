@@ -26,15 +26,21 @@ func DeleteFlow(id int64, bookId int64) {
 func GetFlowsPage(flowQuery types.FlowParam) types.Page {
 	flows := dFlow.FindLists(flowQuery)
 
-	totalMoney := 0.0
+	totalOut := 0.0
+	totalIn := 0.0
 	objs := make([]interface{}, len(flows))
 	for i, d := range flows {
 		objs[i] = d
-		totalMoney += d.Money
+		if d.FlowType == "支出" {
+			totalOut += d.Money
+		} else {
+			totalIn += d.Money
+		}
 	}
 
 	page := util.GetPage(flowQuery.PageNum, flowQuery.PageSize, objs)
-	page.TotalMoney = totalMoney
+	page.TotalOut = totalOut
+	page.TotalIn = totalIn
 	return page
 }
 

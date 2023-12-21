@@ -122,7 +122,8 @@
   <!-- 表格分页插件 -->
   <div class="pageDiv">
     <span class="pageSpan">
-      <b style="float: left">消费总额：{{ Number(flowPageRef.totalMoney.toFixed(2)) }}</b>
+      <b style="float: left">总支出：{{ Number(flowPageRef.totalOut.toFixed(2)) }}</b>
+      <b style="float: left">&nbsp;&nbsp;&nbsp;&nbsp;总收入：{{ Number(flowPageRef.totalIn.toFixed(2)) }}</b>
       <!-- {{ flowQuery }},{{ flowPageRef }} -->
       <el-pagination
         :current-page="flowQuery.pageNum"
@@ -315,7 +316,8 @@ const flowPage: Page<Flow> = {
   pageSize: 0,
   totalPage: 1,
   totalCount: 0,
-  totalMoney: 0,
+  totalOut: 0,
+  totalIn: 0,
   pageData: []
 }
 
