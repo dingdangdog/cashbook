@@ -2,7 +2,7 @@ package controller
 
 import (
 	sBook "cashbook-server/service/book"
-	sDict "cashbook-server/service/dict"
+	sFlow "cashbook-server/service/flow"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -26,7 +26,6 @@ func CreateBook(c *gin.Context) {
 
 	id := sBook.CreateOrUpdateBook(data)
 	data.Id = id
-	sDict.CheckAndInitBookDict(id)
 
 	c.JSON(200, util.Success(data))
 }
@@ -66,4 +65,10 @@ func GetBookList(c *gin.Context) {
 	userId := util.GetUserId(c)
 	data := sBook.GetBookList(userId)
 	c.JSON(200, util.Success(data))
+}
+
+func OpenBook(c *gin.Context) {
+	bookId := util.GetBookId(c)
+	sFlow.InitFlows(bookId)
+	c.JSON(200, util.Success("账本已打开"))
 }
