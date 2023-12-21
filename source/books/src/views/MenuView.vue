@@ -27,10 +27,10 @@
         <span>系统管理</span>
       </template>
 
-      <el-menu-item index="/index/dict">
-        <el-icon><List /></el-icon>
-        <template #title>字典管理</template>
-      </el-menu-item>
+<!--      <el-menu-item index="/index/dict">-->
+<!--        <el-icon><List /></el-icon>-->
+<!--        <template #title>字典管理</template>-->
+<!--      </el-menu-item>-->
 
       <!-- <el-menu-item index="account">
         <el-icon><MenuIcon /></el-icon>
