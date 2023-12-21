@@ -20,7 +20,7 @@ func GetUploadData(online types.Online) *types.OnlineData {
 func SaveDownload(online types.Online, data types.OnlineData) int64 {
 	if len(data.Flows) > 0 {
 		// 保存流水数据
-		flowFlag := sFlow.ImportFlows("overwrite", data.Flows)
+		flowFlag := sFlow.ImportFlows("overwrite", data.Flows, 0)
 		if flowFlag == 0 {
 			return 0
 		}

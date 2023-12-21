@@ -24,7 +24,11 @@ func loadFile(fileName string) []types.Flow {
 	fileBytes, _ := os.ReadFile(FilePath + "/" + fileName)
 	var flows []types.Flow
 	if len(fileBytes) != 0 {
-		if err := json.Unmarshal(fileBytes, &flows); err != nil {
+		decoder := json.NewDecoder(strings.NewReader(string(fileBytes)))
+		decoder.UseNumber()
+
+		if err := decoder.Decode(&flows); err != nil {
+			util.CheckErr(err)
 			return nil
 		}
 	}
@@ -49,18 +53,21 @@ func AddOrUpdate(flow types.Flow) int64 {
 }
 
 // AddByBatch 批量添加数据
-func AddByBatch(flows []types.Flow) int {
-	getFileData(flows[0].BookId)
+func AddByBatch(flows []types.Flow, bookId int64) int {
+	getFileData(bookId)
 	for _, flow := range flows {
 		if flow.Id == 0 {
 			flow.Id = getNextId()
+		}
+		if flow.BookId == 0 {
+			flow.BookId = bookId
 		}
 		if len(flow.FlowType) == 0 {
 			flow.FlowType = "支出"
 		}
 		flowStatic = append(flowStatic, flow)
 	}
-	saveFile(flows[0].BookId)
+	saveFile(bookId)
 	return len(flows)
 }
 

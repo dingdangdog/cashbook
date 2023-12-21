@@ -116,7 +116,8 @@ func ImportFlows(c *gin.Context) {
 		return
 	}
 
-	nums := flow.ImportFlows(flag, data.Flows)
+	bookId := util.GetBookId(c)
+	nums := flow.ImportFlows(flag, data.Flows, bookId)
 
 	if nums == 0 {
 		c.JSON(500, util.Error("导入失败，请重试", nil))
@@ -124,5 +125,5 @@ func ImportFlows(c *gin.Context) {
 	}
 	c.JSON(200, util.Success(nums))
 
-	go plan.UpdatePlanUsed(data.Flows[0].BookId)
+	go plan.UpdatePlanUsed(bookId)
 }

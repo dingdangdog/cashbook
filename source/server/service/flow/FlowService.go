@@ -50,11 +50,11 @@ func GetBookAll(bookId int64) []types.Flow {
 }
 
 // ImportFlows 导入流水
-func ImportFlows(flag string, flows []types.Flow) int {
+func ImportFlows(flag string, flows []types.Flow, bookId int64) int {
 	if flag == "overwrite" {
-		dFlow.DeleteBatch(flows[0].BookId)
+		dFlow.DeleteBatch(bookId)
 	}
-	return dFlow.AddByBatch(flows)
+	return dFlow.AddByBatch(flows, bookId)
 }
 
 func InitFlows(bookId int64) {
