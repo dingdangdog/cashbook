@@ -1,14 +1,14 @@
 <template>
   <!-- 表格查询框与操作按钮 -->
   <el-row class="queryRow">
-    <div class="queryParam pc-button">
+    <div class="table-header pc-button">
       <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
     </div>
-    <div class="queryParam pc-button">
+    <div class="table-header pc-button">
       <el-button type="success" @click="exportFlows()">导出</el-button>
     </div>
 
-    <div class="queryParam">
+    <div class="table-header queryParam">
       <el-date-picker
         :style="datePickerStyle"
         class="date-picker"
@@ -19,7 +19,7 @@
         placeholder="开始时间"
       />
     </div>
-    <div class="queryParam">
+    <div class="table-header queryParam">
       <el-date-picker
         :style="datePickerStyle"
         class="date-picker"
@@ -30,8 +30,8 @@
         placeholder="结束时间"
       />
     </div>
-    <div class="queryParam">
-      <el-select v-model="flowQuery.flowType" class="m-2" placeholder="流水类型" clearable>
+    <div class="table-header queryParam">
+      <el-select v-model="flowQuery.flowType" class="m-2" placeholder="流水类型" @change="changeTypes" clearable>
         <el-option
           v-for="item in flowTypeOptions"
           :key="item.value"
@@ -40,7 +40,7 @@
         />
       </el-select>
     </div>
-    <div class="queryParam">
+    <div class="table-header queryParam">
       <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
         <el-option
           v-for="item in expenseTypeOptions"
@@ -51,7 +51,7 @@
       </el-select>
     </div>
 
-    <div class="queryParam">
+    <div class="table-header queryParam">
       <el-select v-model="flowQuery.payType" class="m-2" placeholder="支付方式" clearable>
         <el-option
           v-for="item in paymentTypeOptions"
@@ -62,23 +62,23 @@
       </el-select>
     </div>
 
-    <div class="queryParam">
+    <div class="table-header queryParam">
       <el-input v-model="flowQuery.name" placeholder="名称" />
     </div>
 
-    <!-- <div class="queryParam">
+    <div class="table-header queryParam">
       <el-input v-model="flowQuery.description" placeholder="描述" />
-    </div> -->
+    </div>
 
-    <div class="queryParam query-icon">
+    <div class="table-header query-icon">
       <el-button :icon="Search" circle @click="doQuery()" />
     </div>
 
-    <div class="queryParam pc-button">
+    <div class="table-header pc-button">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
 
-    <div class="queryParam pc-button">
+    <div class="table-header pc-button">
       <el-button type="primary" @click="showExcelImportDialogFlag.visible = true">Excel导入</el-button>
     </div>
   </el-row>
@@ -244,7 +244,8 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="showExcelImportDialogFlag.visible" title="Excel导入流水" :fullscreen="true" :close-on-click-modal="false">
+  <el-dialog v-model="showExcelImportDialogFlag.visible" title="Excel导入流水" :fullscreen="true"
+             :close-on-click-modal="false">
     <FlowExcelImport />
   </el-dialog>
 </template>
@@ -276,19 +277,24 @@ const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/F
 // 初始化后自动执行
 onMounted(() => {
   doQuery()
+  getTypes()
+})
+
+const getTypes = () => {
   getFlowType().then((data) => {
     flowTypeOptions.value = data
     if (data[0]) {
-      changeTypes(data[0].value || '')
+      changeTypes(data[0].value)
     }
   })
-})
+}
+
 // 修改FlowType后联动
-const changeTypes = (flowType: string) => {
-  getExpenseType(flowType).then((data) => {
+const changeTypes = (flowType: string | undefined) => {
+  getExpenseType(flowType || '支出').then((data) => {
     expenseTypeOptions.value = data
   })
-  getPaymentType(flowType).then((data) => {
+  getPaymentType(flowType || '支出').then((data) => {
     paymentTypeOptions.value = data
   })
 }
@@ -590,7 +596,7 @@ const readJsonInfo = (flie: UploadFile) => {
               dialogFormVisible.value = false
               dialogUpdateVisible.value = false
               doQuery()
-              router.push({path: '/index/flows'})
+              router.push({ path: '/index/flows' })
             }
           })
         } else {
@@ -624,11 +630,15 @@ watch(flowQuery, () => {
 </script>
 
 <style scoped>
-.queryRow .queryParam {
+.table-header {
   margin: 0.5rem 0.5rem;
   display: flex; /* 设置body为flex布局 */
   justify-content: center; /* 横向居中 */
   align-items: center; /* 纵向居中 */
+}
+
+.queryRow .queryParam {
+  width: 10rem;
 }
 
 .pageDiv {
