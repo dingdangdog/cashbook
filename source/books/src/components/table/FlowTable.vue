@@ -71,9 +71,9 @@
       <el-input v-model="flowQuery.description" placeholder="描述" />
     </div> -->
 
-    <!-- <div class="queryParam query-icon">
+     <div class="queryParam query-icon">
       <el-button :icon="Search" circle @click="doQuery()" />
-    </div> -->
+    </div>
 
     <div class="queryParam pc-button">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
@@ -254,7 +254,7 @@
 // 第三方库引入
 import { ref, onMounted, reactive, watch } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { Delete, Edit } from '@element-plus/icons-vue'
+import { Delete, Edit, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus'
 
 // 私有引入
@@ -282,7 +282,7 @@ onMounted(() => {
     }
   })
 })
-
+// 修改FlowType后联动
 const changeTypes = (flowType: string) => {
   getExpenseType(flowType).then((data) => {
     expenseTypeOptions.value = data
@@ -292,13 +292,13 @@ const changeTypes = (flowType: string) => {
   })
 }
 
+// 小屏幕
 const miniScreen = ref(false)
 if (document.body.clientWidth <= 480) {
   miniScreen.value = true
 }
-
+// 时间选择器
 const datePickerStyle = ref('')
-
 if (document.body.clientWidth <= 480) {
   datePickerStyle.value = 'width: auto'
 }
@@ -306,8 +306,11 @@ if (document.body.clientWidth <= 480) {
 /*
  * 集中定义常量
  */
+// 流水类型
 const flowTypeOptions = ref<Dict[]>([])
+// 消费类型/收入类型
 const expenseTypeOptions = ref<Dict[]>([])
+// 支付类型
 const paymentTypeOptions = ref<Dict[]>([])
 
 // 分页数据结果
@@ -385,7 +388,6 @@ const pageSizeChange = (pageSize: number) => {
 const doQuery = () => {
   getFlowPage(flowQuery).then((res) => {
     flowPageRef.value = res
-    // console.log(JSON.stringify(flowPage) + "doQuery");
     loading.value = false
   })
 }
