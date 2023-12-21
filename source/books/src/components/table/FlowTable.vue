@@ -7,7 +7,6 @@
     <div class="queryParam pc-button">
       <el-button type="success" @click="exportFlows()">导出</el-button>
     </div>
-    
 
     <div class="queryParam">
       <el-date-picker
@@ -71,7 +70,7 @@
       <el-input v-model="flowQuery.description" placeholder="描述" />
     </div> -->
 
-     <div class="queryParam query-icon">
+    <div class="queryParam query-icon">
       <el-button :icon="Search" circle @click="doQuery()" />
     </div>
 
@@ -80,7 +79,7 @@
     </div>
 
     <div class="queryParam pc-button">
-      <el-button type="primary"  @click="excelImportVisible = true">Excel导入</el-button>
+      <el-button type="primary" @click="showExcelImportDialogFlag.visible = true">Excel导入</el-button>
     </div>
   </el-row>
   <hr />
@@ -245,7 +244,7 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="excelImportVisible" title="Excel导入流水" :fullscreen="true" :close-on-click-modal="false">
+  <el-dialog v-model="showExcelImportDialogFlag.visible" title="Excel导入流水" :fullscreen="true" :close-on-click-modal="false">
     <FlowExcelImport />
   </el-dialog>
 </template>
@@ -268,6 +267,8 @@ import type { Flow } from '@/types/model/flow'
 import type { Dict } from '@/types/model/dict'
 
 import { defineAsyncComponent } from 'vue'
+import router from '@/router'
+import { showExcelImportDialogFlag } from '@/stores/flag'
 
 // 异步组件引用
 const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/FlowExcelImport.vue'))
@@ -277,7 +278,7 @@ onMounted(() => {
   doQuery()
   getFlowType().then((data) => {
     flowTypeOptions.value = data
-    if (data[0]){
+    if (data[0]) {
       changeTypes(data[0].value || '')
     }
   })
@@ -356,8 +357,6 @@ const loading = ref(true)
 const dialogFormVisible = ref(false)
 // 导入弹窗显示控制器
 const dialogUpdateVisible = ref(false)
-// 导入弹窗显示控制器
-const excelImportVisible = ref(false)
 // 表单弹窗标题
 const dialogFormTitle = ref(formTitle[0])
 // 表单输入框宽度
@@ -434,7 +433,7 @@ const confirmForm = async (dialogForm: FormInstance | undefined, closeDialog: bo
 const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
   if (!formEl) return
   flowRef.id = undefined
-  flowRef.flowType = undefined;
+  flowRef.flowType = undefined
   flowRef.type = undefined
   flowRef.payType = undefined
   flowRef.money = undefined
@@ -544,8 +543,8 @@ const openUpdateDialog = (title: string, updateFlow: Flow) => {
   dialogFormVisible.value = true
 
   flowRef.id = updateFlow.id
-  flowRef.bookId= updateFlow.bookId,
-  flowRef.day = updateFlow.day
+  flowRef.bookId = updateFlow.bookId,
+    flowRef.day = updateFlow.day
   flowRef.flowType = updateFlow.flowType
   flowRef.type = updateFlow.type
   flowRef.payType = updateFlow.payType
@@ -584,14 +583,19 @@ const readJsonInfo = (flie: UploadFile) => {
     importFlows(importFlag.value, importFlowList)
       .then((res) => {
         console.log(res)
-        ElMessageBox.alert('', '导入成功', {
-          confirmButtonText: '确定',
-          callback: () => {
-            dialogFormVisible.value = false
-            dialogUpdateVisible.value = false
-            doQuery()
-          }
-        })
+        if (res > 0) {
+          ElMessageBox.alert('共导入' + res + '条流水', '导入成功', {
+            confirmButtonText: '确定',
+            callback: () => {
+              dialogFormVisible.value = false
+              dialogUpdateVisible.value = false
+              doQuery()
+              router.push({path: '/index/flows'})
+            }
+          })
+        } else {
+          ElMessage.error('导入失败，请重试！')
+        }
       })
       .catch(() => {
         ElMessage.error('导入失败，请重试！')
