@@ -76,3 +76,12 @@ func GetBookId(c *gin.Context) int64 {
 	CheckErr(err)
 	return bookIdNum
 }
+
+func ArrayContains(array []string, newStr string) bool {
+	for _, str := range array {
+		if str == newStr {
+			return true
+		}
+	}
+	return false
+}
