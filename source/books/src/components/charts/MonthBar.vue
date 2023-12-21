@@ -31,7 +31,8 @@ const optionRef = ref({
 
   toolbox: {
     feature: {
-      saveAsImage: {}
+      // 下载按钮
+      // saveAsImage: {}
     }
   },
   xAxis: {
