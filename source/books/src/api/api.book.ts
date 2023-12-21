@@ -34,5 +34,9 @@ export function createBook(createDto: CreateBookDto): Promise<Book> {
 * @returns result
 */
 export function changeKey(book: Book): Promise<Book> {
-  return $http({ url: '/admin' + prefix + '/changeKey', method: "post", data: book })
+  return $http({ url: prefix + '/changeKey', method: "post", data: book })
+}
+
+export async function openBookApi(): Promise<string> {
+  return $http({ url: prefix + '/openBook', method: "post" })
 }

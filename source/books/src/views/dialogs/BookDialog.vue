@@ -38,7 +38,7 @@ import { onMounted, ref } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import type { Book } from '@/types/model/book'
 
-import { createBook, getBook } from '@/api/api.book'
+import { createBook, getBook, openBookApi } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
 
 import router from '@/router/index'
@@ -59,13 +59,16 @@ const initBooks = () => {
     })
 }
 
-const openBook = (book: Book) => {
+const openBook = async (book: Book) => {
   if (localStorage.getItem('bookId') === book.id.toString()) {
     showBookDialogFlag.value.visable = false
     return
   }
   localStorage.setItem('bookId', book.id.toString())
   localStorage.setItem('bookName', book.bookName)
+  openBookApi().then((res) => {
+    ElMessage.success(res)
+  })
   // close book dialog
   showBookDialogFlag.value.visable = false
   // window.location.href = "/index"
