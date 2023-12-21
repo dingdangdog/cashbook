@@ -1,5 +1,9 @@
 import { ref } from 'vue'
 
 export const showBookDialogFlag = ref({
-  visable: false,
+  visible: false,
+})
+
+export const showExcelImportDialogFlag = ref({
+  visible: false
 })

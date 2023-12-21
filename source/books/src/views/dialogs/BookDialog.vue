@@ -61,7 +61,7 @@ const initBooks = () => {
 
 const openBook = async (book: Book) => {
   if (localStorage.getItem('bookId') === book.id.toString()) {
-    showBookDialogFlag.value.visable = false
+    showBookDialogFlag.value.visible = false
     return
   }
   localStorage.setItem('bookId', book.id.toString())
@@ -70,7 +70,7 @@ const openBook = async (book: Book) => {
     ElMessage.success(res)
   })
   // close book dialog
-  showBookDialogFlag.value.visable = false
+  showBookDialogFlag.value.visible = false
   // window.location.href = "/index"
   router.push({ path: '/index' })
 }

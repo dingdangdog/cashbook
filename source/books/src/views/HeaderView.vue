@@ -45,12 +45,12 @@
   </el-dialog>
 
   <!-- 弹出框表单：额度设置 -->
-  <el-dialog style="width: 30vw" v-model="planDialog.visable" :title="planDialog.title">
+  <el-dialog style="width: 30vw" v-model="planDialog.visible" :title="planDialog.title">
     <PlanDialog />
   </el-dialog>
 
   <!-- 弹出框：账本设置 -->
-  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visable" :title="bookDialog.title">
+  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title">
     <BookDialog />
   </el-dialog>
 
@@ -149,20 +149,20 @@ const changeBookKey = () => {
 }
 
 const planDialog = ref({
-  visable: false,
+  visible: false,
   title: ''
 })
 const showPlanDialog = () => {
-  planDialog.value.visable = true
+  planDialog.value.visible = true
   planDialog.value.title = '额度设置'
 }
 
 const bookDialog = ref({
-  visable: showBookDialogFlag.value.visable,
+  visible: showBookDialogFlag.value.visible,
   title: '切换账本'
 })
 const showBookDialog = () => {
-  showBookDialogFlag.value.visable = true
+  showBookDialogFlag.value.visible = true
 }
 
 const onlineDialog = ref({

@@ -1,6 +1,6 @@
 import $http from './index'
-import type { Page } from '../types/page';
-import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '../types/model/flow';
+import type { Page } from '@/types/page';
+import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '@/types/model/flow';
 
 const prefix = '/admin/flow';
 
@@ -52,6 +52,6 @@ export function deleteFlow(id: number): Promise<any> {
  * @param flows 
  * @returns 
  */
-export function importFlows(importFlag: string, flows: Flow[]) {
+export function importFlows(importFlag: string, flows: Flow[]): Promise<any> {
     return $http({ url: prefix + "/importFlows?flag=" + importFlag, method: "post", data: { 'flows':flows }})
 }
