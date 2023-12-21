@@ -50,3 +50,7 @@ func ImportFlows(flag string, flows []types.Flow) int {
 	}
 	return dFlow.AddByBatch(flows)
 }
+
+func InitFlows(bookId int64) {
+	dFlow.InitFlows(bookId)
+}

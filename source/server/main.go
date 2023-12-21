@@ -36,15 +36,19 @@ func main() {
 		// 账本相关
 		adminApi.GET("/book", controller.GetBookList)
 		adminApi.POST("/book", controller.CreateBook)
+		adminApi.POST("/book/openBook", controller.OpenBook)
 		adminApi.PUT("/book/:id", controller.UpdateBook)
 		adminApi.DELETE("/book/:id", controller.DeleteBook)
 
 		// 字典相关
-		adminApi.GET("/dict/:type", controller.GetDictList)
-		adminApi.GET("/dict", controller.GetDictPage)
-		adminApi.POST("/dict", controller.AddDict)
-		adminApi.PUT("/dict/:id", controller.UpdateDict)
-		adminApi.DELETE("/dict/:id", controller.DeleteDict)
+		adminApi.GET("/dict/getFlowType", controller.GetFlowType)
+		adminApi.GET("/dict/getExpenseType/:flowType", controller.GetExpenseType)
+		adminApi.GET("/dict/getPaymentType/:flowType", controller.GetPaymentType)
+		//adminApi.GET("/dict/:type", controller.GetDictList)
+		//adminApi.GET("/dict", controller.GetDictPage)
+		//adminApi.POST("/dict", controller.AddDict)
+		//adminApi.PUT("/dict/:id", controller.UpdateDict)
+		//adminApi.DELETE("/dict/:id", controller.DeleteDict)
 		// 分析图表相关
 		adminApi.POST("/analysis/dailyLine", controller.GetDailyLine)
 		adminApi.POST("/analysis/typePie", controller.GetTypePie)

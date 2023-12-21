@@ -84,6 +84,25 @@ func Delete(id int64, bookId int64) {
 	}
 }
 
+// DeleteDontSave 按照ID删除但不保存数据
+func DeleteDontSave(id int64, bookId int64) {
+	getFileData(bookId)
+	var index int64
+	var flag = false
+	if len(flowStatic) > 0 {
+		for i, param := range flowStatic {
+			if id == param.Id {
+				index = int64(i)
+				flag = true
+				break
+			}
+		}
+	}
+	if flag {
+		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
+	}
+}
+
 // DeleteBatch 按照bookId删除数据
 func DeleteBatch(bookId int64) {
 	getFileData(bookId)
@@ -218,4 +237,20 @@ func getQuery(param types.FlowParam) types.FlowQuery {
 	query.EndDay = len(param.EndDay) > 0
 	query.MoneySort = len(param.MoneySort) > 0
 	return query
+}
+
+func updateFlowType(flows []types.Flow, bookId int64) {
+	for _, flow := range flows {
+		if len(flow.FlowType) == 0 {
+			flow.FlowType = "支出"
+			DeleteDontSave(flow.Id, bookId)
+			flowStatic = append(flowStatic, flow)
+		}
+	}
+	saveFile(bookId)
+}
+
+func InitFlows(bookId int64) {
+	flows := getFileData(bookId)
+	updateFlowType(flows, bookId)
 }

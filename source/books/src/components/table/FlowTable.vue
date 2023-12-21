@@ -35,9 +35,9 @@
       <el-select v-model="flowQuery.flowType" class="m-2" placeholder="流水类型" clearable>
         <el-option
           v-for="item in flowTypeOptions"
-          :key="item.dictKey"
-          :label="item.dictValue"
-          :value="item.dictKey"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
         />
       </el-select>
     </div>
@@ -45,9 +45,9 @@
       <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
         <el-option
           v-for="item in expenseTypeOptions"
-          :key="item.dictKey"
-          :label="item.dictValue"
-          :value="item.dictKey"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
         />
       </el-select>
     </div>
@@ -56,9 +56,9 @@
       <el-select v-model="flowQuery.payType" class="m-2" placeholder="支付方式" clearable>
         <el-option
           v-for="item in paymentTypeOptions"
-          :key="item.dictKey"
-          :label="item.dictValue"
-          :value="item.dictKey"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
         />
       </el-select>
     </div>
@@ -155,23 +155,31 @@
         </el-form-item>
 
         <el-form-item label="流水类型" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="flowRef.flowType" placeholder="选择" clearable>
+          <el-select v-model="flowRef.flowType"
+                     placeholder="选择"
+                     clearable
+                     filterable
+                     allow-create
+                     @change="changeTypes">
             <el-option
               v-for="item in flowTypeOptions"
-              :key="item.dictKey"
-              :label="item.dictValue"
-              :value="item.dictKey"
+              :key="item.value"
+              :label="item.value"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
 
         <el-form-item label="消费类型" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="flowRef.type" placeholder="选择" clearable>
+          <el-select v-model="flowRef.type" placeholder="选择"
+                     clearable
+                     filterable
+                     allow-create>
             <el-option
               v-for="item in expenseTypeOptions"
-              :key="item.dictKey"
-              :label="item.dictValue"
-              :value="item.dictKey"
+              :key="item.value"
+              :label="item.value"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
@@ -181,12 +189,15 @@
         </el-form-item>
 
         <el-form-item label="支付方式" :label-width="formLabelWidth" prop="payType">
-          <el-select v-model="flowRef.payType" placeholder="选择" clearable>
+          <el-select v-model="flowRef.payType" placeholder="选择"
+                     clearable
+                     filterable
+                     allow-create>
             <el-option
               v-for="item in paymentTypeOptions"
-              :key="item.dictKey"
-              :label="item.dictValue"
-              :value="item.dictKey"
+              :key="item.value"
+              :label="item.value"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
@@ -218,15 +229,6 @@
 
   <!-- 文件导入窗口 -->
   <el-dialog v-model="dialogUpdateVisible" title="文件上传" :fullscreen="miniScreen">
-    <!-- <el-upload submit="submitExcel()" :auto-upload="false">
-      <el-button type="primary">导入Excel文件</el-button>
-      <template #tip>
-        <div class="el-upload__tip">
-          仅支持上传excel文件
-        </div>
-      </template>
-    </el-upload> -->
-
     <div class="el-dialog-main">
       <el-radio-group v-model="importFlag" class="ml-4">
         <el-radio label="overwrite" size="large"><b style="color: red">删除原有流水</b></el-radio>
@@ -256,7 +258,7 @@ import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'elemen
 
 // 私有引入
 import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows } from '@/api/api.flow'
-import { getDictByType } from '@/api/api.dict'
+import { getFlowType, getExpenseType, getPaymentType } from '@/api/api.dict'
 import { dateFormater, deviceAgent, timeFormatter } from '@/utils/common'
 import { exportJson } from '@/utils/fileUtils'
 import { flowQuery } from '@/utils/store'
@@ -272,16 +274,22 @@ const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/F
 // 初始化后自动执行
 onMounted(() => {
   doQuery()
-  getDictByType('flowType').then((data) => {
+  getFlowType().then((data) => {
     flowTypeOptions.value = data
-  })
-  getDictByType('expenseType').then((data) => {
-    expenseTypeOptions.value = data
-  })
-  getDictByType('paymentType').then((data) => {
-    paymentTypeOptions.value = data
+    if (data[0]){
+      changeTypes(data[0].value || '')
+    }
   })
 })
+
+const changeTypes = (flowType: string) => {
+  getExpenseType(flowType).then((data) => {
+    expenseTypeOptions.value = data
+  })
+  getPaymentType(flowType).then((data) => {
+    paymentTypeOptions.value = data
+  })
+}
 
 const miniScreen = ref(false)
 if (document.body.clientWidth <= 480) {
@@ -293,17 +301,6 @@ const datePickerStyle = ref('')
 if (document.body.clientWidth <= 480) {
   datePickerStyle.value = 'width: auto'
 }
-
-// const tableRef = ref();
-// tableRef.value.height = document.documentElement.clientHeight * 0.65;
-
-// const tableRef = ref({
-//   'height': document.documentElement.clientHeight * 0.63
-// });
-
-// if (document.body.clientWidth <= 480) {
-//   tableRef.value.height = document.documentElement.clientHeight * 0.7;
-// }
 
 /*
  * 集中定义常量
