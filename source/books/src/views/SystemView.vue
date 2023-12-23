@@ -1,7 +1,13 @@
 <template>
   <div class="setting-container">
-    <el-input v-model="url" placeholder="Please input" @input="changeBackground" />
-    <el-image style="width: 100px; height: 100px" :src="url" fit="contain" />
+    <div class="background-set">
+      <el-form-item label="图片地址">
+        <el-input v-model="url" placeholder="Please input" @input="changeBackground" />
+      </el-form-item>
+      <el-form-item label="图片预览">
+        <el-image style="width: 300px; height: 300px" :src="url" fit="contain" />
+      </el-form-item>
+    </div>
   </div>
 </template>
 
