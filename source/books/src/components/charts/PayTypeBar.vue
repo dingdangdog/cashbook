@@ -47,9 +47,10 @@ import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { payTypeBar } from '@/api/api.analysis'
-import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
+import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
+import { showFlowTableDialog } from '@/stores/flag'
 
 const query: TypePieChartQuery = {
   flowType: '支出'

@@ -38,7 +38,8 @@ import { getPlan } from '@/api/api.plan'
 import type { Plan } from '@/types/model/plan'
 import type { DailyLineChartQuery } from '@/types/model/analysis'
 import { dateFormater } from '@/utils/common'
-import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
+import { flowQuery, resetFlowQuery } from '@/utils/store'
+import { showFlowTableDialog } from '@/stores/flag'
 
 const allCount = ref<any>({})
 
@@ -55,8 +56,8 @@ const clickDay = (param: any) => {
   flowQuery.startDay = param.day
   flowQuery.endDay = param.day
   day.value = new Date(param.day)
-  chartDialog.chartDiaLogShow = false
-  console.log(param)
+  showFlowTableDialog.value.visible = true
+  // console.log(param)
 }
 
 const nowDate = ref(new Date())

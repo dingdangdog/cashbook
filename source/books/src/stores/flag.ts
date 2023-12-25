@@ -7,3 +7,7 @@ export const showBookDialogFlag = ref({
 export const showExcelImportDialogFlag = ref({
   visible: false
 })
+
+export const showFlowTableDialog = ref({
+  visible: false
+})

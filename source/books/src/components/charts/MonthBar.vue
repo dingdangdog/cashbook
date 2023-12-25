@@ -10,6 +10,7 @@ import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
 import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
 import type { TypePieChartQuery } from '@/types/model/analysis'
+import { showFlowTableDialog } from '@/stores/flag'
 
 const query: TypePieChartQuery = {
   flowType: '支出'
@@ -79,6 +80,7 @@ const doQuery = () => {
         flowQuery.startDay = param.name + '-01'
         flowQuery.endDay = param.name + '-31'
         chartDialog.chartDiaLogShow = false
+        showFlowTableDialog.value.visible = true
       })
     }
   })

@@ -47,9 +47,10 @@ import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { typePie } from '@/api/api.analysis'
-import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
+import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
+import { showFlowTableDialog } from '@/stores/flag'
 
 const query: TypePieChartQuery = {
   flowType: '支出'
@@ -151,7 +152,7 @@ const doQuery = (query: TypePieChartQuery) => {
         flowQuery.startDay = queryRef.value.startDay
         flowQuery.endDay = queryRef.value.endDay
         flowQuery.type = param.name
-        chartDialog.chartDiaLogShow = false
+        showFlowTableDialog.value.visible = true
       })
     }
   })
