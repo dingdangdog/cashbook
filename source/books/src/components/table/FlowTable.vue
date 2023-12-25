@@ -1,10 +1,10 @@
 <template>
   <!-- 表格查询框与操作按钮 -->
   <el-row class="queryRow">
-    <div class="table-header pc-button">
+    <div class="table-header pc-button" v-if="edit == 'show'" >
       <el-button type="primary" @click="dialogUpdateVisible = true">导入</el-button>
     </div>
-    <div class="table-header pc-button">
+    <div class="table-header pc-button" v-if="edit == 'show'" >
       <el-button type="success" @click="exportFlows()">导出</el-button>
     </div>
 
@@ -74,11 +74,11 @@
       <el-button :icon="Search" circle @click="doQuery()" />
     </div>
 
-    <div class="table-header pc-button">
+    <div class="table-header pc-button" v-if="edit == 'show'" >
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
 
-    <div class="table-header pc-button">
+    <div class="table-header pc-button" v-if="edit == 'show'" >
       <el-button type="primary" @click="showExcelImportDialogFlag.visible = true">Excel导入</el-button>
     </div>
   </el-row>
@@ -103,7 +103,7 @@
       <el-table-column prop="payType" label="支付方式" min-width="80" />
       <el-table-column prop="name" label="名称" min-width="100" />
       <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="150" v-if="edit == 'show'" >
         <template v-slot="scop">
           <el-button
             type="primary"
@@ -273,6 +273,9 @@ import { showExcelImportDialogFlag } from '@/stores/flag'
 
 // 异步组件引用
 const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/FlowExcelImport.vue'))
+
+// 使用 props 来接收外部传入的参数
+const {edit} = defineProps(['edit']);
 
 // 初始化后自动执行
 onMounted(() => {
