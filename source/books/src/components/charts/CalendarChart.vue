@@ -46,8 +46,7 @@ const allCount = ref<any>({})
 const day = ref(flowQuery.startDay ? new Date(flowQuery.startDay) : new Date())
 
 const doQuery = async (param: DailyLineChartQuery) => {
-  const res = await dailyLine(param)
-  return res
+  return await dailyLine(param)
 }
 const monthCount = ref<any>({})
 
