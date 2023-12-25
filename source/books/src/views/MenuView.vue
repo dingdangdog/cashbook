@@ -83,6 +83,7 @@ import {
 } from '@element-plus/icons-vue'
 import { useToggle } from '@vueuse/shared'
 import { isDark } from '@/utils/common'
+import { resetFlowQuery } from '@/utils/store'
 
 // 设置主题色
 const themeChange = useToggle(isDark)
@@ -108,6 +109,8 @@ const menuChange = () => {
 
 const selectMenu = (key: string, keyPath: string[]) => {
   console.log('selectMenu', key, keyPath)
+  // 不管点的啥菜单，先充值一下查询条件吧，防止互相影响
+  resetFlowQuery()
   router.push({ path: key })
 }
 </script>
