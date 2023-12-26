@@ -1,6 +1,6 @@
 {
   "name": "cashbook2",
-  "version": "0.0.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "dev": "vite",

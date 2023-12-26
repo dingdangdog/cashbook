@@ -1,11 +1,11 @@
 {
   "name": "cashbook-books",
   "description": "cashbook application by Windows Desktop",
-  "version": "1.1.0-BETA",
+  "version": "1.1.1",
   "main": "main.js",
   "author": {
     "name": "dingdangdog",
-    "email": "dddogx@outlook.com"
+    "email": "dingdangdogx@outlook.com"
   },
   "build": {
     "asar": false,
@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.56",
-    "electron": "^24.2.0",
+    "electron": "^24.8.8",
     "electron-builder": "^23.6.0",
     "npm-run-all": "^4.1.5"
   }
