@@ -146,7 +146,7 @@ if (document.body.clientWidth <= 480) {
 
 const changePassword = () => {
   passwordDialog.value.visible = true
-  passwordDialog.value.title = '修改密钥，原密钥：(' + localStorage.getItem('bookId') + ')'
+  passwordDialog.value.title = '修改密码'
 }
 
 const planDialog = ref({

@@ -11,3 +11,8 @@ export interface LoginUser {
   name: string;
   token: string;
 }
+
+export interface NewPassword{
+  old: string,
+  new: string
+}
