@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AnalyticsView from '@/views/AnalyticsView.vue'
 import CalendarView from '@/views/CalendarView.vue'
 import FlowsView from '@/views/FlowsView.vue'
-import DictView from '@/views/DictView.vue'
 import BooksView from '@/views/BooksView.vue'
 import SystemView from '@/views/SystemView.vue'
 import AboutView from '@/views/AboutView.vue'
@@ -41,11 +40,6 @@ const publicRoutes= [
         path: '/index/flows',
         name: 'flows',
         component: FlowsView
-      },
-      {
-        path: '/index/dict',
-        name: 'dict',
-        component: DictView
       },
       {
         path: '/index/books',
