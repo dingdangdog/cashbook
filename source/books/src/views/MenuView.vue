@@ -1,17 +1,23 @@
 <template>
   <el-menu default-active="/index/" :collapse="isCollapse" @select="selectMenu">
     <el-menu-item index="/index/">
-      <el-icon><Calendar /></el-icon>
+      <el-icon>
+        <Calendar />
+      </el-icon>
       <template #title>消费日历</template>
     </el-menu-item>
 
     <el-menu-item index="/index/analytics">
-      <el-icon><Monitor /></el-icon>
+      <el-icon>
+        <Monitor />
+      </el-icon>
       <template #title>分析概览</template>
     </el-menu-item>
 
     <el-menu-item index="/index/flows">
-      <el-icon><EditPen /></el-icon>
+      <el-icon>
+        <EditPen />
+      </el-icon>
       <template #title>流水管理</template>
     </el-menu-item>
 
@@ -23,33 +29,48 @@
     <!-- 多级菜单 -->
     <el-sub-menu index="/index/setting">
       <template #title>
-        <el-icon><Operation /></el-icon>
+        <el-icon>
+          <Operation />
+        </el-icon>
         <span>系统管理</span>
       </template>
 
 
       <el-menu-item index="/index/system">
-        <el-icon><Setting /></el-icon>
+        <el-icon>
+          <Setting />
+        </el-icon>
         <template #title>系统设置</template>
       </el-menu-item>
     </el-sub-menu>
+
+    <el-menu-item index="/index/about">
+      <el-icon>
+        <Reading />
+      </el-icon>
+      <template #title>关于</template>
+    </el-menu-item>
   </el-menu>
 
   <el-menu default-active="#" id="menu-bottom" :collapse="isCollapse" @select="selectMenu">
     <el-menu-item index="#1" @click="themeChange()">
-      <el-icon v-show="isDark"><MoonNight /></el-icon>
-      <el-icon v-show="!isDark"><Sunny /></el-icon>
+      <el-icon v-show="isDark">
+        <MoonNight />
+      </el-icon>
+      <el-icon v-show="!isDark">
+        <Sunny />
+      </el-icon>
       <template #title>{{ isDark ? '夜间模式' : '白天模式' }}</template>
     </el-menu-item>
 
-    <el-menu-item index="/index/about">
-      <el-icon><Reading /></el-icon>
-      <template #title>关于</template>
-    </el-menu-item>
 
     <el-menu-item index="#2" @click="menuChange()">
-      <el-icon v-show="isCollapse" size="large"><Expand /></el-icon>
-      <el-icon v-show="!isCollapse" size="large"><Fold /></el-icon>
+      <el-icon v-show="isCollapse" size="large">
+        <Expand />
+      </el-icon>
+      <el-icon v-show="!isCollapse" size="large">
+        <Fold />
+      </el-icon>
       <template #title>{{ isCollapse ? '展开' : '收起' }}</template>
     </el-menu-item>
   </el-menu>
@@ -82,7 +103,7 @@ const router: Router = useRouter()
 const isCollapse = ref(false)
 
 const menuChange = () => {
-  isCollapse.value = !isCollapse.value;
+  isCollapse.value = !isCollapse.value
 }
 
 const selectMenu = (key: string, keyPath: string[]) => {
@@ -107,6 +128,7 @@ const selectMenu = (key: string, keyPath: string[]) => {
   bottom: 1rem;
   width: auto;
 }
+
 #menu-bottom li {
   padding-right: 3rem;
 }
