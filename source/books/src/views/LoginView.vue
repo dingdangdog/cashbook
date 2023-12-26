@@ -8,7 +8,7 @@
           <el-input v-model="formData.userName" />
         </el-form-item>
         <el-form-item label="密码（Password）" prop="pass" class="login-input">
-          <el-input v-model="formData.password" type="password" autocomplete="off" />
+          <el-input v-model="formData.password" type="password" autocomplete="off" show-password/>
         </el-form-item>
         <el-checkbox v-model="remeberUser" class="login-button">Remember me</el-checkbox>
         <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
@@ -30,7 +30,7 @@
         </el-form-item>
 
         <el-form-item label="密码（Password）" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="registerUser.password" type="password" autocomplete="off" />
+          <el-input v-model="registerUser.password" type="password" autocomplete="off" show-password/>
         </el-form-item>
       </el-form>
     </div>
