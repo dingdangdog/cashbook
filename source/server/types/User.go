@@ -21,3 +21,8 @@ type LogInfo struct {
 	Name  string `json:"name"`
 	Token string `json:"token"`
 }
+
+type NewPassword struct {
+	Old string `json:"old"`
+	New string `json:"new"`
+}

@@ -33,6 +33,10 @@ func main() {
 	adminApi := api.Group("/admin")
 	adminApi.Use(checkToken())
 	{
+		// 用户相关
+		adminApi.POST("/checkPassword/:password", controller.CheckPassword)
+		adminApi.POST("/changePassword", controller.ChangePassword)
+
 		// 账本相关
 		adminApi.GET("/book", controller.GetBookList)
 		adminApi.POST("/book", controller.CreateBook)

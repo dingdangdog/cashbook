@@ -10,7 +10,7 @@ import (
 // Register 注册
 func Register(u types.User) int64 {
 	u.Password = util.EncryptBySHA256(u.UserName, u.Password)
-	return user.AddUser(u)
+	return user.AddOrUpdate(u)
 }
 
 // Login 登录
@@ -29,4 +29,26 @@ func Login(rememberFlag bool, u types.User) (types.LogInfo, error) {
 		return loginfo, errors.New("用户名或密码错误")
 	}
 	return loginfo, nil
+}
+
+// CheckPassword /* 校验密码是否正确 */
+func CheckPassword(id int64, password string) bool {
+	us := user.FindUsers(types.User{Id: id})
+	if len(us) <= 0 {
+		return false
+	}
+	return util.EncryptBySHA256(us[0].UserName, password) == us[0].Password
+}
+
+// ChangePassword /* 修改密码 */
+func ChangePassword(id int64, password string) bool {
+	us := user.FindUsers(types.User{Id: id})
+	if len(us) <= 0 {
+		return false
+	}
+	u := us[0]
+	u.Password = util.EncryptBySHA256(us[0].UserName, password)
+	user.Delete(id)
+	user.AddOrUpdate(u)
+	return true
 }

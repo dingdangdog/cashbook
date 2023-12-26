@@ -52,3 +52,31 @@ func Login(c *gin.Context) {
 	}
 	c.JSON(200, util.Success(data))
 }
+
+// CheckPassword /* 校验密码是否正确 */
+func CheckPassword(c *gin.Context) {
+	password := c.Param("password")
+	userId := util.GetUserId(c)
+	boolean := user.CheckPassword(userId, password)
+	c.JSON(200, util.Success(boolean))
+}
+
+// ChangePassword /* 修改密码 */
+func ChangePassword(c *gin.Context) {
+	var newPassword types.NewPassword
+	if err := c.ShouldBindJSON(&newPassword); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	userId := util.GetUserId(c)
+	if !user.CheckPassword(userId, newPassword.Old) {
+		c.JSON(200, util.Error("原密码错误！", false))
+		return
+	}
+	boolean := user.ChangePassword(userId, newPassword.New)
+	c.JSON(200, util.Success(boolean))
+}
