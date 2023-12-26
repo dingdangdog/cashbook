@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { dailyLine } from '@/api/api.analysis'
 import { getPlan } from '@/api/api.plan'
 import type { Plan } from '@/types/model/plan'
@@ -122,28 +122,45 @@ const noZero = (money: any) => {
   return !(!money || money == 0);
 }
 
-// 支出数据查询
-doQuery({}).then((res) => {
-  res.forEach((data) => {
-    // 月集合
-    let month = dayToMonth(data.day)
-    // 支出
-    outDayCount.value[data.day] = data.daySum
-    let count = outMonthCount.value[month] ? outMonthCount.value[month] : 0
-    outMonthCount.value[month] = count + Number(data.daySum)
-    // 收入
-    inDayCount.value[data.day] = data.inSum
-    let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0
-    inMonthCount.value[month] = inCount + Number(data.inSum)
+const initQuery = () => {
+  inMonthCount.value = {}
+  inDayCount.value = {}
+  outMonthCount.value = {}
+  outDayCount.value = {}
+  // 支出数据查询
+  doQuery({}).then((res) => {
+    res.forEach((data) => {
+      // 月集合
+      let month = dayToMonth(data.day)
+      // 支出
+      outDayCount.value[data.day] = data.daySum
+      let count = outMonthCount.value[month] ? outMonthCount.value[month] : 0
+      outMonthCount.value[month] = count + Number(data.daySum)
+      // 收入
+      inDayCount.value[data.day] = data.inSum
+      let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0
+      inMonthCount.value[month] = inCount + Number(data.inSum)
+    })
+    console.log(outMonthCount.value)
   })
-  console.log(outMonthCount.value)
-})
 
-// 限额数据查询
-getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
-  plan.value = res
-})
+  // 限额数据查询
+  getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
+    plan.value = res
+  })
+}
 
+initQuery()
+
+let bookId = localStorage.getItem("bookId")
+onMounted(()=>{
+  setInterval(() => {
+    if (bookId != localStorage.getItem("bookId")) {
+      bookId = localStorage.getItem("bookId")
+      initQuery()
+    }
+  }, 500)
+})
 </script>
 <style>
 .calendar-main {

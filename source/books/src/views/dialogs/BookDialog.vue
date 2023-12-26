@@ -2,6 +2,7 @@
   <div class="el-dialog-main">
     <div class="book-cards common-center">
       <el-card
+        :key="book.id"
         v-for="book in books"
         :class="checkSelectBook(book.id)"
         shadow="hover"
@@ -40,9 +41,18 @@ import type { Book } from '@/types/model/book'
 
 import { createBook, getBook, openBookApi } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
+import router from '@/router'
+
+let bookId = localStorage.getItem("bookId")
 
 onMounted(() => {
   initBooks()
+  setInterval(() => {
+    if (bookId != localStorage.getItem("bookId")) {
+      bookId = localStorage.getItem("bookId")
+      initBooks()
+    }
+  }, 3000)
 })
 
 const books = ref<Book[]>([])
@@ -69,7 +79,7 @@ const openBook = (book: Book) => {
   })
   // close book dialog
   showBookDialogFlag.value.visible = false
-  location.reload()
+  router.push({path: '/index/'})
 }
 
 // 表单输入框宽度
