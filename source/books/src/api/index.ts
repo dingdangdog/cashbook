@@ -23,7 +23,7 @@ $http.interceptors.request.use(async (config) => {
   const token: any = localStorage.getItem('token')
 
   if (!token && $http.getUri.toString().indexOf('admin') > 0) {
-    await toLogin()
+    toLogin()
     return Promise.reject('请先登录')
   }
 
