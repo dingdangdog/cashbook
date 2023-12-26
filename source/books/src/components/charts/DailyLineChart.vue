@@ -8,27 +8,38 @@ import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { dailyLine } from '@/api/api.analysis'
-import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { dateFormater } from '@/utils/common'
 import type { DailyLineChartQuery } from '@/types/model/analysis'
 
-const query: DailyLineChartQuery = {
-  flowType: '支出'
-}
-const queryRef = ref(query)
-
 // 横轴数据
 const xAxisList: string[] = []
-// 纵轴数据
-const dataList: string[] = []
+// 支出数据
+const dataListOut: string[] = []
+// 收入数据
+const dataListIn: string[] = []
 
 const optionRef = ref({
-  color: ['#1ec9e0'],
   tooltip: {
     trigger: 'axis',
     axisPointer: {
       type: 'cross',
     }
+  },
+  legend: {
+    data: [
+      {
+        name: '每日支出曲线',
+        textStyle: {
+          color: 'rgb(217,159,8)',
+        },
+      },
+      {
+        name: '每日收入曲线',
+        textStyle: {
+          color: 'rgb(76, 152, 112)',
+        },
+      },
+    ], // 系列的名称，与 series 中的 name 对应
   },
   toolbox: {
     feature: {
@@ -55,57 +66,46 @@ const optionRef = ref({
   yAxis: {
     name: '金额(元)',
     show: true,
-    type: 'value'
+    type: 'value',
+    min: '0.00',
   },
   series: [
     {
-      name: '每日消费统计',
+      name: '每日支出曲线',
       type: 'line',
-      stack: 'Total',
       symbol: 'circle',
       symbolSize: 6,
       areaStyle: {},
+      itemStyle: {
+        color: 'rgb(217,159,8)', // 支出颜色
+      },
       emphasis: {
         focus: 'series'
       },
-      data: dataList
+      data: dataListOut
+    },
+    {
+      name: '每日收入曲线',
+      type: 'line',
+      symbol: 'circle',
+      symbolSize: 6,
+      areaStyle: {},
+      itemStyle: {
+        color: 'rgb(76, 152, 112)', // 收入颜色
+      },
+      emphasis: {
+        focus: 'series'
+      },
+      data: dataListIn
     }
   ]
 })
 
-var lineDiv: any
-var lineChart: echarts.ECharts
+let lineDiv: any
+let lineChart: echarts.ECharts
 
-const doQuery = (query: DailyLineChartQuery) => {
-  resetFlowQuery()
-  flowQuery.startDay = queryRef.value.startDay
-  flowQuery.endDay = queryRef.value.endDay
-  dailyLine(query).then((res) => {
-    if (res) {
-      if (res.length === 0) {
-        ElMessage.error('未查询到数据！')
-        return
-      }
-      xAxisList.length = 0
-      dataList.length = 0
-      res.forEach((data) => {
-        xAxisList.push(dateFormater('YYYY-MM-dd', data.day))
-        dataList.push(Number(data.daySum).toFixed(2))
-      })
-      optionRef.value.xAxis.data = xAxisList
-      optionRef.value.series[0].data = dataList
-      optionRef.value.dataZoom[0].start = zoomChange(xAxisList.length)
-      optionRef.value.dataZoom[1].start = zoomChange(xAxisList.length)
-
-      lineDiv = document.getElementById('lineDiv')
-      lineChart = echarts.init(lineDiv)
-      lineChart.setOption(optionRef.value)
-      // lineChart.on('click', function (){
-      //   flowQuery.startDay = queryRef.value.startDay;
-      //   flowQuery.endDay = queryRef.value.endDay;
-      // });
-    }
-  })
+const doQuery = async (query: DailyLineChartQuery) => {
+  return await dailyLine(query)
 }
 
 // 缩放比例动态计算，保证美观
@@ -114,42 +114,43 @@ const zoomChange = (total: number): number => {
 }
 
 onMounted(() => {
-  queryRef.value.startDay = flowQuery.startDay
-  queryRef.value.endDay = flowQuery.endDay
-  doQuery(queryRef.value)
+  doQuery({}).then( (res) => {
+    if (res) {
+      if (res.length === 0) {
+        ElMessage.error('未查询到数据！')
+        return
+      }
+      xAxisList.length = 0
+      dataListOut.length = 0
+      res.forEach((data) => {
+        xAxisList.push(dateFormater('YYYY-MM-dd', data.day))
+        dataListOut.push(Number(data.daySum).toFixed(2))
+        dataListIn.push(Number(data.inSum).toFixed(2))
+      })
+      console.log(dataListOut)
+      console.log(dataListIn)
+      optionRef.value.xAxis.data = xAxisList
+      optionRef.value.series[0].data = dataListOut
+      optionRef.value.series[1].data = dataListIn
+      optionRef.value.dataZoom[0].start = zoomChange(xAxisList.length)
+      optionRef.value.dataZoom[1].start = zoomChange(xAxisList.length)
+
+      lineDiv = document.getElementById('lineDiv')
+      lineChart = echarts.init(lineDiv)
+      lineChart.setOption(optionRef.value)
+    }
+  })
 })
 </script>
 
 <style scoped>
-.queryRow {
-  margin: 8px 3px;
-}
-
-.queryParam {
-  margin: auto 0.5rem;
-}
-
 #lineDiv {
   width: 100%;
   height: 400px;
   padding: 10px;
 }
 
-@media screen and (min-width: 960px) {
-  .mini-buttons {
-    display: none;
-  }
-}
-
 @media screen and (max-width: 480px) {
-  .pc-button {
-    display: none;
-  }
-
-  .mini-buttons {
-    margin: 8px 3px;
-  }
-
   #lineDiv {
     font-size: small;
   }

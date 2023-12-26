@@ -1,6 +1,6 @@
 export interface DailyLineChartQuery {
   bookId?: number;
-  flowType: string;
+  flowType?: string;
   startDay?: string;
   endDay?: string;
 }
@@ -8,6 +8,7 @@ export interface DailyLineChartQuery {
 export interface DailyLineChart {
   day: string;
   daySum: number;
+  inSum: number;
 }
 
 export interface TypePieChartQuery {
