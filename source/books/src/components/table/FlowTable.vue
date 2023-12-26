@@ -252,7 +252,7 @@
 
 <script setup lang="ts">
 // 第三方库引入
-import { ref, onMounted, reactive, watch } from 'vue'
+import { ref, onMounted, reactive, watch, provide } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Delete, Edit, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus'
@@ -270,6 +270,7 @@ import type { Dict } from '@/types/model/dict'
 import { defineAsyncComponent } from 'vue'
 import router from '@/router'
 import { showExcelImportDialogFlag } from '@/stores/flag'
+import type { FlowExport } from '@/types/view'
 
 // 异步组件引用
 const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/FlowExcelImport.vue'))
@@ -630,6 +631,14 @@ const exportFlows = () => {
 watch(flowQuery, () => {
   doQuery()
 })
+
+const flowMethods: FlowExport= {
+  query: () => {
+    doQuery()
+  }
+}
+
+provide('flowMethods', flowMethods)
 </script>
 
 <style scoped>

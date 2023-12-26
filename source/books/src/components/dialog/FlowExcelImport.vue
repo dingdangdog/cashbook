@@ -28,15 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import * as XLSX from 'xlsx'
 import { ElMessage, ElMessageBox, type UploadProps, type UploadRawFile, type UploadUserFile } from 'element-plus'
 
-import router from '@/router'
 import type { Flow } from '@/types/model/flow'
 import { alipayConvert, wxpayConvert } from '@/utils/flowConvert'
 import { importFlows } from '@/api/api.flow'
 import { showExcelImportDialogFlag } from '@/stores/flag'
+import type { FlowExport } from '@/types/view'
 
 // 上传文件类型标识：none-未知文件；alipay-支付宝
 const fileType = ref('none')
@@ -180,6 +180,8 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
   // console.log(data.value)
 }
 
+const flowMethods : FlowExport | undefined = inject('flowMethods')
+
 // 确定提交
 const submitUpload = () => {
   importFlows('add', flows.value).then((res) => {
@@ -194,7 +196,7 @@ const submitUpload = () => {
           excelTableHead.value.innerHTML = ''
           excelTableBody.value.innerHTML = ''
           showExcelImportDialogFlag.value.visible = false
-          router.push({ path: '/index/flows' })
+          flowMethods?.query()
         }
       })
     } else {
