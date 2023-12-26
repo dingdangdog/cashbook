@@ -1,5 +1,5 @@
 
-type Method = () => void
+type DefaultMethod = () => void
 export interface FlowExport {
-  query: Method
+  query: DefaultMethod
 }
