@@ -51,9 +51,11 @@ func saveFile() {
 	util.CheckErr(err)
 }
 
-// AddUser 添加数据
-func AddUser(user types.User) int64 {
-	user.Id = getNextId()
+// AddOrUpdate 添加数据
+func AddOrUpdate(user types.User) int64 {
+	if user.Id == 0 {
+		user.Id = getNextId()
+	}
 	userStatic = append(userStatic, user)
 	saveFile()
 	return user.Id
