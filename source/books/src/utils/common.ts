@@ -78,3 +78,12 @@ export const dateFormater = (format: string, date: string | Date) => {
 export const toLogin = () => {
   router.push({ path: '/login' })
 }
+
+export const cleanLoginInfo = () => {
+  localStorage.removeItem('userId')
+  localStorage.removeItem('name')
+  localStorage.removeItem('bookId')
+  localStorage.removeItem('bookName')
+  localStorage.removeItem('token')
+  toLogin()
+}

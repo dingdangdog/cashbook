@@ -30,7 +30,7 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="changeBookKey()"> 密钥修改 </el-dropdown-item>
+              <el-dropdown-item @click="changePassword()"> 修改密码 </el-dropdown-item>
               <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -40,7 +40,7 @@
   </div>
 
   <!-- 弹出框表单：账本密钥修改 -->
-  <el-dialog style="width: 30vw" v-model="keyDialog.visable" :title="keyDialog.title">
+  <el-dialog style="width: 30vw" v-model="passwordDialog.visible" :title="passwordDialog.title">
     <ChangePasswordDialog />
   </el-dialog>
 
@@ -74,6 +74,7 @@ import ChangePasswordDialog from '@/views/dialogs/ChangePasswordDialog.vue'
 import { getServerInfo } from '@/api/api.server'
 
 import router from '@/router/index'
+import { cleanLoginInfo } from '@/utils/common'
 
 onMounted(() => {
   if (!localStorage.getItem('bookId')) {
@@ -132,8 +133,8 @@ const name = ref(localStorage.getItem('name') || '')
 // 账本名
 const bookName = ref(localStorage.getItem('bookName') || '')
 
-const keyDialog = ref({
-  visable: false,
+const passwordDialog = ref({
+  visible: false,
   title: ''
 })
 
@@ -143,9 +144,9 @@ if (document.body.clientWidth <= 480) {
   formLabelWidth.value = '60px'
 }
 
-const changeBookKey = () => {
-  keyDialog.value.visable = true
-  keyDialog.value.title = '修改密钥，原密钥：(' + localStorage.getItem('bookId') + ')'
+const changePassword = () => {
+  passwordDialog.value.visible = true
+  passwordDialog.value.title = '修改密钥，原密钥：(' + localStorage.getItem('bookId') + ')'
 }
 
 const planDialog = ref({
@@ -181,12 +182,7 @@ const logout = () => {
     type: 'warning'
   })
     .then(() => {
-      localStorage.removeItem('userId')
-      localStorage.removeItem('name')
-      localStorage.removeItem('bookId')
-      localStorage.removeItem('bookName')
-      localStorage.removeItem('token')
-      router.push({ path: '/login' })
+      cleanLoginInfo()
     })
     .catch(() => {
       ElMessage({
