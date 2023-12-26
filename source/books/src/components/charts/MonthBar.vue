@@ -19,7 +19,7 @@ const queryRef = ref(query)
 
 const dataList: any[] = []
 const xAxisList: any[] = []
-const colors: any[] = []
+const colors: any[] = ['rgba(76, 152, 112, 0.9)']
 
 const optionRef = ref({
   color: colors,
@@ -48,13 +48,20 @@ const optionRef = ref({
   series: [
     {
       data: [120, 200, 150, 80, 70, 110, 130],
-      type: 'bar'
+      type: 'bar',
+      barBorderRadius: [10, 10, 0, 0],
+      label: {
+        show: true,
+        position: 'top',
+        fontSize: 14,
+        color: 'rgba(76, 152, 112, 0.9)',
+      }
     }
   ]
 })
 
-var pieDiv: any
-var pieChart: echarts.ECharts
+let pieDiv: any
+let pieChart: echarts.ECharts
 
 const doQuery = () => {
   monthBar().then((res) => {
@@ -67,8 +74,9 @@ const doQuery = () => {
       res.forEach((data) => {
         xAxisList.push(data.type)
         dataList.push(Number(data.typeSum).toFixed(2))
-        colors.push(getRandomColor())
+        // colors.push(getRandomColor())
       })
+      console.log(colors)
       optionRef.value.series[0].data = dataList
       optionRef.value.xAxis.data = xAxisList
 
@@ -86,14 +94,17 @@ const doQuery = () => {
   })
 }
 
-const getRandomColor = () => {
-  var letters = '6789ABCDEF'
-  var color = '#'
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 10)]
-  }
-  return color
-}
+/**
+ * 生成16进制随机颜色
+ */
+// const getRandomColor = () => {
+//   var letters = '6789ABCDEF'
+//   var color = '#'
+//   for (var i = 0; i < 6; i++) {
+//     color += letters[Math.floor(Math.random() * 10)]
+//   }
+//   return color
+// }
 
 onMounted(() => {
   queryRef.value.startDay = flowQuery.startDay
