@@ -10,19 +10,36 @@ import (
 func GetDailyLine(param types.FlowParam) []types.DailyLine {
 	flowList := dFlow.FindLists(param)
 	sumMap := make(map[string]float64)
+	inSumMap := make(map[string]float64)
 
 	for _, flow := range flowList {
-		if sumMap[flow.Day] == 0 {
-			sumMap[flow.Day] = flow.Money
-		} else {
-			sumMap[flow.Day] += flow.Money
+		if flow.FlowType == "支出" {
+			if sumMap[flow.Day] == 0 {
+				sumMap[flow.Day] = flow.Money
+			} else {
+				sumMap[flow.Day] += flow.Money
+			}
+		} else if flow.FlowType == "收入" {
+			if inSumMap[flow.Day] == 0 {
+				inSumMap[flow.Day] = flow.Money
+			} else {
+				inSumMap[flow.Day] += flow.Money
+			}
 		}
 	}
+	// 收入日期和支出日期合并
+	for day := range inSumMap {
+		if sumMap[day] <= 0 {
+			sumMap[day] = 0
+		}
+	}
+
 	lines := make([]types.DailyLine, 0)
 	for day, money := range sumMap {
 		dailyLine := types.DailyLine{
 			Day:    day,
 			DaySum: strconv.FormatFloat(money, 'f', 2, 64),
+			InSum:  strconv.FormatFloat(inSumMap[day], 'f', 2, 64),
 		}
 		lines = append(lines, dailyLine)
 	}

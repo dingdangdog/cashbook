@@ -10,4 +10,5 @@ type TypePie struct {
 type DailyLine struct {
 	Day    string `json:"day"`
 	DaySum string `json:"daySum"`
+	InSum  string `json:"inSum"`
 }
