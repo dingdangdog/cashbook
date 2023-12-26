@@ -4,8 +4,9 @@
       <template #header="{ date }">
         <span>
           {{ date }}
-          &nbsp; 消费总额：<b>{{ monthCount[date] ? Number(monthCount[date]).toFixed(2) : 0 }} </b>
-          &nbsp; 设置额度：<b>{{ plan.limitMoney }} </b>
+          &nbsp; 总收入：<b>{{ inMonthCount[date] ? Number(inMonthCount[date]).toFixed(2) : 0 }} </b>
+          &nbsp; 总支出：<b>{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }} </b>
+          &nbsp; 消费限额：<b>{{ plan.limitMoney }} </b>
         </span>
         <el-row class="mini-button-group">
           <el-button-group>
@@ -22,8 +23,11 @@
             {{ data.day.split('-').slice(1).join('-') }}
             {{ data.day === flowQuery.startDay ? '✔️' : '' }}
           </p>
-          <p :class="moneyClass(allCount[data.day])" style="display: flex; justify-content: right">
-            {{ allCount[data.day] ? Number(allCount[data.day]).toFixed(2) : 0 }}
+          <p :class="outMoneyClass(outDayCount[data.day])" v-if="noZero(outDayCount[data.day])" style="display: flex; justify-content: right">
+            支：{{ outDayCount[data.day] ? Number(outDayCount[data.day]).toFixed(2) : 0 }}
+          </p>
+          <p :class="inMoneyClass(inDayCount[data.day])" v-if="noZero(inDayCount[data.day])" style="display: flex; justify-content: right">
+            收：{{ inDayCount[data.day] ? Number(inDayCount[data.day]).toFixed(2) : 0 }}
           </p>
         </div>
       </template>
@@ -41,14 +45,16 @@ import { dateFormater } from '@/utils/common'
 import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { showFlowTableDialog } from '@/stores/flag'
 
-const allCount = ref<any>({})
+const outDayCount = ref<any>({})
+const inDayCount = ref<any>({})
 
 const day = ref(flowQuery.startDay ? new Date(flowQuery.startDay) : new Date())
 
 const doQuery = async (param: DailyLineChartQuery) => {
   return await dailyLine(param)
 }
-const monthCount = ref<any>({})
+const outMonthCount = ref<any>({})
+const inMonthCount = ref<any>({})
 
 const clickDay = (param: any) => {
   resetFlowQuery()
@@ -79,11 +85,6 @@ const changeDate = (value: any) => {
   }
 }
 
-const query: DailyLineChartQuery = {
-  flowType: '支出'
-}
-const queryRef = ref(query)
-
 const dayToMonth = (day: string) => {
   let date = new Date(day)
   let year = date.getFullYear().toString()
@@ -93,8 +94,7 @@ const dayToMonth = (day: string) => {
 
 const plan = ref<Plan>({})
 
-
-const moneyClass = (money: any) => {
+const outMoneyClass = (money: any) => {
   if (!money || money == 0) {
     return 'no-flow'
   } else if (money >= 1000) {
@@ -105,19 +105,47 @@ const moneyClass = (money: any) => {
     return 'have-flow'
   }
 }
+const inMoneyClass = (money: any) => {
+  if (!money || money == 0) {
+    return 'no-in'
+  } else {
+    return 'have-in'
+  }
+}
+
+const noZero = (money: any) => {
+  if (!money || money == 0) {
+    return false
+  } else {
+    return true
+  }
+}
 
 
-doQuery(queryRef.value).then((res) => {
+doQuery({ flowType: '支出' }).then((res) => {
   res.forEach((data) => {
     // 天集合
-    allCount.value[data.day] = data.daySum
+    outDayCount.value[data.day] = data.daySum
     // 月集合
     let month = dayToMonth(data.day)
-    let count = monthCount.value[month] ? monthCount.value[month] : 0
-    monthCount.value[month] = count + Number(data.daySum)
+    let count = outMonthCount.value[month] ? outMonthCount.value[month] : 0
+    outMonthCount.value[month] = count + Number(data.daySum)
   })
-  console.log(monthCount.value)
+  console.log(outMonthCount.value)
 })
+
+doQuery({ flowType: '收入' }).then((res) => {
+  res.forEach((data) => {
+    // 天集合
+    inDayCount.value[data.day] = data.daySum
+    // 月集合
+    let month = dayToMonth(data.day)
+    let count = inMonthCount.value[month] ? inMonthCount.value[month] : 0
+    inMonthCount.value[month] = count + Number(data.daySum)
+  })
+  console.log(inMonthCount.value)
+})
+
 
 getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
   plan.value = res
@@ -150,11 +178,15 @@ getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
 } */
 .have-flow {
   /* color: #1fbbf8; */
-  color: #f6b204;
+  color: #cc9200;
 }
 
-.no-flow {
-  color: #67c23a;
+.no-flow, .have-in {
+  color: #2f8f00;
+}
+
+.no-in {
+  color: var(--el-text-color-placeholder)
 }
 
 .el-calendar__body {
