@@ -28,13 +28,13 @@ const optionRef = ref({
   legend: {
     data: [
       {
-        name: '每日支出曲线',
+        name: '支出',
         textStyle: {
           color: 'rgb(217,159,8)',
         },
       },
       {
-        name: '每日收入曲线',
+        name: '收入',
         textStyle: {
           color: 'rgb(76, 152, 112)',
         },
@@ -71,7 +71,7 @@ const optionRef = ref({
   },
   series: [
     {
-      name: '每日支出曲线',
+      name: '支出',
       type: 'line',
       symbol: 'circle',
       symbolSize: 6,
@@ -85,7 +85,7 @@ const optionRef = ref({
       data: dataListOut
     },
     {
-      name: '每日收入曲线',
+      name: '收入',
       type: 'line',
       symbol: 'circle',
       symbolSize: 6,

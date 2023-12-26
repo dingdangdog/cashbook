@@ -8,21 +8,14 @@ import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
-import { flowQuery, chartDialog, resetFlowQuery } from '@/utils/store'
-import type { TypePieChartQuery } from '@/types/model/analysis'
+import { chartDialog } from '@/utils/store'
 import { showFlowTableDialog } from '@/stores/flag'
 
-const query: TypePieChartQuery = {
-  flowType: '支出'
-}
-const queryRef = ref(query)
-
-const dataList: any[] = []
+const dataListOut: any[] = []
+const dataListIn: any[] = []
 const xAxisList: any[] = []
-const colors: any[] = ['rgba(76, 152, 112, 0.9)']
 
 const optionRef = ref({
-  color: colors,
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -47,14 +40,31 @@ const optionRef = ref({
   },
   series: [
     {
+      name: '支出',
       data: [120, 200, 150, 80, 70, 110, 130],
       type: 'bar',
-      barBorderRadius: [10, 10, 0, 0],
+      itemStyle: {
+        color: 'rgba(217,159,8, 0.9)'
+      },
       label: {
         show: true,
         position: 'top',
         fontSize: 14,
-        color: 'rgba(76, 152, 112, 0.9)',
+        color: 'rgba(217,159,8, 0.9)'
+      }
+    },
+    {
+      name: '收入',
+      data: [120, 200, 150, 80, 70, 110, 130],
+      type: 'bar',
+      itemStyle: {
+        color: 'rgba(76, 152, 112, 0.9)'
+      },
+      label: {
+        show: true,
+        position: 'top',
+        fontSize: 14,
+        color: 'rgba(76, 152, 112, 0.9)'
       }
     }
   ]
@@ -70,23 +80,21 @@ const doQuery = () => {
         ElMessage.error('未查询到数据！')
         return
       }
-      dataList.length = 0
+      dataListOut.length = 0
+      dataListIn.length = 0
       res.forEach((data) => {
         xAxisList.push(data.type)
-        dataList.push(Number(data.typeSum).toFixed(2))
-        // colors.push(getRandomColor())
+        dataListOut.push(Number(data.typeSum).toFixed(2))
+        dataListIn.push(Number(data.inSum).toFixed(2))
       })
-      console.log(colors)
-      optionRef.value.series[0].data = dataList
+      optionRef.value.series[0].data = dataListOut
+      optionRef.value.series[1].data = dataListIn
       optionRef.value.xAxis.data = xAxisList
 
       pieDiv = document.getElementById('pieDiv')
       pieChart = echarts.init(pieDiv)
       pieChart.setOption(optionRef.value)
-      pieChart.on('click', function (param) {
-        resetFlowQuery()
-        flowQuery.startDay = param.name + '-01'
-        flowQuery.endDay = param.name + '-31'
+      pieChart.on('click', function(param) {
         chartDialog.chartDiaLogShow = false
         showFlowTableDialog.value.visible = true
       })
@@ -107,8 +115,6 @@ const doQuery = () => {
 // }
 
 onMounted(() => {
-  queryRef.value.startDay = flowQuery.startDay
-  queryRef.value.endDay = flowQuery.endDay
   doQuery()
 })
 </script>

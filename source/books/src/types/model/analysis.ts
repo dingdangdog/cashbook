@@ -21,4 +21,5 @@ export interface TypePieChartQuery {
 export interface TypePieChart {
   type: string;
   typeSum: number;
+  inSum: number;
 }
