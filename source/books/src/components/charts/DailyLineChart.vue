@@ -127,8 +127,6 @@ onMounted(() => {
         dataListOut.push(Number(data.daySum).toFixed(2))
         dataListIn.push(Number(data.inSum).toFixed(2))
       })
-      console.log(dataListOut)
-      console.log(dataListIn)
       optionRef.value.xAxis.data = xAxisList
       optionRef.value.series[0].data = dataListOut
       optionRef.value.series[1].data = dataListIn
