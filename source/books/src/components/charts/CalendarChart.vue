@@ -123,29 +123,20 @@ const noZero = (money: any) => {
 }
 
 // 支出数据查询
-doQuery({ flowType: '支出' }).then((res) => {
+doQuery({}).then((res) => {
   res.forEach((data) => {
-    // 天集合
-    outDayCount.value[data.day] = data.daySum
     // 月集合
     let month = dayToMonth(data.day)
+    // 支出
+    outDayCount.value[data.day] = data.daySum
     let count = outMonthCount.value[month] ? outMonthCount.value[month] : 0
     outMonthCount.value[month] = count + Number(data.daySum)
+    // 收入
+    inDayCount.value[data.day] = data.inSum
+    let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0
+    inMonthCount.value[month] = inCount + Number(data.inSum)
   })
   console.log(outMonthCount.value)
-})
-
-// 收入数据查询
-doQuery({ flowType: '收入' }).then((res) => {
-  res.forEach((data) => {
-    // 天集合
-    inDayCount.value[data.day] = data.daySum
-    // 月集合
-    let month = dayToMonth(data.day)
-    let count = inMonthCount.value[month] ? inMonthCount.value[month] : 0
-    inMonthCount.value[month] = count + Number(data.daySum)
-  })
-  console.log(inMonthCount.value)
 })
 
 // 限额数据查询
@@ -175,11 +166,8 @@ getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
 .five-hundred-flow {
   color: #d485e1;
 }
-/* .hundred-flow {
-    color: #f6b204;
-} */
+
 .have-flow {
-  /* color: #1fbbf8; */
   color: #cc9200;
 }
 
@@ -192,7 +180,7 @@ getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
 }
 
 .el-calendar__body {
-  padding: 0 20px;
+  padding: 0 1rem;
 }
 
 @media screen and (max-width: 1660px) {
