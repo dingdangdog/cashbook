@@ -27,15 +27,6 @@
         <span>系统管理</span>
       </template>
 
-<!--      <el-menu-item index="/index/dict">-->
-<!--        <el-icon><List /></el-icon>-->
-<!--        <template #title>字典管理</template>-->
-<!--      </el-menu-item>-->
-
-      <!-- <el-menu-item index="account">
-        <el-icon><MenuIcon /></el-icon>
-        <template #title>帐号管理</template>
-      </el-menu-item> -->
 
       <el-menu-item index="/index/system">
         <el-icon><Setting /></el-icon>
@@ -76,9 +67,7 @@ import {
   MoonNight,
   Monitor,
   EditPen,
-  Collection,
   Reading,
-  List,
   Setting
 } from '@element-plus/icons-vue'
 import { useToggle } from '@vueuse/shared'
@@ -93,19 +82,8 @@ const router: Router = useRouter()
 const isCollapse = ref(false)
 
 const menuChange = () => {
-  if (isCollapse.value) {
-    isCollapse.value = false
-  } else {
-    isCollapse.value = true
-  }
+  isCollapse.value = !isCollapse.value;
 }
-
-// const handleOpen = (key: string, keyPath: string[]) => {
-//   console.log('open', key, keyPath)
-// }
-// const handleClose = (key: string, keyPath: string[]) => {
-//   console.log('close', key, keyPath)
-// }
 
 const selectMenu = (key: string, keyPath: string[]) => {
   console.log('selectMenu', key, keyPath)
@@ -117,7 +95,7 @@ const selectMenu = (key: string, keyPath: string[]) => {
 
 <style scoped>
 .el-menu {
-  border-right: solid 0px;
+  border-right: solid 0;
 }
 
 .el-sub-menu__title span {
