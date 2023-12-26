@@ -41,8 +41,6 @@ import type { Book } from '@/types/model/book'
 import { createBook, getBook, openBookApi } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
 
-import router from '@/router/index'
-
 onMounted(() => {
   initBooks()
 })
@@ -59,7 +57,7 @@ const initBooks = () => {
     })
 }
 
-const openBook = async (book: Book) => {
+const openBook = (book: Book) => {
   if (localStorage.getItem('bookId') === book.id.toString()) {
     showBookDialogFlag.value.visible = false
     return
@@ -71,8 +69,7 @@ const openBook = async (book: Book) => {
   })
   // close book dialog
   showBookDialogFlag.value.visible = false
-  // window.location.href = "/index"
-  router.push({ path: '/index' })
+  location.reload()
 }
 
 // 表单输入框宽度
