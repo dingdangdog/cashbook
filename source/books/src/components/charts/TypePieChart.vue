@@ -1,25 +1,37 @@
 <template>
   <el-row class="queryRow">
-    <h4 class="queryParam">消费类型统计</h4>
-    <div class="queryParam">
+    <h4 class="row-header">消费类型统计</h4>
+    <div class="row-header queryParam">
       <el-date-picker
         v-model="queryRef.startDay"
         type="date"
+        style="width: auto"
         format="YYYY/MM/DD"
         value-format="YYYY-MM-DD"
         placeholder="开始时间"
       />
     </div>
-    <div class="queryParam pc-button">
+    <div class="row-header queryParam">
       <el-date-picker
         v-model="queryRef.endDay"
+        style="width: auto"
         type="date"
         format="YYYY/MM/DD"
         value-format="YYYY-MM-DD"
         placeholder="结束时间"
       />
     </div>
-    <div class="queryParam pc-button">
+    <div class="row-header queryParam">
+      <el-select v-model="queryRef.flowType" class="m-2" placeholder="流水类型" clearable>
+        <el-option
+          v-for="item in flowTypeOptions"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
+        />
+      </el-select>
+    </div>
+    <div class="row-header pc-button">
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
@@ -51,10 +63,14 @@ import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
+import type { Dict } from '@/types/model/dict'
 
 const query: TypePieChartQuery = {
   flowType: '支出'
 }
+// 流水类型
+const flowTypeOptions = ref<Dict[]>([{ value: '支出' }, { value: '收入' }])
+
 const queryRef = ref(query)
 
 const dataList: any[] = []
@@ -147,7 +163,7 @@ const doQuery = (query: TypePieChartQuery) => {
       typePieDiv = document.getElementById('typePieDiv')
       typePieChart = echarts.init(typePieDiv)
       typePieChart.setOption(optionRef.value)
-      typePieChart.on('click', function (param) {
+      typePieChart.on('click', function(param) {
         resetFlowQuery()
         flowQuery.startDay = queryRef.value.startDay
         flowQuery.endDay = queryRef.value.endDay
@@ -170,8 +186,13 @@ onMounted(() => {
   margin: 8px 3px;
 }
 
-.queryParam {
+
+.row-header {
   margin: auto 0.5rem;
+}
+
+.queryParam {
+  width: 10rem;
 }
 
 #typePieDiv {
