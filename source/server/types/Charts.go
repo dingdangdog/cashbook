@@ -4,6 +4,7 @@ package types
 type TypePie struct {
 	Type    string `json:"type"`
 	TypeSum string `json:"typeSum"`
+	InSum   string `json:"inSum"`
 }
 
 // DailyLine Echarts相关数据实体 日消费曲线

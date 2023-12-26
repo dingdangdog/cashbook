@@ -27,7 +27,7 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 			}
 		}
 	}
-	// 收入日期和支出日期合并
+	// 收入日期和支出日期合并，防止横轴不同步
 	for day := range inSumMap {
 		if sumMap[day] <= 0 {
 			sumMap[day] = 0
@@ -107,20 +107,37 @@ func GetPayTypeBar(param types.FlowParam) []types.TypePie {
 func MonthBar(bookId int64) []types.TypePie {
 	flowList := dFlow.FindLists(types.FlowParam{BookId: bookId})
 	sumMap := make(map[string]float64)
+	inSumMap := make(map[string]float64)
 
 	for _, flow := range flowList {
 		month := flow.Day[0:7]
-		if sumMap[month] == 0 {
-			sumMap[month] = flow.Money
-		} else {
-			sumMap[month] += flow.Money
+		if flow.FlowType == "支出" {
+			if sumMap[month] == 0 {
+				sumMap[month] = flow.Money
+			} else {
+				sumMap[month] += flow.Money
+			}
+		} else if flow.FlowType == "收入" {
+			if inSumMap[month] == 0 {
+				inSumMap[month] = flow.Money
+			} else {
+				inSumMap[month] += flow.Money
+			}
 		}
 	}
+	// 收入月份和支出月份合并，防止横轴不同步
+	for month := range inSumMap {
+		if sumMap[month] <= 0 {
+			sumMap[month] = 0
+		}
+	}
+
 	months := make([]types.TypePie, 0)
 	for month, money := range sumMap {
 		typePie := types.TypePie{
 			Type:    month,
 			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
+			InSum:   strconv.FormatFloat(inSumMap[month], 'f', 2, 64),
 		}
 		months = append(months, typePie)
 	}
