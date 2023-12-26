@@ -45,17 +45,20 @@ import { dateFormater } from '@/utils/common'
 import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { showFlowTableDialog } from '@/stores/flag'
 
-const outDayCount = ref<any>({})
-const inDayCount = ref<any>({})
-
-const day = ref(flowQuery.startDay ? new Date(flowQuery.startDay) : new Date())
+// 获取今天日期
+const day = ref(new Date())
 
 const doQuery = async (param: DailyLineChartQuery) => {
   return await dailyLine(param)
 }
+// 支出相关数据存储实体
 const outMonthCount = ref<any>({})
+const outDayCount = ref<any>({})
+// 收入相关数据存储实体
 const inMonthCount = ref<any>({})
+const inDayCount = ref<any>({})
 
+// 日期点击事件
 const clickDay = (param: any) => {
   resetFlowQuery()
   flowQuery.startDay = param.day
@@ -68,6 +71,7 @@ const clickDay = (param: any) => {
 const nowDate = ref(new Date())
 const refCalendar = ref()
 
+// 月份变更
 const changeDate = (value: any) => {
   if (refCalendar.value) {
     refCalendar.value.selectDate(value)
@@ -85,6 +89,7 @@ const changeDate = (value: any) => {
   }
 }
 
+// 根据日期获取月份
 const dayToMonth = (day: string) => {
   let date = new Date(day)
   let year = date.getFullYear().toString()
@@ -114,14 +119,10 @@ const inMoneyClass = (money: any) => {
 }
 
 const noZero = (money: any) => {
-  if (!money || money == 0) {
-    return false
-  } else {
-    return true
-  }
+  return !(!money || money == 0);
 }
 
-
+// 支出数据查询
 doQuery({ flowType: '支出' }).then((res) => {
   res.forEach((data) => {
     // 天集合
@@ -134,6 +135,7 @@ doQuery({ flowType: '支出' }).then((res) => {
   console.log(outMonthCount.value)
 })
 
+// 收入数据查询
 doQuery({ flowType: '收入' }).then((res) => {
   res.forEach((data) => {
     // 天集合
@@ -146,7 +148,7 @@ doQuery({ flowType: '收入' }).then((res) => {
   console.log(inMonthCount.value)
 })
 
-
+// 限额数据查询
 getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
   plan.value = res
 })
