@@ -23,13 +23,11 @@ const xAxisList: string[] = []
 const dataList: string[] = []
 
 const optionRef = ref({
+  color: ['#1ec9e0'],
   tooltip: {
     trigger: 'axis',
     axisPointer: {
       type: 'cross',
-      label: {
-        backgroundColor: '#6a7985'
-      }
     }
   },
   toolbox: {
@@ -64,8 +62,8 @@ const optionRef = ref({
       name: '每日消费统计',
       type: 'line',
       stack: 'Total',
-      symbol: 'star',
-      symbolSize: 10,
+      symbol: 'circle',
+      symbolSize: 6,
       areaStyle: {},
       emphasis: {
         focus: 'series'
