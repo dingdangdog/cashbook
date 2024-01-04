@@ -23,11 +23,11 @@
             {{ data.day.split('-').slice(1).join('-') }}
             {{ data.day === flowQuery.startDay ? '✔️' : '' }}
           </p>
-          <p :class="outMoneyClass(outDayCount[data.day])" v-if="noZero(outDayCount[data.day])" style="display: flex; justify-content: right">
-            支：{{ outDayCount[data.day] ? Number(outDayCount[data.day]).toFixed(2) : 0 }}
+          <p :class="inMoneyClass(inDayCount[data.day])" style="display: flex; justify-content: right">
+            {{ (inDayCount[data.day] && inDayCount[data.day] > 0) ? '收：' + Number(inDayCount[data.day]).toFixed(2) : '&nbsp;' }}
           </p>
-          <p :class="inMoneyClass(inDayCount[data.day])" v-if="noZero(inDayCount[data.day])" style="display: flex; justify-content: right">
-            收：{{ inDayCount[data.day] ? Number(inDayCount[data.day]).toFixed(2) : 0 }}
+          <p :class="outMoneyClass(outDayCount[data.day])" style="display: flex; justify-content: right">
+            {{ (outDayCount[data.day] && outDayCount[data.day] > 0) ? '支：' + Number(outDayCount[data.day]).toFixed(2) : '&nbsp;' }}
           </p>
         </div>
       </template>
