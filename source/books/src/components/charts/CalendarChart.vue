@@ -155,9 +155,10 @@ initQuery()
 let bookId = localStorage.getItem("bookId")
 onMounted(()=>{
   setInterval(() => {
-    if (bookId != localStorage.getItem("bookId")) {
+    if (bookId != localStorage.getItem("bookId") || localStorage.getItem("changePlan") === "true") {
       bookId = localStorage.getItem("bookId")
       initQuery()
+      localStorage.setItem("changePlan", "false")
     }
   }, 500)
 })

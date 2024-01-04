@@ -44,7 +44,7 @@ const planFormRef = ref<FormInstance>()
 
 const planModel: Plan = {
   month: new Date(),
-  bookId: parseInt(localStorage.getItem('bookId') || '0'), 
+  bookId: parseInt(localStorage.getItem('bookId') || '0'),
   limitMoney: 0,
   usedMoney: undefined
 }
@@ -61,6 +61,7 @@ const planFormRules = ref<FormRules>({
 const toSetPlan = (plan: Plan, o: number) => {
   plan.month = dateFormater('YYYY-MM', plan.month || new Date())
   setPlans(plan, o).then(() => {
+    localStorage.setItem("changePlan", "true")
     ElMessage({
       type: 'success',
       message: '设置成功!'
