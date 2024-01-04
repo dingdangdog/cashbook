@@ -158,11 +158,9 @@
           <el-select v-model="flowRef.flowType"
                      placeholder="选择"
                      clearable
-                     filterable
-                     allow-create
                      @change="changeTypes">
             <el-option
-              v-for="item in flowTypeOptions"
+              v-for="item in flowTypeDialogOptions"
               :key="item.value"
               :label="item.value"
               :value="item.value"
@@ -319,6 +317,7 @@ if (document.body.clientWidth <= 480) {
  */
 // 流水类型
 const flowTypeOptions = ref<Dict[]>([])
+const flowTypeDialogOptions = ref<Dict[]>([{value:"支出"},{value:"收入"}])
 // 消费类型/收入类型
 const expenseTypeOptions = ref<Dict[]>([])
 // 支付类型
