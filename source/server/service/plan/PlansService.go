@@ -15,6 +15,8 @@ func SetPlan(plan types.Plan) {
 
 // UpdatePlan 更新计划
 func UpdatePlan(plan types.Plan) {
+	plans := dPlan.FindLists(plan)
+	plan.Id = plans[0].Id
 	dPlan.Delete(plan.Id)
 	dPlan.AddOrUpdate(plan)
 }
