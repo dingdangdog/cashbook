@@ -13,7 +13,7 @@ export interface DailyLineChart {
 
 export interface TypePieChartQuery {
   bookId?: number;
-  flowType: string;
+  flowType?: string;
   startDay?: string;
   endDay?: string;
 }

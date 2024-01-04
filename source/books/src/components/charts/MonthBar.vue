@@ -8,8 +8,14 @@ import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
-import { chartDialog } from '@/utils/store'
+import { chartDialog, flowQuery } from '@/utils/store'
+import type { TypePieChartQuery } from '@/types/model/analysis'
+
 import { showFlowTableDialog } from '@/stores/flag'
+
+const query: TypePieChartQuery = {
+}
+const queryRef = ref(query)
 
 const dataListOut: any[] = []
 const dataListIn: any[] = []
@@ -95,6 +101,9 @@ const doQuery = () => {
       pieChart = echarts.init(pieDiv)
       pieChart.setOption(optionRef.value)
       pieChart.on('click', function(param) {
+        flowQuery.startDay = param.name + '-01'
+        flowQuery.endDay = param.name + '-31'
+
         chartDialog.chartDiaLogShow = false
         showFlowTableDialog.value.visible = true
       })
