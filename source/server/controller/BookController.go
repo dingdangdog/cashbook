@@ -62,8 +62,9 @@ func DeleteBook(c *gin.Context) {
 
 // GetBookList 根据用户ID获取全部账本
 func GetBookList(c *gin.Context) {
+	bookName := c.Query("name")
 	userId := util.GetUserId(c)
-	data := sBook.GetBookList(userId)
+	data := sBook.GetBookList(userId, bookName)
 	c.JSON(200, util.Success(data))
 }
 

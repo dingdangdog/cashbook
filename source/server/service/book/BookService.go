@@ -18,10 +18,21 @@ func CreateOrUpdateBook(book types.Book) int64 {
 }
 
 // GetBookList 根据用户ID获取全部账本
-func GetBookList(userId int64) []types.Book {
+func GetBookList(userId int64, bookName string) []types.Book {
 	book := types.Book{}
 	book.UserId = userId
-	return dBook.FindLists(book)
+	book.BookName = bookName
+	books := dBook.FindLists(book)
+
+	// sort by id
+	for i := 0; i < len(books); i++ {
+		for j := i + 1; j < len(books); j++ {
+			if books[i].Id > books[j].Id {
+				books[i], books[j] = books[j], books[i]
+			}
+		}
+	}
+	return books
 }
 
 // DeleteBook 删除账本
