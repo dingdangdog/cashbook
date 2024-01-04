@@ -16,7 +16,7 @@
   <footer class="custom-dialog-footer common-center">
     <el-button type="primary" @click="addBook">添加账本</el-button>
   </footer>
-  <el-dialog style="width: 30vw" v-model="addBookDialog.visable" :title="addBookDialog.title">
+  <el-dialog style="width: 30vw" v-model="addBookDialog.visible" :title="addBookDialog.title">
     <div class="el-dialog-main">
       <el-form ref="bookFormRef" :model="newBook" :rules="bookFormRules">
         <el-form-item label="账本名称" :label-width="formLabelWidth" prop="bookName">
@@ -55,10 +55,11 @@ onMounted(() => {
   }, 3000)
 })
 
+
 const books = ref<Book[]>([])
 
 const initBooks = () => {
-  getBook()
+  getBook('')
     .then((res) => {
       books.value = res
     })
@@ -89,12 +90,12 @@ if (document.body.clientWidth <= 480) {
 }
 
 const addBookDialog = ref({
-  visable: false,
+  visible: false,
   title: '添加账本'
 })
 
 const addBook = () => {
-  addBookDialog.value.visable = true
+  addBookDialog.value.visible = true
 }
 
 const newBook = ref<Book>({
@@ -103,7 +104,7 @@ const newBook = ref<Book>({
   userId: 0,
   createDate: ''
 })
-// 额度设置表单实例
+// 账本编辑表单实例
 const bookFormRef = ref<FormInstance>()
 
 // 表单输入框校验规则
@@ -117,7 +118,7 @@ const confirmBookForm = async (form: FormInstance | undefined) => {
     createBook({ bookName: newBook.value.bookName })
       .then((res) => {
         ElMessage.success('添加成功')
-        addBookDialog.value.visable = false
+        addBookDialog.value.visible = false
         initBooks()
       })
       .catch((err) => {

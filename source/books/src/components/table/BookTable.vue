@@ -20,27 +20,48 @@
       row-key="row"
       max-height="calc(100vh - 20rem)"
     >
-      <el-table-column type="index" label="序号" min-width="40" />
-      <el-table-column prop="id" label="ID" v-if="false" />
+      <!--      <el-table-column type="index" label="序号" min-width="40" />-->
+      <el-table-column prop="id" label="ID" />
       <el-table-column prop="bookName" label="账本名称" min-width="100" />
       <el-table-column prop="createDate" label="创建时间" min-width="100" />
       <el-table-column label="操作" width="120">
-        <!-- <template v-slot="scop"> -->
-        <!-- <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(formTitle[1], scop.row)" /> -->
-        <!-- <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row)" /> -->
-        <!-- </template> -->
+        <template v-slot="scop">
+          <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(scop.row)" />
+          <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row)" />
+        </template>
       </el-table-column>
     </el-table>
   </div>
+
+  <el-dialog style="width: 20vw" v-model="addBookDialog.visible" :title="addBookDialog.title">
+    <div class="el-dialog-main">
+      <el-form ref="bookFormRef" :model="editBook" :rules="bookFormRules">
+        <el-form-item label="账本名称" :label-width="formLabelWidth" prop="bookName">
+          <el-input v-model="editBook.bookName" />
+        </el-form-item>
+        <el-form-item label="创建时间" :label-width="formLabelWidth" prop="createDate">
+          <el-input v-model="editBook.createDate" disabled />
+        </el-form-item>
+      </el-form>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="confirmBookForm(bookFormRef)"> 确定 </el-button>
+        <el-button @click="cancelEdit"> 取消 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 // 第三方库引入
 import { ref, onMounted, watch } from 'vue'
+import { Delete, Edit, Search } from '@element-plus/icons-vue'
 
 // 私有引入
-import { getAllBook } from '@/api/api.book'
+import { deleteBook, getBook, updateBook } from '@/api/api.book'
 import type { BookQuery, Book } from '@/types/model/book'
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 
 // 初始化后自动执行
 onMounted(() => {
@@ -49,7 +70,7 @@ onMounted(() => {
 
 const booksQuery: BookQuery = {
   id: undefined,
-  bookName: undefined,
+  bookName: '',
   createDate: undefined
 }
 
@@ -70,8 +91,8 @@ const books = ref<Book[]>([])
 
 // 执行分页数据查询
 const doQuery = () => {
-  getAllBook().then((res) => {
-    console.log(res)
+  getBook(booksQueryRef.value.bookName).then((res) => {
+    // console.log(res)
     books.value = res
     loading.value = false
   })
@@ -80,6 +101,82 @@ const doQuery = () => {
 watch(booksQueryRef.value, () => {
   doQuery()
 })
+
+const addBookDialog = ref({
+  visible: false,
+  title: '账本改名'
+})
+
+// 表单输入框校验规则
+const bookFormRules = ref<FormRules>({
+  bookName: [{ required: true, message: '请输入账本名称', trigger: 'blur' }]
+})
+
+// 账本编辑表单实例
+const bookFormRef = ref<FormInstance>()
+
+const editBook = ref<Book>({
+  id: 0,
+  bookName: '',
+  userId: 0,
+  createDate: ''
+})
+
+const openUpdateDialog = (row: Book) => {
+  editBook.value = row
+  addBookDialog.value.visible = true
+}
+const confirmBookForm = async (form: FormInstance | undefined) => {
+  if (!form) return
+  if (await form.validate()) {
+    updateBook(editBook.value)
+      .then((_res) => {
+        ElMessage.success('修改成功')
+        addBookDialog.value.visible = false
+        doQuery()
+      })
+      .catch((err) => {
+        ElMessage.success('修改失败')
+        console.log(err)
+      })
+  } else {
+    return false
+  }
+}
+const cancelEdit = () => {
+  addBookDialog.value.visible = false
+  bookFormRef.value?.resetFields()
+}
+
+const deleteById = (row: Book) => {
+  ElMessageBox.confirm('确定删除此账本？删除后无法找回！', '确认删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      deleteBook(row.id)
+        .then(() => {
+          doQuery()
+          ElMessage({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: '删除失败'
+          })
+        })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除'
+      })
+    })
+}
 </script>
 
 <style scoped>
@@ -88,11 +185,6 @@ watch(booksQueryRef.value, () => {
   display: flex; /* 设置body为flex布局 */
   justify-content: center; /* 横向居中 */
   align-items: center; /* 纵向居中 */
-}
-
-.pageDiv {
-  margin: 10px 0;
-  /* width: 85%; */
 }
 
 .el-table {

@@ -32,9 +32,22 @@
         <el-icon>
           <Operation />
         </el-icon>
-        <span>系统管理</span>
+        <span>辅助功能</span>
       </template>
 
+      <el-menu-item index="/index/books">
+        <el-icon>
+          <Notebook />
+        </el-icon>
+        <template #title>账本管理</template>
+      </el-menu-item>
+
+      <el-menu-item index="/index/type">
+        <el-icon>
+          <Paperclip />
+        </el-icon>
+        <template #title>类型管理</template>
+      </el-menu-item>
 
       <el-menu-item index="/index/system">
         <el-icon>
@@ -89,7 +102,9 @@ import {
   Monitor,
   EditPen,
   Reading,
-  Setting
+  Setting,
+  Notebook,
+  Paperclip
 } from '@element-plus/icons-vue'
 import { useToggle } from '@vueuse/shared'
 import { isDark } from '@/utils/common'

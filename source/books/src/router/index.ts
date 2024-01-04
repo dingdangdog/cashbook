@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AnalyticsView from '@/views/AnalyticsView.vue'
+import IndexView from '@/views/IndexView.vue'
+import LoginView from '@/views/LoginView.vue'
 import CalendarView from '@/views/CalendarView.vue'
+import AnalyticsView from '@/views/AnalyticsView.vue'
 import FlowsView from '@/views/FlowsView.vue'
 import BooksView from '@/views/BooksView.vue'
+import TypeView from '@/views/TypeView.vue'
 import SystemView from '@/views/SystemView.vue'
 import AboutView from '@/views/AboutView.vue'
-import LoginView from '@/views/LoginView.vue'
-import IndexView from '@/views/IndexView.vue'
 
 const checkLoginIn = () => {
   const isLogin = localStorage.getItem('token')
@@ -45,6 +46,11 @@ const publicRoutes= [
         path: '/index/books',
         name: 'books',
         component: BooksView
+      },
+      {
+        path: '/index/type',
+        name: 'type',
+        component: TypeView
       },
       {
         path: '/index/system',
