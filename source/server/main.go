@@ -48,6 +48,7 @@ func main() {
 		adminApi.GET("/dict/getFlowType", controller.GetFlowType)
 		adminApi.GET("/dict/getExpenseType/:flowType", controller.GetExpenseType)
 		adminApi.GET("/dict/getPaymentType/:flowType", controller.GetPaymentType)
+		adminApi.GET("/dict/getAll", controller.GetAll)
 		//adminApi.GET("/dict/:type", controller.GetDictList)
 		//adminApi.GET("/dict", controller.GetDictPage)
 		//adminApi.POST("/dict", controller.AddDict)

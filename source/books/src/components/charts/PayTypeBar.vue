@@ -63,11 +63,10 @@ import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
-import type { Dict } from '@/types/model/dict'
 
 
 // 流水类型
-const flowTypeOptions = ref<Dict[]>([{ value: '支出' }, { value: '收入' }])
+const flowTypeOptions = ref<any[]>([{ value: '支出' }, { value: '收入' }])
 
 const query: TypePieChartQuery = {
   flowType: '支出'
@@ -133,19 +132,6 @@ const optionRef = ref({
       data: dataList
     }
   ]
-  // xAxis: {
-  //   type: 'category',
-  //   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  // },
-  // yAxis: {
-  //   type: 'value'
-  // },
-  // series: [
-  //   {
-  //     data: [120, 200, 150, 80, 70, 110, 130],
-  //     type: 'bar'
-  //   }
-  // ]
 })
 
 var payTypeDiv: any

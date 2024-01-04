@@ -56,3 +56,7 @@ func GetPaymentType(bookId int64, flowType string) []types.Dict {
 
 	return dicts
 }
+
+func UpdateType(data types.Dict, bookId int64) types.Dict {
+	dFlow.
+}

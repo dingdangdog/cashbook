@@ -257,13 +257,13 @@ import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'elemen
 
 // 私有引入
 import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows } from '@/api/api.flow'
-import { getFlowType, getExpenseType, getPaymentType } from '@/api/api.dict'
+import { getFlowType, getExpenseType, getPaymentType } from '@/api/api.typer'
 import { dateFormater, deviceAgent, timeFormatter } from '@/utils/common'
 import { exportJson } from '@/utils/fileUtils'
 import { flowQuery } from '@/utils/store'
 import type { Page } from '@/types/page'
 import type { Flow } from '@/types/model/flow'
-import type { Dict } from '@/types/model/dict'
+import type { Typer } from '@/types/model/typer'
 
 import { defineAsyncComponent } from 'vue'
 import router from '@/router'
@@ -316,12 +316,12 @@ if (document.body.clientWidth <= 480) {
  * 集中定义常量
  */
 // 流水类型
-const flowTypeOptions = ref<Dict[]>([])
-const flowTypeDialogOptions = ref<Dict[]>([{ value: '支出' }, { value: '收入' }])
+const flowTypeOptions = ref<Typer[]>([])
+const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }])
 // 消费类型/收入类型
-const expenseTypeOptions = ref<Dict[]>([])
+const expenseTypeOptions = ref<Typer[]>([])
 // 支付类型
-const paymentTypeOptions = ref<Dict[]>([])
+const paymentTypeOptions = ref<Typer[]>([])
 
 // 分页数据结果
 const flowPage: Page<Flow> = {
@@ -441,13 +441,7 @@ const confirmForm = async (dialogForm: FormInstance | undefined, closeDialog: bo
 // 重置表单数据
 const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
   if (!formEl) return
-  flowRef.id = undefined
-  flowRef.flowType = undefined
-  flowRef.type = undefined
-  flowRef.payType = undefined
-  flowRef.money = undefined
-  flowRef.name = undefined
-  flowRef.description = undefined
+  formEl.resetFields()
   dialogFormVisible.value = showDialog
 }
 

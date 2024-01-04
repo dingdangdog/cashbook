@@ -63,13 +63,12 @@ import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
-import type { Dict } from '@/types/model/dict'
 
 const query: TypePieChartQuery = {
   flowType: '支出'
 }
 // 流水类型
-const flowTypeOptions = ref<Dict[]>([{ value: '支出' }, { value: '收入' }])
+const flowTypeOptions = ref<any[]>([{ value: '支出' }, { value: '收入' }])
 
 const queryRef = ref(query)
 
