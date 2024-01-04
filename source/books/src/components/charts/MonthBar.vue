@@ -9,13 +9,8 @@ import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
 import { chartDialog, flowQuery } from '@/utils/store'
-import type { TypePieChartQuery } from '@/types/model/analysis'
 
 import { showFlowTableDialog } from '@/stores/flag'
-
-const query: TypePieChartQuery = {
-}
-const queryRef = ref(query)
 
 const dataListOut: any[] = []
 const dataListIn: any[] = []

@@ -118,10 +118,6 @@ const inMoneyClass = (money: any) => {
   }
 }
 
-const noZero = (money: any) => {
-  return !(!money || money == 0);
-}
-
 const initQuery = () => {
   inMonthCount.value = {}
   inDayCount.value = {}
