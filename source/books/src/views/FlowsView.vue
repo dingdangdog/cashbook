@@ -1,6 +1,6 @@
 <template>
   <div class="flow-container">
-    <FlowTable edit="show"/>
+    <FlowTable edit="show" />
   </div>
 </template>
 
