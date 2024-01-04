@@ -5,7 +5,7 @@
         <span>
           {{ date }}
           &nbsp; 总收入：<b>{{ inMonthCount[date] ? Number(inMonthCount[date]).toFixed(2) : 0 }} </b>
-          &nbsp; 总支出：<b>{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }} </b>
+          &nbsp; 总支出：<b :style="outPlan(date)">{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }} </b>
           &nbsp; 消费限额：<b>{{ plan.limitMoney }} </b>
         </span>
         <el-row class="mini-button-group">
@@ -148,6 +148,13 @@ const initQuery = () => {
   getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
     plan.value = res
   })
+}
+
+const outPlan = (date: string) => {
+  if (plan.value.limitMoney && outMonthCount.value[date] > plan.value.limitMoney){
+    return "color:red"
+  }
+  return ""
 }
 
 initQuery()
