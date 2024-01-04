@@ -56,7 +56,7 @@
 <script setup lang="ts">
 // 第三方库引入
 import { ref, onMounted, watch } from 'vue'
-import { Delete, Edit, Search } from '@element-plus/icons-vue'
+import { Delete, Edit } from '@element-plus/icons-vue'
 
 // 私有引入
 import { deleteBook, getBook, updateBook } from '@/api/api.book'

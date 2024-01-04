@@ -10,8 +10,7 @@ import SystemView from '@/views/SystemView.vue'
 import AboutView from '@/views/AboutView.vue'
 
 const checkLoginIn = () => {
-  const isLogin = localStorage.getItem('token')
-  return isLogin
+  return localStorage.getItem('token')
 }
 
 

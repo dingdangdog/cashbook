@@ -116,7 +116,7 @@ const confirmBookForm = async (form: FormInstance | undefined) => {
   if (!form) return
   if (await form.validate()) {
     createBook({ bookName: newBook.value.bookName })
-      .then((res) => {
+      .then((_res) => {
         ElMessage.success('添加成功')
         addBookDialog.value.visible = false
         initBooks()

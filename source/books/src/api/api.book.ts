@@ -1,5 +1,5 @@
 import $http from './index'
-import type { Book, CreateBookDto } from '../types/model/book';
+import type { Book, CreateBookDto } from '@/types/model/book';
 
 const prefix = '/admin/book';
 
