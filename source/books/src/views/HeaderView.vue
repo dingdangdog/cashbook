@@ -3,7 +3,7 @@
     <div class="header-left">
       <!-- 图标 -->
       <div id="iconTitle">
-        <img alt="cashbook logo" src="@/assets/images/cashbook.png" width="45" />
+        <img alt="cashbook logo" src="@/assets/images/cashbook.png" style="width: 2.8rem" />
       </div>
       <!-- 页面标题 -->
       <h3 style="padding-top: 0.3rem">Cashbook</h3>
