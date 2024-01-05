@@ -73,7 +73,6 @@ import ChangePasswordDialog from '@/views/dialogs/ChangePasswordDialog.vue'
 
 import { getServerInfo } from '@/api/api.server'
 
-import router from '@/router/index'
 import { cleanLoginInfo } from '@/utils/common'
 
 onMounted(() => {
@@ -225,10 +224,6 @@ const logout = () => {
   width: 100%;
   display: flex;
   justify-content: right;
-}
-
-#theme-button {
-  font-size: 1.5rem;
 }
 
 .header-setting {
