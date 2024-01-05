@@ -5,7 +5,14 @@
       <el-input v-model="typeQueryRef.value" placeholder="类型名称" />
     </div>
     <div class="queryParam">
-      <el-input v-model="typeQueryRef.type" placeholder="类型类型" />
+      <el-select v-model="typeQueryRef.type" class="m-2" placeholder="类型类型" clearable>
+        <el-option
+          v-for="item in typerOptions"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
+        />
+      </el-select>
     </div>
   </el-row>
 
@@ -33,7 +40,10 @@
   <el-dialog style="width: 20vw" v-model="typeDialog.visible" :title="typeDialog.title">
     <div class="el-dialog-main">
       <el-form ref="typeFormRef" :model="editType" :rules="typeFormRules">
-        <el-form-item label="类型名称" :label-width="formLabelWidth" prop="value">
+        <el-form-item label="原类型名称" :label-width="formLabelWidth" prop="value">
+          <el-input v-model="editType.oldValue" disabled />
+        </el-form-item>
+        <el-form-item label="新类型名称" :label-width="formLabelWidth" prop="value">
           <el-input v-model="editType.value" />
         </el-form-item>
         <el-form-item label="类型类型" :label-width="formLabelWidth" prop="type">
@@ -52,11 +62,12 @@
 
 <script setup lang="ts">
 import { Edit } from '@element-plus/icons-vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import type { Typer } from '@/types/model/typer'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { update, getAll } from '@/api/api.typer'
+import { flowQuery } from '@/utils/store'
 
 // 加载蒙版显示控制器
 const loading = ref(true)
@@ -65,6 +76,12 @@ const formLabelWidth = ref('100px')
 if (document.body.clientWidth <= 480) {
   formLabelWidth.value = '60px'
 }
+
+const typerOptions = ref<Typer[]>([
+  { value: '消费类型' },
+  { value: '支付方式' }
+])
+
 // 列表数据绑定
 const types = ref<Typer[]>([])
 
@@ -72,7 +89,7 @@ const typeQueryRef = ref<Typer>({
   value: ''
 })
 
-const editType = ref<Typer> ({
+const editType = ref<Typer>({
   type: '',
   value: ''
 })
@@ -92,19 +109,25 @@ const typeFormRef = ref<FormInstance>()
 
 const openUpdateDialog = (row: Typer) => {
   editType.value = row
+  editType.value.oldValue = row.value
+  editType.value.value = ''
   typeDialog.value.visible = true
 }
 const confirmTypeForm = async (form: FormInstance | undefined) => {
   if (!form) return
   if (await form.validate()) {
     update(editType.value)
-      .then((_res) => {
-        ElMessage.success('修改成功')
+      .then((res) => {
+        if (res > 0){
+          ElMessage.success('修改成功，同步修改' + res + '条流水数据')
+        } else {
+          ElMessage.error('修改失败')
+        }
         typeDialog.value.visible = false
         doQuery()
       })
       .catch((err) => {
-        ElMessage.success('修改失败')
+        ElMessage.error('修改失败')
         console.log(err)
       })
   } else {
@@ -117,15 +140,20 @@ const cancelEdit = () => {
 }
 
 const doQuery = () => {
-  getAll(typeQueryRef.value).then((res)=>{
+  getAll(typeQueryRef.value).then((res) => {
     types.value = res
-  }).catch((err)=> {
-    ElMessage.error("查询出错")
+    loading.value = false
+  }).catch((err) => {
+    ElMessage.error('查询出错')
     console.log(err)
   })
 }
 
 onMounted(() => {
+  doQuery()
+})
+
+watch(typeQueryRef.value, () => {
   doQuery()
 })
 

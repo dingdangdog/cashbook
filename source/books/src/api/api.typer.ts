@@ -33,6 +33,6 @@ export function getAll(typer: Typer): Promise<Typer[]> {
 /**
  * 更新类型
  */
-export function update(type: Typer): Promise<Typer[]> {
+export function update(type: Typer): Promise<number> {
   return $http({ url: prefix + "/update", method: "post", data: type });
 }
