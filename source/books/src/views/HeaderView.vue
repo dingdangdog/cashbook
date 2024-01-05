@@ -50,7 +50,7 @@
   </el-dialog>
 
   <!-- 弹出框：账本设置 -->
-  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title">
+  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title" destroy-on-close>
     <BookDialog />
   </el-dialog>
 
@@ -89,7 +89,7 @@ onMounted(() => {
       showBookDialog()
     })
   }
-  
+
   setInterval(() => {
     name.value = localStorage.getItem('name') || ''
     bookName.value = localStorage.getItem('bookName') || ''
