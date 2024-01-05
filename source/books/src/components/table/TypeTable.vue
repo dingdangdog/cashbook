@@ -67,7 +67,6 @@ import { onMounted, ref, watch } from 'vue'
 import type { Typer } from '@/types/model/typer'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { update, getAll } from '@/api/api.typer'
-import { flowQuery } from '@/utils/store'
 
 // 加载蒙版显示控制器
 const loading = ref(true)
@@ -108,7 +107,7 @@ const typeFormRules = ref<FormRules>({
 const typeFormRef = ref<FormInstance>()
 
 const openUpdateDialog = (row: Typer) => {
-  editType.value = row
+  editType.value.type = row.type
   editType.value.oldValue = row.value
   editType.value.value = ''
   typeDialog.value.visible = true
