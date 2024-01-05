@@ -37,11 +37,11 @@
 
 1.1.0-BETA版本前后有非常大的差异，页面到后端整体全部重构了一次，推荐使用最新版！
 
-- 1.1.0-BETA版本前的一些说明：[NOTICE](./NOTICE.md)
+- 1.1.0-BETA版本前的一些说明：[NOTICE](./doc/NOTICE.md)
 
 ## 截图展示
 
-- 1.1.0-BETA版本前：[DISPLAY](./DISPLAY.md)
+- 1.1.0-BETA版本前：[DISPLAY](./doc/DISPLAY.md)
 - 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/json_db/images/new/1.1.0-BETA.mp4
 
 ## 贡献者（Contributor）
