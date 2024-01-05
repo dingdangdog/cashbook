@@ -31,6 +31,7 @@ func GetExpenseType(bookId int64, flowType string) []types.Dict {
 	for _, flow := range flows {
 		dict := types.Dict{}
 		if !util.ArrayContains(values, flow.Type) {
+			dict.Type = "消费类型"
 			dict.Value = flow.Type
 			dicts = append(dicts, dict)
 			values = append(values, flow.Type)
@@ -48,6 +49,7 @@ func GetPaymentType(bookId int64, flowType string) []types.Dict {
 	for _, flow := range flows {
 		dict := types.Dict{}
 		if !util.ArrayContains(values, flow.PayType) {
+			dict.Type = "支付方式"
 			dict.Value = flow.PayType
 			dicts = append(dicts, dict)
 			values = append(values, flow.PayType)
@@ -57,6 +59,26 @@ func GetPaymentType(bookId int64, flowType string) []types.Dict {
 	return dicts
 }
 
-func UpdateType(data types.Dict, bookId int64) types.Dict {
-	dFlow.
+func UpdateType(typer types.Dict, bookId int64) int {
+	flowParam := types.FlowParam{
+		BookId: bookId,
+	}
+	if typer.Type == "消费类型" {
+		flowParam.Type = typer.OldValue
+	} else if typer.Type == "支付方式" {
+		flowParam.PayType = typer.OldValue
+	}
+	flows := dFlow.FindLists(flowParam)
+
+	newFlows := make([]types.Flow, 0)
+	for _, f := range flows {
+		if typer.Type == "消费类型" {
+			f.Type = typer.Value
+		} else if typer.Type == "支付方式" {
+			f.PayType = typer.Value
+		}
+		newFlows = append(newFlows, f)
+	}
+	dFlow.UpdateByBatch(newFlows, bookId)
+	return len(flows)
 }

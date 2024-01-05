@@ -41,6 +41,11 @@ func GetAll(c *gin.Context) {
 		data = sDict.GetExpenseType(bookId, "")
 	} else if typer == "支付方式" {
 		data = sDict.GetPaymentType(bookId, "")
+	} else {
+		eData := sDict.GetExpenseType(bookId, "")
+		pData := sDict.GetPaymentType(bookId, "")
+		data = append(data, eData...)
+		data = append(data, pData...)
 	}
 
 	var resultData []types.Dict
@@ -67,6 +72,6 @@ func UpdateType(c *gin.Context) {
 	}
 
 	bookId := util.GetBookId(c)
-	data = sDict.UpdateType(data, bookId)
-	c.JSON(200, util.Success(data))
+	num := sDict.UpdateType(data, bookId)
+	c.JSON(200, util.Success(num))
 }

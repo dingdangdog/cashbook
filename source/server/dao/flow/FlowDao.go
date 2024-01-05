@@ -92,8 +92,7 @@ func Delete(id int64, bookId int64) {
 }
 
 // DeleteDontSave 按照ID删除但不保存数据
-func DeleteDontSave(id int64, bookId int64) {
-	getFileData(bookId)
+func DeleteDontSave(id int64) {
 	var index int64
 	var flag = false
 	if len(flowStatic) > 0 {
@@ -247,10 +246,11 @@ func getQuery(param types.FlowParam) types.FlowQuery {
 }
 
 func updateFlowType(flows []types.Flow, bookId int64) {
+	getFileData(bookId)
 	for _, flow := range flows {
 		if len(flow.FlowType) == 0 {
 			flow.FlowType = "支出"
-			DeleteDontSave(flow.Id, bookId)
+			DeleteDontSave(flow.Id)
 			flowStatic = append(flowStatic, flow)
 		}
 	}
@@ -260,4 +260,14 @@ func updateFlowType(flows []types.Flow, bookId int64) {
 func InitFlows(bookId int64) {
 	flows := getFileData(bookId)
 	updateFlowType(flows, bookId)
+}
+
+// UpdateByBatch 批量更新流水数据
+func UpdateByBatch(flows []types.Flow, bookId int64) {
+	getFileData(bookId)
+	for _, flow := range flows {
+		DeleteDontSave(flow.Id)
+		flowStatic = append(flowStatic, flow)
+	}
+	saveFile(bookId)
 }
