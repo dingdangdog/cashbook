@@ -138,15 +138,15 @@ func FindLists(param types.FlowParam) []types.Flow {
 			}
 			if param.FlowType == "支出" {
 				// 兼容历史版本数据，历史版本无FlowType，默认为支出数据
-				flag = strings.Contains(data.FlowType, param.FlowType) || len(data.FlowType) == 0
+				flag = data.FlowType == param.FlowType || len(data.FlowType) == 0
 			} else if flag && query.FlowType {
-				flag = strings.Contains(data.FlowType, param.FlowType)
+				flag = data.FlowType == param.FlowType
 			}
 			if flag && query.Type {
-				flag = strings.Contains(data.Type, param.Type)
+				flag = data.Type == param.Type
 			}
 			if flag && query.PayType {
-				flag = strings.Contains(data.PayType, param.PayType)
+				flag = data.PayType == param.PayType
 			}
 			if flag && query.Description {
 				flag = strings.Contains(data.Description, param.Description)
