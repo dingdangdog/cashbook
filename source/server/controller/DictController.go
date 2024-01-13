@@ -48,6 +48,7 @@ func GetAll(c *gin.Context) {
 		data = append(data, pData...)
 	}
 
+	// 查询条件：按名称过滤
 	var resultData []types.Dict
 	for _, value := range data {
 		if len(name) > 0 && strings.Contains(value.Value, name) {

@@ -28,13 +28,25 @@ func GetExpenseType(bookId int64, flowType string) []types.Dict {
 
 	dicts := make([]types.Dict, 0)
 	values := make([]string, 0)
+	flowTypes := make([]string, 0)
 	for _, flow := range flows {
 		dict := types.Dict{}
-		if !util.ArrayContains(values, flow.Type) {
+		if !util.ArrayContains(values, flow.Type) || !util.ArrayContains(flowTypes, flow.FlowType) {
 			dict.Type = "消费类型"
 			dict.Value = flow.Type
+			dict.FlowType = flow.FlowType
 			dicts = append(dicts, dict)
 			values = append(values, flow.Type)
+			flowTypes = append(flowTypes, flow.FlowType)
+		}
+	}
+
+	// sort by FlowType
+	for i := 0; i < len(dicts); i++ {
+		for j := i + 1; j < len(dicts); j++ {
+			if dicts[i].FlowType > dicts[j].FlowType {
+				dicts[i], dicts[j] = dicts[j], dicts[i]
+			}
 		}
 	}
 
@@ -46,13 +58,24 @@ func GetPaymentType(bookId int64, flowType string) []types.Dict {
 
 	dicts := make([]types.Dict, 0)
 	values := make([]string, 0)
+	flowTypes := make([]string, 0)
 	for _, flow := range flows {
 		dict := types.Dict{}
-		if !util.ArrayContains(values, flow.PayType) {
+		if !util.ArrayContains(values, flow.PayType) || !util.ArrayContains(flowTypes, flow.FlowType) {
 			dict.Type = "支付方式"
 			dict.Value = flow.PayType
+			dict.FlowType = flow.FlowType
 			dicts = append(dicts, dict)
 			values = append(values, flow.PayType)
+			flowTypes = append(flowTypes, flow.FlowType)
+		}
+	}
+	// sort by FlowType
+	for i := 0; i < len(dicts); i++ {
+		for j := i + 1; j < len(dicts); j++ {
+			if dicts[i].FlowType > dicts[j].FlowType {
+				dicts[i], dicts[j] = dicts[j], dicts[i]
+			}
 		}
 	}
 
@@ -61,7 +84,8 @@ func GetPaymentType(bookId int64, flowType string) []types.Dict {
 
 func UpdateType(typer types.Dict, bookId int64) int {
 	flowParam := types.FlowParam{
-		BookId: bookId,
+		BookId:   bookId,
+		FlowType: typer.FlowType,
 	}
 	if typer.Type == "消费类型" {
 		flowParam.Type = typer.OldValue
