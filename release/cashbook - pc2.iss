@@ -27,11 +27,12 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=E:\project-my\cashbook-desktop\release
-OutputBaseFilename=cashbook-v{#MyAppVersion}-win-x86
+OutputBaseFilename=cashbook-v{#MyAppVersion}-win-x64
 SetupIconFile=E:\project-my\cashbook-desktop\release\icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
