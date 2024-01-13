@@ -4,13 +4,13 @@
     <div class="icon-container"><img src="@/assets/images/cashbook.png" width="60" /><h1 style="margin-left: 2rem;">Casbook-Desktop</h1></div>
     <div class="form-container">
       <el-form ref="loginForm" :model="formData" :rules="rules" label-width="10rem">
-        <el-form-item label="帐号（UserName）" prop="name" class="login-input">
+        <el-form-item label="帐号（Account）" prop="name" class="login-input">
           <el-input v-model="formData.userName" />
         </el-form-item>
         <el-form-item label="密码（Password）" prop="pass" class="login-input">
-          <el-input v-model="formData.password" type="password" autocomplete="off" show-password/>
+          <el-input v-model="formData.password" type="password" autocomplete="off" @change="submitForm(loginForm)" show-password/>
         </el-form-item>
-        <el-checkbox v-model="remeberUser" class="login-button">Remember me</el-checkbox>
+        <el-checkbox v-model="rememberUser" class="login-button">记住我</el-checkbox>
         <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
         <el-button type="primary" class="login-button" @click="submitForm(loginForm)">登录</el-button>
       </el-form>
@@ -18,19 +18,23 @@
   </div>
 
   <!-- 弹出框表单：注册用户 -->
-  <el-dialog style="width: 30vw" v-model="registerDialog.visable" :title="registerDialog.title">
+  <el-dialog style="width: 25vw" v-model="registerDialog.visable" :title="registerDialog.title">
     <div class="el-dialog-main">
       <el-form ref="registerFormRef" :model="registerUser" :rules="registerUserRules">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="registerUser.name" />
+          <el-input v-model="registerUser.name" placeholder="Name" />
         </el-form-item>
 
-        <el-form-item label="帐号（UserName）" :label-width="formLabelWidth" prop="userName">
-          <el-input v-model="registerUser.userName" />
+        <el-form-item label="帐号" :label-width="formLabelWidth" prop="userName">
+          <el-input v-model="registerUser.userName" placeholder="Account" />
         </el-form-item>
 
-        <el-form-item label="密码（Password）" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="registerUser.password" type="password" autocomplete="off" show-password/>
+        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+          <el-input v-model="registerUser.password" type="password" autocomplete="off" placeholder="Password" show-password/>
+        </el-form-item>
+
+        <el-form-item label="确认密码" :label-width="formLabelWidth" prop="againPassword" class="is-required">
+          <el-input v-model="registerUser.againPassword" type="password" autocomplete="off" placeholder="Password Again" show-password/>
         </el-form-item>
       </el-form>
     </div>
@@ -53,9 +57,9 @@ import { login, registerApi } from '../api/api.user'
 import router from '../router/index'
 
 // 表单输入框宽度
-const formLabelWidth = ref('150px')
+const formLabelWidth = ref('120px')
 if (document.body.clientWidth <= 480) {
-  formLabelWidth.value = '100px'
+  formLabelWidth.value = '80px'
 }
 
 const loginForm = ref<FormInstance>()
@@ -64,7 +68,7 @@ const formData = ref<User>({
   password: ''
 })
 
-const remeberUser = ref(false)
+const rememberUser = ref(true)
 
 const rules = reactive<FormRules<typeof formData>>({
   userName: [
@@ -82,7 +86,7 @@ const submitForm = async (form: FormInstance | undefined) => {
   await form.validate((valid, data) => {
     if (valid) {
       //alert('submit!')
-      login(remeberUser.value,formData.value).then((res) => {
+      login(rememberUser.value,formData.value).then((res) => {
         if (res.id != 0) {
           ElMessage({
             type: 'success',
@@ -114,8 +118,19 @@ const registerDialog = ref({
 const registerUser = ref<User>({
   name: '',
   userName: '',
-  password: ''
+  password: '',
+  againPassword: ''
 })
+
+const validatePass2 = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'))
+  } else if (value !== registerUser.value.password) {
+    callback(new Error("两次输入密码不一致"))
+  } else {
+    callback()
+  }
+}
 
 // 表单输入框校验规则
 const registerUserRules = ref<FormRules>({
@@ -130,8 +145,12 @@ const registerUserRules = ref<FormRules>({
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 18, message: '字符限制：6-18', trigger: 'blur' }
+  ],
+  againPassword: [
+    { validator: validatePass2, trigger: 'blur' }
   ]
 })
+
 
 const registerFormRef = ref<FormInstance>()
 
@@ -169,6 +188,7 @@ const register = (form: FormInstance | undefined) => {
 const cancel = () => {
   registerDialog.value.visable = false
 }
+
 </script>
 
 <style scoped>
@@ -204,7 +224,7 @@ const cancel = () => {
 }
 
 .login-button {
-  margin-left: 1rem;
-  size: large;
+  margin-left: 3rem !important;
+  font-size: medium;
 }
 </style>

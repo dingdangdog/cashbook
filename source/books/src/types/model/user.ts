@@ -4,6 +4,7 @@ export interface User {
   name?: string;
   userName: string;
   password: string;
+  againPassword?: string;
 }
 
 export interface LoginUser {
