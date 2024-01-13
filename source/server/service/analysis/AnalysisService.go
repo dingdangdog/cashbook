@@ -68,13 +68,28 @@ func GetTypePie(param types.FlowParam) []types.TypePie {
 			sumMap[flow.Type] += flow.Money
 		}
 	}
-	pies := make([]types.TypePie, 0)
+	datas := make([]types.TypeData, 0)
 	for t, money := range sumMap {
-		typePie := types.TypePie{
+		typePie := types.TypeData{
 			Type:    t,
-			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
+			TypeSum: money,
 		}
-		pies = append(pies, typePie)
+		datas = append(datas, typePie)
+	}
+	// sort by sum
+	for i := 0; i < len(datas); i++ {
+		for j := i + 1; j < len(datas); j++ {
+			if datas[i].TypeSum < datas[j].TypeSum {
+				datas[i], datas[j] = datas[j], datas[i]
+			}
+		}
+	}
+	pies := make([]types.TypePie, 0)
+	for i := 0; i < len(datas); i++ {
+		pie := types.TypePie{}
+		pie.Type = datas[i].Type
+		pie.TypeSum = strconv.FormatFloat(datas[i].TypeSum, 'f', 2, 64)
+		pies = append(pies, pie)
 	}
 
 	return pies
@@ -91,13 +106,28 @@ func GetPayTypeBar(param types.FlowParam) []types.TypePie {
 			sumMap[flow.PayType] += flow.Money
 		}
 	}
-	pies := make([]types.TypePie, 0)
+	datas := make([]types.TypeData, 0)
 	for t, money := range sumMap {
-		typePie := types.TypePie{
+		typePie := types.TypeData{
 			Type:    t,
-			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
+			TypeSum: money,
 		}
-		pies = append(pies, typePie)
+		datas = append(datas, typePie)
+	}
+	// sort by sum
+	for i := 0; i < len(datas); i++ {
+		for j := i + 1; j < len(datas); j++ {
+			if datas[i].TypeSum < datas[j].TypeSum {
+				datas[i], datas[j] = datas[j], datas[i]
+			}
+		}
+	}
+	pies := make([]types.TypePie, 0)
+	for i := 0; i < len(datas); i++ {
+		pie := types.TypePie{}
+		pie.Type = datas[i].Type
+		pie.TypeSum = strconv.FormatFloat(datas[i].TypeSum, 'f', 2, 64)
+		pies = append(pies, pie)
 	}
 
 	return pies
