@@ -18,7 +18,7 @@
       </template>
 
       <template #date-cell="{ data }">
-        <div @click="clickDay(data)">
+        <div @click="clickDay(data)" class="day-container">
           <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
             {{ data.day.split('-').slice(1).join('-') }}
             {{ data.day === flowQuery.startDay ? '✔️' : '' }}
@@ -202,6 +202,16 @@ onMounted(()=>{
 
 .el-calendar__body {
   padding: 0 1rem;
+}
+
+.day-container p {
+  margin: 1rem !important;
+}
+
+@media screen and (max-height: 860px) {
+  .day-container p {
+    margin: 0.5rem !important;
+  }
 }
 
 @media screen and (max-width: 1660px) {
