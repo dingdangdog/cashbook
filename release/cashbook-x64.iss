@@ -2,7 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "cashbook"
-#define MyAppVersion "1.1.2"
+#define MyAppVersion "1.1.3"
+#define MyAppOutDir "E:\project-my\cashbook-desktop\release"
+#define MyAppResourcesDir "E:\project-my\cashbook-desktop\release\build\win-unpacked"
 #define MyAppPublisher "dingdangdog"
 #define MyAppURL "https://www.oldmoon.top/"
 #define MyAppExeName "cashbook.exe"
@@ -26,9 +28,9 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=E:\project-my\cashbook-desktop\release
-OutputBaseFilename=cashbook-v{#MyAppVersion}-win-x64
-SetupIconFile=E:\project-my\cashbook-desktop\release\icon.ico
+OutputDir={#MyAppOutDir}
+OutputBaseFilename=cashbook-v{#MyAppVersion}-x64
+SetupIconFile={#MyAppOutDir}\icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -41,24 +43,24 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\chrome_100_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\chrome_200_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\ffmpeg.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\icudtl.dat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\LICENSE.electron.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\LICENSES.chromium.html"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\resources.pak"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\v8_context_snapshot.bin"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\vk_swiftshader.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\vk_swiftshader_icd.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\vulkan-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "E:\project-my\cashbook-desktop\release\build\win-unpacked\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppResourcesDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\chrome_100_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\chrome_200_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\ffmpeg.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\icudtl.dat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\LICENSE.electron.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\LICENSES.chromium.html"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\resources.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\v8_context_snapshot.bin"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\vk_swiftshader.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\vk_swiftshader_icd.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\vulkan-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppResourcesDir}\resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppResourcesDir}\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

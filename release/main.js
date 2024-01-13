@@ -1,36 +1,37 @@
-const { app, BrowserWindow, Menu, shell, globalShortcut  } = require("electron");
-const child_process = require("child_process");
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  shell,
+} = require("electron");
 const { spawn } = require("child_process");
 const path = require("path");
 
 let serverWindowPid;
 let timeOut;
-let window;
+let win;
+
+let ctrlKeyIsPressed = false;
 
 function createWindow() {
   // 创建浏览器窗口
-  window = new BrowserWindow({
-    width: 1200,
-    height: 960,
+  win = new BrowserWindow({
+    width: 1920,
+    height: 1080,
+    // resizable: false, // 设置为 false 禁止缩小
     //绝对路径
     icon: path.join(__dirname, "icon.ico"),
     webPreferences: {
       nodeIntegration: true,
     },
   });
-
   // 最大化窗口
-  window.maximize()
+  // win.maximize()
 
-  window.loadFile(path.join(__dirname, "dist/index.html"));
-  // 打开开发者工具
-  // 注册 F12 快捷键
-  globalShortcut.register('F12', () => {
-    window.webContents.openDevTools();
-  });
+  win.loadFile(path.join(__dirname, "dist/index.html"));
 
   // 关闭窗口时
-  window.on("close", () => {
+  win.on("close", () => {
     clearTimeout(timeOut);
     if (serverWindowPid) {
       // 根据pid停止关闭后台服务
@@ -38,8 +39,29 @@ function createWindow() {
       process.kill(serverWindowPid);
     }
   });
-}
+  // 监听窗口的键盘事件
+  win.webContents.on('before-input-event', (event, input) => {
+    // 判断是否按下了 Ctrl 键和鼠标滚轮事件
+    if (input.type === 'keyDown' && input.key === 'F12') {
+      event.preventDefault();
+      // f12 键按下
+      win.webContents.openDevTools({ mode: 'detach' })
+    }
+  });
+  win.webContents.on('zoom-changed', (event, input) => {
+    event.preventDefault();
+    if (event.deltaY > 0) {
+      console.log('CTRL + 鼠标滚轮向下滚动');
+      // 在这里执行缩小操作或其他你想要的操作
+      win.webContents.setZoomFactor(win.webContents.getZoomFactor() - 0.1);
+    } else if (event.deltaY < 0) {
+      console.log('CTRL + 鼠标滚轮向上滚动');
+      // 在这里执行放大操作或其他你想要的操作
+      win.webContents.setZoomFactor(win.webContents.getZoomFactor() + 0.1);
+    }
+  });
 
+}
 async function startServer() {
   const serverName = "cashbook-server";
   // 启动后台服务
@@ -58,7 +80,7 @@ async function startServer() {
       // 保存后台服务进程的PID
       serverWindowPid = data;
     });
-  }, 2000);
+  }, 1500);
 }
 
 // 当 Electron 完成初始化时，创建窗口
@@ -98,8 +120,19 @@ const customMenu = Menu.buildFromTemplate([
   {
     label: 'Window',
     submenu: [
-      { label: 'Minimize', click: () => { window.minimize(); } },
-      { label: 'Close', click: () => { window.close(); } },
+      { label: 'Minimize', click: () => { win.minimize(); } },
+      { label: 'Close', click: () => { win.close(); } },
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      { role: 'zoomIn' },
+      { role: 'zoomOut' },
+      { type: 'separator' },
+      { role: 'toggleDevTools' },
+      { type: 'separator' },
+      { label: 'Close', click: () => { win.close(); } },
     ]
   },
   {
