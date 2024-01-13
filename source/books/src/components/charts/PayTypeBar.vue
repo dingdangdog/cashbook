@@ -22,7 +22,7 @@
       />
     </div>
     <div class="row-header queryParam">
-      <el-select v-model="queryRef.flowType" class="m-2" placeholder="流水类型" clearable>
+      <el-select v-model="queryRef.flowType" class="m-2" placeholder="流水类型">
         <el-option
           v-for="item in flowTypeOptions"
           :key="item.value"
@@ -31,9 +31,9 @@
         />
       </el-select>
     </div>
-    <div class="row-header pc-button">
-      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
-    </div>
+<!--    <div class="row-header pc-button">-->
+<!--      <el-button :icon="Search" circle @click="doQuery(queryRef)" />-->
+<!--    </div>-->
   </el-row>
 
   <el-row class="mini-buttons">
@@ -57,7 +57,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { payTypeBar } from '@/api/api.analysis'
 import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
@@ -134,8 +134,8 @@ const optionRef = ref({
   ]
 })
 
-var payTypeDiv: any
-var payTypeChart: echarts.ECharts
+let payTypeDiv: any
+let payTypeChart: echarts.ECharts
 
 const doQuery = (query: TypePieChartQuery) => {
   flowQuery.startDay = queryRef.value.startDay
@@ -173,6 +173,10 @@ const doQuery = (query: TypePieChartQuery) => {
     }
   })
 }
+
+watch(queryRef.value, () => {
+  doQuery(queryRef.value)
+})
 
 onMounted(() => {
   queryRef.value.startDay = flowQuery.startDay
