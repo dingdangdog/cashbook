@@ -284,7 +284,7 @@ onMounted(() => {
 
 const getTypes = () => {
   getFlowType().then((data) => {
-    flowTypeOptions.value = data
+    // flowTypeOptions.value = data
     if (data[0]) {
       changeTypes(data[0].value)
     }
@@ -316,7 +316,7 @@ if (document.body.clientWidth <= 480) {
  * 集中定义常量
  */
 // 流水类型
-const flowTypeOptions = ref<Typer[]>([])
+const flowTypeOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }])
 const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }])
 // 消费类型/收入类型
 const expenseTypeOptions = ref<Typer[]>([])

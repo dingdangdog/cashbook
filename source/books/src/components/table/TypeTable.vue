@@ -27,8 +27,9 @@
       max-height="calc(100vh - 20rem)"
     >
       <el-table-column type="index" label="序号" min-width="40" />
-      <el-table-column prop="type" label="类型名称" min-width="100" />
-      <el-table-column prop="value" label="类型类型" min-width="100" />
+      <el-table-column prop="flowType" label="所属流水类型" min-width="100" />
+      <el-table-column prop="type" label="Type类型" min-width="100" />
+      <el-table-column prop="value" label="Type名称" min-width="100" />
       <el-table-column label="操作" width="120">
         <template v-slot="scop">
           <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(scop.row)" />
@@ -40,6 +41,9 @@
   <el-dialog style="width: 20vw" v-model="typeDialog.visible" :title="typeDialog.title">
     <div class="el-dialog-main">
       <el-form ref="typeFormRef" :model="editType" :rules="typeFormRules">
+        <el-form-item label="关联流水类型" :label-width="formLabelWidth" prop="flowType">
+          <el-input v-model="editType.flowType" disabled />
+        </el-form-item>
         <el-form-item label="原类型名称" :label-width="formLabelWidth" prop="value">
           <el-input v-model="editType.oldValue" disabled />
         </el-form-item>
@@ -107,6 +111,7 @@ const typeFormRules = ref<FormRules>({
 const typeFormRef = ref<FormInstance>()
 
 const openUpdateDialog = (row: Typer) => {
+  editType.value.flowType = row.flowType
   editType.value.type = row.type
   editType.value.oldValue = row.value
   editType.value.value = ''
