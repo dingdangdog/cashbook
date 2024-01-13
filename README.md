@@ -4,8 +4,11 @@
 </div>
 
 <p align="center">
+  <img alt="release" src="https://img.shields.io/github/v/release/dingdangdog/cashbook-desktop" />
   <img alt="stars" src="https://img.shields.io/github/stars/dingdangdog/cashbook-desktop" />
   <img alt="dorks" src="https://img.shields.io/github/forks/dingdangdog/cashbook-desktop" />
+</p>
+<p align="center">
   <img alt="issues-open" src="https://img.shields.io/github/issues/dingdangdog/cashbook-desktop?color=important" />
   <img alt="issues-close" src="https://img.shields.io/github/issues-closed/dingdangdog/cashbook-desktop?color=green" />
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow.svg" />
