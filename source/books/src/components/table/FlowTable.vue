@@ -96,13 +96,13 @@
     >
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if="false" />
-      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="100" />
+      <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="80" />
       <el-table-column prop="flowType" label="流水类型" min-width="60" />
+      <el-table-column prop="payType" label="支付方式" min-width="80" />
       <el-table-column prop="type" label="消费类型" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
-      <el-table-column prop="payType" label="支付方式" min-width="80" />
       <el-table-column prop="name" label="名称" min-width="100" />
-      <el-table-column prop="description" label="描述" v-if="deviceAgent() === 'pc'" />
+      <el-table-column prop="description" label="描述" min-width="100" v-if="deviceAgent() === 'pc'" />
       <el-table-column label="操作" width="150" v-if="edit == 'show'">
         <template v-slot="scop">
           <el-button
@@ -168,6 +168,20 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="支付方式" :label-width="formLabelWidth" prop="payType">
+          <el-select v-model="flowRef.payType" placeholder="选择"
+                     clearable
+                     filterable
+                     allow-create>
+            <el-option
+              v-for="item in paymentTypeOptions"
+              :key="item.value"
+              :label="item.value"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="消费类型" :label-width="formLabelWidth" prop="type">
           <el-select v-model="flowRef.type" placeholder="选择"
                      clearable
@@ -184,20 +198,6 @@
 
         <el-form-item label="金额" :label-width="formLabelWidth" prop="money">
           <el-input-number v-model="flowRef.money" :min="0" />
-        </el-form-item>
-
-        <el-form-item label="支付方式" :label-width="formLabelWidth" prop="payType">
-          <el-select v-model="flowRef.payType" placeholder="选择"
-                     clearable
-                     filterable
-                     allow-create>
-            <el-option
-              v-for="item in paymentTypeOptions"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value"
-            />
-          </el-select>
         </el-form-item>
 
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
@@ -441,7 +441,15 @@ const confirmForm = async (dialogForm: FormInstance | undefined, closeDialog: bo
 // 重置表单数据
 const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
   if (!formEl) return
-  formEl.resetFields()
+  if (showDialog) {
+    flowRef.type = ''
+    flowRef.money = undefined
+    // flowRef.day = ''
+    flowRef.name = ''
+    flowRef.description = ''
+  } else {
+    formEl.resetFields()
+  }
   dialogFormVisible.value = showDialog
 }
 

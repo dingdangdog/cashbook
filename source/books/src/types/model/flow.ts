@@ -1,9 +1,12 @@
 export interface Flow {
     id?: number;
     day?: string;
+    // 流水类型
     flowType?: string;
+    // 消费类型
     type?: string;
     bookId?: number;
+    // 支付方式
     payType?: string;
     money?: number;
     name?: string;
