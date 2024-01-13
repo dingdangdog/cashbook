@@ -18,7 +18,7 @@
       :data="books"
       stripe
       row-key="row"
-      max-height="calc(100vh - 20rem)"
+      max-height="calc(100vh - 12rem)"
     >
       <!--      <el-table-column type="index" label="序号" min-width="40" />-->
       <el-table-column prop="id" label="ID" />

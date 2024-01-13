@@ -92,7 +92,7 @@
       @sort-change="moneySortFunc"
       stripe
       row-key="row"
-      max-height="calc(100vh - 15rem)"
+      max-height="calc(100vh - 18rem)"
     >
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="id" label="ID" v-if="false" />
