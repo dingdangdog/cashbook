@@ -1,6 +1,6 @@
 // store.js
 import { reactive } from 'vue';
-import type { FlowQuery } from '../types/model/flow';
+import type { FlowQuery } from '@/types/model/flow';
 
 export const flowQuery: FlowQuery = reactive({
   pageNum: 1,

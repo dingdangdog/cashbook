@@ -8,12 +8,16 @@
     "email": "dingdangdogx@outlook.com"
   },
   "build": {
-    "asar": false,
+    "asar": true,
     "appId": "cashbook",
     "productName": "cashbook",
     "extends": null,
     "directories": {
       "output": "build"
+    },
+    "i18n": {
+      "locales": ["zh-CN"],
+      "defaultLocale": "zh-CN"
     },
     "files": [
       "./icon.ico",

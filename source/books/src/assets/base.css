@@ -4,7 +4,7 @@
   /* 日间模式颜色 */
   --write: #FFFFFF;
   --black: #000000;
-  
+
   /* 夜间模式颜色 */
 }
 
@@ -12,6 +12,19 @@
 :root {
   --color-background: var(--write);
 }
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #3498db;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: #ecf0f1;
+  border-radius: 10px;
+}
+
 
 /* 夜间模式变量赋值 */
 @media (prefers-color-scheme: dark) {
@@ -34,4 +47,14 @@ body{
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+}
+
+#app {
+  margin: 0;
+  padding: 0;
+}
+
+html{
+  margin: 0;
+  padding: 0;
 }

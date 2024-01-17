@@ -123,6 +123,18 @@ func FindUsers(u types.User) []types.User {
 	return results
 }
 
+func FindUserById(id int64) types.User {
+	if len(userStatic) > 0 {
+		for _, ui := range userStatic {
+			// 字符串模糊
+			if ui.Id == id {
+				return ui
+			}
+		}
+	}
+	return types.User{}
+}
+
 // 查询条件前置判断，明确哪些条件需要判断
 func getQuery(u types.User) types.UserQuery {
 	var uQuery types.UserQuery

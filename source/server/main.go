@@ -36,6 +36,7 @@ func main() {
 		// 用户相关
 		adminApi.POST("/checkPassword/:password", controller.CheckPassword)
 		adminApi.POST("/changePassword", controller.ChangePassword)
+		adminApi.GET("/setBackground", controller.SetBackground)
 
 		// 账本相关
 		adminApi.GET("/book", controller.GetBookList)

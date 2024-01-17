@@ -23,6 +23,7 @@ func Login(rememberFlag bool, u types.User) (types.LogInfo, error) {
 		loginfo.Token = token
 		loginfo.Id = users[0].Id
 		loginfo.Name = users[0].Name
+		loginfo.Background = users[0].Background
 	} else {
 		// throw error
 		loginfo.Token = "error"
@@ -48,6 +49,17 @@ func ChangePassword(id int64, password string) bool {
 	}
 	u := us[0]
 	u.Password = util.EncryptBySHA256(us[0].UserName, password)
+	user.Delete(id)
+	user.AddOrUpdate(u)
+	return true
+}
+
+func SetBackground(id int64, background string) bool {
+	u := user.FindUserById(id)
+	if u.Id <= 0 {
+		return false
+	}
+	u.Background = background
 	user.Delete(id)
 	user.AddOrUpdate(u)
 	return true

@@ -90,7 +90,6 @@
       :data="flowPageRef.pageData"
       :default-sort="{ prop: 'money', order: 'null' }"
       @sort-change="moneySortFunc"
-      stripe
       row-key="row"
       max-height="calc(100vh - 18rem)"
     >

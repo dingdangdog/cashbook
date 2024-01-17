@@ -10,6 +10,7 @@ import router from '@/router';
 import { onMounted, defineAsyncComponent } from 'vue';
 import { RouterView } from 'vue-router'
 import { showFlowTableDialog } from '@/stores/flag'
+import { changeBackground } from '@/utils/common'
 
 // 异步组件引用
 const FlowTable = defineAsyncComponent(() => import('@/components/table/FlowTable.vue'))
@@ -17,6 +18,9 @@ const FlowTable = defineAsyncComponent(() => import('@/components/table/FlowTabl
 onMounted(() => {
   if (localStorage.getItem('token')) {
     router.push({ path: '/index/' })
+  }
+  if (localStorage.getItem("background")) {
+    changeBackground(localStorage.getItem("background") || '')
   }
 })
 </script>

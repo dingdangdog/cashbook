@@ -80,3 +80,10 @@ func ChangePassword(c *gin.Context) {
 	boolean := user.ChangePassword(userId, newPassword.New)
 	c.JSON(200, util.Success(boolean))
 }
+
+func SetBackground(c *gin.Context) {
+	background := c.Query("background")
+	userId := util.GetUserId(c)
+	boolean := user.SetBackground(userId, background)
+	c.JSON(200, util.Success(boolean))
+}

@@ -22,7 +22,6 @@
     <el-table
       v-loading="loading"
       :data="types"
-      stripe
       row-key="row"
       max-height="calc(100vh - 12rem)"
     >

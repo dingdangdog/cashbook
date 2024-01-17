@@ -8,7 +8,7 @@ export const isDark = useDark({
 
 /**
  * 校验客户端是什么机型
- * @returns 
+ * @returns
  */
 export const deviceAgent = (): any => {
   return navigator.userAgent.match(/(phone|pad|pod|iPhone|iod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i) || 'pc';
@@ -33,10 +33,10 @@ export const generateMixed = (n: number) => {
 
 /**
  * 日期格式化方法
- * @param _row 
- * @param _column 
- * @param cellValue 
- * @param _index 
+ * @param _row
+ * @param _column
+ * @param cellValue
+ * @param _index
  */
 export const timeFormatter = (_row: any, _column: Date, cellValue: string) => {
   return dateFormater('YYYY-MM-dd', cellValue);
@@ -44,7 +44,7 @@ export const timeFormatter = (_row: any, _column: Date, cellValue: string) => {
 
 /***
   * 日期格式化方法
-  * 
+  *
   * @author DingDangDog
   * @param format 格式化后的日期格式，标准格式：YYYY-MM-dd HH:mm:ss。
   * @param date 待格式化的日期，可以是string或Date类型
@@ -86,4 +86,11 @@ export const cleanLoginInfo = () => {
   localStorage.removeItem('bookName')
   localStorage.removeItem('token')
   toLogin()
+}
+
+export const changeBackground = (url: string) => {
+  document.getElementById('app')!.style!.backgroundImage = 'url(' + url + ')'
+  // set div background image size
+  document.getElementById('app')!.style!.backgroundSize = 'cover'
+  localStorage.setItem("background", url)
 }

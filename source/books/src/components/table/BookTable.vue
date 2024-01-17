@@ -16,7 +16,6 @@
     <el-table
       v-loading="loading"
       :data="books"
-      stripe
       row-key="row"
       max-height="calc(100vh - 12rem)"
     >

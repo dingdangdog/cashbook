@@ -21,7 +21,7 @@ export function registerApi(user: User): Promise<number> {
 
 /**
  * 校验密码
- * @returns Page<number>
+ * @returns Page<boolean>
  */
 export function checkPassword(password: string): Promise<boolean> {
   return $http({ url: "/admin/checkPassword/" + password, method: "post" })
@@ -29,8 +29,18 @@ export function checkPassword(password: string): Promise<boolean> {
 
 /**
  * 修改密码
- * @returns Page<number>
+ * @returns Page<boolean>
  */
 export function changePassword(newPassword: NewPassword): Promise<boolean> {
   return $http({ url: "/admin/changePassword", method: "post", data: newPassword })
 }
+
+
+/**
+ * 修改背景图片
+ * @returns Page<boolean>
+ */
+export function setBackground(background: string): Promise<boolean> {
+  return $http({ url: "/admin/setBackground?background=" + background, method: "get"})
+}
+

@@ -49,12 +49,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { User } from '../types/model/user'
+import type { User } from '@/types/model/user'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { ref, reactive } from 'vue'
-import { login, registerApi } from '../api/api.user'
+import { login, registerApi } from '@/api/api.user'
 import router from '../router/index'
+import { changeBackground } from '@/utils/common'
 
 // 表单输入框宽度
 const formLabelWidth = ref('120px')
@@ -95,6 +96,9 @@ const submitForm = async (form: FormInstance | undefined) => {
           localStorage.setItem('userId', res.id.toString())
           localStorage.setItem('name', res.name)
           localStorage.setItem('token', res.token)
+          if (res.background) {
+            changeBackground(res.background)
+          }
           // 跳转到首页
           router.push({ path: '/index/' })
         } else {
