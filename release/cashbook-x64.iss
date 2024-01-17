@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "cashbook"
-#define MyAppVersion "1.1.3"
+#define MyAppVersion "1.1.4"
 #define MyAppOutDir "E:\project-my\cashbook-desktop\release"
 #define MyAppResourcesDir "E:\project-my\cashbook-desktop\release\build\win-unpacked"
 #define MyAppPublisher "dingdangdog"
@@ -60,7 +60,7 @@ Source: "{#MyAppResourcesDir}\vk_swiftshader.dll"; DestDir: "{app}"; Flags: igno
 Source: "{#MyAppResourcesDir}\vk_swiftshader_icd.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppResourcesDir}\vulkan-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppResourcesDir}\resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#MyAppResourcesDir}\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion recursesubdirs createallsubdirs
+; Source: "{#MyAppResourcesDir}\locales\*"; DestDir: "{app}\locales"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

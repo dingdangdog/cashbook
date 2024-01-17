@@ -2,6 +2,7 @@ const {
   app,
   BrowserWindow,
   Menu,
+  MenuItem,
   shell,
 } = require("electron");
 const { spawn } = require("child_process");
@@ -11,7 +12,9 @@ let serverWindowPid;
 let timeOut;
 let win;
 
-let ctrlKeyIsPressed = false;
+// 设置应用程序的默认语言为中文
+// app.locale = 'zh-CN';
+// app.commandLine.appendSwitch('--lang', 'zh-CN')
 
 function createWindow() {
   // 创建浏览器窗口
@@ -99,6 +102,22 @@ app.whenReady().then(async () => {
   });
 
   app.on("before-quit", () => {});
+
+// 获取当前菜单
+  const currentMenu = Menu.getApplicationMenu();
+
+// 新增一个菜单项到 "Help" 菜单下
+  currentMenu.items
+      .find(item => item.label === 'Help')
+      .submenu
+      .append(new MenuItem({
+            label: 'Github',
+            click: () => { shell.openExternal('https://github.com/dingdangdog/cashbook-desktop'); }
+          }
+      ));
+
+// 设置应用菜单
+  Menu.setApplicationMenu(currentMenu);
 });
 
 // 在所有窗口关闭时退出应用程序。
@@ -116,32 +135,30 @@ function wait(ms) {
 }
 
 // 创建自定义菜单
-const customMenu = Menu.buildFromTemplate([
-  {
-    label: 'Window',
-    submenu: [
-      { label: 'Minimize', click: () => { win.minimize(); } },
-      { label: 'Close', click: () => { win.close(); } },
-    ]
-  },
-  {
-    label: 'View',
-    submenu: [
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'toggleDevTools' },
-      { type: 'separator' },
-      { label: 'Close', click: () => { win.close(); } },
-    ]
-  },
-  {
-    label: 'Help',
-    submenu: [
-      { label: 'Github', click: () => { shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');} }
-    ]
-  }
-]);
+// const customMenu = Menu.buildFromTemplate([
+//   {
+//     label: 'Window',
+//     submenu: [
+//       { label: 'Minimize', click: () => { win.minimize(); } },
+//       { label: 'Close', click: () => { win.close(); } },
+//     ]
+//   },
+//   {
+//     label: 'View',
+//     submenu: [
+//       { role: 'zoomIn' },
+//       { role: 'zoomOut' },
+//       { type: 'separator' },
+//       { role: 'toggleDevTools' },
+//       { type: 'separator' },
+//       { label: 'Close', click: () => { win.close(); } },
+//     ]
+//   },
+//   {
+//     label: 'Help',
+//     submenu: [
+//       { label: 'Github', click: () => { shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');} }
+//     ]
+//   }
+// ]);
 
-// 设置应用菜单
-Menu.setApplicationMenu(customMenu);

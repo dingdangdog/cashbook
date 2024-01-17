@@ -27,7 +27,7 @@
         <el-button type="primary" @click="setConfirm">确认设置</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" @click="()=>{url = ''; changeUrl()}">清除设置</el-button>
+        <el-button type="danger" @click="()=>{url = ''; changeUrl(); setConfirm()}">清除设置</el-button>
       </el-col>
     </el-row>
   </div>
