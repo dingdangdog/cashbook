@@ -41,7 +41,7 @@
       </el-select>
     </div>
     <div class="table-header queryParam">
-      <el-select v-model="flowQuery.type" class="m-2" placeholder="消费类型" clearable>
+      <el-select v-model="flowQuery.type" class="m-2" :placeholder="typeLabel" clearable>
         <el-option
           v-for="item in expenseTypeOptions"
           :key="item.value"
@@ -52,7 +52,7 @@
     </div>
 
     <div class="table-header queryParam">
-      <el-select v-model="flowQuery.payType" class="m-2" placeholder="支付方式" clearable>
+      <el-select v-model="flowQuery.payType" class="m-2" :placeholder="payTypeLabel" clearable>
         <el-option
           v-for="item in paymentTypeOptions"
           :key="item.value"
@@ -98,8 +98,8 @@
       <el-table-column prop="id" label="ID" v-if="false" />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="80" />
       <el-table-column prop="flowType" label="流水类型" min-width="60" />
-      <el-table-column prop="payType" label="支付方式" min-width="80" />
-      <el-table-column prop="type" label="消费类型" min-width="80" />
+      <el-table-column prop="payType" :label="typeLabel" min-width="80" />
+      <el-table-column prop="type" :label="payTypeLabel" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
       <el-table-column prop="name" label="名称" min-width="100" />
       <el-table-column prop="description" label="描述" min-width="100" v-if="deviceAgent() === 'pc'" />
@@ -168,7 +168,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="支付方式" :label-width="formLabelWidth" prop="payType">
+        <el-form-item :label="payTypeLabel" :label-width="formLabelWidth" prop="payType">
           <el-select v-model="flowRef.payType" placeholder="选择"
                      clearable
                      filterable
@@ -182,7 +182,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="消费类型" :label-width="formLabelWidth" prop="type">
+        <el-form-item :label="typeLabel" :label-width="formLabelWidth" prop="type">
           <el-select v-model="flowRef.type" placeholder="选择"
                      clearable
                      filterable
@@ -282,17 +282,28 @@ onMounted(() => {
   getTypes()
 })
 
+const typeLabel = ref("消费/收入类型")
+const payTypeLabel = ref("支出/收款方式")
+
 const getTypes = () => {
   getFlowType().then((data) => {
-    // flowTypeOptions.value = data
-    if (data[0]) {
-      changeTypes(data[0].value)
-    }
+    // 初始化时，流水类型不做控制
+    changeTypes(undefined)
   })
 }
 
 // 修改FlowType后联动
 const changeTypes = (flowType: string | undefined) => {
+  if (flowType === "支出") {
+    typeLabel.value = "消费类型"
+    payTypeLabel.value = "支付方式"
+  } else if (flowType === "收入") {
+    typeLabel.value = "收入类型"
+    payTypeLabel.value = "收款方式"
+  } else {
+    typeLabel.value = "消费/收入类型"
+    payTypeLabel.value = "支出/收款方式"
+  }
   getExpenseType(flowType || '支出').then((data) => {
     expenseTypeOptions.value = data
   })
@@ -545,6 +556,8 @@ const deleteById = (id: number) => {
 
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
+  typeLabel.value = "消费/收入类型"
+  payTypeLabel.value = "支出/收款方式"
   dialogFormTitle.value = title
   dialogFormVisible.value = true
 }
