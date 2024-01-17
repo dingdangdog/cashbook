@@ -66,10 +66,10 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 
 import { showBookDialogFlag } from '@/stores/flag'
 
-import BookDialog from '@/views/dialogs/BookDialog.vue'
-import PlanDialog from '@/views/dialogs/PlanDialog.vue'
-import OnlineDialog from '@/views/dialogs/OnlineDialog.vue'
-import ChangePasswordDialog from '@/views/dialogs/ChangePasswordDialog.vue'
+import BookDialog from '@/components/dialog/BookDialog.vue'
+import PlanDialog from '@/components/dialog/PlanDialog.vue'
+import OnlineDialog from '@/components/dialog/OnlineDialog.vue'
+import ChangePasswordDialog from '@/components/dialog/ChangePasswordDialog.vue'
 
 import { getServerInfo } from '@/api/api.server'
 
