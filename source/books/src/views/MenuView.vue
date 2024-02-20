@@ -9,7 +9,7 @@
 
     <el-menu-item index="/index/analytics">
       <el-icon>
-        <TrendCharts />
+        <DataAnalysis />
       </el-icon>
       <template #title>分析概览</template>
     </el-menu-item>
@@ -99,7 +99,7 @@ import {
   Operation,
   Sunny,
   MoonNight,
-  TrendCharts,
+  DataAnalysis,
   EditPen,
   Reading,
   Setting,

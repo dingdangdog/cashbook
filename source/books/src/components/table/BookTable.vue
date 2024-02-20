@@ -23,8 +23,9 @@
       <el-table-column prop="id" label="ID" />
       <el-table-column prop="bookName" label="账本名称" min-width="100" />
       <el-table-column prop="createDate" label="创建时间" min-width="100" />
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="150" align="center">
         <template v-slot="scop">
+<!--          <el-button type="success" :icon="Tickets" circle @click="reportBook(scop.row)" />-->
           <el-button type="primary" :icon="Edit" circle @click="openUpdateDialog(scop.row)" />
           <el-button type="danger" :icon="Delete" circle @click="deleteById(scop.row)" />
         </template>
@@ -50,22 +51,29 @@
       </span>
     </template>
   </el-dialog>
+
+  <el-dialog style="width: 30rem" v-model="showReport" title="reportTitle">
+    <ReportBook />
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 // 第三方库引入
 import { ref, onMounted, watch } from 'vue'
-import { Delete, Edit } from '@element-plus/icons-vue'
+import { Delete, Edit, Tickets } from '@element-plus/icons-vue'
 
 // 私有引入
 import { deleteBook, getBook, updateBook } from '@/api/api.book'
 import type { BookQuery, Book } from '@/types/model/book'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
+import ReportBook from '@/components/dialog/ReportBook.vue'
 
 // 初始化后自动执行
 onMounted(() => {
   doQuery()
 })
+
+const showReport = ref(false)
 
 const booksQuery: BookQuery = {
   id: undefined,
@@ -175,6 +183,10 @@ const deleteById = (row: Book) => {
         message: '取消删除'
       })
     })
+}
+
+const reportBook = (row: Book) => {
+  showReport.value = true
 }
 </script>
 
