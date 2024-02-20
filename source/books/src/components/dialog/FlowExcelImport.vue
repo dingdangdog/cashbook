@@ -1,5 +1,16 @@
 <template>
   <div class="dialog-container">
+    <el-form-item label="标题行" prop="bookName">
+      <el-tooltip
+        content="标题的行数，从0开始"
+      >
+        <el-icon style="margin-right: 1rem !important;">
+          <Warning />
+        </el-icon>
+      </el-tooltip>
+      <el-input-number v-model="titleRowIndex" name="titleRowIndex" id="titleRowIndexInput"></el-input-number>
+    </el-form-item>
+    <br />
     <el-upload
       v-model:file-list="fileList"
       class="upload-demo"
@@ -7,15 +18,18 @@
       :on-change="importFile"
       :before-remove="removeFile"
     >
-<!--      <el-button type="warning" @click="clickButton('none')">打开文件</el-button>-->
-      <el-button type="primary" @click="clickButton('alipay')">打开支付宝文件</el-button>
-      <el-button type="success" @click="clickButton('wxpay')">打开微信文件</el-button>
+      <!--      <el-button type="warning" @click="clickButton('none')">打开文件</el-button>-->
+      <el-button type="primary" @click="clickButton('alipay')">支付宝文件</el-button>
+      <el-button type="success" @click="clickButton('wxpay')">微信文件</el-button>
+      <el-button type="danger" @click="clickButton('jdFinance')">京东金融</el-button>
       <template #tip>
-        <div><br/>
-          <span style="color:red">1、目前仅支持移动端`支付宝`/`微信`导出的CSV账单文件；</span>&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-          <span style="color:red">2、目前仅会导入`支出`/`收入`数据，`不计收支`等特殊数据不会导入；</span>&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-          <span style="color:red">3、选择文件后可以预览文件数据；</span>&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-          <span style="color:red">4、选择文件后请点击此按钮开始上传：</span><el-button type="primary" @click="submitUpload">确定导入</el-button>
+        <div><br />
+          <span
+            style="color:red">1、目前仅支持移动端`支付宝`/`微信`导出的CSV账单文件；</span>&nbsp;&nbsp;&nbsp;&nbsp;<br />
+          <span style="color:red">2、目前仅会导入`支出`/`收入`数据，`不计收支`等特殊数据不会导入；</span>&nbsp;&nbsp;&nbsp;&nbsp;<br />
+          <span style="color:red">3、选择文件后可以预览文件数据；</span>&nbsp;&nbsp;&nbsp;&nbsp;<br />
+          <span style="color:red">4、选择文件后请点击此按钮开始上传：</span>
+          <el-button type="primary" @click="submitUpload">确定导入</el-button>
         </div>
       </template>
     </el-upload>
@@ -31,18 +45,31 @@
 import { inject, ref } from 'vue'
 import * as XLSX from 'xlsx'
 import { ElMessage, ElMessageBox, type UploadProps, type UploadRawFile, type UploadUserFile } from 'element-plus'
+import { Warning } from '@element-plus/icons-vue'
 
 import type { Flow } from '@/types/model/flow'
-import { alipayConvert, wxpayConvert } from '@/utils/flowConvert'
+import { alipayConvert, jdFinanceConvert, wxpayConvert } from '@/utils/flowConvert'
 import { importFlows } from '@/api/api.flow'
 import { showExcelImportDialogFlag } from '@/stores/flag'
 import type { FlowExport } from '@/types/view'
 
 // 上传文件类型标识：none-未知文件；alipay-支付宝
 const fileType = ref('none')
+// 表头行索引
+const titleRowIndex = ref(0)
 
 const clickButton = (type: string) => {
   fileType.value = type
+  if (fileType.value === 'alipay') {
+    // 支付宝表头行是第25行，索引是24
+    titleRowIndex.value = 24
+  } else if (fileType.value === 'wxpay') {
+    // 微信表头行是第17行，索引是16
+    titleRowIndex.value = 16
+  } else if (fileType.value === 'jdFinance') {
+    // 京东金融表头行是第22行，索引是21
+    titleRowIndex.value = 21
+  }
 }
 
 const excelTable = ref()
@@ -68,22 +95,14 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
     const buffer = e.target?.result
     // 待保存excel实体
     let workbook: XLSX.WorkBook
-    // 表头行号
-    let headRowIndex = 0
 
     /**************************************/
-    // 不同数据格式前置处理
+    // 不同编码格式读取
     /**************************************/
     if (fileType.value === 'alipay') {
-      // 支付宝表头行是第25行，索引是24
-      headRowIndex = 24
       // 阿里csv账单为GB2312编码，需要特殊处理，擦
       const context = new TextDecoder('gb2312').decode(buffer)
       workbook = XLSX.read(context, { type: 'string', codepage: 936 })
-    } else if (fileType.value === 'wxpay') {
-      // 微信表头行是第17行，索引是16
-      headRowIndex = 16
-      workbook = XLSX.read(buffer)
     } else {
       workbook = XLSX.read(buffer)
     }
@@ -112,12 +131,12 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
     const sheetData: any[] = sheets[0].data
     // 表头索引集合
     const titleIndex = new Map()
-    for (let i = 0; i < sheetData[headRowIndex].length; i++) {
+    for (let i = 0; i < sheetData[titleRowIndex.value].length; i++) {
       // 保存表头及其索引，便于后续数据解析
-      titleIndex.set(sheetData[headRowIndex][i], i)
+      titleIndex.set(sheetData[titleRowIndex.value][i], i)
       // 创建表头单元格元素
       const th = document.createElement('th')
-      th.innerText = sheetData[headRowIndex][i]
+      th.innerText = sheetData[titleRowIndex.value][i]
       th.className = 'excel-th'
       th.style.textAlign = 'left'
       head.appendChild(th)
@@ -125,7 +144,7 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
     excelTableHead.value.appendChild(head)
 
     // 删除表头以上行数据
-    sheetData.splice(0, headRowIndex + 1)
+    sheetData.splice(0, titleRowIndex.value + 1)
 
     /**************************************/
     // 数据主题回显
@@ -140,7 +159,7 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
         // 创建单元格元素
         const td = document.createElement('td')
         // 将日期数字转换为 JavaScript 日期对象
-        if ((fileType.value === 'alipay' || fileType.value === 'wxpay') && i === timeIndex) {
+        if ((fileType.value === 'alipay' || fileType.value === 'wxpay' || fileType.value === 'jdFinance') && i === timeIndex) {
           // Excel 中日期从1899年12月30日开始
           const excelStartDate = new Date(1899, 11, 30)
           const resultDate = new Date(excelStartDate)
@@ -164,6 +183,8 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
         flow = alipayConvert(row, titleIndex)
       } else if (fileType.value === 'wxpay') {
         flow = wxpayConvert(row, titleIndex)
+      } else if (fileType.value === 'jdFinance') {
+        flow = jdFinanceConvert(row, titleIndex)
       } else {
         // 其他数据，暂不处理
         flow = {}
@@ -180,10 +201,14 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
   // console.log(data.value)
 }
 
-const flowMethods : FlowExport | undefined = inject('flowMethods')
+const flowMethods: FlowExport | undefined = inject('flowMethods')
 
 // 确定提交
 const submitUpload = () => {
+  if (flows.value.length === 0) {
+    ElMessage.error('数据为空！')
+    return
+  }
   importFlows('add', flows.value).then((res) => {
     console.log(res)
     if (res > 0) {
@@ -210,10 +235,12 @@ const submitUpload = () => {
 
 const removeFile = () => {
   data.value = []
+  flows.value = []
   excelTableHead.value.innerHTML = ''
   excelTableBody.value.innerHTML = ''
   return true
 }
+
 </script>
 
 <style>

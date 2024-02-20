@@ -97,8 +97,8 @@
       <el-table-column prop="id" label="ID" v-if="false" />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="80" />
       <el-table-column prop="flowType" label="流水类型" min-width="60" />
-      <el-table-column prop="payType" :label="typeLabel" min-width="80" />
-      <el-table-column prop="type" :label="payTypeLabel" min-width="80" />
+      <el-table-column prop="type" :label="typeLabel" min-width="80" />
+      <el-table-column prop="payType" :label="payTypeLabel" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
       <el-table-column prop="name" label="名称" min-width="100" />
       <el-table-column prop="description" label="描述" min-width="100" v-if="deviceAgent() === 'pc'" />
@@ -241,7 +241,7 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="showExcelImportDialogFlag.visible" title="Excel导入流水" :fullscreen="true"
+  <el-dialog v-model="showExcelImportDialogFlag.visible" title="Excel导入流水" :fullscreen="true" destroy-on-close
              :close-on-click-modal="false">
     <FlowExcelImport />
   </el-dialog>
