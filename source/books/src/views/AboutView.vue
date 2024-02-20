@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <img src="https://images.oldmoon.top/images/dingdangdog/b457e5e9-45bd-4e92-9e94-7d101b031084.png" alt="icon" style="width:10rem;height:10rem"/>
+    <img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog1674980314.png" alt="icon" style="width:10rem;height:10rem"/>
     <p>
       Powered by
       <a href="#" @click="openSource()">cashbook-desktop_v{{ version }}</a>
