@@ -189,9 +189,7 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
         // 其他数据，暂不处理
         flow = {}
       }
-      if (flow.flowType === '支出' || flow.flowType === '收入') {
-        flows.value.push(flow)
-      }
+      flows.value.push(flow)
       excelTableBody.value.appendChild(tr)
     })
 

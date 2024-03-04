@@ -14,6 +14,9 @@
         />
       </el-select>
     </div>
+    <div class="queryParam">
+      <el-button type="primary" @click="hisFlowTypeConvert">历史数据类型转换</el-button>
+    </div>
   </el-row>
 
   <hr />
@@ -68,8 +71,9 @@ import { Edit } from '@element-plus/icons-vue'
 import { onMounted, ref, watch } from 'vue'
 
 import type { Typer } from '@/types/model/typer'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { ElMessage, type FormInstance, type FormRules, ElLoading, ElMessageBox } from 'element-plus'
 import { update, getAll } from '@/api/api.typer'
+import { typeConvert } from '@/utils/flowConvert'
 
 // 加载蒙版显示控制器
 const loading = ref(true)
@@ -121,7 +125,7 @@ const confirmTypeForm = async (form: FormInstance | undefined) => {
   if (await form.validate()) {
     update(editType.value)
       .then((res) => {
-        if (res > 0){
+        if (res > 0) {
           ElMessage.success('修改成功，同步修改' + res + '条流水数据')
         } else {
           ElMessage.error('修改失败')
@@ -160,6 +164,48 @@ watch(typeQueryRef.value, () => {
   doQuery()
 })
 
+const hisFlowTypeConvert = async () => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)'
+  })
+  let doConvert: string = ''
+  for (let i = 0; i < types.value.length; i++) {
+    let t = types.value[i]
+    if (t.type === '消费类型') {
+      if (t.value !== typeConvert(t.value?.replace('-WX', ''))) {
+        t.oldValue = t.value
+        t.value = typeConvert(t.value?.replace('-WX', ''))
+        doConvert += t.oldValue + '-->' + t.value
+        await update(t).then((res) => {
+          if (res > 0) {
+            doConvert += ' success<br/>'
+          } else {
+            doConvert += ' fail<br/>'
+          }
+        })
+      }
+    }
+  }
+  ElMessageBox.alert(
+    doConvert.length === 0 ? '没有类型需要转换' : doConvert,
+    '转换结果',
+    {
+      confirmButtonText: 'OK',
+      center: true,
+      dangerouslyUseHTMLString: true
+    }
+  )
+    .then(() => {
+      loading.close()
+      doQuery()
+    })
+    .catch(() => {
+      loading.close()
+      doQuery()
+    })
+}
 </script>
 
 <style scoped>
