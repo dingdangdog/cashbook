@@ -16,6 +16,7 @@
 
 - cashbook's desktop application
 - 桌面版账本，目前仅支持`Windows`桌面版。
+- 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号：cashbook/cashbook)
 
 ## 简述（Description）
 
@@ -25,6 +26,29 @@
 - 在统计分析上力求清晰、美观、简洁有效。
 
 > 重要提示：当前版本尚不成熟，后续升级可能有较大变动，请谨慎使用！
+
+## 开始使用（Start）
+
+### 1. windows下载安装
+
+前往【[Releases](https://github.com/dingdangdog/cashbook-desktop/releases/)】页面自行下载安装。
+
+### 2. docker部署
+
+推荐使用`docker-compose`：
+
+```yaml
+version: "3"
+
+services:
+  cashbook:
+    image: dingdangdog/cashbook:latest
+    restart: always
+    ports:
+      - 880:80
+    volumes:
+      - ./resources:/app/resources
+```
 
 ## 主要计划（Plan）
 
