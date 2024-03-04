@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "cashbook"
-#define MyAppVersion "1.1.5"
+#define MyAppVersion "1.1.6"
 #define MyAppOutDir "E:\project-my\cashbook-desktop\release"
 #define MyAppResourcesDir "E:\project-my\cashbook-desktop\release\build\win-unpacked"
 #define MyAppPublisher "dingdangdog"

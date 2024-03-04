@@ -5,7 +5,7 @@ const {
   MenuItem,
   shell,
 } = require("electron");
-const { spawn } = require("child_process");
+const {spawn} = require("child_process");
 const path = require("path");
 
 let serverWindowPid;
@@ -48,7 +48,7 @@ function createWindow() {
     if (input.type === 'keyDown' && input.key === 'F12') {
       event.preventDefault();
       // f12 键按下
-      win.webContents.openDevTools({ mode: 'detach' })
+      win.webContents.openDevTools({mode: 'detach'})
     }
   });
   win.webContents.on('zoom-changed', (event, input) => {
@@ -65,6 +65,7 @@ function createWindow() {
   });
 
 }
+
 async function startServer() {
   const serverName = "cashbook-server";
   // 启动后台服务
@@ -73,9 +74,9 @@ async function startServer() {
   timeOut = setTimeout(() => {
     // 获取服务程序PID
     const getWindowPid =
-        `Get-Process -Name "` +
-        serverName +
-        `" | Select-Object -ExpandProperty Id`;
+      `Get-Process -Name "` +
+      serverName +
+      `" | Select-Object -ExpandProperty Id`;
     const getWindow = spawn("powershell.exe", [getWindowPid]);
     getWindow.stdout.on("data", (data) => {
       console.log(`server-pid: ${data}`);
@@ -101,23 +102,11 @@ app.whenReady().then(async () => {
     }
   });
 
-  app.on("before-quit", () => {});
+  app.on("before-quit", () => {
+  });
 
-// 获取当前菜单
-  const currentMenu = Menu.getApplicationMenu();
-
-// 新增一个菜单项到 "Help" 菜单下
-  currentMenu.items
-      .find(item => item.label === 'Help')
-      .submenu
-      .append(new MenuItem({
-            label: 'Github',
-            click: () => { shell.openExternal('https://github.com/dingdangdog/cashbook-desktop'); }
-          }
-      ));
-
-// 设置应用菜单
-  Menu.setApplicationMenu(currentMenu);
+  // 设置应用菜单
+  Menu.setApplicationMenu(initCustomMenu());
 });
 
 // 在所有窗口关闭时退出应用程序。
@@ -134,31 +123,51 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 }
 
-// 创建自定义菜单
-// const customMenu = Menu.buildFromTemplate([
-//   {
-//     label: 'Window',
-//     submenu: [
-//       { label: 'Minimize', click: () => { win.minimize(); } },
-//       { label: 'Close', click: () => { win.close(); } },
-//     ]
-//   },
-//   {
-//     label: 'View',
-//     submenu: [
-//       { role: 'zoomIn' },
-//       { role: 'zoomOut' },
-//       { type: 'separator' },
-//       { role: 'toggleDevTools' },
-//       { type: 'separator' },
-//       { label: 'Close', click: () => { win.close(); } },
-//     ]
-//   },
-//   {
-//     label: 'Help',
-//     submenu: [
-//       { label: 'Github', click: () => { shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');} }
-//     ]
-//   }
-// ]);
+/**
+ * 完全自定义菜单
+ * @returns {Electron.Menu}
+ */
+function initCustomMenu() {
+  return Menu.buildFromTemplate([
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'Reload',
+          click: () => {
+            app.relaunch();
+            app.quit();
+          }
+        },
+        {
+          label: 'Github', click: () => {
+            shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');
+          }
+        }
+      ]
+    }
+  ]);
+}
 
+/**
+ * 使用默认菜单并进行修改
+ * @returns {Electron.Menu}
+ */
+function initDefaultMenu() {
+  // 获取当前菜单
+  const currentMenu = Menu.getApplicationMenu();
+
+  // 新增一个菜单项到 "Help" 菜单下
+  currentMenu.items
+    .find(item => item.label === 'Help')
+    .submenu
+    .append(new MenuItem({
+        label: 'Github',
+        click: () => {
+          shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');
+        }
+      }
+    ));
+
+  return currentMenu;
+}
