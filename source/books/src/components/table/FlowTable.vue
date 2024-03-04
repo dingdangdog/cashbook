@@ -326,8 +326,8 @@ if (document.body.clientWidth <= 480) {
  * 集中定义常量
  */
 // 流水类型
-const flowTypeOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }])
-const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }])
+const flowTypeOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
+const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
 // 消费类型/收入类型
 const expenseTypeOptions = ref<Typer[]>([])
 // 支付类型

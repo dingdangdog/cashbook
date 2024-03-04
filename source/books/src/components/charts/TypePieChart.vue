@@ -68,7 +68,7 @@ const query: TypePieChartQuery = {
   flowType: '支出'
 }
 // 流水类型
-const flowTypeOptions = ref<any[]>([{ value: '支出' }, { value: '收入' }])
+const flowTypeOptions = ref<any[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
 
 const queryRef = ref(query)
 
