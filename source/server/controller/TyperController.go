@@ -1,7 +1,7 @@
 package controller
 
 import (
-	sDict "cashbook-server/service/dict"
+	sTyper "cashbook-server/service/typer"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ import (
 // GetFlowType 获取流水类型
 func GetFlowType(c *gin.Context) {
 	bookId := util.GetBookId(c)
-	data := sDict.GetFlowType(bookId)
+	data := sTyper.GetFlowType(bookId)
 	c.JSON(200, util.Success(data))
 }
 
@@ -20,7 +20,7 @@ func GetFlowType(c *gin.Context) {
 func GetExpenseType(c *gin.Context) {
 	flowType := c.Param("flowType")
 	bookId := util.GetBookId(c)
-	data := sDict.GetExpenseType(bookId, flowType)
+	data := sTyper.GetExpenseType(bookId, flowType)
 	c.JSON(200, util.Success(data))
 }
 
@@ -28,7 +28,7 @@ func GetExpenseType(c *gin.Context) {
 func GetPaymentType(c *gin.Context) {
 	flowType := c.Param("flowType")
 	bookId := util.GetBookId(c)
-	data := sDict.GetPaymentType(bookId, flowType)
+	data := sTyper.GetPaymentType(bookId, flowType)
 	c.JSON(200, util.Success(data))
 }
 
@@ -36,20 +36,20 @@ func GetAll(c *gin.Context) {
 	typer := c.Query("type")
 	name := c.Query("value")
 	bookId := util.GetBookId(c)
-	var data []types.Dict
+	var data []types.Typer
 	if typer == "消费类型" {
-		data = sDict.GetExpenseType(bookId, "")
+		data = sTyper.GetExpenseType(bookId, "")
 	} else if typer == "支付方式" {
-		data = sDict.GetPaymentType(bookId, "")
+		data = sTyper.GetPaymentType(bookId, "")
 	} else {
-		eData := sDict.GetExpenseType(bookId, "")
-		pData := sDict.GetPaymentType(bookId, "")
+		eData := sTyper.GetExpenseType(bookId, "")
+		pData := sTyper.GetPaymentType(bookId, "")
 		data = append(data, eData...)
 		data = append(data, pData...)
 	}
 
 	// 查询条件：按名称过滤
-	var resultData []types.Dict
+	var resultData []types.Typer
 	for _, value := range data {
 		if len(name) > 0 && strings.Contains(value.Value, name) {
 			resultData = append(resultData, value)
@@ -62,7 +62,7 @@ func GetAll(c *gin.Context) {
 }
 
 func UpdateType(c *gin.Context) {
-	var data types.Dict
+	var data types.Typer
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -73,6 +73,6 @@ func UpdateType(c *gin.Context) {
 	}
 
 	bookId := util.GetBookId(c)
-	num := sDict.UpdateType(data, bookId)
+	num := sTyper.UpdateType(data, bookId)
 	c.JSON(200, util.Success(num))
 }

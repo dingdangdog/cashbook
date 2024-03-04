@@ -1,4 +1,4 @@
-package dict
+package typer
 
 import (
 	dFlow "cashbook-server/dao/flow"
@@ -6,13 +6,13 @@ import (
 	"cashbook-server/util"
 )
 
-func GetFlowType(bookId int64) []types.Dict {
+func GetFlowType(bookId int64) []types.Typer {
 	flows := dFlow.FindLists(types.FlowParam{BookId: bookId})
 
-	dicts := make([]types.Dict, 0)
+	dicts := make([]types.Typer, 0)
 	values := make([]string, 0)
 	for _, flow := range flows {
-		dict := types.Dict{}
+		dict := types.Typer{}
 		if !util.ArrayContains(values, flow.FlowType) {
 			dict.Value = flow.FlowType
 			dicts = append(dicts, dict)
@@ -23,14 +23,14 @@ func GetFlowType(bookId int64) []types.Dict {
 	return dicts
 }
 
-func GetExpenseType(bookId int64, flowType string) []types.Dict {
+func GetExpenseType(bookId int64, flowType string) []types.Typer {
 	flows := dFlow.FindLists(types.FlowParam{BookId: bookId, FlowType: flowType})
 
-	dicts := make([]types.Dict, 0)
+	dicts := make([]types.Typer, 0)
 	values := make([]string, 0)
 	flowTypes := make([]string, 0)
 	for _, flow := range flows {
-		dict := types.Dict{}
+		dict := types.Typer{}
 		if !util.ArrayContains(values, flow.Type) || !util.ArrayContains(flowTypes, flow.FlowType) {
 			dict.Type = "消费类型"
 			dict.Value = flow.Type
@@ -53,14 +53,14 @@ func GetExpenseType(bookId int64, flowType string) []types.Dict {
 	return dicts
 }
 
-func GetPaymentType(bookId int64, flowType string) []types.Dict {
+func GetPaymentType(bookId int64, flowType string) []types.Typer {
 	flows := dFlow.FindLists(types.FlowParam{BookId: bookId, FlowType: flowType})
 
-	dicts := make([]types.Dict, 0)
+	dicts := make([]types.Typer, 0)
 	values := make([]string, 0)
 	flowTypes := make([]string, 0)
 	for _, flow := range flows {
-		dict := types.Dict{}
+		dict := types.Typer{}
 		if !util.ArrayContains(values, flow.PayType) || !util.ArrayContains(flowTypes, flow.FlowType) {
 			dict.Type = "支付方式"
 			dict.Value = flow.PayType
@@ -82,7 +82,8 @@ func GetPaymentType(bookId int64, flowType string) []types.Dict {
 	return dicts
 }
 
-func UpdateType(typer types.Dict, bookId int64) int {
+func UpdateType(typer types.Typer, bookId int64) int {
+	typer.Mu.Lock()
 	flowParam := types.FlowParam{
 		BookId:   bookId,
 		FlowType: typer.FlowType,
@@ -104,5 +105,6 @@ func UpdateType(typer types.Dict, bookId int64) int {
 		newFlows = append(newFlows, f)
 	}
 	dFlow.UpdateByBatch(newFlows, bookId)
+	defer typer.Mu.Unlock()
 	return len(flows)
 }

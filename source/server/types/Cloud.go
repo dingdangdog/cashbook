@@ -19,9 +19,9 @@ type Online struct {
 }
 
 type OnlineData struct {
-	Flows []Flow `json:"flows"`
-	Plans []Plan `json:"plans"`
-	Dicts []Dict `json:"dicts"`
+	Flows []Flow  `json:"flows"`
+	Plans []Plan  `json:"plans"`
+	Dicts []Typer `json:"dicts"`
 }
 
 type OnlineUpload struct {
