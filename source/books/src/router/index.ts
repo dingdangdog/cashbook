@@ -14,7 +14,7 @@ const checkLoginIn = () => {
 }
 
 
-const publicRoutes= [
+const publicRoutes = [
   {
     path: '/login',
     component: LoginView,
@@ -62,17 +62,17 @@ const publicRoutes= [
         component: AboutView
       }
     ]
-  },
+  }
 ]
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...publicRoutes]
+  routes: publicRoutes
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('to', to)
+  // console.log('to', to)
   if (!to.meta.public && !checkLoginIn()) {
     next({ path: '/login' })
   } else {
@@ -80,4 +80,4 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-export default router;
+export default router
