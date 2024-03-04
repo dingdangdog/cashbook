@@ -1,6 +1,6 @@
 <template>
   <el-row class="queryRow">
-    <h4 class="row-header">消费类型统计</h4>
+    <h4 class="row-header">{{ title }}</h4>
     <div class="row-header queryParam">
       <el-date-picker
         v-model="queryRef.startDay"
@@ -50,7 +50,7 @@
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="typePieDiv"></div>
+  <div id="typePieDiv" :style="style"></div>
 </template>
 
 <script setup lang="ts">
@@ -63,6 +63,9 @@ import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
+
+// 使用 props 来接收外部传入的参数
+const { title, style } = defineProps(['title', 'style'])
 
 const query: TypePieChartQuery = {
   flowType: '支出'
@@ -198,8 +201,6 @@ onMounted(() => {
 }
 
 #typePieDiv {
-  width: 100%;
-  height: 400px;
   padding: 10px;
 }
 

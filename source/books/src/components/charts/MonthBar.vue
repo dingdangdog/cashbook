@@ -1,6 +1,6 @@
 <template>
-  <h4>每月流水统计</h4>
-  <div id="pieDiv"></div>
+  <h4>{{ title }}</h4>
+  <div id="pieDiv" :style="style"></div>
 </template>
 
 <script setup lang="ts">
@@ -12,8 +12,12 @@ import { chartDialog, flowQuery } from '@/utils/store'
 
 import { showFlowTableDialog } from '@/stores/flag'
 
+// 使用 props 来接收外部传入的参数
+const { title, style } = defineProps(['title', 'style'])
+
 const dataListOut: any[] = []
 const dataListIn: any[] = []
+const notInOut: any[] = []
 const xAxisList: any[] = []
 
 const optionRef = ref({
@@ -67,6 +71,20 @@ const optionRef = ref({
         fontSize: 14,
         color: 'rgba(76, 152, 112, 0.9)'
       }
+    },
+    {
+      name: '不计收支',
+      data: [120, 200, 150, 80, 70, 110, 130],
+      type: 'bar',
+      itemStyle: {
+        color: 'rgba(66, 66, 66, 0.9)'
+      },
+      label: {
+        show: true,
+        position: 'top',
+        fontSize: 14,
+        color: 'rgba(66, 66, 66, 0.9)'
+      }
     }
   ]
 })
@@ -83,13 +101,16 @@ const doQuery = () => {
       }
       dataListOut.length = 0
       dataListIn.length = 0
+      notInOut.length = 0
       res.forEach((data) => {
         xAxisList.push(data.type)
         dataListOut.push(Number(data.typeSum).toFixed(2))
         dataListIn.push(Number(data.inSum).toFixed(2))
+        notInOut.push(Number(data.zeroSum).toFixed(2))
       })
       optionRef.value.series[0].data = dataListOut
       optionRef.value.series[1].data = dataListIn
+      optionRef.value.series[2].data = notInOut
       optionRef.value.xAxis.data = xAxisList
 
       pieDiv = document.getElementById('pieDiv')
@@ -133,8 +154,6 @@ onMounted(() => {
 }
 
 #pieDiv {
-  width: 100%;
-  height: 400px;
   padding: 10px;
 }
 

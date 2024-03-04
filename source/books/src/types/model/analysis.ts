@@ -9,6 +9,7 @@ export interface DailyLineChart {
   day: string;
   daySum: number;
   inSum: number;
+  zeroSum: number;
 }
 
 export interface TypePieChartQuery {
@@ -22,4 +23,5 @@ export interface TypePieChart {
   type: string;
   typeSum: number;
   inSum: number;
+  zeroSum: number;
 }

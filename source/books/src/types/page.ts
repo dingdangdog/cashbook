@@ -6,5 +6,6 @@ export interface Page<T>{
     totalCount: number;
     totalOut: number;
     totalIn: number;
+    notInOut: number;
     pageData: T[];
 }

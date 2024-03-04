@@ -1,6 +1,6 @@
 <template>
   <el-row class="queryRow">
-    <h4 class="row-header">支付方式统计</h4>
+    <h4 class="row-header">{{ title }}</h4>
     <div class="row-header queryParam">
       <el-date-picker
         v-model="queryRef.startDay"
@@ -50,7 +50,7 @@
       <el-button :icon="Search" circle @click="doQuery(queryRef)" />
     </div>
   </el-row>
-  <div id="payTypeDiv"></div>
+  <div id="payTypeDiv" :style="style"></div>
 </template>
 
 <script setup lang="ts">
@@ -64,6 +64,8 @@ import { isDark } from '@/utils/common'
 import type { TypePieChartQuery } from '@/types/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
 
+// 使用 props 来接收外部传入的参数
+const { title, style } = defineProps(['title', 'style'])
 
 // 流水类型
 const flowTypeOptions = ref<any[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
@@ -199,8 +201,6 @@ onMounted(() => {
 }
 
 #payTypeDiv {
-  width: 100%;
-  height: 400px;
   padding: 10px;
 }
 
