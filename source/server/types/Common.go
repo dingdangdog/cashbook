@@ -8,6 +8,7 @@ type Page struct {
 	TotalCount int64         `json:"totalCount"`
 	TotalOut   float64       `json:"totalOut"`
 	TotalIn    float64       `json:"totalIn"`
+	NotInOut   float64       `json:"notInOut"`
 	PageData   []interface{} `json:"pageData"`
 }
 

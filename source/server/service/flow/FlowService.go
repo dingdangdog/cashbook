@@ -28,19 +28,23 @@ func GetFlowsPage(flowQuery types.FlowParam) types.Page {
 
 	totalOut := 0.0
 	totalIn := 0.0
+	notInOut := 0.0
 	objs := make([]interface{}, len(flows))
 	for i, d := range flows {
 		objs[i] = d
 		if d.FlowType == "支出" {
 			totalOut += d.Money
-		} else {
+		} else if d.FlowType == "收入" {
 			totalIn += d.Money
+		} else {
+			notInOut += d.Money
 		}
 	}
 
 	page := util.GetPage(flowQuery.PageNum, flowQuery.PageSize, objs)
 	page.TotalOut = totalOut
 	page.TotalIn = totalIn
+	page.NotInOut = notInOut
 	return page
 }
 

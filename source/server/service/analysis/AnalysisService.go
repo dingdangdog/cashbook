@@ -11,6 +11,7 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 	flowList := dFlow.FindLists(param)
 	sumMap := make(map[string]float64)
 	inSumMap := make(map[string]float64)
+	zeroSumMap := make(map[string]float64)
 
 	for _, flow := range flowList {
 		if flow.FlowType == "支出" {
@@ -25,6 +26,12 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 			} else {
 				inSumMap[flow.Day] += flow.Money
 			}
+		} else {
+			if zeroSumMap[flow.Day] == 0 {
+				zeroSumMap[flow.Day] = flow.Money
+			} else {
+				zeroSumMap[flow.Day] += flow.Money
+			}
 		}
 	}
 	// 收入日期和支出日期合并，防止横轴不同步
@@ -32,14 +39,18 @@ func GetDailyLine(param types.FlowParam) []types.DailyLine {
 		if sumMap[day] <= 0 {
 			sumMap[day] = 0
 		}
+		if zeroSumMap[day] <= 0 {
+			zeroSumMap[day] = 0
+		}
 	}
 
 	lines := make([]types.DailyLine, 0)
 	for day, money := range sumMap {
 		dailyLine := types.DailyLine{
-			Day:    day,
-			DaySum: strconv.FormatFloat(money, 'f', 2, 64),
-			InSum:  strconv.FormatFloat(inSumMap[day], 'f', 2, 64),
+			Day:     day,
+			DaySum:  strconv.FormatFloat(money, 'f', 2, 64),
+			InSum:   strconv.FormatFloat(inSumMap[day], 'f', 2, 64),
+			ZeroSum: strconv.FormatFloat(zeroSumMap[day], 'f', 2, 64),
 		}
 		lines = append(lines, dailyLine)
 	}
@@ -138,6 +149,7 @@ func MonthBar(bookId int64) []types.TypePie {
 	flowList := dFlow.FindLists(types.FlowParam{BookId: bookId})
 	sumMap := make(map[string]float64)
 	inSumMap := make(map[string]float64)
+	zeroSumMap := make(map[string]float64)
 
 	for _, flow := range flowList {
 		month := flow.Day[0:7]
@@ -153,12 +165,21 @@ func MonthBar(bookId int64) []types.TypePie {
 			} else {
 				inSumMap[month] += flow.Money
 			}
+		} else {
+			if zeroSumMap[month] == 0 {
+				zeroSumMap[month] = flow.Money
+			} else {
+				zeroSumMap[month] += flow.Money
+			}
 		}
 	}
 	// 收入月份和支出月份合并，防止横轴不同步
 	for month := range inSumMap {
 		if sumMap[month] <= 0 {
 			sumMap[month] = 0
+		}
+		if zeroSumMap[month] <= 0 {
+			zeroSumMap[month] = 0
 		}
 	}
 
@@ -168,6 +189,7 @@ func MonthBar(bookId int64) []types.TypePie {
 			Type:    month,
 			TypeSum: strconv.FormatFloat(money, 'f', 2, 64),
 			InSum:   strconv.FormatFloat(inSumMap[month], 'f', 2, 64),
+			ZeroSum: strconv.FormatFloat(zeroSumMap[month], 'f', 2, 64),
 		}
 		months = append(months, typePie)
 	}
