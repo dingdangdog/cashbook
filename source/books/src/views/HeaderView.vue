@@ -1,13 +1,13 @@
 <template>
   <div class="header-container">
-    <div class="header-left">
-      <!-- 图标 -->
-      <div id="iconTitle">
-        <img alt="cashbook logo" src="@/assets/images/cashbook.png" style="width: 2.8rem" />
-      </div>
-      <!-- 页面标题 -->
-      <h3 style="padding-top: 0.3rem">Cashbook</h3>
-    </div>
+<!--    <div class="header-left">-->
+<!--      &lt;!&ndash; 图标 &ndash;&gt;-->
+<!--      <div id="iconTitle">-->
+<!--        <img alt="cashbook logo" src="@/assets/images/cashbook.png" style="width: 2.8rem" />-->
+<!--      </div>-->
+<!--      &lt;!&ndash; 页面标题 &ndash;&gt;-->
+<!--      <h3 style="padding-top: 0.3rem">Cashbook</h3>-->
+<!--    </div>-->
 
     <div class="header-center">
       <span>当前用户：{{ name }}&nbsp;&nbsp;</span>
@@ -215,12 +215,13 @@ const logout = () => {
   justify-content: left;
 }
 .header-center {
+  flex: 3;
   width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: right;
 }
 .header-right {
+  flex: 2;
   width: 100%;
   display: flex;
   justify-content: right;
