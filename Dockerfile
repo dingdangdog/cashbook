@@ -22,8 +22,6 @@ RUN apk add --no-cache nginx
 WORKDIR /app
 
 COPY --from=binarybuilder /app/cashbook .
-RUN mkdir -p /app/resources/app/config
-COPY ./docker/server.json /app/resources/app/config/server.json
 # 前端
 COPY ./source/books/dist/ ./books/
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
