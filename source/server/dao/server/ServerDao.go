@@ -1,35 +1,32 @@
 package book
 
 import (
-	"cashbook-server/config"
 	"cashbook-server/types"
 	"encoding/json"
 	"fmt"
-	"os"
 )
 
-// FileName 文件名称
-const FileName = config.ConfigPath + "server.json"
-
-//const FileName = "./config/server.json"
+const Config = "{" +
+	"\"version\": \"1.1.6\", " +
+	"\"environment\": \"personal\", " +
+	"\"serverPath\": \".\", " +
+	"\"secret\": \"spend-money-like-water\"" +
+	"}"
 
 var serverInfo types.Server
 
 // 初始化数据
 func init() {
 	fmt.Println("------ Loading server ------")
-	serverInfo = loadFile()
+	serverInfo = loadConfig()
 	fmt.Println("------ Loaded server ------")
 }
 
 // 加载文件
-func loadFile() types.Server {
-	fileBytes, _ := os.ReadFile(FileName)
+func loadConfig() types.Server {
 	var server types.Server
-	if len(fileBytes) != 0 {
-		if err := json.Unmarshal(fileBytes, &server); err != nil {
-			return types.Server{}
-		}
+	if err := json.Unmarshal([]byte(Config), &server); err != nil {
+		return types.Server{}
 	}
 	return server
 }
