@@ -99,7 +99,7 @@ services:
 ## 截图展示
 
 - 1.1.0-BETA版本前：[DISPLAY](./doc/DISPLAY.md)
-- 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/json_db/images/new/1.1.0-BETA.mp4
+- 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/main/images/new/1.1.0-BETA.mp4
 
 ## 贡献者（Contributor）
 
