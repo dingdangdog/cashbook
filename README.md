@@ -47,7 +47,7 @@ services:
     ports:
       - 880:80
     volumes:
-      - ./resources:/app/resources
+      - ./data:/app/resources/app/data
 ```
 
 ## 主要计划（Plan）
