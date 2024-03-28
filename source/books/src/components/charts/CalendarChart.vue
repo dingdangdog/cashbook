@@ -4,8 +4,12 @@
       <template #header="{ date }">
         <span>
           {{ date }}
-          &nbsp; 总收入：<b>{{ inMonthCount[date] ? Number(inMonthCount[date]).toFixed(2) : 0 }} </b>
-          &nbsp; 总支出：<b :style="outPlan(date)">{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }} </b>
+          &nbsp; 总收入：<b
+            >{{ inMonthCount[date] ? Number(inMonthCount[date]).toFixed(2) : 0 }}
+          </b>
+          &nbsp; 总支出：<b :style="outPlan(date)"
+            >{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }}
+          </b>
           &nbsp; 消费限额：<b>{{ plan.limitMoney }} </b>
         </span>
         <el-row class="mini-button-group">
@@ -23,11 +27,25 @@
             {{ data.day.split('-').slice(1).join('-') }}
             {{ data.day === flowQuery.startDay ? '✔️' : '' }}
           </p>
-          <p :class="inMoneyClass(inDayCount[data.day])" style="display: flex; justify-content: right">
-            {{ (inDayCount[data.day] && inDayCount[data.day] > 0) ? '收：' + Number(inDayCount[data.day]).toFixed(2) : '&nbsp;' }}
+          <p
+            :class="inMoneyClass(inDayCount[data.day])"
+            style="display: flex; justify-content: right"
+          >
+            {{
+              inDayCount[data.day] && inDayCount[data.day] > 0
+                ? '收：' + Number(inDayCount[data.day]).toFixed(2)
+                : '&nbsp;'
+            }}
           </p>
-          <p :class="outMoneyClass(outDayCount[data.day])" style="display: flex; justify-content: right">
-            {{ (outDayCount[data.day] && outDayCount[data.day] > 0) ? '支：' + Number(outDayCount[data.day]).toFixed(2) : '&nbsp;' }}
+          <p
+            :class="outMoneyClass(outDayCount[data.day])"
+            style="display: flex; justify-content: right"
+          >
+            {{
+              outDayCount[data.day] && outDayCount[data.day] > 0
+                ? '支：' + Number(outDayCount[data.day]).toFixed(2)
+                : '&nbsp;'
+            }}
           </p>
         </div>
       </template>
@@ -44,6 +62,7 @@ import type { DailyLineChartQuery } from '@/types/model/analysis'
 import { dateFormater } from '@/utils/common'
 import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { showFlowTableDialog } from '@/stores/flag'
+import { ElMessage } from 'element-plus'
 
 // 获取今天日期
 const day = ref(new Date())
@@ -125,6 +144,9 @@ const initQuery = () => {
   outDayCount.value = {}
   // 支出数据查询
   doQuery({}).then((res) => {
+    if (res.length === 0) {
+      ElMessage.error('暂无数据')
+    }
     res.forEach((data) => {
       // 月集合
       let month = dayToMonth(data.day)
@@ -137,7 +159,7 @@ const initQuery = () => {
       let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0
       inMonthCount.value[month] = inCount + Number(data.inSum)
     })
-    console.log(outMonthCount.value)
+    // console.log(outMonthCount.value)
   })
 
   // 限额数据查询
@@ -147,21 +169,22 @@ const initQuery = () => {
 }
 
 const outPlan = (date: string) => {
-  if (plan.value.limitMoney && outMonthCount.value[date] > plan.value.limitMoney){
-    return "color:red"
+  if (plan.value.limitMoney && outMonthCount.value[date] > plan.value.limitMoney) {
+    return 'color:red'
   }
-  return ""
+  return ''
 }
 
 initQuery()
 
-let bookId = localStorage.getItem("bookId")
-onMounted(()=>{
+let bookId = localStorage.getItem('bookId')
+onMounted(() => {
+  // 定时任务，用于在数据变更时自动刷新页面 TODO 待优化
   setInterval(() => {
-    if (bookId != localStorage.getItem("bookId") || localStorage.getItem("changePlan") === "true") {
-      bookId = localStorage.getItem("bookId")
+    if (bookId != localStorage.getItem('bookId') || localStorage.getItem('changePlan') === 'true') {
+      bookId = localStorage.getItem('bookId')
       initQuery()
-      localStorage.setItem("changePlan", "false")
+      localStorage.setItem('changePlan', 'false')
     }
   }, 500)
 })
@@ -192,12 +215,13 @@ onMounted(()=>{
   color: #cc9200;
 }
 
-.no-flow, .have-in {
+.no-flow,
+.have-in {
   color: #2f8f00;
 }
 
 .no-in {
-  color: var(--el-text-color-placeholder)
+  color: var(--el-text-color-placeholder);
 }
 
 .el-calendar__body {

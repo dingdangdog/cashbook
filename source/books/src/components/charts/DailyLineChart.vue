@@ -146,7 +146,7 @@ onMounted(() => {
   doQuery({}).then((res) => {
     if (res) {
       if (res.length === 0) {
-        ElMessage.error('未查询到数据！')
+        console.log('DailyLineChart未查询到数据！')
         return
       }
       xAxisList.length = 0

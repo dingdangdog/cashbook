@@ -4,9 +4,10 @@ import (
 	"cashbook-server/controller"
 	"cashbook-server/util"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -51,11 +52,10 @@ func main() {
 		adminApi.GET("/dict/getPaymentType/:flowType", controller.GetPaymentType)
 		adminApi.GET("/dict/getAll", controller.GetAll)
 		adminApi.POST("/dict/update", controller.UpdateType)
-		//adminApi.GET("/dict/:type", controller.GetDictList)
-		//adminApi.GET("/dict", controller.GetDictPage)
-		//adminApi.POST("/dict", controller.AddDict)
-		//adminApi.PUT("/dict/:id", controller.UpdateDict)
-		//adminApi.DELETE("/dict/:id", controller.DeleteDict)
+		// 映射关系维护
+		adminApi.GET("/type/getTypeRelation", controller.GetTypeRelation)
+		adminApi.POST("/type/updateTypeRelation", controller.UpdateTypeRelation)
+
 		// 分析图表相关
 		adminApi.POST("/analysis/dailyLine", controller.GetDailyLine)
 		adminApi.POST("/analysis/typePie", controller.GetTypePie)
@@ -68,6 +68,7 @@ func main() {
 		adminApi.POST("/flow", controller.AddFlow)
 		adminApi.PUT("/flow/:id", controller.UpdateFlow)
 		adminApi.DELETE("/flow/:id", controller.DeleteFlow)
+		adminApi.DELETE("/flow/deleteFlows", controller.DeleteFlows)
 		// 计划相关
 		adminApi.GET("/plans/:month", controller.GetPlan)
 		adminApi.POST("/plans/:overwrite", controller.SetPlan)

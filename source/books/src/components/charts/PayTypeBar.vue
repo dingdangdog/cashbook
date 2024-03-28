@@ -145,7 +145,7 @@ const doQuery = (query: TypePieChartQuery) => {
   payTypeBar(query).then((res) => {
     if (res) {
       if (res.length === 0) {
-        ElMessage.error('未查询到数据！')
+        console.log('PayTypeBar未查询到数据！')
         return
       }
       dataList.length = 0

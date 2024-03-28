@@ -5,7 +5,6 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
 import { chartDialog, flowQuery } from '@/utils/store'
@@ -96,7 +95,7 @@ const doQuery = () => {
   monthBar().then((res) => {
     if (res) {
       if (res.length === 0) {
-        ElMessage.error('未查询到数据！')
+        console.log('MonthBar未查询到数据！')
         return
       }
       dataListOut.length = 0

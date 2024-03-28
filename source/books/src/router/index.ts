@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import IndexView from '@/views/IndexView.vue'
-import LoginView from '@/views/LoginView.vue'
-import CalendarView from '@/views/CalendarView.vue'
-import AnalyticsView from '@/views/AnalyticsView.vue'
-import FlowsView from '@/views/FlowsView.vue'
-import BooksView from '@/views/BooksView.vue'
-import TypeView from '@/views/TypeView.vue'
-import SystemView from '@/views/SystemView.vue'
-import AboutView from '@/views/AboutView.vue'
+import IndexView from '@/views/layout/IndexView.vue'
+
+import LoginView from '@/views/pages/LoginView.vue'
+import CalendarView from '@/views/pages/CalendarView.vue'
+import AnalyticsView from '@/views/pages/AnalyticsView.vue'
+import FlowsView from '@/views/pages/FlowsView.vue'
+import BooksView from '@/views/pages/BooksView.vue'
+import TypeView from '@/views/pages/TypeView.vue'
+import SystemView from '@/views/pages/SystemView.vue'
+import AboutView from '@/views/pages/AboutView.vue'
 
 const checkLoginIn = () => {
   return localStorage.getItem('token')
