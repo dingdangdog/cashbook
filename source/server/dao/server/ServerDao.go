@@ -1,17 +1,14 @@
 package server
 
 import (
+	"cashbook-server/config"
 	"cashbook-server/types"
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
-const Config = "{" +
-	"\"version\": \"1.1.6\", " +
-	"\"environment\": \"personal\", " +
-	"\"serverPath\": \".\", " +
-	"\"secret\": \"spend-money-like-water\"" +
-	"}"
+const ConfigFile = config.ConfigPath + "server.json"
 
 var serverInfo types.Server
 
@@ -24,9 +21,12 @@ func init() {
 
 // 加载文件
 func loadConfig() types.Server {
+	fileBytes, _ := os.ReadFile(ConfigFile)
 	var server types.Server
-	if err := json.Unmarshal([]byte(Config), &server); err != nil {
-		return types.Server{}
+	if len(fileBytes) != 0 {
+		if err := json.Unmarshal(fileBytes, &server); err != nil {
+			return types.Server{}
+		}
 	}
 	return server
 }

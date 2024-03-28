@@ -16,7 +16,7 @@ module.exports = {
       console.log(`stdout: ${stdout}`);
     });
     console.log("done: " + build_electron_script);
-
+    common.log("----------------");
     
     /* 正式打包x64 */
     const build_inno_script_64 = `ISCC release/cashbook-x64.iss`;
@@ -30,6 +30,7 @@ module.exports = {
     });
     console.log("done: " + build_inno_script_64);
     common.log("----------------");
+    
     /* 正式打包x86 */
     const build_inno_script_86 = `ISCC release/cashbook-x86.iss`;
     console.log("run: " + build_inno_script_86);

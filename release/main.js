@@ -19,8 +19,8 @@ let win;
 function createWindow() {
   // 创建浏览器窗口
   win = new BrowserWindow({
-    width: 1920,
-    height: 1080,
+    width: 1440,
+    height: 960,
     // resizable: false, // 设置为 false 禁止缩小
     //绝对路径
     icon: path.join(__dirname, "icon.ico"),
@@ -106,7 +106,7 @@ app.whenReady().then(async () => {
   });
 
   // 设置应用菜单
-  Menu.setApplicationMenu(initCustomMenu());
+  Menu.setApplicationMenu(initDefaultMenu());
 });
 
 // 在所有窗口关闭时退出应用程序。

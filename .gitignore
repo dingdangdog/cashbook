@@ -19,6 +19,7 @@
 /source/cloud/src/test/
 
 /**/package-lock.json
+pnpm-lock.yaml
 
 /**/cashbook-*.exe
 ### Mac OS ###
