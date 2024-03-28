@@ -1,4 +1,4 @@
-source/server/resources/
+source/server/resources/app/data/
 source/server/.idea/
 source/server/*.log
 source/server/*.exe
