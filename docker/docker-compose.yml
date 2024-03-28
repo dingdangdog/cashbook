@@ -7,4 +7,4 @@ services:
     ports:
       - 880:80
     volumes:
-      - ./resources:/app/resources
+      - ./data:/app/resources/app/data
