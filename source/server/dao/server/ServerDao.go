@@ -1,4 +1,4 @@
-package book
+package server
 
 import (
 	"cashbook-server/types"

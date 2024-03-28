@@ -1,4 +1,4 @@
-package book
+package plan
 
 import (
 	"cashbook-server/config"
