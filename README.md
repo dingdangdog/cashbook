@@ -106,13 +106,18 @@ services:
 - 1.1.0-BETA版本前：[DISPLAY](./doc/DISPLAY.md)
 - 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/main/images/new/1.1.0-BETA.mp4
 
-## 贡献者（Contributor）
+## 鸣谢（Acknowledgments）
 
-### 感谢以下大佬的代码
+### 贡献者（Contributor）
+
+- 感谢以下大佬的任何贡献，排名不分先后
 
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
-### 感谢以下优秀的开发工具
+### 开发工具（Tools）
+
+- 感谢以下优秀的开发工具
+
 <div style="display:flex; align-item:left">
 <a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/webstorm.svg' width='80px' height='80px'/></a> &nbsp;
 <a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/goland.svg' width='80px' height='80px'/></a> &nbsp;
