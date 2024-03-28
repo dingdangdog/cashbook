@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog1674980314.png" style="width:5rem" alt="icon" />
+<img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog1674980314.png" width="80px" alt="cashbook" />
 <h1>cashbook-desktop</h1>
 </div>
 
@@ -52,15 +52,16 @@ services:
 
 ## 主要计划（Plan）
 
-> 以下是一些比较重要的功能开发计划，不代表本系统全部功能，欢迎下载试用！
+> 以下是一些比较重要的功能开发计划，不代表本系统全部功能，欢迎下载试用！  
+> 在目前没什么用户的情况下，不出意外的话，每月更新一次。
 
 - [x] 使用JSON格式存储数据，拒绝一切三方数据库；
 - [x] 阿里支付宝CSV个人账单文件导入；
 - [x] 微信CSV个人账单文件导入；
-- [ ] ~~构建Docker部署镜像；~~ 替换为云部署版本
+- [x] ~~构建Docker部署镜像；~~ 替换为云部署版本
 - [ ] 数据云同步；
 - [ ] 生成分析报表/年报功能；
-- [ ] 云部署版本？`姑且想想`
+- [x] 云部署版本：`v1.1.6`开始同步发布docker镜像
 - [ ] 浏览器插件？`姑且想想`
 - [ ] 小程序版本？`姑且想想`
 - [ ] Android版本？`姑且想想`
@@ -99,7 +100,7 @@ services:
 ## 截图展示
 
 - 1.1.0-BETA版本前：[DISPLAY](./doc/DISPLAY.md)
-- 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/json_db/images/new/1.1.0-BETA.mp4
+- 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/main/images/new/1.1.0-BETA.mp4
 
 ## 贡献者（Contributor）
 
