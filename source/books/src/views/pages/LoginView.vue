@@ -8,7 +8,7 @@
           <el-input v-model="formData.userName" />
         </el-form-item>
         <el-form-item label="密码（Password）" prop="pass" class="login-input">
-          <el-input v-model="formData.password" type="password" autocomplete="off" @change="submitForm(loginForm)" show-password/>
+          <el-input v-model="formData.password" type="password" autocomplete="off" @keyup.enter="submitForm(loginForm)" show-password/>
         </el-form-item>
         <el-checkbox v-model="rememberUser" class="login-button">记住我</el-checkbox>
         <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
@@ -54,7 +54,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { login, registerApi } from '@/api/api.user'
-import router from '../router/index'
+import router from '@/router/index'
 import { changeBackground } from '@/utils/common'
 
 // 表单输入框宽度
@@ -231,4 +231,4 @@ const cancel = () => {
   margin-left: 3rem !important;
   font-size: medium;
 }
-</style>
+</style>../../router/index
