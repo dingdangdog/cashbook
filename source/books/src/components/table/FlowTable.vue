@@ -77,6 +77,9 @@
     <div class="table-header pc-button" v-if="edit == 'show'">
       <el-button type="primary" @click="openCreateDialog(formTitle[0])">新增</el-button>
     </div>
+    <div class="table-header pc-button" v-if="edit == 'show'">
+      <el-button type="danger" @click="deleteFlows">删除</el-button>
+    </div>
 
     <div class="table-header pc-button" v-if="edit == 'show'">
       <el-button type="primary" @click="showExcelImportDialogFlag.visible = true">Excel导入</el-button>
@@ -90,18 +93,20 @@
       :data="flowPageRef.pageData"
       :default-sort="{ prop: 'money', order: 'null' }"
       @sort-change="moneySortFunc"
+      @selection-change="handleSelectionChange"
       row-key="row"
       max-height="calc(100vh - 18rem)"
     >
-      <el-table-column type="index" label="序号" min-width="40" />
+      <el-table-column type="selection" min-width="40" />
+      <!-- <el-table-column type="index" label="序号" min-width="40" /> -->
       <el-table-column prop="id" label="ID" v-if="false" />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="80" />
       <el-table-column prop="flowType" label="流水类型" min-width="60" />
       <el-table-column prop="type" :label="typeLabel" min-width="80" />
       <el-table-column prop="payType" :label="payTypeLabel" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
-      <el-table-column prop="name" label="名称" min-width="100" />
-      <el-table-column prop="description" label="描述" min-width="100" v-if="deviceAgent() === 'pc'" />
+      <el-table-column prop="name" label="名称" min-width="100" show-overflow-tooltip />
+      <el-table-column prop="description" label="描述" min-width="100" show-overflow-tooltip v-if="deviceAgent() === 'pc'" />
       <el-table-column label="操作" width="150" v-if="edit == 'show'">
         <template v-slot="scop">
           <el-button
@@ -262,7 +267,7 @@ import { Delete, Edit, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus'
 
 // 私有引入
-import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows } from '@/api/api.flow'
+import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows, deleteFlowsApi } from '@/api/api.flow'
 import { getFlowType, getExpenseType, getPaymentType } from '@/api/api.typer'
 import { dateFormater, deviceAgent, timeFormatter } from '@/utils/common'
 import { exportJson } from '@/utils/fileUtils'
@@ -561,6 +566,43 @@ const deleteById = (id: number) => {
     })
 }
 
+
+// 批量删除
+const deleteFlows = () => {
+  if (multipleSelection.value.length === 0) {
+    ElMessage.error("请至少选择一条要删除的流水");
+    return
+  }
+  ElMessageBox.confirm(`确定删除选中的【${multipleSelection.value.length}】条流水？`, '确认删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      deleteFlowsApi(multipleSelection.value.map(flow => flow.id))
+        .then(() => {
+          doQuery()
+          ElMessage({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: '删除失败'
+          })
+        })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除'
+      })
+    })
+}
+
+
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
   typeLabel.value = "消费/收入类型"
@@ -648,6 +690,13 @@ const exportFlows = () => {
       ElMessage.error('数据获取出错，无法导出！')
     })
 }
+
+const multipleSelection = ref<Flow[]>([])
+
+const handleSelectionChange = (val: Flow[]) => {
+  multipleSelection.value = val
+}
+
 
 watch(flowQuery, () => {
   doQuery()

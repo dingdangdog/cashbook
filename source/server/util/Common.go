@@ -85,3 +85,12 @@ func ArrayContains(array []string, newStr string) bool {
 	}
 	return false
 }
+
+func IntContains(arr []int64, i int64) bool {
+	for _, num := range arr {
+		if num == i {
+			return true
+		}
+	}
+	return false
+}

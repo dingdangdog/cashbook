@@ -1,4 +1,4 @@
-package book
+package flow
 
 import (
 	"cashbook-server/config"
@@ -89,6 +89,26 @@ func Delete(id int64, bookId int64) {
 		flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
 		saveFile(bookId)
 	}
+}
+
+// DeleteByIds 按照IDS删除数据
+func DeleteByIds(ids []int64, bookId int64) {
+	getFileData(bookId)
+	//var index int64
+	//var flag = false
+	var flowStaticNews []types.Flow
+	if len(flowStatic) > 0 {
+		for _, flow := range flowStatic {
+			if !util.IntContains(ids, flow.Id) {
+				flowStaticNews = append(flowStaticNews, flow)
+			}
+		}
+	}
+	flowStatic = flowStaticNews
+	//if flag {
+	//	flowStatic = append(flowStatic[:index], flowStatic[index+1:]...)
+	saveFile(bookId)
+	//}
 }
 
 // DeleteDontSave 按照ID删除但不保存数据

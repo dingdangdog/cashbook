@@ -22,6 +22,11 @@ func DeleteFlow(id int64, bookId int64) {
 	dFlow.Delete(id, bookId)
 }
 
+// DeleteFlows 删除流水
+func DeleteFlows(ids []int64, bookId int64) {
+	dFlow.DeleteByIds(ids, bookId)
+}
+
 // GetFlowsPage 获取流水分页
 func GetFlowsPage(flowQuery types.FlowParam) types.Page {
 	flows := dFlow.FindLists(flowQuery)

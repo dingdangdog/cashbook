@@ -41,11 +41,22 @@ export function update(id: number, updateDto: UpdateFlowDto): Promise<Flow> {
 
 /**
  * 删除流水
- * @returns Page<Flow>
+ * @returns any
  */
 export function deleteFlow(id: number): Promise<any> {
     return $http({ url: prefix + "/" + id, method: "delete" })
 }
+
+
+
+/**
+ * 批量删除流水
+ * @returns any
+ */
+export function deleteFlowsApi(id: number[] | any): Promise<any> {
+    return $http({ url: prefix + "/deleteFlows", method: "delete", data: {ids: id}})
+}
+
 
 /**
  * 批量导入流水

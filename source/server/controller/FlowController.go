@@ -5,9 +5,10 @@ import (
 	"cashbook-server/service/plan"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // AddFlow 新增流水
@@ -63,6 +64,24 @@ func DeleteFlow(c *gin.Context) {
 	// 更新计划中本月已用金额
 	go plan.UpdatePlanUsed(bookId)
 	c.JSON(200, util.Success("删除成功："+id))
+}
+
+// DeleteFlows 删除流水
+func DeleteFlows(c *gin.Context) {
+	var data map[string][]int64
+	if err := c.ShouldBindJSON(&data); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	bookId := util.GetBookId(c)
+	flow.DeleteFlows(data["ids"], bookId)
+	// 更新计划中本月已用金额
+	go plan.UpdatePlanUsed(bookId)
+	c.JSON(200, util.Success("删除成功："+strconv.Itoa(len(data["ids"]))))
 }
 
 // GetFlowsPage 分页获取流水数据
