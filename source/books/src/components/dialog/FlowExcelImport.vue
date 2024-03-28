@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import * as XLSX from 'xlsx'
 import { ElMessage, ElMessageBox, type UploadProps, type UploadRawFile, type UploadUserFile } from 'element-plus'
 import { Warning } from '@element-plus/icons-vue'
@@ -52,6 +52,8 @@ import { alipayConvert, jdFinanceConvert, wxpayConvert } from '@/utils/flowConve
 import { importFlows } from '@/api/api.flow'
 import { showExcelImportDialogFlag } from '@/stores/flag'
 import type { FlowExport } from '@/types/view'
+import { getTypeRelation } from '@/api/api.typer'
+import { typeRelation } from '@/utils/store'
 
 // 上传文件类型标识：none-未知文件；alipay-支付宝
 const fileType = ref('none')
@@ -112,8 +114,7 @@ const importFile: UploadProps['onChange'] = async (uploadFile, _uploadFiles) => 
     /**************************************/
     const sheets = workbook.SheetNames.map(sheetName => {
       const xlsxSheet = workbook.Sheets[sheetName]
-      console.log(xlsxSheet)
-      // dateNF不管用啊！！！
+      // console.log(xlsxSheet)
       const data = XLSX.utils.sheet_to_json<any[]>(xlsxSheet, { header: 1, defval: '', dateNF: 'yyyy-mm-dd' })
       return {
         name: sheetName,
@@ -208,7 +209,7 @@ const submitUpload = () => {
     return
   }
   importFlows('add', flows.value).then((res) => {
-    console.log(res)
+    // console.log(res)
     if (res > 0) {
       ElMessageBox.alert('共导入' + res + '条流水', '导入成功', {
         confirmButtonText: '确定',
@@ -239,6 +240,12 @@ const removeFile = () => {
   return true
 }
 
+
+onMounted(() => {
+  getTypeRelation().then(res => {
+    typeRelation.value = res
+  })
+})
 </script>
 
 <style>

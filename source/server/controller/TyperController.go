@@ -4,9 +4,10 @@ import (
 	sTyper "cashbook-server/service/typer"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GetFlowType 获取流水类型
@@ -74,5 +75,25 @@ func UpdateType(c *gin.Context) {
 
 	bookId := util.GetBookId(c)
 	num := sTyper.UpdateType(data, bookId)
+	c.JSON(200, util.Success(num))
+}
+
+func GetTypeRelation(c *gin.Context) {
+	types := sTyper.GetTypeRelation()
+	c.JSON(200, util.Success(types))
+}
+
+func UpdateTypeRelation(c *gin.Context) {
+
+	var data map[string]string
+	if err := c.ShouldBindJSON(&data); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	num := sTyper.UpdateTypeRelation(data)
 	c.JSON(200, util.Success(num))
 }

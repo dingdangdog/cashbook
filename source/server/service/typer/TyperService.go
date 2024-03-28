@@ -108,3 +108,12 @@ func UpdateType(typer types.Typer, bookId int64) int {
 	defer typer.Mu.Unlock()
 	return len(flows)
 }
+
+func GetTypeRelation() map[string]string {
+	return dFlow.GetTypeRelation()
+}
+
+func UpdateTypeRelation(data map[string]string) int {
+	dFlow.UpdateTypeRelation(data)
+	return 1
+}

@@ -1,5 +1,5 @@
 // store.js
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import type { FlowQuery } from '@/types/model/flow';
 
 export const flowQuery: FlowQuery = reactive({
@@ -23,3 +23,5 @@ export const resetFlowQuery = () => {
   flowQuery.name = undefined;
   flowQuery.description = undefined;
 }
+
+export const typeRelation = ref<Record<string, string>>({})

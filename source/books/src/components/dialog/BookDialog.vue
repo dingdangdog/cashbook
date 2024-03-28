@@ -4,6 +4,7 @@
       <el-card
         :key="book.id"
         v-for="book in books"
+        calss="book-card"
         :class="checkSelectBook(book.id)"
         shadow="hover"
         @click="openBook(book)"
@@ -43,16 +44,8 @@ import { createBook, getBook, openBookApi } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
 import router from '@/router'
 
-let bookId = localStorage.getItem("bookId")
-
 onMounted(() => {
   initBooks()
-  setInterval(() => {
-    if (bookId != localStorage.getItem("bookId")) {
-      bookId = localStorage.getItem("bookId")
-      initBooks()
-    }
-  }, 3000)
 })
 
 
@@ -135,9 +128,9 @@ const resetBookForm = () => {
 
 const checkSelectBook = (bookId: number) => {
   if (localStorage.getItem('bookId') === bookId.toString()) {
-    return 'book-card book-card-selected'
+    return 'book-card-selected'
   } else {
-    return 'book-card'
+    return ''
   }
 }
 </script>
