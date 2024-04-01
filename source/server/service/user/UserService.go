@@ -10,6 +10,10 @@ import (
 // Register 注册
 func Register(u types.User) int64 {
 	u.Password = util.EncryptBySHA256(u.UserName, u.Password)
+	us := user.FindUsers(types.User{UserName: u.UserName})
+	if len(us) > 0 {
+		return -1
+	}
 	return user.AddOrUpdate(u)
 }
 

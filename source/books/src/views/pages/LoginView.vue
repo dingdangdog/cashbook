@@ -168,7 +168,7 @@ const register = (form: FormInstance | undefined) => {
     if (valid) {
       //alert('submit!')
       registerApi(registerUser.value).then((res) => {
-        if (res != 0) {
+        if (res > 0) {
           ElMessage({
             type: 'success',
             message: '注册成功，请登录!'
@@ -176,6 +176,9 @@ const register = (form: FormInstance | undefined) => {
           // 跳转到首页
           // router.push({ path: '/' })
           registerDialog.value.visable = false
+          formData.value.userName = registerUser.value.userName
+          formData.value.password = registerUser.value.password
+          form.resetFields()
         } else {
           ElMessage({
             type: 'error',

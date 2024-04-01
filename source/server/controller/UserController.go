@@ -25,6 +25,10 @@ func Register(c *gin.Context) {
 		c.JSON(500, util.Error("注册失败", id))
 		return
 	}
+	if id == -1 {
+		c.JSON(500, util.Error("账号已存在", id))
+		return
+	}
 	c.JSON(200, util.Success(id))
 }
 
