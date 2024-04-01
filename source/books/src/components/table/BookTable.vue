@@ -60,13 +60,14 @@
 <script setup lang="ts">
 // 第三方库引入
 import { ref, onMounted, watch } from 'vue'
-import { Delete, Edit, Tickets } from '@element-plus/icons-vue'
+import { Delete, Edit } from '@element-plus/icons-vue'
 
 // 私有引入
 import { deleteBook, getBook, updateBook } from '@/api/api.book'
 import type { BookQuery, Book } from '@/types/model/book'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import ReportBook from '@/components/dialog/ReportBook.vue'
+import { checkUserAndBook } from '@/utils/common'
 
 // 初始化后自动执行
 onMounted(() => {
@@ -169,6 +170,7 @@ const deleteById = (row: Book) => {
             type: 'success',
             message: '删除成功!'
           })
+          checkUserAndBook()
         })
         .catch(() => {
           ElMessage({

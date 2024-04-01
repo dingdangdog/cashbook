@@ -102,7 +102,7 @@ export const checkUserAndBook = () => {
   checkUser().then((res)=>{
     if (res.user === "none") {
       localStorage.clear()
-      ElMessageBox.confirm('账号已失效，请重新登录', '提示', {
+      ElMessageBox.confirm('当前账号已失效，请重新登录', '提示', {
         confirmButtonText: '确定',
         type: 'warning'
       })
@@ -113,7 +113,7 @@ export const checkUserAndBook = () => {
         router.push({path: '/login'})
       })
     } else if (res.book === "none") {
-      ElMessageBox.confirm('账本已失效，请重新选择账本', '提示', {
+      ElMessageBox.confirm('当前账本已失效，请重新选择账本', '提示', {
         confirmButtonText: '确定',
         type: 'warning'
       })
