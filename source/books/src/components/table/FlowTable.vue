@@ -40,16 +40,6 @@
         />
       </el-select>
     </div>
-    <div class="table-header queryParam">
-      <el-select v-model="flowQuery.type" class="m-2" :placeholder="typeLabel" clearable>
-        <el-option
-          v-for="item in expenseTypeOptions"
-          :key="item.value"
-          :label="item.value"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
 
     <div class="table-header queryParam">
       <el-select v-model="flowQuery.payType" class="m-2" :placeholder="payTypeLabel" clearable>
@@ -63,11 +53,22 @@
     </div>
 
     <div class="table-header queryParam">
-      <el-input v-model="flowQuery.name" placeholder="名称" />
+      <el-select v-model="flowQuery.type" class="m-2" :placeholder="typeLabel" clearable>
+        <el-option
+          v-for="item in expenseTypeOptions"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
+        />
+      </el-select>
     </div>
 
     <div class="table-header queryParam">
-      <el-input v-model="flowQuery.description" placeholder="备注" />
+      <el-input v-model="flowQuery.name" clearable placeholder="名称" />
+    </div>
+
+    <div class="table-header queryParam">
+      <el-input v-model="flowQuery.description" clearable placeholder="备注" />
     </div>
 
     <div class="table-header query-icon">
@@ -102,8 +103,8 @@
       <el-table-column prop="id" label="ID" v-if="false" />
       <el-table-column prop="day" label="日期" :formatter="timeFormatter" min-width="80" />
       <el-table-column prop="flowType" label="流水类型" min-width="60" />
-      <el-table-column prop="type" :label="typeLabel" min-width="80" />
       <el-table-column prop="payType" :label="payTypeLabel" min-width="80" />
+      <el-table-column prop="type" :label="typeLabel" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
       <el-table-column prop="name" label="名称" min-width="100" show-overflow-tooltip />
       <el-table-column prop="description" label="备注" min-width="100" show-overflow-tooltip v-if="deviceAgent() === 'pc'" />
@@ -293,8 +294,21 @@ onMounted(() => {
   getTypes()
 })
 
-const typeLabel = ref("消费/收入类型")
-const payTypeLabel = ref("支出/收款方式")
+const typeLabel = ref("支出/收入类型")
+const payTypeLabel = ref("支付/收款方式")
+/*
+ * 集中定义常量
+ */
+// 流水类型
+const flowTypeOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
+const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
+
+const typeDefault: Typer[] = [{value: '请先选择流水类型'}];
+// 消费类型/收入类型
+const expenseTypeOptions = ref<Typer[]>(typeDefault)
+// 支付类型
+const paymentTypeOptions = ref<Typer[]>(typeDefault)
+
 
 const getTypes = () => {
   getFlowType().then((data) => {
@@ -306,19 +320,24 @@ const getTypes = () => {
 // 修改FlowType后联动
 const changeTypes = (flowType: string | undefined) => {
   if (flowType === "支出") {
-    typeLabel.value = "消费类型"
+    typeLabel.value = "支出类型"
     payTypeLabel.value = "支付方式"
   } else if (flowType === "收入") {
     typeLabel.value = "收入类型"
     payTypeLabel.value = "收款方式"
   } else {
-    typeLabel.value = "消费/收入类型"
-    payTypeLabel.value = "支出/收款方式"
+    typeLabel.value = "支出/收入类型"
+    payTypeLabel.value = "支付/收款方式"
   }
-  getExpenseType(flowType || '支出').then((data) => {
+  if (!flowType) {
+    expenseTypeOptions.value = typeDefault
+    paymentTypeOptions.value = typeDefault
+    return
+  }
+  getExpenseType(flowType).then((data) => {
     expenseTypeOptions.value = data
   })
-  getPaymentType(flowType || '支出').then((data) => {
+  getPaymentType(flowType).then((data) => {
     paymentTypeOptions.value = data
   })
 }
@@ -334,16 +353,6 @@ if (document.body.clientWidth <= 480) {
   datePickerStyle.value = 'width: auto'
 }
 
-/*
- * 集中定义常量
- */
-// 流水类型
-const flowTypeOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
-const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
-// 消费类型/收入类型
-const expenseTypeOptions = ref<Typer[]>([])
-// 支付类型
-const paymentTypeOptions = ref<Typer[]>([])
 
 // 分页数据结果
 const flowPage: Page<Flow> = {
@@ -603,8 +612,8 @@ const deleteFlows = () => {
 
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
-  typeLabel.value = "消费/收入类型"
-  payTypeLabel.value = "支出/收款方式"
+  typeLabel.value = "支出/收入类型"
+  payTypeLabel.value = "支付/收款方式"
   dialogFormTitle.value = title
   dialogFormVisible.value = true
 }
