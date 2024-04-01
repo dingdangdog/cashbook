@@ -4,7 +4,7 @@
       <el-card
         :key="book.id"
         v-for="book in books"
-        calss="book-card"
+        class="book-card"
         :class="checkSelectBook(book.id)"
         shadow="hover"
         @click="openBook(book)"
