@@ -42,6 +42,34 @@ const optionRef = ref({
     name: '金额(元)',
     type: 'value'
   },
+  
+  legend: {
+    selected: {
+      '支出': true,
+      '收入': true,
+      '不计收支': false
+    },
+    data: [
+      {
+        name: '支出',
+        textStyle: {
+          color: 'rgba(217,159,8, 0.9)'
+        }
+      },
+      {
+        name: '收入',
+        textStyle: {
+          color: 'rgba(76, 152, 112, 0.9)'
+        }
+      },
+      {
+        name: '不计收支',
+        textStyle: {
+          color: 'rgba(66, 66, 66, 0.9)'
+        }
+      }
+    ] // 系列的名称，与 series 中的 name 对应
+  },
   series: [
     {
       name: '支出',

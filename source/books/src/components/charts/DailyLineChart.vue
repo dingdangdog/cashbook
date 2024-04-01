@@ -31,6 +31,11 @@ const optionRef = ref({
     }
   },
   legend: {
+    selected: {
+      '支出': true,
+      '收入': true,
+      '不计收支': false
+    },
     data: [
       {
         name: '支出',
@@ -117,6 +122,7 @@ const optionRef = ref({
       name: '不计收支',
       type: 'line',
       symbol: 'circle',
+      visible: false,
       symbolSize: 6,
       areaStyle: {},
       itemStyle: {
