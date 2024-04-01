@@ -12,6 +12,8 @@
   <img alt="issues-open" src="https://img.shields.io/github/issues/dingdangdog/cashbook-desktop?color=important" />
   <img alt="issues-close" src="https://img.shields.io/github/issues-closed/dingdangdog/cashbook-desktop?color=green" />
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow.svg" />
+  <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/dingdangdog/cashbook.svg" />
+  <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook-desktop/total.svg" />
 </p>
 
 - cashbook's desktop application
@@ -55,13 +57,13 @@ services:
 > 以下是一些比较重要的功能开发计划，不代表本系统全部功能，欢迎下载试用！  
 > 在目前没什么用户的情况下，不出意外的话，每月更新一次。
 
+- [x] Windows桌面应用（目前是简单的Electron套壳，以后可能还会重构）；
+- [x] Docker部署，重构后的系统从`v1.1.6`之后开始同步发布Docker；
 - [x] 使用JSON格式存储数据，拒绝一切三方数据库；
 - [x] 阿里支付宝CSV个人账单文件导入；
 - [x] 微信CSV个人账单文件导入；
-- [x] ~~构建Docker部署镜像；~~ 替换为云部署版本
-- [ ] 数据云同步；
-- [ ] 生成分析报表/年报功能；
-- [x] 云部署版本：`v1.1.6`开始同步发布docker镜像
+- [ ] 生成分析报表，如月报/年报功能，暂定 `v1.1.8` 支持月报；
+- [ ] 数据云同步，暂定 `v1.2.0` 重新支持云同步；
 - [ ] 浏览器插件？`姑且想想`
 - [ ] 小程序版本？`姑且想想`
 - [ ] Android版本？`姑且想想`
@@ -70,11 +72,13 @@ services:
 
 ## 重要说明
 
-1.1.0-BETA版本前后有非常大的差异，页面到后端整体全部重构了一次，推荐使用最新版！
+`1.1.0-BETA` 版本前后有非常大的差异，从页面到后端整体全部重构了一次，推荐使用最新版！
 
 - 1.1.0-BETA版本前的一些说明：[NOTICE](./doc/NOTICE.md)
 
 ### 类型映射
+
+从 [v1.1.7](https://github.com/dingdangdog/cashbook-desktop/releases/tag/v1.1.7) 版本开始，在系统设置中可以进行映射关系维护了，这里列出项目默认的映射关系，用户安装后可自行修改。
 
 | 本软件类型 | 支付宝 | 微信 | 京东金融 | 备注 |
 | -------- | ---- | -------- | ---- | ---- |
@@ -102,13 +106,18 @@ services:
 - 1.1.0-BETA版本前：[DISPLAY](./doc/DISPLAY.md)
 - 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/main/images/new/1.1.0-BETA.mp4
 
-## 贡献者（Contributor）
+## 鸣谢（Acknowledgments）
 
-### 感谢以下大佬的代码
+### 贡献者（Contributor）
+
+- 感谢以下大佬的任何贡献，排名不分先后
 
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
-### 感谢以下优秀的开发工具
+### 开发工具（Tools）
+
+- 感谢以下优秀的开发工具
+
 <div style="display:flex; align-item:left">
 <a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/webstorm.svg' width='80px' height='80px'/></a> &nbsp;
 <a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/goland.svg' width='80px' height='80px'/></a> &nbsp;
