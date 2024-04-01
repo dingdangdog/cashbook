@@ -23,30 +23,35 @@
 
       <template #date-cell="{ data }">
         <div @click="clickDay(data)" class="day-container">
-          <p :class="data.day === flowQuery.startDay ? 'is-selected' : ''">
+          <span 
+            class="day-title"
+            :class="data.day === flowQuery.startDay ? 'is-selected' : ''" 
+            style="flex:1;">
             {{ data.day.split('-').slice(1).join('-') }}
             {{ data.day === flowQuery.startDay ? '✔️' : '' }}
-          </p>
-          <p
-            :class="inMoneyClass(inDayCount[data.day])"
-            style="display: flex; justify-content: right"
-          >
-            {{
-              inDayCount[data.day] && inDayCount[data.day] > 0
-                ? '收：' + Number(inDayCount[data.day]).toFixed(2)
-                : '&nbsp;'
-            }}
-          </p>
-          <p
-            :class="outMoneyClass(outDayCount[data.day])"
-            style="display: flex; justify-content: right"
-          >
-            {{
-              outDayCount[data.day] && outDayCount[data.day] > 0
-                ? '支：' + Number(outDayCount[data.day]).toFixed(2)
-                : '&nbsp;'
-            }}
-          </p>
+          </span>
+          <div class="day-count">
+            <span
+              :class="inMoneyClass(inDayCount[data.day])"
+              @click.stop="clickDay(data,'收入')"
+            >
+              {{
+                inDayCount[data.day] && inDayCount[data.day] > 0
+                  ? '收：' + Number(inDayCount[data.day]).toFixed(2)
+                  : '&nbsp;'
+              }}
+            </span>
+            <span
+              :class="outMoneyClass(outDayCount[data.day])"
+              @click.stop="clickDay(data,'支出')" 
+            >
+              {{
+                outDayCount[data.day] && outDayCount[data.day] > 0
+                  ? '支：' + Number(outDayCount[data.day]).toFixed(2)
+                  : '&nbsp;'
+              }}
+            </span>
+          </div>
         </div>
       </template>
     </el-calendar>
@@ -78,10 +83,23 @@ const inMonthCount = ref<any>({})
 const inDayCount = ref<any>({})
 
 // 日期点击事件
-const clickDay = (param: any) => {
+const clickDay = (param: any, flowType?: string) => {
+  console.log(param)
+  console.log(refCalendar)
+  let month = dayToMonth(param.day)
+  let caMonth = dayToMonth(refCalendar.value.selectedDay)
+  console.log(month, caMonth)
+  if (month != caMonth) {
+    return
+  }
+  console.log(month)
+
   resetFlowQuery()
   flowQuery.startDay = param.day
   flowQuery.endDay = param.day
+  if (flowType) {
+    flowQuery.flowType = flowType
+  }
   day.value = new Date(param.day)
   showFlowTableDialog.value.visible = true
   // console.log(param)
@@ -197,7 +215,43 @@ onMounted(() => {
 }
 
 .el-calendar-table .el-calendar-day {
-  height: calc(var(--el-calendar-cell-width) * 1.5);
+  height: calc(var(--el-calendar-cell-width) * 1.5) !important;
+}
+.el-calendar-day {
+  padding: 0 !important;
+}
+
+.day-container{
+  height: 100%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-container span {
+  border-radius: 0.5rem;
+}
+
+.day-container span:hover {
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+.day-title {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.day-count {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-count span{
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  padding: 0.2rem;
 }
 
 .is-selected {
@@ -228,13 +282,9 @@ onMounted(() => {
   padding: 0 1rem;
 }
 
-.day-container p {
-  margin: 1rem !important;
-}
-
 @media screen and (max-height: 860px) {
-  .day-container p {
-    margin: 0.5rem !important;
+  .day-container span {
+    margin: 0.1rem !important;
   }
 }
 

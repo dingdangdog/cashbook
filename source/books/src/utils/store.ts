@@ -20,6 +20,7 @@ export const resetFlowQuery = () => {
   flowQuery.endDay = undefined;
   flowQuery.type = undefined;
   flowQuery.payType = undefined;
+  flowQuery.flowType = undefined;
   flowQuery.name = undefined;
   flowQuery.description = undefined;
 }
