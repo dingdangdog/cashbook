@@ -67,7 +67,7 @@
     </div>
 
     <div class="table-header queryParam">
-      <el-input v-model="flowQuery.description" placeholder="描述" />
+      <el-input v-model="flowQuery.description" placeholder="备注" />
     </div>
 
     <div class="table-header query-icon">
@@ -106,7 +106,7 @@
       <el-table-column prop="payType" :label="payTypeLabel" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
       <el-table-column prop="name" label="名称" min-width="100" show-overflow-tooltip />
-      <el-table-column prop="description" label="描述" min-width="100" show-overflow-tooltip v-if="deviceAgent() === 'pc'" />
+      <el-table-column prop="description" label="备注" min-width="100" show-overflow-tooltip v-if="deviceAgent() === 'pc'" />
       <el-table-column label="操作" width="150" v-if="edit == 'show'">
         <template v-slot="scop">
           <el-button
@@ -215,7 +215,7 @@
           <el-input v-model="flowRef.name" />
         </el-form-item>
 
-        <el-form-item label="描述" :label-width="formLabelWidth" prop="description" textarea>
+        <el-form-item label="备注" :label-width="formLabelWidth" prop="description" textarea>
           <el-input v-model="flowRef.description" />
         </el-form-item>
       </el-form>
