@@ -465,11 +465,9 @@ const confirmForm = async (dialogForm: FormInstance | undefined, closeDialog: bo
 const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
   if (!formEl) return
   if (showDialog) {
-    flowRef.type = ''
     flowRef.money = undefined
     // flowRef.day = ''
     flowRef.name = ''
-    flowRef.description = ''
   } else {
     formEl.resetFields()
   }
