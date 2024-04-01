@@ -78,9 +78,9 @@ import { cleanLoginInfo } from '@/utils/common'
 onMounted(() => {
   if (!localStorage.getItem('bookId')) {
     ElMessageBox.confirm('尚未打开账本，请前往选择并打开账本。', '提示', {
-    confirmButtonText: '确定',
-    type: 'warning'
-  })
+      confirmButtonText: '确定',
+      type: 'warning'
+    })
     .then(() => {
       showBookDialog()
     })
@@ -93,7 +93,6 @@ onMounted(() => {
     name.value = localStorage.getItem('name') || ''
     bookName.value = localStorage.getItem('bookName') || ''
   }, 500)
-
 })
 
 // 服务器信息封装

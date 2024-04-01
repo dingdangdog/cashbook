@@ -1,5 +1,8 @@
 import { useDark } from '@vueuse/core';
 import router from '../router/index';
+import { checkUser } from '@/api/api.user';
+import { showBookDialogFlag } from '@/stores/flag';
+import { ElMessageBox } from 'element-plus';
 
 // 设置主题，用于判断主题色是否为暗色
 export const isDark = useDark({
@@ -93,4 +96,33 @@ export const changeBackground = (url: string) => {
   // set div background image size
   document.getElementById('app')!.style!.backgroundSize = 'cover'
   localStorage.setItem("background", url)
+}
+
+export const checkUserAndBook = () => {
+  checkUser().then((res)=>{
+    if (res.user === "none") {
+      localStorage.clear()
+      ElMessageBox.confirm('账号已失效，请重新登录', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning'
+      })
+      .then(() => {
+        router.push({path: '/login'})
+      })
+      .catch(() => {
+        router.push({path: '/login'})
+      })
+    } else if (res.book === "none") {
+      ElMessageBox.confirm('账本已失效，请重新选择账本', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning'
+      })
+      .then(() => {
+        showBookDialogFlag.value.visible = true
+      })
+      .catch(() => {
+        showBookDialogFlag.value.visible = true
+      })
+    }
+  })
 }

@@ -10,7 +10,7 @@ import router from '@/router';
 import { onMounted, defineAsyncComponent } from 'vue';
 import { RouterView } from 'vue-router'
 import { showFlowTableDialog } from '@/stores/flag'
-import { changeBackground } from '@/utils/common'
+import { changeBackground, checkUserAndBook } from '@/utils/common'
 
 // 异步组件引用
 const FlowTable = defineAsyncComponent(() => import('@/components/table/FlowTable.vue'))
@@ -22,6 +22,8 @@ onMounted(() => {
   if (localStorage.getItem("background")) {
     changeBackground(localStorage.getItem("background") || '')
   }
+  // 校验数据有效性：Token、BookId
+  checkUserAndBook()
 })
 </script>
 

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"cashbook-server/dao/book"
 	"cashbook-server/dao/user"
 	"cashbook-server/types"
 	"cashbook-server/util"
@@ -67,4 +68,22 @@ func SetBackground(id int64, background string) bool {
 	user.Delete(id)
 	user.AddOrUpdate(u)
 	return true
+}
+
+func CheckUser(userId int64, bookId int64) map[string]string {
+	userBookMap := make(map[string]string)
+	u := user.FindUserById(userId)
+	if u.Id <= 0 {
+		userBookMap["user"] = "none"
+	} else {
+		userBookMap["user"] = "have"
+	}
+	b := book.GetOneById(bookId)
+	if b.Id <= 0 {
+		userBookMap["book"] = "none"
+	} else {
+		userBookMap["book"] = "have"
+	}
+
+	return userBookMap
 }

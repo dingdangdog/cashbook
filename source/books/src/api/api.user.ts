@@ -44,3 +44,9 @@ export function setBackground(background: string): Promise<boolean> {
   return $http({ url: "/admin/setBackground?background=" + background, method: "get"})
 }
 
+
+export function checkUser(): Promise<{user:string,book:string}> {
+  return $http({ url: "/admin/checkUser", method: "get" })
+}
+
+

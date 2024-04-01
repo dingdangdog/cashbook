@@ -38,6 +38,7 @@ func main() {
 		adminApi.POST("/checkPassword/:password", controller.CheckPassword)
 		adminApi.POST("/changePassword", controller.ChangePassword)
 		adminApi.GET("/setBackground", controller.SetBackground)
+		adminApi.GET("/checkUser", controller.CheckUser)
 
 		// 账本相关
 		adminApi.GET("/book", controller.GetBookList)

@@ -91,3 +91,11 @@ func SetBackground(c *gin.Context) {
 	boolean := user.SetBackground(userId, background)
 	c.JSON(200, util.Success(boolean))
 }
+
+func CheckUser(c *gin.Context) {
+	userId := util.GetUserId(c)
+	bookId := util.GetBookId(c)
+	flagMap := user.CheckUser(userId, bookId)
+
+	c.JSON(200, util.Success(flagMap))
+}
