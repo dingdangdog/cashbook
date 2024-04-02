@@ -111,7 +111,7 @@ services:
 
 ### 贡献者（Contributor）
 
-- 感谢贡献者，排名不分先后
+- 感谢以下贡献者，排名不分先后
 
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
