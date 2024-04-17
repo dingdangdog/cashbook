@@ -66,3 +66,12 @@ func MonthBar(c *gin.Context) {
 
 	c.JSON(200, util.Success(data))
 }
+
+func MonthAnalysis(c *gin.Context) {
+	bookId := util.GetBookId(c)
+	month := c.Query("month")
+
+	data := analysis.MonthAnalysis(bookId, month)
+
+	c.JSON(200, util.Success(data))
+}

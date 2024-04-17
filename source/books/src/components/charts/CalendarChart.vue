@@ -11,6 +11,8 @@
             >{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }}
           </b>
           &nbsp; 消费限额：<b>{{ plan.limitMoney }} </b>
+          &nbsp; 
+          <el-button type="primary" @click="showMonthAnalysis(date)">分析</el-button>
         </span>
         <el-row class="mini-button-group">
           <el-button-group>
@@ -56,10 +58,13 @@
       </template>
     </el-calendar>
   </div>
+  <el-dialog style="width: 30rem" v-model="monthAnalysisDialog" :title="monthTitle + ' 流水分析'" destroy-on-close>
+    <MonthAnalysis :month="monthTitle"/>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, defineAsyncComponent } from 'vue'
 import { dailyLine } from '@/api/api.analysis'
 import { getPlan } from '@/api/api.plan'
 import type { Plan } from '@/types/model/plan'
@@ -68,6 +73,7 @@ import { dateFormater } from '@/utils/common'
 import { flowQuery, resetFlowQuery } from '@/utils/store'
 import { showFlowTableDialog } from '@/stores/flag'
 import { ElMessage } from 'element-plus'
+const MonthAnalysis = defineAsyncComponent(() => import('@/components/charts/MonthAnalysis.vue'))
 
 // 获取今天日期
 const day = ref(new Date())
@@ -206,6 +212,14 @@ onMounted(() => {
     }
   }, 500)
 })
+
+
+const monthAnalysisDialog = ref(false)
+const monthTitle = ref('')
+const showMonthAnalysis = (month: string) => {
+  monthAnalysisDialog.value = true
+  monthTitle.value = month
+}
 </script>
 <style>
 .calendar-main {

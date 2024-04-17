@@ -205,3 +205,46 @@ func MonthBar(bookId int64) []types.TypePie {
 
 	return months
 }
+
+func MonthAnalysis(bookId int64, month string) types.MonthAnalysis {
+	monthBar := MonthBar(bookId)
+
+	monthAnalysis := types.MonthAnalysis{Month: month}
+	// 总收入、总支出、总不计收支复用
+	for _, month := range monthBar {
+		if month.Type == monthAnalysis.Month {
+			monthAnalysis.OutSum = month.TypeSum
+			monthAnalysis.InSum = month.InSum
+			monthAnalysis.ZeroSum = month.ZeroSum
+		}
+	}
+	if monthAnalysis.OutSum == "" && monthAnalysis.InSum == "" {
+		return monthAnalysis
+	}
+	flowParam := types.FlowParam{BookId: bookId, StartDay: month + "-01", EndDay: month + "-31", FlowType: "支出"}
+	// 复用饼图统计获得最大消费类型
+	typeSum := GetTypePie(flowParam)
+	monthAnalysis.MaxType = typeSum[0].Type
+	monthAnalysis.MaxTypeSum = typeSum[0].TypeSum
+
+	// 找出最大单笔支出和收入
+	flowParam.FlowType = ""
+	flowList := dFlow.FindLists(flowParam)
+	maxOutFlow := types.Flow{}
+	maxInFlow := types.Flow{}
+	// 获取最大单笔支出和最大单笔收入
+	for _, flow := range flowList {
+		if flow.FlowType == "支出" {
+			if flow.Money > maxOutFlow.Money {
+				maxOutFlow = flow
+			}
+		} else if flow.FlowType == "收入" {
+			if flow.Money > maxInFlow.Money {
+				maxInFlow = flow
+			}
+		}
+	}
+	monthAnalysis.MaxIn = maxInFlow
+	monthAnalysis.MaxOut = maxOutFlow
+	return monthAnalysis
+}

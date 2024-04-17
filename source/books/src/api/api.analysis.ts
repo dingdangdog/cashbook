@@ -1,5 +1,5 @@
 import $http from './index'
-import type { DailyLineChartQuery, DailyLineChart, TypePieChartQuery, TypePieChart } from '../types/model/analysis';
+import type { DailyLineChartQuery, DailyLineChart, TypePieChartQuery, TypePieChart, MonthAnalysis } from '../types/model/analysis';
 
 const prefix = '/admin/analysis';
 
@@ -29,4 +29,11 @@ export function payTypeBar(query: TypePieChartQuery): Promise<TypePieChart[]> {
  */
 export function monthBar(): Promise<TypePieChart[]> {
   return $http({ url: prefix + "/monthBar", method: "post"})
+}
+
+/**
+ * 按月统计生成汇报
+ */
+export function monthAnalysis(month: string): Promise<MonthAnalysis> {
+  return $http({ url: prefix + "/monthAnalysis?month=" + month, method: "get"})
 }

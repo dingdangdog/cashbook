@@ -62,6 +62,7 @@ func main() {
 		adminApi.POST("/analysis/typePie", controller.GetTypePie)
 		adminApi.POST("/analysis/payTypeBar", controller.GetPayTypeBar)
 		adminApi.POST("/analysis/monthBar", controller.MonthBar)
+		adminApi.GET("/analysis/monthAnalysis", controller.MonthAnalysis)
 		// 流水相关
 		adminApi.GET("/flow/getAll", controller.GetBookAll)
 		adminApi.POST("/flow/importFlows", controller.ImportFlows)
