@@ -3,7 +3,7 @@ FROM golang:alpine AS binarybuilder
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook-desktop"
-LABEL project.version="1.1.7"
+LABEL project.version="1.1.8"
 LABEL project.github="https://github.com/DingDangDog/cashbook-desktop"
 
 
