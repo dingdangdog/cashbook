@@ -50,7 +50,7 @@
   </el-dialog>
 
   <!-- 弹出框：账本设置 -->
-  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title" destroy-on-close>
+  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title" @close="checkBook" destroy-on-close>
     <BookDialog />
   </el-dialog>
 
@@ -94,6 +94,15 @@ onMounted(() => {
     bookName.value = localStorage.getItem('bookName') || ''
   }, 500)
 })
+
+const checkBook = () => {
+  if (!localStorage.getItem('bookId')) {
+    ElMessage.error("请先选择账本！")
+    setTimeout(() => {
+      showBookDialog()
+    }, 500);
+  }
+}
 
 // 服务器信息封装
 const serverInfo = ref({

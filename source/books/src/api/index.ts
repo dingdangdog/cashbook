@@ -21,6 +21,7 @@ $http.interceptors.request.use(async (config) => {
 
   if (!token && $http.getUri.toString().indexOf('admin') > 0) {
     toLogin()
+    ElMessage.error('请先登录')
     return Promise.reject('请先登录')
   }
 
