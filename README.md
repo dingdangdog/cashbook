@@ -16,13 +16,13 @@
   <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook-desktop/total.svg" />
 </p>
 
-- cashbook's desktop application
-- 桌面版账本，目前仅支持`Windows`桌面版。
+- Github：[https://github.com/dingdangdog/cashbook-desktop](https://github.com/dingdangdog/cashbook-desktop)
+- Gitee：[https://gitee.com/dddogx/cashbook-desktop](https://gitee.com/dddogx/cashbook-desktop)
 - 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号：cashbook/cashbook)
 
 ## 简述（Description）
 
-本项目的目标是一个终端独立安装的记账本软件。
+本项目的目标是一个终端独立安装的记账本软件。目前的桌面版仅支持 `Windows` 系统。
 
 - 在数据记录上追求简单、易用、自主可控；
 - 在统计分析上力求清晰、美观、简洁有效。
