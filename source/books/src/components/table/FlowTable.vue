@@ -181,7 +181,7 @@
         </el-form-item>
 
         <el-form-item :label="payTypeLabel" :label-width="formLabelWidth" prop="payType">
-          <el-select v-model="flowRef.payType" placeholder="选择"
+          <el-select v-model="flowRef.payType" placeholder="选择或输入"
                      clearable
                      filterable
                      allow-create>
@@ -195,7 +195,7 @@
         </el-form-item>
 
         <el-form-item :label="typeLabel" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="flowRef.type" placeholder="选择"
+          <el-select v-model="flowRef.type" placeholder="选择或输入"
                      clearable
                      filterable
                      allow-create>
