@@ -19,6 +19,7 @@
 - Github：[https://github.com/dingdangdog/cashbook-desktop](https://github.com/dingdangdog/cashbook-desktop)
 - Gitee：[https://gitee.com/dddogx/cashbook-desktop](https://gitee.com/dddogx/cashbook-desktop)
 - 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号：cashbook/cashbook)
+- QQ交流群：564081656
 
 ## 简述（Description）
 
