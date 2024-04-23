@@ -71,7 +71,7 @@ export function jdFinanceConvert(row: any[], indexMap: Map<any, any>): Flow {
   const flow: Flow = {}
   flow.day = row[indexMap.get('交易时间')]
   flow.flowType = String(row[indexMap.get('收/支')])
-  flow.type = typeConvert(indexMap.get('交易分类'))
+  flow.type = typeConvert(row[indexMap.get('交易分类')])
   flow.payType = '京东金融'
   flow.money = parseFloat(row[indexMap.get('金额')])
   flow.name = String(row[indexMap.get('交易说明')])
