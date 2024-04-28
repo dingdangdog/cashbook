@@ -151,7 +151,7 @@
   </div>
 
   <!-- 弹出框表单：新增和修改通用 -->
-  <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" :fullscreen="miniScreen">
+  <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" :fullscreen="miniScreen" width="40rem">
     <div class="el-dialog-main">
       <el-form ref="dialogFormRef" :model="flowRef" :rules="rules">
         <el-form-item label="日期" :label-width="formLabelWidth" prop="day">
@@ -213,11 +213,11 @@
         </el-form-item>
 
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="flowRef.name" />
+          <el-input v-model="flowRef.name" style="width: 300px"/>
         </el-form-item>
 
         <el-form-item label="备注" :label-width="formLabelWidth" prop="description" textarea>
-          <el-input v-model="flowRef.description" />
+          <el-input v-model="flowRef.description" style="width: 400px"/>
         </el-form-item>
       </el-form>
     </div>
@@ -347,6 +347,7 @@ const miniScreen = ref(false)
 if (document.body.clientWidth <= 480) {
   miniScreen.value = true
 }
+
 // 时间选择器
 const datePickerStyle = ref('')
 if (document.body.clientWidth <= 480) {
