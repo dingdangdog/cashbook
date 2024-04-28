@@ -10,7 +10,7 @@
           &nbsp; 总支出：<b :style="outPlan(date)"
             >{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }}
           </b>
-          &nbsp; 消费限额：<b>{{ plan.limitMoney }} </b>
+          &nbsp; 支出限额：<b>{{ plan.limitMoney }} </b>
           &nbsp; 
           <el-button type="primary" @click="showMonthAnalysis(date)">分析</el-button>
         </span>
