@@ -7,7 +7,7 @@
 import * as echarts from 'echarts'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
-import { chartDialog, flowQuery } from '@/utils/store'
+import { chartDialog, flowQuery, resetFlowQuery } from '@/utils/store'
 
 import { showFlowTableDialog } from '@/stores/flag'
 
@@ -144,6 +144,7 @@ const doQuery = () => {
       pieChart = echarts.init(pieDiv)
       pieChart.setOption(optionRef.value)
       pieChart.on('click', function(param) {
+        resetFlowQuery()
         flowQuery.startDay = param.name + '-01'
         flowQuery.endDay = param.name + '-31'
 
