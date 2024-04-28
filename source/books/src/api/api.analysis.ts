@@ -11,7 +11,7 @@ export function dailyLine(query: DailyLineChartQuery): Promise<DailyLineChart[]>
 }
 
 /**
- * 消费类型统计饼图
+ * 支出类型统计饼图
  */
 export function typePie(query: TypePieChartQuery): Promise<TypePieChart[]> {
   return $http({ url: prefix + "/typePie", method: "post", data: query })

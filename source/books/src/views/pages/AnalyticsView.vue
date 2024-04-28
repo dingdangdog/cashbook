@@ -12,14 +12,14 @@
 
 <!--      <el-row justify="space-around">-->
 <!--        <el-col :span="11" class="chart-container">-->
-<!--          <TypePieChart :title="'消费类型统计'" :style="allChartStyle" />-->
+<!--          <TypePieChart :title="'支出类型统计'" :style="allChartStyle" />-->
 <!--        </el-col>-->
 <!--        <el-col :span="11" class="chart-container">-->
 <!--          <PayTypeBar :title="'支付方式统计'" :style="allChartStyle" />-->
 <!--        </el-col>-->
 <!--      </el-row>-->
 <!--    </el-tab-pane>-->
-    <el-tab-pane label="消费类型统计">
+    <el-tab-pane label="支出类型统计">
       <TypePieChart :title="''" :style="singleChartStyle" />
     </el-tab-pane>
     <el-tab-pane label="支付方式统计">

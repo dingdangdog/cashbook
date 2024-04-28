@@ -6,7 +6,7 @@
 
 ![main](./images/old/light-1.jpg)
 
-## 消费类型统计
+## 支出类型统计
 
 
 ![main](./images/old/black-2.jpg)
