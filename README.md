@@ -105,10 +105,9 @@ services:
 
 > PS：如果你不会账单导出，这里有一个图文教程：[微信/支付宝/京东金融导出账单文件](https://oldmoon.top/post/211)
 
-## 截图展示
+## 开发
 
-- 1.1.0-BETA版本前：[DISPLAY](./doc/DISPLAY.md)
-- 1.1.0-BETA版本：https://github.com/dingdangdog/cashbook-desktop/blob/main/images/new/1.1.0-BETA.mp4
+- 请阅读 【[dev.md](./dev.md)】
 
 ## 鸣谢（Acknowledgments）
 
