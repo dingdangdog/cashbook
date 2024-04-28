@@ -4,8 +4,10 @@ import (
 	"cashbook-server/types"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -93,4 +95,28 @@ func IntContains(arr []int64, i int64) bool {
 		}
 	}
 	return false
+}
+
+// CopyFile 函数用于拷贝文件
+func CopyFile(src, dst string) error {
+	sourceFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	// 创建目标文件所在的文件夹
+	err = os.MkdirAll(filepath.Dir(dst), os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	destinationFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destinationFile.Close()
+
+	_, err = io.Copy(destinationFile, sourceFile)
+	return err
 }

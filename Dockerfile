@@ -23,6 +23,7 @@ WORKDIR /app
 
 COPY --from=binarybuilder /app/cashbook .
 COPY --from=binarybuilder /app/resources/ ./resources/
+COPY --from=binarybuilder /app/default/ ./default/
 
 # 前端
 COPY ./source/books/dist/ ./books/
