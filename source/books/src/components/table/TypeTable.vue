@@ -15,7 +15,7 @@
       </el-select>
     </div>
     <div class="queryParam">
-      <el-button type="primary" @click="hisFlowTypeConvert">历史数据类型转换</el-button>
+      <el-button type="primary" @click="hisFlowTypeConvert">自动映射</el-button>
     </div>
   </el-row>
 
