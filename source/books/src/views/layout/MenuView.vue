@@ -46,7 +46,7 @@
         <el-icon>
           <Paperclip />
         </el-icon>
-        <template #title>类型管理</template>
+        <template #title>分类管理</template>
       </el-menu-item>
 
       <el-menu-item index="/index/system">
