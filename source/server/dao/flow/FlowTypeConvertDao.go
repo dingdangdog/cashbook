@@ -40,7 +40,7 @@ func getRelationData() []byte {
 	fileBytes, err := os.ReadFile(TypeFile)
 	if err != nil && os.IsNotExist(err) {
 		// 如果文件不存在，则拷贝另一个指定目录中的文件到指定文件
-		srcFile := "./default/flow_type.json" // 默认文件的路径
+		srcFile := config.ConfigPath + "flow_type.json" // 默认文件的路径
 		if err := util.CopyFile(srcFile, TypeFile); err != nil {
 			panic(err) // 或者执行其他错误处理逻辑
 		}
