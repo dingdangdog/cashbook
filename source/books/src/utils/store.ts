@@ -26,3 +26,5 @@ export const resetFlowQuery = () => {
 }
 
 export const typeRelation = ref<Record<string, string>>({})
+
+export const updatePlanFlag = ref(0)

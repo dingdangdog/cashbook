@@ -7,6 +7,7 @@
           type="month"
           format="YYYY-MM"
           placeholder="月份"
+          @change="changeMonth"
         />
       </el-form-item>
 
@@ -27,11 +28,12 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import type { FormInstance, FormRules } from 'element-plus';
-import type { Plan } from '@/types/model/plan';
+import type { FormInstance, FormRules } from 'element-plus'
+import type { Plan } from '@/types/model/plan'
 
 import { setPlans, getPlan } from '@/api/api.plan'
 import { dateFormater } from '@/utils/common'
+import { updatePlanFlag } from '@/utils/store'
 
 // 表单输入框宽度
 const formLabelWidth = ref('100px')
@@ -57,15 +59,15 @@ const planFormRules = ref<FormRules>({
   limitMoney: [{ required: true, message: '请填入额度', trigger: 'blur' }]
 })
 
-
 const toSetPlan = (plan: Plan, o: number) => {
   plan.month = dateFormater('YYYY-MM', plan.month || new Date())
   setPlans(plan, o).then(() => {
-    localStorage.setItem("changePlan", "true")
+    localStorage.setItem('changePlan', 'true')
     ElMessage({
       type: 'success',
       message: '设置成功!'
     })
+    updatePlanFlag.value += 1
 
     resetPlanForm()
   })
@@ -77,6 +79,7 @@ const resetPlanForm = () => {
   planRef.limitMoney = 0
 }
 
+const havePlan = ref(0)
 
 // 提交表单（新增或修改）
 const confirmPlanForm = async (form: FormInstance | undefined) => {
@@ -93,33 +96,23 @@ const confirmPlanForm = async (form: FormInstance | undefined) => {
   ) {
     return
   }
+  toSetPlan(planRef, havePlan.value)
+}
+
+const changeMonth = () => {
   getPlan(dateFormater('YYYY-MM', planRef.month) || '').then((plan) => {
     if (plan && plan.month) {
-      ElMessageBox.confirm(
-        '已存在额度设置(' + plan.month + '：' + plan.limitMoney + ')，是否修改设置？',
-        '通知',
-        {
-          confirmButtonText: '确定',
-          type: 'warning'
-        }
+      ElMessage.warning(
+        '已存在额度设置【' + plan.month + ':' + plan.limitMoney + '】，重新设置将会覆盖！'
       )
-        .then(() => {
-          toSetPlan(planRef, 1)
-        })
-        .catch(() => {
-          ElMessage({
-            type: 'info',
-            message: '取消设置!'
-          })
-        })
+      planRef.limitMoney = plan.limitMoney
+      havePlan.value = 1
     } else {
-      toSetPlan(planRef, 0)
+      havePlan.value = 0
+      planRef.limitMoney = 0
     }
   })
 }
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

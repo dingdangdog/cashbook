@@ -64,13 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineAsyncComponent } from 'vue'
+import { onMounted, ref, defineAsyncComponent, watch } from 'vue'
 import { dailyLine } from '@/api/api.analysis'
 import { getPlan } from '@/api/api.plan'
 import type { Plan } from '@/types/model/plan'
 import type { DailyLineChartQuery } from '@/types/model/analysis'
 import { dateFormater } from '@/utils/common'
-import { flowQuery, resetFlowQuery } from '@/utils/store'
+import { flowQuery, resetFlowQuery, updatePlanFlag } from '@/utils/store'
 import { showFlowTableDialog } from '@/stores/flag'
 import { ElMessage } from 'element-plus'
 const MonthAnalysis = defineAsyncComponent(() => import('@/components/charts/MonthAnalysis.vue'))
@@ -211,6 +211,13 @@ onMounted(() => {
       localStorage.setItem('changePlan', 'false')
     }
   }, 500)
+})
+
+watch(updatePlanFlag, () => {
+  // 限额数据查询
+  getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
+    plan.value = res
+  })
 })
 
 
