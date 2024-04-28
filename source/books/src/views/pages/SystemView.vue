@@ -33,7 +33,7 @@
     
     <el-row :gutter="24">
       <el-col :span="8">
-        <el-form-item label="类型映射" prop="jsonRelation">
+        <el-form-item label="数据分类映射关系" prop="jsonRelation">
           <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 18 }" v-model="jsonRelation" placeholder="Please input" @input="changeUrl" />
         </el-form-item>
       </el-col>
