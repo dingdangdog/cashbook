@@ -170,6 +170,7 @@ const doQuery = (query: TypePieChartQuery) => {
         flowQuery.startDay = queryRef.value.startDay
         flowQuery.endDay = queryRef.value.endDay
         flowQuery.payType = param.name
+        flowQuery.flowType = queryRef.value.flowType
         showFlowTableDialog.value.visible = true
       })
     }
