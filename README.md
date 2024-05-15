@@ -41,8 +41,6 @@
 推荐使用`docker-compose`：
 
 ```yaml
-version: "3"
-
 services:
   cashbook:
     image: dingdangdog/cashbook:latest
