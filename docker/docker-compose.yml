@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   cashbook:
     image: dingdangdog/cashbook:latest
