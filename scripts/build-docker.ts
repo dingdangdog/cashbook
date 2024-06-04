@@ -1,7 +1,7 @@
 const docker = require('./code/docker.ts');
-const books = require('./code/books.ts');
+const webui = require('./code/webui.ts');
 
-books.clean();
-books.build(true);
+webui.clean();
+webui.build(true);
 // docker.clean();
 docker.build();

@@ -14,7 +14,7 @@
 ### VS Code ###
 /**/.vscode/
 /**/node_modules/
-/source/books/dist/
+/webui/dist/
 /source/cloud/data/
 /source/cloud/src/test/
 
@@ -25,5 +25,5 @@ pnpm-lock.yaml
 ### Mac OS ###
 .DS_Store
 
-/source/server/resources/**/*
-/source/server/cashbook.log
+/server/resources/**/*
+/server/cashbook.log

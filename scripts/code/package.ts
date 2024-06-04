@@ -92,9 +92,9 @@ module.exports = {
   copyFiles: () => {
     common.log("🥗 start: copy-files 🥗");
     /* 修改 api/index.ts 中的配置为打包配置 */
-    const books_path = "./source/books/dist";
-    const server_configs = "./source/server/resources/app/config";
-    const server = "./source/server/cashbook-server.exe";
+    const books_path = "./webui/dist";
+    const server_configs = "./server/resources/app/config";
+    const server = "./server/cashbook-server.exe";
 
     const package_path = "./release/resources";
 

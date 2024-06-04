@@ -1,3 +1,3 @@
-const books = require('./code/books.ts');
-books.clean();
-books.build();
+const webui = require('./code/webui.ts');
+webui.clean();
+webui.build();

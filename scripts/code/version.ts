@@ -3,8 +3,8 @@ const common = require("./common.ts");
 const fs = require("fs");
 
 const filesToUpdate = [
-  "./source/books/package.json",
-  "./source/server/resources/app/config/server.json",
+  "./webui/package.json",
+  "./server/resources/app/config/server.json",
   "./release/package.json",
   "Dockerfile",
   "./release/cashbook-x86.iss",

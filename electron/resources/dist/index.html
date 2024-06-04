@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://images.oldmoon.top/images/dingdangdog/dingdangdog1674980314.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashbook-Desktop</title>
+    <script type="module" crossorigin src="./assets/index-83f5659e.js"></script>
+    <link rel="stylesheet" href="./assets/index-6b4fc47c.css">
+    <style>
+      body{
+      }
+      .window-title{
+        background-color: #5b9b3b;
+        height: 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+      }
+      .titlebar {
+        height: 100%;
+        -webkit-app-region: no-drag; /* 按钮不可拖动 */
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      .button {
+        width: 3rem;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+      }
+      .button:hover {
+        background-color: rgb(40, 138, 60);
+      }
+      .button-svg {
+        width: 1.5rem;
+      }
+      
+      #id{
+        /* background-color: beige; */
+        padding-top: 2.5rem !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window-title">
+      <div style="padding: 0.2rem 0.5rem; color: white;">Cashbook-Desktop</div>
+      <div class="titlebar">
+        <div class="button" id="minimize"><img src="./minus.svg" class="button-svg" /></div>
+        <div class="button" id="maximize"><img src="./window-maximize.svg" class="button-svg" /></div>
+        <div class="button" id="close"><img src="./window-close.svg" class="button-svg" /></div>
+      </div>
+    </div>
+  
+    <div id="app"></div>
+    
+    <script>
+      document.getElementById('minimize').addEventListener('click', () => {
+        window.electron.minimize();
+      });
+
+      document.getElementById('maximize').addEventListener('click', () => {
+        window.electron.maximize();
+      });
+
+      document.getElementById('close').addEventListener('click', () => {
+        window.electron.close();
+      });
+    </script>
+  </body>
+</html>

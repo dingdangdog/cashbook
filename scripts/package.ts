@@ -1,9 +1,9 @@
 const package = require('./code/package.ts');
 const server = require('./code/server.ts');
-const books = require('./code/books.ts');
+const webui = require('./code/webui.ts');
 
-books.clean();
-books.build();
+webui.clean();
+webui.build();
 
 server.clean();
 server.build();
