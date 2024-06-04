@@ -4,6 +4,7 @@ const {
   Menu,
   MenuItem,
   shell,
+  ipcMain,
 } = require("electron");
 const {spawn} = require("child_process");
 const path = require("path");
@@ -11,6 +12,7 @@ const path = require("path");
 let serverWindowPid;
 let timeOut;
 let win;
+let mode = "pro";
 
 // 设置应用程序的默认语言为中文
 // app.locale = 'zh-CN';
@@ -25,13 +27,21 @@ function createWindow() {
     //绝对路径
     icon: path.join(__dirname, "icon.ico"),
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false, // 关闭 Node.js 集成以增强安全性
+      contextIsolation: true, // 启用上下文隔离
+      preload: path.join(__dirname, "preload.js"), // 预加载脚本
     },
+    frame: false, // 无边框窗口
+    transparent: true, // 透明窗口
   });
   // 最大化窗口
   // win.maximize()
 
-  win.loadFile(path.join(__dirname, "dist/index.html"));
+  let indexPath = path.join(__dirname, "dist/index.html");
+  if (mode === "dev") {
+    indexPath = "./resources/dist/index.html";
+  }
+  win.loadFile(indexPath);
 
   // 关闭窗口时
   win.on("close", () => {
@@ -67,16 +77,17 @@ function createWindow() {
 }
 
 async function startServer() {
-  const serverName = "cashbook-server";
+  let serverPath = path.join(__dirname, "cashbook-server.exe");
+  if (mode === "dev") {
+    serverPath = "./resources/cashbook-server.exe";
+  }
   // 启动后台服务
-  spawn(path.join(__dirname, serverName + ".exe"), [], {});
+  spawn(serverPath, [], {});
 
   timeOut = setTimeout(() => {
     // 获取服务程序PID
     const getWindowPid =
-      `Get-Process -Name "` +
-      serverName +
-      `" | Select-Object -ExpandProperty Id`;
+      `Get-Process -Name "cashbook-server" | Select-Object -ExpandProperty Id`;
     const getWindow = spawn("powershell.exe", [getWindowPid]);
     getWindow.stdout.on("data", (data) => {
       console.log(`server-pid: ${data}`);
@@ -118,7 +129,27 @@ app.on("window-all-closed", () => {
   }
 });
 
-// 线程等待
+ipcMain.on('window-control', (event, action) => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (!win) return;
+
+  switch (action) {
+    case 'minimize':
+      win.minimize();
+      break;
+    case 'maximize':
+      if (win.isMaximized()) {
+        win.unmaximize();
+      } else {
+        win.maximize();
+      }
+      break;
+    case 'close':
+      win.close();
+      break;
+  }
+});
+
 function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
 }

@@ -2,11 +2,11 @@
   <div class="header-container">
    <div class="header-left">
      <!-- 图标 --> 
-     <div id="iconTitle">
+     <!-- <div id="iconTitle">
        <img alt="cashbook logo" src="@/assets/images/cashbook.png" style="width: 2.8rem" />
-     </div>
+     </div> -->
      <!-- 页面标题 --> 
-     <!-- <h3 style="padding-top: 0.3rem">Cashbook</h3> -->
+     <h3 style="padding-top: 0.3rem">Thanks for you Uesd</h3>
    </div>
 
     <div class="header-center">
@@ -203,8 +203,7 @@ const logout = () => {
 <style scoped>
 .header-container {
   display: flex;
-  justify-content: left;
-  align-items: center;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -218,22 +217,22 @@ const logout = () => {
 }
 
 .header-left {
-  flex: 1;
   width: 100%;
   display: flex;
   justify-content: left;
+  align-items: center;
 }
 .header-center {
-  flex: 3;
   width: 100%;
   display: flex;
-  justify-content: right;
+  justify-content: center;
+  align-items: center;
 }
 .header-right {
-  flex: 2;
   width: 100%;
   display: flex;
   justify-content: right;
+  align-items: center;
 }
 
 .header-setting {

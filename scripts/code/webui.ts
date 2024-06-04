@@ -4,9 +4,9 @@ const fs = require("fs");
 module.exports = {
   build: (docker = false) => {
     common.log("🥗 start: build-books 🥗");
-    const axiosPath = "./source/books/src/api/index.ts";
+    const axiosPath = "./webui/src/api/index.ts";
     const axiosInfo = fs.readFileSync(axiosPath, { encoding: "utf-8" });
-    const viteConfigPath = "./source/books/vite.config.ts";
+    const viteConfigPath = "./webui/vite.config.ts";
     const viteConfig = fs.readFileSync(viteConfigPath, { encoding: "utf-8" });
     if (!docker){
       /* 不是docker版本构建修改 api/index.ts 中的配置为打包配置 */
@@ -22,7 +22,7 @@ module.exports = {
     }
 
     /* 正式打包 */
-    const build_books_script = `cd ./source/books && npm run build-only`;
+    const build_books_script = `cd ./webui && npm run build-only`;
     console.log("run: " + build_books_script);
     execSync(build_books_script, (err, stdout, stderr) => {
       if (err) {
@@ -42,10 +42,10 @@ module.exports = {
 
   clean: () => {
     common.log("🧺 start: clean-books 🧺");
-    const booksDistPath = "./source/books/dist";
+    const booksDistPath = "./webui/dist";
     if (fs.existsSync(booksDistPath)) {
       console.log("find " + booksDistPath + ", start clean books");
-      const clean_books_script = `cd ./source/books && rd/s/q dist`;
+      const clean_books_script = `cd ./webui && rd/s/q dist`;
       console.log("run: " + clean_books_script);
       execSync(clean_books_script, (err, stdout, stderr) => {
         if (err) {

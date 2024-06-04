@@ -3,14 +3,14 @@ FROM golang:alpine AS binarybuilder
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook-desktop"
-LABEL project.version="1.1.9"
+LABEL project.version="1.1.10"
 LABEL project.github="https://github.com/DingDangDog/cashbook-desktop"
 
 
 WORKDIR /app
 
 # 后端
-COPY ./source/server/ .
+COPY ./server/ .
 # 构建适用于linux的可执行程序
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cashbook .
 
@@ -26,7 +26,7 @@ COPY --from=binarybuilder /app/resources/ ./resources/
 COPY --from=binarybuilder /app/default/ ./default/
 
 # 前端
-COPY ./source/books/dist/ ./books/
+COPY ./webui/dist/ ./books/
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 COPY ./docker/mime.types /etc/nginx/mime.types
 
