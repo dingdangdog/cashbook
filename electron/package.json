@@ -19,9 +19,16 @@
     "directories": {
       "output": "build"
     },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "installerIcon": "./icon.ico"
+    },
     "files": [
       "./icon.ico",
-      "./main.js"
+      "./main.js",
+      "./preload.js"
     ],
     "extraResources": [
       {
@@ -45,6 +52,7 @@
       ]
     },
     "win": {
+      "icon": "./icon.ico",
       "target": [
         "nsis"
       ]
