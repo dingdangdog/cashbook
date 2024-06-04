@@ -5,10 +5,8 @@ const fs = require("fs");
 const filesToUpdate = [
   "./webui/package.json",
   "./server/resources/app/config/server.json",
-  "./release/package.json",
+  "./electron/package.json",
   "Dockerfile",
-  "./release/cashbook-x86.iss",
-  "./release/cashbook-x64.iss",
 ];
 
 module.exports = {

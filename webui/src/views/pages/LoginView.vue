@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-container">
+  <div class="login-container">
     <!-- set input width -->
     <div class="icon-container"><img src="@/assets/images/cashbook.png" width="60" /><h1 style="margin-left: 2rem;">Casbook-Desktop</h1></div>
     <div class="form-container">
@@ -14,6 +14,14 @@
         <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
         <el-button type="primary" class="login-button" @click="submitForm(loginForm)">登录</el-button>
       </el-form>
+    </div>
+    <div class="theme-switch">
+      <el-switch
+        v-model="themeValue"
+        @change="changeTheme()"
+        :active-action-icon="Sunny"
+        :inactive-action-icon="MoonNight"
+      />
     </div>
   </div>
 
@@ -49,13 +57,16 @@
 </template>
 
 <script lang="ts" setup>
+import { Sunny, MoonNight } from '@element-plus/icons-vue'
 import type { User } from '@/types/model/user'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { login, registerApi } from '@/api/api.user'
 import router from '@/router/index'
 import { changeBackground } from '@/utils/common'
+import { useToggle } from '@vueuse/shared'
+import { isDark } from '@/utils/common'
 
 // 表单输入框宽度
 const formLabelWidth = ref('120px')
@@ -68,6 +79,10 @@ const formData = ref<User>({
   userName: '',
   password: ''
 })
+
+
+const themeValue = ref(false)
+const changeTheme = useToggle(isDark)
 
 const rememberUser = ref(true)
 
@@ -196,18 +211,22 @@ const cancel = () => {
   registerDialog.value.visable = false
 }
 
+onMounted(() => {
+  themeValue.value = !isDark.value
+})
 </script>
 
 <style scoped>
 /* Your CSS code here */
 
-.chart-container {
+.login-container {
   padding: 2rem;
   border-radius: 10px;
   margin: 1rem;
-  height: 90vh;
+  height: calc(100vh - 9rem);
   border: solid 1px var(--el-menu-border-color);
   text-align: center;
+  position: relative;
 }
 
 .form-container {
@@ -234,4 +253,10 @@ const cancel = () => {
   margin-left: 3rem !important;
   font-size: medium;
 }
-</style>../../router/index
+
+.theme-switch{
+  position: absolute;
+  right: 5rem;
+  bottom: 5rem;
+}
+</style>

@@ -1,16 +1,25 @@
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
-
-  /* 日间模式颜色 */
-  --write: #FFFFFF;
+  --write: #ffffff;
   --black: #000000;
-
-  /* 夜间模式颜色 */
+  --write-background: #ffffff;
+  --black-background: #121212;
 }
 
 /* 日间模式变量赋值 */
 :root {
-  --color-background: var(--write);
+  --color-background: var(--write-background);
+}
+
+/* 夜间模式变量赋值 */
+@media (prefers-color-scheme: dark) {
+  html.dark {
+    --color-background: var(--black-background);
+  }
+}
+
+body {
+  background-color: var(--color-background);
 }
 
 ::-webkit-scrollbar {
@@ -25,20 +34,12 @@
   border-radius: 10px;
 }
 
-
-/* 夜间模式变量赋值 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--black);
-  }
-}
-
-body{
+body {
   margin: 0;
 }
 
 /* 覆盖ElementPlus默认样式 */
-.el-main{
+.el-main {
   --el-main-padding: 0 !important;
 }
 
@@ -54,7 +55,7 @@ body{
   padding: 0;
 }
 
-html{
+html {
   margin: 0;
   padding: 0;
 }

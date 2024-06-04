@@ -5,7 +5,7 @@ import HeaderView from '@/views/layout/HeaderView.vue'
 </script>
 
 <template>
-  <el-container style="height: 100vh">
+  <el-container style="height: calc(100vh - 2.1rem)">
     <!-- 头部-基础功能 -->
     <el-header id="main-header">
       <HeaderView />

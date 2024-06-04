@@ -12,7 +12,7 @@ const path = require("path");
 let serverWindowPid;
 let timeOut;
 let win;
-let mode = "dev";
+let mode = "pro";
 
 // 设置应用程序的默认语言为中文
 // app.locale = 'zh-CN';
@@ -32,7 +32,7 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"), // 预加载脚本
     },
     frame: false, // 无边框窗口
-    transparent: false, // 透明窗口
+    transparent: true, // 透明窗口
   });
   // 最大化窗口
   // win.maximize()
