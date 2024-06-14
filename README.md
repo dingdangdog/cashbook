@@ -108,7 +108,7 @@ services:
 - 请阅读 【[dev.md](./dev.md)】
 
 ## 鸣谢（Acknowledgments）
-
+<!--
 ### 贡献者（Contributor）
 
 - 感谢以下贡献者，排名不分先后
@@ -116,7 +116,7 @@ services:
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
 ### 开发工具（Tools）
-
+-->
 - 感谢以下优秀的开发工具
 
 <div style="display:flex; align-item:left">
