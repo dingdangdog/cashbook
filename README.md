@@ -4,7 +4,7 @@
 </div>
 
 <p align="center">
-  <img alt="release" src="https://img.shields.io/github/v/electron/dingdangdog/cashbook-desktop" />
+  <img alt="release" src="https://img.shields.io/github/release/dingdangdog/cashbook-desktop" />
   <img alt="stars" src="https://img.shields.io/github/stars/dingdangdog/cashbook-desktop" />
   <img alt="dorks" src="https://img.shields.io/github/forks/dingdangdog/cashbook-desktop" />
 </p>
