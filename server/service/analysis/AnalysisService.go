@@ -206,6 +206,7 @@ func MonthBar(bookId int64) []types.TypePie {
 	return months
 }
 
+// 按月统计分析
 func MonthAnalysis(bookId int64, month string) types.MonthAnalysis {
 	monthBar := MonthBar(bookId)
 

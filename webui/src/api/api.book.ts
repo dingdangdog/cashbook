@@ -1,14 +1,12 @@
-import $http from './index'
-import type { Book, CreateBookDto } from '@/types/model/book';
-
-const prefix = '/admin/book';
+import api from './index'
+import type { Book, CreateBookDto } from '@/types/model/book'
 
 /**
- * 查询用户信息
+ * 查询账本信息
  * @returns book
  */
 export function getBook(name: string | undefined): Promise<Book[]> {
-  return $http({ url: prefix + "?name=" + name, method: "get"})
+  return api('queryBooks', { name })
 }
 
 /**
@@ -16,17 +14,15 @@ export function getBook(name: string | undefined): Promise<Book[]> {
  * @returns books
  */
 export function getAllBook(): Promise<Book[]> {
-  return $http({ url: "allBook", method: "get"})
+  return api('queryBooks')
 }
 
-
-
 /**
-* 注册账本
-* @returns result
-*/
+ * 注册账本
+ * @returns result
+ */
 export function createBook(createDto: CreateBookDto): Promise<Book> {
-  return $http({ url: prefix, method: "post", data: createDto })
+  return api('addBook', createDto)
 }
 
 /**
@@ -34,25 +30,20 @@ export function createBook(createDto: CreateBookDto): Promise<Book> {
  * @returns result
  */
 export function updateBook(book: Book): Promise<Book> {
-  return $http({ url: prefix + "/" + book.id, method: "put", data: book })
+  return api('updateBook', book)
 }
 /**
  * 删除账本
  * @returns result
  */
 export function deleteBook(id: number): Promise<Book> {
-  return $http({ url: prefix + "/" + id, method: "delete" })
+  return api('deleteBook', id)
 }
-
 
 /**
-* 修改账本密钥
-* @returns result
-*/
-export function changeKey(book: Book): Promise<Book> {
-  return $http({ url: prefix + '/changeKey', method: "post", data: book })
-}
-
-export async function openBookApi(): Promise<string> {
-  return $http({ url: prefix + '/openBook', method: "post" })
-}
+ * 修改账本密钥
+ * @returns result
+ */
+// export async function openBookApi(): Promise<string> {
+//   return api('deleteBook', id)
+// }

@@ -1,12 +1,10 @@
-import type { Plan } from '@/types/model/plan';
-import $http from './index'
-
-const prefix = '/admin/plans';
+import type { Plan } from '@/types/model/plan'
+import api from './index'
 
 export function setPlans(plan: Plan, overwrite: number): Promise<any> {
-  return $http({ url: prefix + "/" + overwrite, method: "post", data: plan });
+  return api('addPlan', plan)
 }
 
 export function getPlan(month: string): Promise<Plan> {
-  return $http({ url: prefix + "/" + month, method: "get" });
+  return api('queryPlans', month)
 }

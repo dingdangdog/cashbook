@@ -1,5 +1,5 @@
 import type { Typer } from '@/types/model/typer';
-import $http from './index'
+import api from './index'
 
 const prefix = '/admin';
 
@@ -7,7 +7,7 @@ const prefix = '/admin';
  * 流水类型
  */
 export function getFlowType(): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getFlowType", method: "get" });
+  return api('getFlowType', localStorage.getItem("bookId"))
 }
 
 /**
@@ -15,7 +15,7 @@ export function getFlowType(): Promise<Typer[]> {
  * @param type
  */
 export function getExpenseType(type: string): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getExpenseType/" + type, method: "get" });
+  return api('getExpenseType', localStorage.getItem("bookId"), type)
 }
 
 /**
@@ -23,18 +23,20 @@ export function getExpenseType(type: string): Promise<Typer[]> {
  * @param type
  */
 export function getPaymentType(type: string): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getPaymentType/" + type, method: "get" });
+  return api('getPaymentType', localStorage.getItem("bookId"), type)
 }
 
 export function getAll(typer: Typer): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getAll?type=" + typer.type + "&value=" + typer.value, method: "get" });
+  // TODO
+  // return $http({ url: prefix + "/dict/getAll?type=" + typer.type + "&value=" + typer.value, method: "get" });
+  return api('getPaymentType', localStorage.getItem("bookId"), typer)
 }
 
 /**
  * 更新类型
  */
 export function update(type: Typer): Promise<number> {
-  return $http({ url: prefix + "/dict/update", method: "post", data: type });
+  return api('updateType', localStorage.getItem("bookId"), type)
 }
 
 
@@ -42,12 +44,14 @@ export function update(type: Typer): Promise<number> {
  * 获取类型关系
  */
 export function getTypeRelation(): Promise<Record<string, string>> {
-  return $http({ url: prefix + "/type/getTypeRelation", method: "get"});
+  return api('getTypeRelation', localStorage.getItem("bookId"))
 }
 
 /**
  * 更新类型关系
  */
 export function updateTypeRelation(types: Record<string, string>): Promise<number> {
-  return $http({ url: prefix + "/type/updateTypeRelation", method: "post", data: types});
+  // TODO
+  // return $http({ url: prefix + "/type/updateTypeRelation", method: "post", data: types});
+  return api('getTypeRelation', localStorage.getItem("bookId"))
 }

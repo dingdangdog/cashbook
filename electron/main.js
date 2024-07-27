@@ -1,13 +1,7 @@
-const {
-  app,
-  BrowserWindow,
-  Menu,
-  MenuItem,
-  shell,
-  ipcMain,
-} = require("electron");
-const {spawn} = require("child_process");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const { spawn } = require("child_process");
 const path = require("path");
+const handler = require("./handler.js"); // 假设你的函数封装在handler.js中
 
 let serverWindowPid;
 let timeOut;
@@ -53,27 +47,26 @@ function createWindow() {
     }
   });
   // 监听窗口的键盘事件
-  win.webContents.on('before-input-event', (event, input) => {
+  win.webContents.on("before-input-event", (event, input) => {
     // 判断是否按下了 Ctrl 键和鼠标滚轮事件
-    if (input.type === 'keyDown' && input.key === 'F12') {
+    if (input.type === "keyDown" && input.key === "F12") {
       event.preventDefault();
       // f12 键按下
-      win.webContents.openDevTools({mode: 'detach'})
+      win.webContents.openDevTools({ mode: "detach" });
     }
   });
-  win.webContents.on('zoom-changed', (event, input) => {
+  win.webContents.on("zoom-changed", (event, input) => {
     event.preventDefault();
     if (event.deltaY > 0) {
-      console.log('CTRL + 鼠标滚轮向下滚动');
+      console.log("CTRL + 鼠标滚轮向下滚动");
       // 在这里执行缩小操作或其他你想要的操作
       win.webContents.setZoomFactor(win.webContents.getZoomFactor() - 0.1);
     } else if (event.deltaY < 0) {
-      console.log('CTRL + 鼠标滚轮向上滚动');
+      console.log("CTRL + 鼠标滚轮向上滚动");
       // 在这里执行放大操作或其他你想要的操作
       win.webContents.setZoomFactor(win.webContents.getZoomFactor() + 0.1);
     }
   });
-
 }
 
 async function startServer() {
@@ -86,8 +79,7 @@ async function startServer() {
 
   timeOut = setTimeout(() => {
     // 获取服务程序PID
-    const getWindowPid =
-      `Get-Process -Name "cashbook-server" | Select-Object -ExpandProperty Id`;
+    const getWindowPid = `Get-Process -Name "cashbook-server" | Select-Object -ExpandProperty Id`;
     const getWindow = spawn("powershell.exe", [getWindowPid]);
     getWindow.stdout.on("data", (data) => {
       console.log(`server-pid: ${data}`);
@@ -113,11 +105,7 @@ app.whenReady().then(async () => {
     }
   });
 
-  app.on("before-quit", () => {
-  });
-
-  // 设置应用菜单
-  Menu.setApplicationMenu(initDefaultMenu());
+  app.on("before-quit", () => {});
 });
 
 // 在所有窗口关闭时退出应用程序。
@@ -129,76 +117,36 @@ app.on("window-all-closed", () => {
   }
 });
 
-ipcMain.on('window-control', (event, action) => {
+ipcMain.on("window-control", (event, action) => {
   const win = BrowserWindow.getFocusedWindow();
   if (!win) return;
 
   switch (action) {
-    case 'minimize':
+    case "minimize":
       win.minimize();
       break;
-    case 'maximize':
+    case "maximize":
       if (win.isMaximized()) {
         win.unmaximize();
       } else {
         win.maximize();
       }
       break;
-    case 'close':
+    case "close":
       win.close();
       break;
   }
 });
 
+// 处理从渲染进程发来的请求
+ipcMain.handle("invoke-handler", async (event, functionName, ...args) => {
+  if (handler[functionName]) {
+    return handler[functionName](...args); // 调用 handler.js 中的函数
+  } else {
+    throw new Error(`Function ${functionName} not found`);
+  }
+});
+
 function wait(ms) {
   return new Promise((resolve) => setTimeout(() => resolve(), ms));
-}
-
-/**
- * 完全自定义菜单
- * @returns {Electron.Menu}
- */
-function initCustomMenu() {
-  return Menu.buildFromTemplate([
-    {
-      label: 'Help',
-      submenu: [
-        {
-          label: 'Reload',
-          click: () => {
-            app.relaunch();
-            app.quit();
-          }
-        },
-        {
-          label: 'Github', click: () => {
-            shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');
-          }
-        }
-      ]
-    }
-  ]);
-}
-
-/**
- * 使用默认菜单并进行修改
- * @returns {Electron.Menu}
- */
-function initDefaultMenu() {
-  // 获取当前菜单
-  const currentMenu = Menu.getApplicationMenu();
-
-  // 新增一个菜单项到 "Help" 菜单下
-  currentMenu.items
-    .find(item => item.label === 'Help')
-    .submenu
-    .append(new MenuItem({
-        label: 'Github',
-        click: () => {
-          shell.openExternal('https://github.com/dingdangdog/cashbook-desktop');
-        }
-      }
-    ));
-
-  return currentMenu;
 }
