@@ -13,6 +13,15 @@ const getServerInfo = () => {
   return readJsonFile(getConfigFileName());
 };
 
+const getVersion = () => {
+  const server = getServerInfo();
+  return {
+    c: 200,
+    m: "",
+    d: server.version,
+  };
+};
+
 module.exports = {
-  getServerInfo,
+  getVersion,
 };

@@ -1,4 +1,3 @@
-
 import api from './index'
 import type { User, LoginUser, NewPassword } from '../types/model/user'
 
@@ -10,13 +9,12 @@ export function login(flag: boolean, user: User): Promise<LoginUser> {
   return api('login', flag, user)
 }
 
-
 /**
  * 注册
  * @returns Page<number>
  */
 export function registerApi(user: User): Promise<number> {
-  return api('register',  user)
+  return api('register', user)
 }
 
 /**
@@ -25,7 +23,7 @@ export function registerApi(user: User): Promise<number> {
  */
 export function checkPassword(password: string): Promise<boolean> {
   // TODO
-  return api('checkPassword',  {})
+  return api('checkPassword', {})
 }
 
 /**
@@ -33,14 +31,9 @@ export function checkPassword(password: string): Promise<boolean> {
  * @returns Page<boolean>
  */
 export function changePassword(newPassword: NewPassword): Promise<boolean> {
-  return api('changePassword',  newPassword)
+  return api('changePassword', newPassword)
 }
 
-
-export function checkUser(): Promise<{user:string,book:string}> {
-  // TODO
-  // return $http({ url: "/admin/checkUser", method: "get" })
-  return api('checkUser',)
+export function checkUser(userId: string | null): Promise<User> {
+  return api('checkUser', userId)
 }
-
-

@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld("electron", {
 });
 
 contextBridge.exposeInMainWorld("api", {
-  invokeHandler: (functionName, ...args) => {
-    ipcRenderer.invoke("invoke-handler", functionName, ...args);
+  invokeHandler: async (functionName, args) => {
+    return await ipcRenderer.invoke("invoke-handler", functionName, args);
   },
 });

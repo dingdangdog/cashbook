@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-import { setBackground } from '@/api/api.user'
+// import { setBackground } from '@/api/api.user'
 import { changeBackground } from '@/utils/common'
 import { ElMessage } from 'element-plus'
 import { typeRelation } from '@/utils/store';
@@ -62,17 +62,6 @@ const changeUrl = () => {
   changeBackground(url.value)
 }
 
-const setConfirm = () => {
-  setBackground(url.value).then((res)=>{
-    if (res) {
-      ElMessage.success("设置成功")
-    } else {
-      ElMessage.success("设置失败")
-    }
-  }).catch(()=>{
-    ElMessage.success("设置失败")
-  })
-}
 
 const jsonRelation = ref('')
 
@@ -92,6 +81,7 @@ const cancelTypeRelationChange = () => {
 
 onMounted(() => {
   getTypeRelation().then(res => {
+    console.log(res)
     typeRelation.value = res
     jsonRelation.value = JSON.stringify(typeRelation.value, null, 2)
   })

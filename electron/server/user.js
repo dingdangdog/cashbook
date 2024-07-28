@@ -1,11 +1,15 @@
-const {
-  readData,
-  findById,
-  addDatas,
-  deleteDatas,
-  updateData,
-} = require("./api.js");
+const serverApi = require("./api.js");
 const crypto = require("crypto");
+
+class User {
+  constructor(id, name, userName, password, createDate) {
+    this.id = id;
+    this.name = name;
+    this.userName = userName;
+    this.password = password;
+    this.createDate = createDate;
+  }
+}
 
 const encryptBySHA256 = (userName, password) => {
   const hash = crypto.createHash("sha256");
@@ -19,34 +23,36 @@ const getFileName = () => {
 
 // 读取全部数据
 const readUsers = async () => {
-  return await readData(getFileName());
+  return await serverApi.readData(getFileName());
 };
 
 // 增加数据
 const addUser = async (user) => {
   const arr = [];
   arr.push(user);
-  return await addDatas(getFileName(), arr);
+  return await serverApi.addDatas(getFileName(), arr);
 };
 
 // 批量增加数据
 const addUsers = async (users) => {
-  return await addDatas(getFileName(), users);
+  return await serverApi.addDatas(getFileName(), users);
 };
 
 // 删除数据
 const deleteUser = async (id) => {
-  return await deleteDatas(getFileName(), [id]);
+  return await serverApi.deleteDatas(getFileName(), [id]);
 };
 
 // 修改数据
 const updateUser = async (id, data) => {
-  return await updateData(getFileName(), id, data);
+  return await serverApi.updateData(getFileName(), id, data);
 };
 
 // 基于查询条件的查询
 const queryUsers = async (query) => {
   const data = await readUsers();
+  console.log(data);
+  console.log(query);
   let result = data;
 
   if (query.id) {
@@ -65,41 +71,70 @@ const queryUsers = async (query) => {
   return result;
 };
 
+// 注册用户
 const register = async (user) => {
+  // console.log(user);
   const existingUsers = await queryUsers({ userName: user.userName });
   if (existingUsers.length > 0) {
     return -1;
   }
-  await addUser(user);
-  return 1;
+  const password = encryptBySHA256(user.userName, user.password);
+
+  const u = new User(
+    serverApi.getUUID(),
+    user.name,
+    user.userName,
+    password,
+    serverApi.getNow()
+  );
+  await addUser(u);
+  return serverApi.toResult(200, u);
 };
 
-const login = async (userName, password) => {
-  const encryptedPassword = encryptBySHA256(userName, password);
-  const users = await queryUsers({ userName, password: encryptedPassword });
+// 登录
+const login = async (flag, param) => {
+  // console.log(flag, param);
+  const encryptedPassword = encryptBySHA256(param.userName, param.password);
+  const users = await queryUsers({
+    userName: param.userName,
+    password: encryptedPassword,
+  });
+  // console.log(users);
   if (users.length === 1) {
-    return {
+    return serverApi.toResult(200, {
       id: users[0].id,
       name: users[0].name,
-    };
+    });
   }
-  return { error: "用户名或密码错误" };
+  return serverApi.toResult(401, "", "用户名或密码错误");
 };
 
+// 校验密码是否正确
 const checkPassword = async (id, password) => {
-  const user = await findById(id);
+  const user = await serverApi.findById(getFileName(), id);
   const encryptedPassword = encryptBySHA256(user.userName, password);
-  return user.password === encryptedPassword;
+  return serverApi.toResult(200, user.password === encryptedPassword);
 };
 
+// 修改密码
 const changePassword = async (password) => {
   if (!checkPassword(password.id, password.old)) {
     return false;
   }
-  const user = await findById(password.id);
+  const user = await serverApi.findById(getFileName(), password.id);
   user.password = encryptBySHA256(user.userName, password.new);
   updateUser(password.id, user);
-  return true;
+  return serverApi.toResult(200, true);
+};
+
+const checkUser = async (userId) => {
+  const user = await serverApi.findById(getFileName(), userId);
+  // console.log(userId, user);
+  if (user) {
+    return serverApi.toResult(200, user);
+  }
+
+  return serverApi.toResult(403, "", "无此用户");
 };
 
 module.exports = {
@@ -108,4 +143,5 @@ module.exports = {
   changePassword,
   readUsers,
   deleteUser,
+  checkUser,
 };

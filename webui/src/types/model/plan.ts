@@ -1,6 +1,8 @@
 export interface Plan {
-  month?: any;
-  limitMoney?: number;
-  usedMoney?: number;
-  bookId?: number;
+  id?: string
+  month?: any
+  limitMoney?: number
+  usedMoney?: number
+  bookId?: number
+  createDate?: string
 }

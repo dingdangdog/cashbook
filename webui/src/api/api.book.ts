@@ -5,8 +5,8 @@ import type { Book, CreateBookDto } from '@/types/model/book'
  * 查询账本信息
  * @returns book
  */
-export function getBook(name: string | undefined): Promise<Book[]> {
-  return api('queryBooks', { name })
+export function getBook(userId: string, bookName: string | undefined): Promise<Book[]> {
+  return api('queryBooks', { userId, bookName })
 }
 
 /**
@@ -14,7 +14,7 @@ export function getBook(name: string | undefined): Promise<Book[]> {
  * @returns books
  */
 export function getAllBook(): Promise<Book[]> {
-  return api('queryBooks')
+  return api('readBooks')
 }
 
 /**
@@ -47,3 +47,7 @@ export function deleteBook(id: number): Promise<Book> {
 // export async function openBookApi(): Promise<string> {
 //   return api('deleteBook', id)
 // }
+
+export function checkBook(bookId: string | null): Promise<Book> {
+  return api('checkBook', bookId)
+}

@@ -40,7 +40,7 @@ import { onMounted, ref } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import type { Book } from '@/types/model/book'
 
-import { createBook, getBook, openBookApi } from '@/api/api.book'
+import { createBook, getBook } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
 import router from '@/router'
 
@@ -48,11 +48,10 @@ onMounted(() => {
   initBooks()
 })
 
-
 const books = ref<Book[]>([])
 
 const initBooks = () => {
-  getBook('')
+  getBook(localStorage.getItem('userId'))
     .then((res) => {
       books.value = res
     })
@@ -68,12 +67,13 @@ const openBook = (book: Book) => {
   }
   localStorage.setItem('bookId', book.id.toString())
   localStorage.setItem('bookName', book.bookName)
-  openBookApi().then((res) => {
-    ElMessage.success(res)
-  })
+  ElMessage.success('账本已打开')
+  // openBookApi().then((res) => {
+  //   ElMessage.success(res)
+  // })
   // close book dialog
   showBookDialogFlag.value.visible = false
-  router.push({path: '/index/'})
+  router.push({ path: '/index/' })
 }
 
 // 表单输入框宽度
@@ -108,7 +108,7 @@ const bookFormRules = ref<FormRules>({
 const confirmBookForm = async (form: FormInstance | undefined) => {
   if (!form) return
   if (await form.validate()) {
-    createBook({ bookName: newBook.value.bookName })
+    createBook({ userId: localStorage.getItem('userId'), bookName: newBook.value.bookName })
       .then((_res) => {
         ElMessage.success('添加成功')
         addBookDialog.value.visible = false

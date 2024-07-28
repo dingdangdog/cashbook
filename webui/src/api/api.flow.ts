@@ -15,7 +15,7 @@ export function getAll(query: FlowQuery): Promise<Flow[]> {
  * @returns Page<Flow>
  */
 export function getFlowPage(query: FlowQuery): Promise<Page<Flow>> {
-  return api('queryFlows', query.bookId, query)
+  return api('queryFlowPage', localStorage.getItem("bookId"), query)
 }
 
 /**

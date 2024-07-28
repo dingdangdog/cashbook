@@ -1,34 +1,52 @@
-const { readData, addDatas, deleteData, updateData } = require("./api.js");
+const serverApi = require("./api.js");
 
 const getFileName = () => {
   return `book.csv`;
 };
 
+// 类定义
+class Book {
+  constructor(id, bookName, userId, createDate) {
+    this.id = id;
+    this.bookName = bookName;
+    this.userId = userId;
+    this.createDate = createDate;
+  }
+}
+
 // 读取全部数据
 const readBooks = async () => {
-  return await readData(getFileName());
+  return await serverApi.readData(getFileName());
 };
 
 // 增加数据
 const addBook = async (book) => {
   const arr = [];
-  arr.push(book);
-  return await addDatas(getFileName(), arr);
+  arr.push(
+    new Book(
+      serverApi.getUUID(),
+      book.userId,
+      book.bookName,
+      serverApi.getNow()
+    )
+  );
+  await serverApi.addDatas(getFileName(), arr);
+  return serverApi.toResult(200, book);
 };
 
 // 批量增加数据
 const addBooks = async (books) => {
-  return await addDatas(getFileName(), books);
+  return await serverApi.addDatas(getFileName(), books);
 };
 
 // 删除数据
 const deleteBook = async (id) => {
-  return await deleteData(getFileName(), id);
+  return await serverApi.deleteDatas(getFileName(), [id]);
 };
 
 // 修改数据
 const updateBook = async (id, data) => {
-  return await updateData(getFileName(), id, data);
+  return await serverApi.updateData(getFileName(), id, data);
 };
 
 // 基于查询条件的查询
@@ -46,7 +64,16 @@ const queryBooks = async (query) => {
     result = result.filter((item) => item.bookName == query.bookName);
   }
 
-  return result;
+  return serverApi.toResult(200, result);
+};
+
+const checkBook = async (bookId) => {
+  const book = await serverApi.findById(getFileName(), bookId);
+  if (book) {
+    return serverApi.toResult(200, book);
+  }
+
+  return serverApi.toResult(500, "", "无此账本");
 };
 
 module.exports = {
@@ -54,4 +81,5 @@ module.exports = {
   addBook,
   deleteBook,
   updateBook,
+  checkBook,
 };

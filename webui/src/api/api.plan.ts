@@ -6,5 +6,5 @@ export function setPlans(plan: Plan, overwrite: number): Promise<any> {
 }
 
 export function getPlan(month: string): Promise<Plan> {
-  return api('queryPlans', month)
+  return api('getPlan', month)
 }

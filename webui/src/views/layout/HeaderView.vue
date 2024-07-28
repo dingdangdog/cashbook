@@ -71,7 +71,7 @@ import PlanDialog from '@/components/dialog/PlanDialog.vue'
 import OnlineDialog from '@/components/dialog/OnlineDialog.vue'
 import ChangePasswordDialog from '@/components/dialog/ChangePasswordDialog.vue'
 
-import { getServerInfo } from '@/api/api.server'
+import { getVersion } from '@/api/api.server'
 
 import { cleanLoginInfo } from '@/utils/common'
 
@@ -114,11 +114,8 @@ const serverInfo = ref({
 })
 
 // 获取服务器信息
-getServerInfo().then((res) => {
-  serverInfo.value.id = res.id
-  serverInfo.value.version = res.version || ''
-  serverInfo.value.environment = res.environment || ''
-  serverInfo.value.createDate = res.createDate
+getVersion().then((res) => {
+  serverInfo.value.version = res.version
 
   localStorage.setItem('version', serverInfo.value.version)
 })

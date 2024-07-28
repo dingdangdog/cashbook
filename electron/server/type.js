@@ -1,6 +1,7 @@
 const { readFlows, queryFlows, updateFlows } = require("./flow.js");
 const { readJsonFile, saveJsonFile } = require("./json.js");
 const fs = require("fs");
+const path = require("path");
 
 // 读取JSON文件
 const getConfigFileName = (fileName) => {
@@ -19,7 +20,7 @@ const getTypeConvertConfig = (bookId) => {
   }
 
   const config = readJsonFile(filePath);
-  return config;
+  return { c: 200, d: config };
 };
 
 const saveTypeConvertConfig = (bookId, config) => {

@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const { spawn } = require("child_process");
 const path = require("path");
 const handler = require("./handler.js"); // 假设你的函数封装在handler.js中
 
@@ -35,7 +34,8 @@ function createWindow() {
   if (mode === "dev") {
     indexPath = "./resources/dist/index.html";
   }
-  win.loadFile(indexPath);
+  // win.loadFile(indexPath);
+  win.loadURL("http://127.0.0.1:9090/");
 
   // 关闭窗口时
   win.on("close", () => {
@@ -69,32 +69,13 @@ function createWindow() {
   });
 }
 
-async function startServer() {
-  let serverPath = path.join(__dirname, "cashbook-server.exe");
-  if (mode === "dev") {
-    serverPath = "./resources/cashbook-server.exe";
-  }
-  // 启动后台服务
-  spawn(serverPath, [], {});
-
-  timeOut = setTimeout(() => {
-    // 获取服务程序PID
-    const getWindowPid = `Get-Process -Name "cashbook-server" | Select-Object -ExpandProperty Id`;
-    const getWindow = spawn("powershell.exe", [getWindowPid]);
-    getWindow.stdout.on("data", (data) => {
-      console.log(`server-pid: ${data}`);
-
-      // 保存后台服务进程的PID
-      serverWindowPid = data;
-    });
-  }, 1500);
-}
+async function startServer() {}
 
 // 当 Electron 完成初始化时，创建窗口
 app.whenReady().then(async () => {
-  await startServer();
+  // await startServer();
   // 等待后台服务启动
-  await wait(1500);
+  // await wait(1500);
   createWindow();
 
   app.on("activate", () => {
@@ -139,11 +120,24 @@ ipcMain.on("window-control", (event, action) => {
 });
 
 // 处理从渲染进程发来的请求
-ipcMain.handle("invoke-handler", async (event, functionName, ...args) => {
+ipcMain.handle("invoke-handler", async (event, functionName, args) => {
+  let argarr = [];
+  // console.log("1--", functionName, args);
+  if (args) {
+    argarr = args.map((item) => {
+      try {
+        return JSON.parse(item);
+      } catch (error) {
+        return item;
+      }
+    });
+  }
+  console.log("2--", functionName, ...argarr);
   if (handler[functionName]) {
-    return handler[functionName](...args); // 调用 handler.js 中的函数
+    // console.log("handler");
+    return await handler[functionName](...argarr); // 调用 handler.js 中的函数
   } else {
-    throw new Error(`Function ${functionName} not found`);
+    return { c: 500, m: `Function ${functionName} not found` };
   }
 });
 

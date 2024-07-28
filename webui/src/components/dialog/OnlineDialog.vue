@@ -29,7 +29,7 @@ import type { FormInstance, FormRules } from 'element-plus';
 
 import type { OnlineSync } from '@/types/model/online'
 
-import { upload, download } from '@/api/api.online'
+// import { upload, download } from '@/api/api.online'
 
 // 表单输入框宽度
 const formLabelWidth = ref('100px')
@@ -83,33 +83,33 @@ const toUpload = async (form: FormInstance | undefined) => {
     text: 'Loading',
     background: 'rgba(0, 0, 0, 0.7)'
   })
-  upload(onlineModel).then((res) => {
-    if (res == 'true') {
-      loading.close()
-      ElMessage({
-        type: 'success',
-        message: '上传成功!'
-      })
-    } else {
-      loading.close()
-      console.log(res)
-      if (res.code == 203) {
-        if (!res.data?.auth?.state || res.data.auth.state == 0) {
-          ElMessage.error('授权码无效')
-        } else {
-          ElMessage.error(
-            '授权码剩余天数：' + (res.data.auth.limit == -1 ? '不限' : res.data.auth.limit)
-          )
-          ElMessage.error('授权码本日剩余次数：' + res.data.auth.day)
-        }
-      } else {
-        ElMessage({
-          type: 'error',
-          message: res.message
-        })
-      }
-    }
-  })
+  // upload(onlineModel).then((res) => {
+  //   if (res == 'true') {
+  //     loading.close()
+  //     ElMessage({
+  //       type: 'success',
+  //       message: '上传成功!'
+  //     })
+  //   } else {
+  //     loading.close()
+  //     console.log(res)
+  //     if (res.code == 203) {
+  //       if (!res.data?.auth?.state || res.data.auth.state == 0) {
+  //         ElMessage.error('授权码无效')
+  //       } else {
+  //         ElMessage.error(
+  //           '授权码剩余天数：' + (res.data.auth.limit == -1 ? '不限' : res.data.auth.limit)
+  //         )
+  //         ElMessage.error('授权码本日剩余次数：' + res.data.auth.day)
+  //       }
+  //     } else {
+  //       ElMessage({
+  //         type: 'error',
+  //         message: res.message
+  //       })
+  //     }
+  //   }
+  // })
 }
 const toDownload = async (form: FormInstance | undefined) => {
   saveOnline()
@@ -142,40 +142,40 @@ const toDownload = async (form: FormInstance | undefined) => {
         text: 'Loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      download(onlineModel).then((res) => {
-        if (res == 1) {
-          loading.close()
-          ElMessage({
-            type: 'success',
-            message: '下载成功!'
-          })
-          ElMessageBox.confirm(
-            '下载成功，请重新登录当前账本。当前账本密码：' + window.localStorage.getItem('bookId'),
-            '下载成功',
-            {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }
-          )
-            .then(() => {
-              localStorage.removeItem('bookId')
-              localStorage.removeItem('bookName')
-              location.reload()
-            })
-            .catch(() => {
-              localStorage.removeItem('bookId')
-              localStorage.removeItem('bookName')
-              location.reload()
-            })
-        } else {
-          loading.close()
-          ElMessage({
-            type: 'error',
-            message: res.message
-          })
-        }
-      })
+      // download(onlineModel).then((res) => {
+      //   if (res == 1) {
+      //     loading.close()
+      //     ElMessage({
+      //       type: 'success',
+      //       message: '下载成功!'
+      //     })
+      //     ElMessageBox.confirm(
+      //       '下载成功，请重新登录当前账本。当前账本密码：' + window.localStorage.getItem('bookId'),
+      //       '下载成功',
+      //       {
+      //         confirmButtonText: '确定',
+      //         cancelButtonText: '取消',
+      //         type: 'warning'
+      //       }
+      //     )
+      //       .then(() => {
+      //         localStorage.removeItem('bookId')
+      //         localStorage.removeItem('bookName')
+      //         location.reload()
+      //       })
+      //       .catch(() => {
+      //         localStorage.removeItem('bookId')
+      //         localStorage.removeItem('bookName')
+      //         location.reload()
+      //       })
+      //   } else {
+      //     loading.close()
+      //     ElMessage({
+      //       type: 'error',
+      //       message: res.message
+      //     })
+      //   }
+      // })
     })
     .catch(() => {
       ElMessage({

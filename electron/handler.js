@@ -1,4 +1,4 @@
-const { getServerInfo } = require("./server/server.js");
+const { getVersion } = require("./server/server.js");
 
 const {
   register,
@@ -6,6 +6,7 @@ const {
   changePassword,
   readUsers,
   deleteUser,
+  checkUser,
 } = require("./server/user.js");
 
 const {
@@ -13,6 +14,7 @@ const {
   addBook,
   deleteBook,
   updateBook,
+  checkBook,
 } = require("./server/book.js");
 
 const {
@@ -21,6 +23,7 @@ const {
   addFlow,
   deleteFlows,
   updateFlow,
+  queryFlowPage,
 } = require("./server/flow.js");
 
 const {
@@ -36,6 +39,7 @@ const {
   addPlan,
   deletePlan,
   updatePlan,
+  getPlan,
 } = require("./server/plan.js");
 
 const {
@@ -49,28 +53,31 @@ const {
 } = require("./server/type.js");
 
 module.exports = {
-  getServerInfo,
+  getVersion,
 
   register,
   login,
   changePassword,
   readUsers,
   deleteUser,
+  checkUser,
 
   queryBooks,
   addBook,
   deleteBook,
   updateBook,
+  checkBook,
 
   queryFlows,
   importFlows,
   addFlow,
   deleteFlows,
   updateFlow,
+  queryFlowPage,
 
-  getDailyLine,
-  getTypePie,
-  getPayTypeBar,
+  dailyLine: getDailyLine,
+  typePie: getTypePie,
+  payTypeBar: getPayTypeBar,
   monthBar,
   monthAnalysis,
 
@@ -78,12 +85,13 @@ module.exports = {
   addPlan,
   deletePlan,
   updatePlan,
+  getPlan,
 
   getFlowType,
   getExpenseType,
   getPaymentType,
   updateType,
   arrayContains,
-  getTypeConvertConfig,
+  getTypeRelation: getTypeConvertConfig,
   saveTypeConvertConfig,
 };

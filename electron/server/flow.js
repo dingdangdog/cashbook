@@ -1,10 +1,4 @@
-const {
-  readData,
-  addDatas,
-  deleteAll,
-  updateData,
-  updateDatas,
-} = require("./api.js");
+const serverApi = require("./api.js");
 
 const getFileName = (bookId) => {
   return `flow${bookId}.csv`;
@@ -12,38 +6,38 @@ const getFileName = (bookId) => {
 
 // 读取全部流水数据
 const readFlows = (bookId) => {
-  return readData(getFileName(bookId));
+  return serverApi.readData(getFileName(bookId));
 };
 
 // 增加数据
 const addFlow = (bookId, flow) => {
   const arr = [];
   arr.push(flow);
-  return addDatas(getFileName(bookId), arr);
+  return serverApi.addDatas(getFileName(bookId), arr);
 };
 
 // 批量增加数据
 const addFlows = (bookId, flows) => {
-  return addDatas(getFileName(bookId), flows);
+  return serverApi.addDatas(getFileName(bookId), flows);
 };
 
 // 删除全部数据
 const deleteAllFlow = (bookId) => {
-  return deleteAll(getFileName(bookId));
+  return serverApi.deleteAll(getFileName(bookId));
 };
 
 // 批量删除数据
 const deleteFlows = (bookId, ids) => {
-  return deleteDatas(getFileName(bookId), ids);
+  return serverApi.deleteDatas(getFileName(bookId), ids);
 };
 
 // 修改数据
 const updateFlow = (bookId, data) => {
-  return updateData(getFileName(bookId), data);
+  return serverApi.updateData(getFileName(bookId), data);
 };
 
 const updateFlows = (bookId, flows) => {
-  return updateDatas(getFileName(bookId), flows);
+  return serverApi.updateDatas(getFileName(bookId), flows);
 };
 
 // 基于查询条件的查询
@@ -81,7 +75,11 @@ const queryFlows = async (bookId, query) => {
       item.description.includes(query.description)
     );
   }
+  return result;
+};
 
+const queryFlowPage = async (bookId, query) => {
+  const result = await queryFlows(bookId, query);
   // 排序
   if (query.moneySort) {
     result = result.sort((a, b) =>
@@ -111,7 +109,7 @@ const queryFlows = async (bookId, query) => {
   pageData = result.slice(start, end);
   totalCount = result.length;
 
-  return {
+  return serverApi.toResult(200, {
     pageNum,
     pageSize,
     pageData,
@@ -119,14 +117,14 @@ const queryFlows = async (bookId, query) => {
     totalIn,
     totalOut,
     notInOut,
-  };
+  });
 };
 
 const importFlows = async (bookId, flag, flows) => {
   if (flag == "overwrite") {
     deleteAllFlow(bookId);
   }
-  return addFlows(bookId, flows);
+  return await addFlows(bookId, flows);
 };
 
 module.exports = {
@@ -137,6 +135,7 @@ module.exports = {
   deleteFlows,
   updateFlow,
   updateFlows,
+  queryFlowPage,
 };
 
 // console.log(queryFlows(101, {pageNum:1, pageSize: 10}))

@@ -7,7 +7,10 @@ const getDailyLine = async (bookId, param) => {
   const inSumMap = {};
   const zeroSumMap = {};
 
-  flowList.forEach((flow) => {
+  if (flowList.length <= 0) {
+    return { c: 200, d: [], m: "暂无数据" };
+  }
+  for (let flow of flowList) {
     if (flow.FlowType === "支出") {
       sumMap[flow.Day] = (sumMap[flow.Day] || 0) + flow.Money;
     } else if (flow.FlowType === "收入") {
@@ -15,12 +18,12 @@ const getDailyLine = async (bookId, param) => {
     } else {
       zeroSumMap[flow.Day] = (zeroSumMap[flow.Day] || 0) + flow.Money;
     }
-  });
+  }
 
-  Object.keys(inSumMap).forEach((day) => {
+  for (let day of Object.keys(inSumMap)) {
     if (!sumMap[day]) sumMap[day] = 0;
     if (!zeroSumMap[day]) zeroSumMap[day] = 0;
-  });
+  }
 
   const lines = Object.keys(sumMap).map(
     (day) =>
@@ -34,7 +37,7 @@ const getDailyLine = async (bookId, param) => {
 
   lines.sort((a, b) => a.day.localeCompare(b.day));
 
-  return lines;
+  return { c: 200, d: lines };
 };
 
 // 获取消费类型饼图数据
@@ -42,9 +45,12 @@ const getTypePie = async (bookId, param) => {
   const flowList = await queryFlows(bookId, param);
   const sumMap = {};
 
-  flowList.forEach((flow) => {
+  if (flowList.length <= 0) {
+    return { c: 200, d: [], m: "暂无数据" };
+  }
+  for (let flow of flowList) {
     sumMap[flow.Type] = (sumMap[flow.Type] || 0) + flow.Money;
-  });
+  }
 
   const datas = Object.keys(sumMap).map(
     (type) => new types.TypeData(type, sumMap[type])
@@ -62,9 +68,12 @@ const getPayTypeBar = async (bookId, param) => {
   const flowList = await queryFlows(bookId, param);
   const sumMap = {};
 
-  flowList.forEach((flow) => {
+  if (flowList.length <= 0) {
+    return { c: 200, d: [], m: "暂无数据" };
+  }
+  for (let flow of flowList) {
     sumMap[flow.PayType] = (sumMap[flow.PayType] || 0) + flow.Money;
-  });
+  }
 
   const datas = Object.keys(sumMap).map(
     (payType) => new types.TypeData(payType, sumMap[payType])
@@ -84,7 +93,10 @@ const monthBar = async (bookId) => {
   const inSumMap = {};
   const zeroSumMap = {};
 
-  flowList.forEach((flow) => {
+  if (flowList.length <= 0) {
+    return { c: 200, d: [], m: "暂无数据" };
+  }
+  for (let flow of flowList) {
     const month = flow.Day.slice(0, 7);
     if (flow.FlowType === "支出") {
       sumMap[month] = (sumMap[month] || 0) + flow.Money;
@@ -93,12 +105,12 @@ const monthBar = async (bookId) => {
     } else {
       zeroSumMap[month] = (zeroSumMap[month] || 0) + flow.Money;
     }
-  });
+  }
 
-  Object.keys(inSumMap).forEach((month) => {
+  for (let month of Object.keys(inSumMap)) {
     if (!sumMap[month]) sumMap[month] = 0;
     if (!zeroSumMap[month]) zeroSumMap[month] = 0;
-  });
+  }
 
   const months = Object.keys(sumMap).map(
     (month) =>
@@ -120,13 +132,13 @@ const monthAnalysis = async (bookId, month) => {
   const monthBarData = await monthBar(bookId);
   const analysis = { month };
 
-  monthBarData.forEach((data) => {
+  for (let data of monthBarData) {
     if (data.type === month) {
       analysis.outSum = data.typeSum;
       analysis.inSum = data.inSum;
       analysis.zeroSum = data.zeroSum;
     }
-  });
+  }
 
   if (!analysis.outSum && !analysis.inSum) {
     return analysis;
@@ -150,7 +162,7 @@ const monthAnalysis = async (bookId, month) => {
   let maxOutFlow = {};
   let maxInFlow = {};
 
-  flowList.forEach((flow) => {
+  for (let flow of flowList) {
     if (
       flow.FlowType === "支出" &&
       (!maxOutFlow.Money || flow.Money > maxOutFlow.Money)
@@ -162,7 +174,7 @@ const monthAnalysis = async (bookId, month) => {
     ) {
       maxInFlow = flow;
     }
-  });
+  }
 
   analysis.maxOut = maxOutFlow;
   analysis.maxIn = maxInFlow;

@@ -14,9 +14,13 @@
 ### VS Code ###
 /**/.vscode/
 /**/node_modules/
+
 /webui/dist/
 /source/cloud/data/
 /source/cloud/src/test/
+
+### electron ###
+/electron/data/
 
 /**/package-lock.json
 pnpm-lock.yaml
