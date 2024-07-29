@@ -66,7 +66,7 @@ const changeUrl = () => {
 const jsonRelation = ref('')
 
 const confirmTypeRelationChange = () => {
-  let newRelation = JSON.parse(jsonRelation.value);
+  let newRelation = jsonRelation.value;
   updateTypeRelation(newRelation).then(()=>{
     ElMessage.success("保存成功");
     typeRelation.value = newRelation;
@@ -81,7 +81,7 @@ const cancelTypeRelationChange = () => {
 
 onMounted(() => {
   getTypeRelation().then(res => {
-    console.log(res)
+    // console.log(res)
     typeRelation.value = res
     jsonRelation.value = JSON.stringify(typeRelation.value, null, 2)
   })

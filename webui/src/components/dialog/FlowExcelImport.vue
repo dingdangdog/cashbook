@@ -312,6 +312,8 @@ onMounted(() => {
   border: 1px solid;
 }
 .dialog-container {
+  /* background-color: transparent; */
+  margin: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;

@@ -7,11 +7,11 @@
           &nbsp; 总收入：<b
             >{{ inMonthCount[date] ? Number(inMonthCount[date]).toFixed(2) : 0 }}
           </b>
-          &nbsp; 总支出：<b :style="outPlan(date)"
+          &nbsp; 总支出：<b :style="outPlanStyle(date)"
             >{{ outMonthCount[date] ? Number(outMonthCount[date]).toFixed(2) : 0 }}
           </b>
           &nbsp; 支出限额：<b>{{ plan.limitMoney }} </b>
-          &nbsp; 
+          &nbsp;
           <el-button type="primary" @click="showMonthAnalysis(date)">分析</el-button>
         </span>
         <el-row class="mini-button-group">
@@ -25,18 +25,16 @@
 
       <template #date-cell="{ data }">
         <div @click="clickDay(data)" class="day-container">
-          <span 
+          <span
             class="day-title"
-            :class="data.day === flowQuery.startDay ? 'is-selected' : ''" 
-            style="flex:1;">
+            :class="data.day === flowQuery.startDay ? 'is-selected' : ''"
+            style="flex: 1"
+          >
             {{ data.day.split('-').slice(1).join('-') }}
             {{ data.day === flowQuery.startDay ? '✔️' : '' }}
           </span>
           <div class="day-count">
-            <span
-              :class="inMoneyClass(inDayCount[data.day])"
-              @click.stop="clickDay(data,'收入')"
-            >
+            <span :class="inMoneyClass(inDayCount[data.day])" @click.stop="clickDay(data, '收入')">
               {{
                 inDayCount[data.day] && inDayCount[data.day] > 0
                   ? '收：' + Number(inDayCount[data.day]).toFixed(2)
@@ -45,7 +43,7 @@
             </span>
             <span
               :class="outMoneyClass(outDayCount[data.day])"
-              @click.stop="clickDay(data,'支出')" 
+              @click.stop="clickDay(data, '支出')"
             >
               {{
                 outDayCount[data.day] && outDayCount[data.day] > 0
@@ -58,8 +56,13 @@
       </template>
     </el-calendar>
   </div>
-  <el-dialog style="width: 30rem" v-model="monthAnalysisDialog" :title="monthTitle + ' 流水分析'" destroy-on-close>
-    <MonthAnalysis :month="monthTitle"/>
+  <el-dialog
+    style="width: 30rem"
+    v-model="monthAnalysisDialog"
+    :title="monthTitle + ' 流水分析'"
+    destroy-on-close
+  >
+    <MonthAnalysis :month="monthTitle" />
   </el-dialog>
 </template>
 
@@ -126,9 +129,7 @@ const changeDate = (value: any) => {
     } else {
       nowDate.value = new Date()
     }
-    getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
-      plan.value = res
-    })
+    toGetPlan(dateFormater('YYYY-MM', nowDate.value))
   }
 }
 
@@ -161,7 +162,7 @@ const inMoneyClass = (money: any) => {
   }
 }
 
-const initQuery = () => {
+const initData = () => {
   inMonthCount.value = {}
   inDayCount.value = {}
   outMonthCount.value = {}
@@ -170,6 +171,7 @@ const initQuery = () => {
   doQuery({}).then((res) => {
     if (res.length === 0) {
       ElMessage.error('暂无数据')
+      return
     }
     res.forEach((data) => {
       // 月集合
@@ -185,21 +187,33 @@ const initQuery = () => {
     })
     // console.log(outMonthCount.value)
   })
+  let month = dateFormater('YYYY-MM', nowDate.value)
+  toGetPlan(month)
+}
 
+const toGetPlan = (month: string) => {
   // 限额数据查询
-  getPlan(dateFormater('YYYY-MM', nowDate.value)).then((res) => {
-    plan.value = res
+  getPlan(month).then((res) => {
+    // console.log('res', res)
+    if (res) {
+      plan.value = res
+    } else {
+      ElMessage({
+        type: 'warning',
+        message: `暂未设置${month}月限额`
+      })
+    }
   })
 }
 
-const outPlan = (date: string) => {
-  if (plan.value.limitMoney && outMonthCount.value[date] > plan.value.limitMoney) {
+const outPlanStyle = (date: string) => {
+  if (plan.value?.limitMoney && outMonthCount.value[date] > plan.value.limitMoney) {
     return 'color:red'
   }
   return ''
 }
 
-initQuery()
+initData()
 
 let bookId = localStorage.getItem('bookId')
 onMounted(() => {
@@ -207,7 +221,7 @@ onMounted(() => {
   setInterval(() => {
     if (bookId != localStorage.getItem('bookId') || localStorage.getItem('changePlan') === 'true') {
       bookId = localStorage.getItem('bookId')
-      initQuery()
+      initData()
       localStorage.setItem('changePlan', 'false')
     }
   }, 500)
@@ -219,7 +233,6 @@ watch(updatePlanFlag, () => {
     plan.value = res
   })
 })
-
 
 const monthAnalysisDialog = ref(false)
 const monthTitle = ref('')
@@ -242,7 +255,7 @@ const showMonthAnalysis = (month: string) => {
   padding: 0 !important;
 }
 
-.day-container{
+.day-container {
   height: 100%;
   padding: 0.5rem;
   display: flex;
@@ -268,7 +281,7 @@ const showMonthAnalysis = (month: string) => {
   flex-direction: column;
 }
 
-.day-count span{
+.day-count span {
   height: 1.5rem;
   display: flex;
   justify-content: center;

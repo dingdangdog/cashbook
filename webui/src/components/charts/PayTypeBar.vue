@@ -144,6 +144,7 @@ const doQuery = (query: TypePieChartQuery) => {
   flowQuery.endDay = queryRef.value.endDay
   payTypeBar(query).then((res) => {
     if (res) {
+      // console.log(res)
       if (res.length === 0) {
         console.log('PayTypeBar未查询到数据！')
         return

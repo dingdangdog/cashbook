@@ -1,13 +1,13 @@
 export interface Book {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   bookName: string;
   createDate: string;
 }
 
 export class BookQuery {
-  id?: number;
-  userId?: number;
+  id?: string;
+  userId?: string;
   bookName?: string;
   createDate?: string;
 }

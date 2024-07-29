@@ -73,7 +73,7 @@ const openBook = (book: Book) => {
   // })
   // close book dialog
   showBookDialogFlag.value.visible = false
-  router.push({ path: '/index/' })
+  router.push({ path: '/index/calendar' })
 }
 
 // 表单输入框宽度

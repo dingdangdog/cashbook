@@ -25,8 +25,8 @@ const addBook = async (book) => {
   arr.push(
     new Book(
       serverApi.getUUID(),
-      book.userId,
       book.bookName,
+      book.userId,
       serverApi.getNow()
     )
   );
@@ -41,12 +41,14 @@ const addBooks = async (books) => {
 
 // 删除数据
 const deleteBook = async (id) => {
-  return await serverApi.deleteDatas(getFileName(), [id]);
+  await serverApi.deleteDatas(getFileName(), [id]);
+  return serverApi.toResult(200, "", "ok");
 };
 
 // 修改数据
 const updateBook = async (id, data) => {
-  return await serverApi.updateData(getFileName(), id, data);
+  await serverApi.updateData(getFileName(), id, data);
+  return serverApi.toResult(200, data, "ok");
 };
 
 // 基于查询条件的查询

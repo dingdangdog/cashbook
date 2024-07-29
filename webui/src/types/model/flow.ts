@@ -1,11 +1,11 @@
 export interface Flow {
-    id?: number;
+    id?: string;
     day?: string;
     // 流水类型
     flowType?: string;
     // 消费类型
     type?: string;
-    bookId?: number;
+    bookId?: string;
     // 支付方式
     payType?: string;
     money?: number;
@@ -18,7 +18,7 @@ export interface Flow {
 export interface CreateFlowDto {
     day?: string;
     flowType?: string;
-    bookId?: number;
+    bookId?: string;
     type?: string;
     payType?: string;
     money?: number;
@@ -32,7 +32,7 @@ export interface CreateFlowDto {
  */
 export interface UpdateFlowDto {
     day?: string;
-    bookId?: number;
+    bookId?: string;
     flowType?: string;
     type?: string;
     payType?: string;
@@ -44,8 +44,8 @@ export interface UpdateFlowDto {
 export class FlowQuery {
     pageNum: number = 1;
     pageSize: number = 20;
-    id?: number;
-    bookId?: number;
+    id?: string;
+    bookId?: string;
     startDay?: string;
     endDay?: string;
     flowType?: string;

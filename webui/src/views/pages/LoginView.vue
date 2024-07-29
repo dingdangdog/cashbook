@@ -6,7 +6,7 @@
       <h1 style="margin-left: 2rem">Casbook-Desktop</h1>
     </div>
     <div class="form-container">
-      <el-form :model="formData" :rules="rules" label-width="10rem">
+      <el-form ref="loginForm" :model="formData" :rules="rules" label-width="10rem">
         <el-form-item label="帐号（Account）" prop="name" class="login-input">
           <el-input v-model="formData.userName" />
           <el-text style="color: red" v-if="loginCheck.userName">{{ loginCheck.userName }}</el-text>
@@ -16,13 +16,13 @@
             v-model="formData.password"
             type="password"
             autocomplete="off"
-            @keyup.enter="submitForm()"
+            @keyup.enter="submitForm(loginForm)"
             show-password
           />
         </el-form-item>
         <el-checkbox v-model="rememberUser" class="login-button">记住我</el-checkbox>
         <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
-        <el-button type="primary" class="login-button" @click="submitForm()">登录</el-button>
+        <el-button type="primary" class="login-button" @click="submitForm(loginForm)">登录</el-button>
       </el-form>
     </div>
     <div class="theme-switch">
@@ -116,6 +116,7 @@ const changeTheme = useToggle(isDark)
 
 const rememberUser = ref(true)
 
+const loginForm = ref<FormInstance>()
 const rules = reactive<FormRules<typeof formData>>({
   userName: [
     { required: true, message: 'Please input userName', trigger: 'blur' },
@@ -127,57 +128,38 @@ const rules = reactive<FormRules<typeof formData>>({
   ]
 })
 
-const validLoginParam = (): boolean => {
-  let flag = true
-  if (!formData.value.userName) {
-    loginCheck.value.userName = 'Please input userName'
-    flag = false
-  }
-  if (!formData.value.password) {
-    loginCheck.value.password = 'Please input password'
-    flag = false
-  }
-  // if (!flag) {
-  return flag
-  // }
-  // if (!formData.value.userName) {
-  //   loginCheck.value.userName = "Please input userName"
-  //   flag = false
-  // }
-  // if (!formData.value.password) {
-  //   loginCheck.value.password = "Please input password"
-  //   flag = false
-  // }
-}
-
-const submitForm = async () => {
-  console.log(formData.value)
-  if (validLoginParam()) {
-    //alert('submit!')
-    login(rememberUser.value, formData.value).then((res) => {
-      if (res.id != 0) {
-        ElMessage({
-          type: 'success',
-          message: '登录成功!'
-        })
-        localStorage.setItem('userId', res.id.toString())
-        localStorage.setItem('name', res.name)
-        localStorage.setItem('token', res.token)
-        if (res.background) {
-          changeBackground(res.background)
+const submitForm = async (form: FormInstance | undefined) => {
+  if (!form) return
+  form.validate((valid, data) => {
+    if (valid) {
+      login(rememberUser.value, formData.value).then((res) => {
+        if (res.id != 0) {
+          ElMessage({
+            type: 'success',
+            message: '登录成功!'
+          })
+          localStorage.setItem('userId', res.id.toString())
+          localStorage.setItem('name', res.name)
+          localStorage.setItem('token', res.token)
+          if (rememberUser.value) {
+            localStorage.setItem('remember', rememberUser.value)
+          }
+          if (res.background) {
+            changeBackground(res.background)
+          }
+          // 跳转到首页
+          router.push({ path: '/index/calendar' })
+        } else {
+          ElMessage({
+            type: 'error',
+            message: '登录失败!'
+          })
         }
-        // 跳转到首页
-        router.push({ path: '/index/' })
-      } else {
-        ElMessage({
-          type: 'error',
-          message: '登录失败!'
-        })
-      }
-    })
-  } else {
-    console.log('error submit!!')
-  }
+      })
+    } else {
+      console.log('error submit!!')
+    }
+  })
 }
 const registerDialog = ref({
   visable: false,

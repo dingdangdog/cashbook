@@ -31,9 +31,9 @@
         />
       </el-select>
     </div>
-<!--    <div class="row-header pc-button">-->
-<!--      <el-button :icon="Search" circle @click="doQuery(queryRef)" />-->
-<!--    </div>-->
+    <!--    <div class="row-header pc-button">-->
+    <!--      <el-button :icon="Search" circle @click="doQuery(queryRef)" />-->
+    <!--    </div>-->
   </el-row>
 
   <el-row class="mini-buttons">
@@ -66,6 +66,7 @@ import { showFlowTableDialog } from '@/stores/flag'
 
 // 使用 props 来接收外部传入的参数
 const { title, style } = defineProps(['title', 'style'])
+// console.log(style.value)
 
 const query: TypePieChartQuery = {
   flowType: '支出'
@@ -142,7 +143,9 @@ let typePieChart: echarts.ECharts
 const doQuery = (query: TypePieChartQuery) => {
   flowQuery.startDay = queryRef.value.startDay
   flowQuery.endDay = queryRef.value.endDay
+  console.log(query)
   typePie(query).then((res) => {
+    console.log(res)
     if (res) {
       if (res.length === 0) {
         console.log('TypePieChart未查询到数据！')
@@ -165,7 +168,7 @@ const doQuery = (query: TypePieChartQuery) => {
       typePieDiv = document.getElementById('typePieDiv')
       typePieChart = echarts.init(typePieDiv)
       typePieChart.setOption(optionRef.value)
-      typePieChart.on('click', function(param) {
+      typePieChart.on('click', function (param) {
         resetFlowQuery()
         flowQuery.startDay = queryRef.value.startDay
         flowQuery.endDay = queryRef.value.endDay
@@ -191,7 +194,6 @@ onMounted(() => {
 .queryRow {
   margin: 8px 3px;
 }
-
 
 .row-header {
   margin: auto 0.5rem;

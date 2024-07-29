@@ -1,4 +1,20 @@
 const { readFlows, queryFlows } = require("./flow.js");
+class DailyLine {
+  constructor(day, daySum, inSum, zeroSum) {
+    this.day = day;
+    this.daySum = daySum; // 总支出
+    this.inSum = inSum; // 总收入
+    this.zeroSum = zeroSum; // 总不计收支
+  }
+}
+class TypePie {
+  constructor(type, typeSum, inSum, zeroSum) {
+    this.type = type;
+    this.typeSum = typeSum; // 总支出
+    this.inSum = inSum; // 总收入
+    this.zeroSum = zeroSum; // 总不计收支
+  }
+}
 
 // 获取每日流水折线图数据
 const getDailyLine = async (bookId, param) => {
@@ -11,12 +27,12 @@ const getDailyLine = async (bookId, param) => {
     return { c: 200, d: [], m: "暂无数据" };
   }
   for (let flow of flowList) {
-    if (flow.FlowType === "支出") {
-      sumMap[flow.Day] = (sumMap[flow.Day] || 0) + flow.Money;
-    } else if (flow.FlowType === "收入") {
-      inSumMap[flow.Day] = (inSumMap[flow.Day] || 0) + flow.Money;
+    if (flow.flowType === "支出") {
+      sumMap[flow.day] = (sumMap[flow.day] || 0) + Number(flow.money);
+    } else if (flow.flowType === "收入") {
+      inSumMap[flow.day] = (inSumMap[flow.day] || 0) + Number(flow.money);
     } else {
-      zeroSumMap[flow.Day] = (zeroSumMap[flow.Day] || 0) + flow.Money;
+      zeroSumMap[flow.day] = (zeroSumMap[flow.day] || 0) + Number(flow.money);
     }
   }
 
@@ -27,7 +43,7 @@ const getDailyLine = async (bookId, param) => {
 
   const lines = Object.keys(sumMap).map(
     (day) =>
-      new types.DailyLine(
+      new DailyLine(
         day,
         sumMap[day].toFixed(2),
         (inSumMap[day] || 0).toFixed(2),
@@ -49,18 +65,19 @@ const getTypePie = async (bookId, param) => {
     return { c: 200, d: [], m: "暂无数据" };
   }
   for (let flow of flowList) {
-    sumMap[flow.Type] = (sumMap[flow.Type] || 0) + flow.Money;
+    sumMap[flow.type] = (sumMap[flow.type] || 0) + Number(flow.money);
   }
 
   const datas = Object.keys(sumMap).map(
-    (type) => new types.TypeData(type, sumMap[type])
+    (type) => new TypePie(type, sumMap[type])
   );
 
   datas.sort((a, b) => b.typeSum - a.typeSum);
 
-  return datas.map(
-    (data) => new types.TypePie(data.type, data.typeSum.toFixed(2))
+  const result = datas.map(
+    (data) => new TypePie(data.type, data.typeSum.toFixed(2))
   );
+  return { c: 200, d: result };
 };
 
 // 获取支付类型饼图数据
@@ -72,18 +89,18 @@ const getPayTypeBar = async (bookId, param) => {
     return { c: 200, d: [], m: "暂无数据" };
   }
   for (let flow of flowList) {
-    sumMap[flow.PayType] = (sumMap[flow.PayType] || 0) + flow.Money;
+    sumMap[flow.payType] = (sumMap[flow.payType] || 0) + Number(flow.money);
   }
 
   const datas = Object.keys(sumMap).map(
-    (payType) => new types.TypeData(payType, sumMap[payType])
+    (payType) => new TypePie(payType, sumMap[payType])
   );
 
   datas.sort((a, b) => b.typeSum - a.typeSum);
-
-  return datas.map(
-    (data) => new types.TypePie(data.type, data.typeSum.toFixed(2))
+  const result = datas.map(
+    (data) => new TypePie(data.type, data.typeSum.toFixed(2))
   );
+  return { c: 200, d: result };
 };
 
 // 获取月度统计数据
@@ -97,13 +114,13 @@ const monthBar = async (bookId) => {
     return { c: 200, d: [], m: "暂无数据" };
   }
   for (let flow of flowList) {
-    const month = flow.Day.slice(0, 7);
-    if (flow.FlowType === "支出") {
-      sumMap[month] = (sumMap[month] || 0) + flow.Money;
-    } else if (flow.FlowType === "收入") {
-      inSumMap[month] = (inSumMap[month] || 0) + flow.Money;
+    const month = flow.day.slice(0, 7);
+    if (flow.flowType === "支出") {
+      sumMap[month] = (sumMap[month] || 0) + Number(flow.money);
+    } else if (flow.flowType === "收入") {
+      inSumMap[month] = (inSumMap[month] || 0) + Number(flow.money);
     } else {
-      zeroSumMap[month] = (zeroSumMap[month] || 0) + flow.Money;
+      zeroSumMap[month] = (zeroSumMap[month] || 0) + Number(flow.money);
     }
   }
 
@@ -114,7 +131,7 @@ const monthBar = async (bookId) => {
 
   const months = Object.keys(sumMap).map(
     (month) =>
-      new types.TypePie(
+      new DailyLine(
         month,
         sumMap[month].toFixed(2),
         inSumMap[month]?.toFixed(2) || "",
@@ -122,9 +139,9 @@ const monthBar = async (bookId) => {
       )
   );
 
-  months.sort((a, b) => a.type.localeCompare(b.type));
+  const result = months.sort((a, b) => a.type.localeCompare(b.type));
 
-  return months;
+  return { c: 200, d: result };
 };
 
 // 按月统计分析
@@ -164,13 +181,13 @@ const monthAnalysis = async (bookId, month) => {
 
   for (let flow of flowList) {
     if (
-      flow.FlowType === "支出" &&
-      (!maxOutFlow.Money || flow.Money > maxOutFlow.Money)
+      flow.flowType === "支出" &&
+      (!maxOutFlow.money || Number(flow.money) > Number(maxOutFlow.money))
     ) {
       maxOutFlow = flow;
     } else if (
-      flow.FlowType === "收入" &&
-      (!maxInFlow.Money || flow.Money > maxInFlow.Money)
+      flow.flowType === "收入" &&
+      (!maxInFlow.money || Number(flow.money) > Number(maxInFlow.money))
     ) {
       maxInFlow = flow;
     }
@@ -179,7 +196,8 @@ const monthAnalysis = async (bookId, month) => {
   analysis.maxOut = maxOutFlow;
   analysis.maxIn = maxInFlow;
 
-  return analysis;
+  // return analysis;
+  return { c: 200, d: analysis };
 };
 
 module.exports = {

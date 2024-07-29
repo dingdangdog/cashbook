@@ -1,6 +1,6 @@
 
 export interface User {
-  id?: number;
+  id?: string;
   name?: string;
   userName: string;
   password: string;
@@ -8,7 +8,7 @@ export interface User {
 }
 
 export interface LoginUser {
-  id: number;
+  id: string;
   name: string;
   token: string;
   background: string;

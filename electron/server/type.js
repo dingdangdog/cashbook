@@ -11,22 +11,21 @@ const getConfigFileName = (fileName) => {
 const getTypeConvertConfig = (bookId) => {
   const fileName = `type_convert${bookId}.json`;
   const filePath = getConfigFileName(fileName);
+  let config;
   if (!fs.existsSync(filePath)) {
-    const defaultConfig = readJsonFile(
-      path.join(__dirname, "config/type_convert.json")
-    );
-    saveJsonFile(filePath, defaultConfig);
-    return defaultConfig;
+    config = readJsonFile(path.join(__dirname, "config/type_convert.json"));
+    saveJsonFile(filePath, config);
+  } else {
+    config = readJsonFile(filePath);
   }
-
-  const config = readJsonFile(filePath);
   return { c: 200, d: config };
 };
 
 const saveTypeConvertConfig = (bookId, config) => {
   const fileName = `type_convert${bookId}.json`;
   const filePath = getConfigFileName(fileName);
-  saveJsonFile(filePath, config);
+  saveJsonFile(filePath, JSON.parse(config));
+  return { c: 200, d: true };
 };
 
 // 获取所有流水类型
@@ -38,7 +37,7 @@ const getFlowType = async (bookId) => {
     types.add(flow.flowType);
   });
 
-  return Array.from(types);
+  return { c: 200, d: Array.from(types) };
 };
 
 // 获取所有消费类型
@@ -59,7 +58,8 @@ const getExpenseType = async (bookId, flowType) => {
     });
   }
 
-  return results.sort((a, b) => a.flowType.localeCompare(b.flowType));
+  results.sort((a, b) => a.flowType.localeCompare(b.flowType));
+  return { c: 200, d: results };
 };
 
 // 获取所有支付方式
@@ -80,7 +80,8 @@ const getPaymentType = async (bookId, flowType) => {
     });
   }
 
-  return results.sort((a, b) => a.flowType.localeCompare(b.flowType));
+  results.sort((a, b) => a.flowType.localeCompare(b.flowType));
+  return { c: 200, d: results };
 };
 
 // 更新类型
@@ -105,7 +106,7 @@ const updateType = async (typer, bookId) => {
   // 这里需要实现对flows的批量更新
   updateFlows(bookId, flows);
 
-  return flows.length;
+  return { c: 200, d: flows.length };
 };
 
 // 示例的 ArrayContains 实现

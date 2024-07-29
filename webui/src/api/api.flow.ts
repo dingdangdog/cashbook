@@ -7,7 +7,7 @@ import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '@/types/mode
  * @returns FlowPage
  */
 export function getAll(query: FlowQuery): Promise<Flow[]> {
-  return api('readFlows', query.bookId, query)
+  return api('getFlowList', localStorage.getItem('bookId'), query)
 }
 
 /**
@@ -15,7 +15,7 @@ export function getAll(query: FlowQuery): Promise<Flow[]> {
  * @returns Page<Flow>
  */
 export function getFlowPage(query: FlowQuery): Promise<Page<Flow>> {
-  return api('queryFlowPage', localStorage.getItem("bookId"), query)
+  return api('queryFlowPage', localStorage.getItem('bookId'), query)
 }
 
 /**
@@ -23,22 +23,22 @@ export function getFlowPage(query: FlowQuery): Promise<Page<Flow>> {
  * @returns Page<Flow>
  */
 export function createFlow(createDto: CreateFlowDto): Promise<Flow> {
-  return api('createFlow', createDto.bookId, createDto)
+  return api('createFlow', localStorage.getItem('bookId'), createDto)
 }
 
 /**
  * 修改流水
  * @returns Page<Flow>
  */
-export function update(id: number, updateDto: UpdateFlowDto): Promise<Flow> {
-  return api('updateFlow', updateDto.bookId, { id, ...updateDto })
+export function update(id: string, updateDto: UpdateFlowDto): Promise<Flow> {
+  return api('updateFlow', localStorage.getItem('bookId'), { id, ...updateDto })
 }
 
 /**
  * 删除流水
  * @returns any
  */
-export function deleteFlow(id: number): Promise<any> {
+export function deleteFlow(id: string): Promise<any> {
   return api('deleteFlow', localStorage.getItem('bookId'), id)
 }
 
@@ -46,7 +46,7 @@ export function deleteFlow(id: number): Promise<any> {
  * 批量删除流水
  * @returns any
  */
-export function deleteFlowsApi(ids: number[] | any): Promise<any> {
+export function deleteFlowsApi(ids: string[] | any): Promise<any> {
   return api('deleteFlows', localStorage.getItem('bookId'), ids)
 }
 

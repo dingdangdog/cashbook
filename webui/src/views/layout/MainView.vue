@@ -1,22 +1,24 @@
 <template>
-  <div class="window-title">
-    <div class="window-title-text">
-      <img style="height: 1.5rem; margin: 0.2rem" src="@/assets/icon.ico" fit="cover" />
-      <el-text style="color: white; font-weight: bold">CashBook</el-text>
+  <div style="">
+    <div class="window-title">
+      <div class="window-title-text">
+        <img style="height: 1.5rem; margin: 0.2rem" src="@/assets/icon.ico" fit="cover" />
+        <el-text style="color: white; font-weight: bold">CashBook</el-text>
+      </div>
+      <div class="window-title-buttons">
+        <div class="button" @click="minimize">
+          <img src="@/assets/minus.svg" class="button-svg" />
+        </div>
+        <div class="button" @click="maximize">
+          <img src="@/assets/window-maximize.svg" class="button-svg" />
+        </div>
+        <div class="button" @click="close">
+          <img src="@/assets/window-close.svg" class="button-svg" />
+        </div>
+      </div>
     </div>
-    <div class="window-title-buttons">
-      <div class="button" @click="minimize">
-        <img src="@/assets/minus.svg" class="button-svg" />
-      </div>
-      <div class="button" @click="maximize">
-        <img src="@/assets/window-maximize.svg" class="button-svg" />
-      </div>
-      <div class="button" @click="close">
-        <img src="@/assets/window-close.svg" class="button-svg" />
-      </div>
-    </div>
+    <RouterView />
   </div>
-  <RouterView />
   <el-dialog
     v-model="showFlowTableDialog.visible"
     title="流水详情"
@@ -47,12 +49,15 @@ const maximize = () => {
 }
 
 const close = () => {
+  if (!localStorage.getItem("remember")){
+    localStorage.clear()
+  }
   window.electron.close()
 }
 
 onMounted(() => {
   if (localStorage.getItem('token')) {
-    router.push({ path: '/index/' })
+    router.push({ path: '/index/calendar' })
   }
   if (localStorage.getItem('background')) {
     changeBackground(localStorage.getItem('background') || '')
@@ -64,9 +69,9 @@ onMounted(() => {
 
 <style scoped>
 .window-title {
+  background-color: rgb(40, 138, 60);
   height: 2rem;
   border-bottom: solid 1px var(--el-menu-border-color);
-  background-color: #4f4f4f;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,7 +98,7 @@ onMounted(() => {
   align-items: center;
 }
 .button:hover {
-  background-color: rgb(40, 138, 60);
+  background-color: #4f4f4f;
 }
 
 .button-svg {

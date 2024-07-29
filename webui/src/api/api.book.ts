@@ -36,7 +36,7 @@ export function updateBook(book: Book): Promise<Book> {
  * 删除账本
  * @returns result
  */
-export function deleteBook(id: number): Promise<Book> {
+export function deleteBook(id: string): Promise<Book> {
   return api('deleteBook', id)
 }
 

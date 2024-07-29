@@ -15,6 +15,7 @@ const saveData = (data, fileName) => {
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, "");
   }
+  console.log(data,fileName)
   const csv = parse(data, { header: true });
   fs.writeFileSync(filePath, csv);
 };

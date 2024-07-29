@@ -1,13 +1,13 @@
 <template>
   <div class="header-container">
-   <div class="header-left">
-     <!-- 图标 --> 
-     <!-- <div id="iconTitle">
+    <div class="header-left">
+      <!-- 图标 -->
+      <!-- <div id="iconTitle">
        <img alt="cashbook logo" src="@/assets/images/cashbook.png" style="width: 2.8rem" />
      </div> -->
-     <!-- 页面标题 --> 
-     <h3 style="padding-top: 0.3rem">Thanks for you Uesd</h3>
-   </div>
+      <!-- 页面标题 -->
+      <h3 style="padding-top: 0.3rem">Thanks for you Uesd</h3>
+    </div>
 
     <div class="header-center">
       <span>当前用户：{{ name }}&nbsp;&nbsp;</span>
@@ -50,7 +50,13 @@
   </el-dialog>
 
   <!-- 弹出框：账本设置 -->
-  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title" @close="checkBook" destroy-on-close>
+  <el-dialog
+    style="width: 50vw"
+    v-model="showBookDialogFlag.visible"
+    :title="bookDialog.title"
+    @close="checkBook"
+    destroy-on-close
+  >
     <BookDialog />
   </el-dialog>
 
@@ -81,12 +87,12 @@ onMounted(() => {
       confirmButtonText: '确定',
       type: 'warning'
     })
-    .then(() => {
-      showBookDialog()
-    })
-    .catch(() => {
-      showBookDialog()
-    })
+      .then(() => {
+        showBookDialog()
+      })
+      .catch(() => {
+        showBookDialog()
+      })
   }
 
   setInterval(() => {
@@ -97,27 +103,17 @@ onMounted(() => {
 
 const checkBook = () => {
   if (!localStorage.getItem('bookId')) {
-    ElMessage.error("请先选择账本！")
+    ElMessage.error('请先选择账本！')
     setTimeout(() => {
       showBookDialog()
-    }, 500);
+    }, 500)
   }
 }
 
-// 服务器信息封装
-const serverInfo = ref({
-  id: 1,
-  version: '',
-  environment: '',
-  createDate: new Date(),
-  startDate: new Date()
-})
-
 // 获取服务器信息
 getVersion().then((res) => {
-  serverInfo.value.version = res.version
-
-  localStorage.setItem('version', serverInfo.value.version)
+  console.log(res, "version")
+  localStorage.setItem('version', res)
 })
 
 // 图标大小设置

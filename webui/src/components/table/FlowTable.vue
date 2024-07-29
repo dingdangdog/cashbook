@@ -31,7 +31,13 @@
       />
     </div>
     <div class="table-header queryParam">
-      <el-select v-model="flowQuery.flowType" class="m-2" placeholder="流水类型" @change="changeTypes" clearable>
+      <el-select
+        v-model="flowQuery.flowType"
+        class="m-2"
+        placeholder="流水类型"
+        @change="changeTypes"
+        clearable
+      >
         <el-option
           v-for="item in flowTypeOptions"
           :key="item.value"
@@ -63,11 +69,11 @@
       </el-select>
     </div>
 
-    <div class="table-header queryParam">
+    <div class="table-header queryParam max-button">
       <el-input v-model="flowQuery.name" clearable placeholder="名称" />
     </div>
 
-    <div class="table-header queryParam">
+    <div class="table-header queryParam max-button">
       <el-input v-model="flowQuery.description" clearable placeholder="备注" />
     </div>
 
@@ -83,7 +89,9 @@
     </div>
 
     <div class="table-header pc-button" v-if="edit == 'show'">
-      <el-button type="primary" @click="showExcelImportDialogFlag.visible = true">Excel导入</el-button>
+      <el-button type="primary" @click="showExcelImportDialogFlag.visible = true"
+        >Excel导入</el-button
+      >
     </div>
   </el-row>
   <hr />
@@ -107,7 +115,13 @@
       <el-table-column prop="type" :label="typeLabel" min-width="80" />
       <el-table-column prop="money" label="金额（元）" min-width="80" sortable="custom" />
       <el-table-column prop="name" label="名称" min-width="100" show-overflow-tooltip />
-      <el-table-column prop="description" label="备注" min-width="100" show-overflow-tooltip v-if="deviceAgent() === 'pc'" />
+      <el-table-column
+        prop="description"
+        label="备注"
+        min-width="100"
+        show-overflow-tooltip
+        v-if="deviceAgent() === 'pc'"
+      />
       <el-table-column label="操作" width="150" v-if="edit == 'show'">
         <template v-slot="scop">
           <el-button
@@ -126,13 +140,13 @@
   <!-- 表格分页插件 -->
   <div class="pageDiv">
     <span class="pageSpan">
-      <span style="float: left; color:rgb(76, 152, 112)">
+      <span style="float: left; color: rgb(76, 152, 112)">
         &nbsp;&nbsp;总收入：<b>{{ Number(flowPageRef.totalIn.toFixed(2)) }}</b>
       </span>
-      <span style="float: left; color:rgb(217,159,8)">
+      <span style="float: left; color: rgb(217, 159, 8)">
         &nbsp;&nbsp;总支出：<b>{{ Number(flowPageRef.totalOut.toFixed(2)) }}</b>
       </span>
-      <span style="float: left; color:rgb(66, 66, 66)">
+      <span style="float: left; color: rgb(66, 66, 66)">
         &nbsp;&nbsp;不计收支：<b>{{ Number(flowPageRef.notInOut.toFixed(2)) }}</b>
       </span>
       <!-- {{ flowQuery }},{{ flowPageRef }} -->
@@ -151,7 +165,12 @@
   </div>
 
   <!-- 弹出框表单：新增和修改通用 -->
-  <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" :fullscreen="miniScreen" width="40rem">
+  <el-dialog
+    v-model="dialogFormVisible"
+    :title="dialogFormTitle"
+    :fullscreen="miniScreen"
+    width="40rem"
+  >
     <div class="el-dialog-main">
       <el-form ref="dialogFormRef" :model="flowRef" :rules="rules">
         <el-form-item label="日期" :label-width="formLabelWidth" prop="day">
@@ -167,10 +186,7 @@
         </el-form-item>
 
         <el-form-item label="流水类型" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="flowRef.flowType"
-                     placeholder="选择"
-                     clearable
-                     @change="changeTypes">
+          <el-select v-model="flowRef.flowType" placeholder="选择" clearable @change="changeTypes">
             <el-option
               v-for="item in flowTypeDialogOptions"
               :key="item.value"
@@ -181,10 +197,13 @@
         </el-form-item>
 
         <el-form-item :label="payTypeLabel" :label-width="formLabelWidth" prop="payType">
-          <el-select v-model="flowRef.payType" placeholder="选择或输入"
-                     clearable
-                     filterable
-                     allow-create>
+          <el-select
+            v-model="flowRef.payType"
+            placeholder="选择或输入"
+            clearable
+            filterable
+            allow-create
+          >
             <el-option
               v-for="item in paymentTypeOptions"
               :key="item.value"
@@ -195,10 +214,13 @@
         </el-form-item>
 
         <el-form-item :label="typeLabel" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="flowRef.type" placeholder="选择或输入"
-                     clearable
-                     filterable
-                     allow-create>
+          <el-select
+            v-model="flowRef.type"
+            placeholder="选择或输入"
+            clearable
+            filterable
+            allow-create
+          >
             <el-option
               v-for="item in expenseTypeOptions"
               :key="item.value"
@@ -213,11 +235,11 @@
         </el-form-item>
 
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="flowRef.name" style="width: 300px"/>
+          <el-input v-model="flowRef.name" style="width: 300px" />
         </el-form-item>
 
         <el-form-item label="备注" :label-width="formLabelWidth" prop="description" textarea>
-          <el-input v-model="flowRef.description" style="width: 400px"/>
+          <el-input v-model="flowRef.description" style="width: 400px" />
         </el-form-item>
       </el-form>
     </div>
@@ -254,8 +276,13 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="showExcelImportDialogFlag.visible" title="Excel导入流水" :fullscreen="true" destroy-on-close
-             :close-on-click-modal="false">
+  <el-dialog
+    v-model="showExcelImportDialogFlag.visible"
+    title="Excel导入流水"
+    :fullscreen="true"
+    destroy-on-close
+    :close-on-click-modal="false"
+  >
     <FlowExcelImport />
   </el-dialog>
 </template>
@@ -268,7 +295,15 @@ import { Delete, Edit, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, UploadFile, UploadUserFile } from 'element-plus'
 
 // 私有引入
-import { getFlowPage, deleteFlow, createFlow, update, getAll, importFlows, deleteFlowsApi } from '@/api/api.flow'
+import {
+  getFlowPage,
+  deleteFlow,
+  createFlow,
+  update,
+  getAll,
+  importFlows,
+  deleteFlowsApi
+} from '@/api/api.flow'
 import { getFlowType, getExpenseType, getPaymentType } from '@/api/api.typer'
 import { dateFormater, deviceAgent, timeFormatter } from '@/utils/common'
 import { exportJson } from '@/utils/fileUtils'
@@ -283,7 +318,9 @@ import { showExcelImportDialogFlag } from '@/stores/flag'
 import type { FlowExport } from '@/types/view'
 
 // 异步组件引用
-const FlowExcelImport = defineAsyncComponent(() => import('@/components/dialog/FlowExcelImport.vue'))
+const FlowExcelImport = defineAsyncComponent(
+  () => import('@/components/dialog/FlowExcelImport.vue')
+)
 
 // 使用 props 来接收外部传入的参数
 const { edit } = defineProps(['edit'])
@@ -294,21 +331,24 @@ onMounted(() => {
   getTypes()
 })
 
-const typeLabel = ref("支出/收入类型")
-const payTypeLabel = ref("支付/收款方式")
+const typeLabel = ref('支出/收入类型')
+const payTypeLabel = ref('支付/收款方式')
 /*
  * 集中定义常量
  */
 // 流水类型
 const flowTypeOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
-const flowTypeDialogOptions = ref<Typer[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
+const flowTypeDialogOptions = ref<Typer[]>([
+  { value: '支出' },
+  { value: '收入' },
+  { value: '不计收支' }
+])
 
-const typeDefault: Typer[] = [{value: '请先选择流水类型'}];
+const typeDefault: Typer[] = [{ value: '请先选择流水类型' }]
 // 消费类型/收入类型
 const expenseTypeOptions = ref<Typer[]>(typeDefault)
 // 支付类型
 const paymentTypeOptions = ref<Typer[]>(typeDefault)
-
 
 const getTypes = () => {
   getFlowType().then((data) => {
@@ -319,15 +359,15 @@ const getTypes = () => {
 
 // 修改FlowType后联动
 const changeTypes = (flowType: string | undefined) => {
-  if (flowType === "支出") {
-    typeLabel.value = "支出类型"
-    payTypeLabel.value = "支付方式"
-  } else if (flowType === "收入") {
-    typeLabel.value = "收入类型"
-    payTypeLabel.value = "收款方式"
+  if (flowType === '支出') {
+    typeLabel.value = '支出类型'
+    payTypeLabel.value = '支付方式'
+  } else if (flowType === '收入') {
+    typeLabel.value = '收入类型'
+    payTypeLabel.value = '收款方式'
   } else {
-    typeLabel.value = "支出/收入类型"
-    payTypeLabel.value = "支付/收款方式"
+    typeLabel.value = '支出/收入类型'
+    payTypeLabel.value = '支付/收款方式'
   }
   if (!flowType) {
     expenseTypeOptions.value = typeDefault
@@ -353,7 +393,6 @@ const datePickerStyle = ref('')
 if (document.body.clientWidth <= 480) {
   datePickerStyle.value = 'width: auto'
 }
-
 
 // 分页数据结果
 const flowPage: Page<Flow> = {
@@ -488,7 +527,7 @@ const resetForm = (formEl: FormInstance | undefined, showDialog: boolean) => {
 const createOne = () => {
   createFlow({
     day: dateFormater('YYYY-MM-dd', flowRef.day || new Date()),
-    bookId: parseInt(bookId || '0'),
+    bookId: bookId,
     flowType: flowRef.flowType,
     type: flowRef.type,
     money: flowRef.money,
@@ -517,7 +556,7 @@ const createOne = () => {
 const updateOne = () => {
   update(flowRef.id || -1, {
     day: dateFormater('YYYY-MM-dd', flowRef.day || new Date()),
-    bookId: parseInt(bookId || '0'),
+    bookId: bookId,
     flowType: flowRef.flowType,
     type: flowRef.type,
     money: flowRef.money,
@@ -574,11 +613,10 @@ const deleteById = (id: number) => {
     })
 }
 
-
 // 批量删除
 const deleteFlows = () => {
   if (multipleSelection.value.length === 0) {
-    ElMessage.error("请至少选择一条要删除的流水");
+    ElMessage.error('请至少选择一条要删除的流水')
     return
   }
   ElMessageBox.confirm(`确定删除选中的【${multipleSelection.value.length}】条流水？`, '确认删除', {
@@ -587,7 +625,7 @@ const deleteFlows = () => {
     type: 'warning'
   })
     .then(() => {
-      deleteFlowsApi(multipleSelection.value.map(flow => flow.id))
+      deleteFlowsApi(multipleSelection.value.map((flow) => flow.id))
         .then(() => {
           doQuery()
           ElMessage({
@@ -610,11 +648,10 @@ const deleteFlows = () => {
     })
 }
 
-
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
-  typeLabel.value = "支出/收入类型"
-  payTypeLabel.value = "支付/收款方式"
+  typeLabel.value = '支出/收入类型'
+  payTypeLabel.value = '支付/收款方式'
   dialogFormTitle.value = title
   dialogFormVisible.value = true
 }
@@ -653,7 +690,7 @@ const readJsonInfo = (flie: UploadFile) => {
         day: flow.day,
         flowType: flow.flowType,
         type: flow.type,
-        bookId: parseInt(bookId || '0'),
+        bookId: bookId,
         payType: flow.payType,
         money: flow.money,
         name: flow.name,
@@ -705,7 +742,6 @@ const handleSelectionChange = (val: Flow[]) => {
   multipleSelection.value = val
 }
 
-
 watch(flowQuery, () => {
   doQuery()
 })
@@ -739,5 +775,14 @@ provide('flowMethods', flowMethods)
 .el-table {
   overflow-x: auto;
   overflow-y: auto;
+}
+
+.max-button {
+  display: block;
+}
+@media screen and (max-width: 1920px) {
+  .max-button {
+    display: none;
+  }
 }
 </style>

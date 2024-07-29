@@ -190,4 +190,8 @@ onMounted(() => {
     font-size: small;
   }
 }
+
+h4{
+  margin: 0.5rem;
+}
 </style>

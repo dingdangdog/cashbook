@@ -1,7 +1,7 @@
 import type { Flow } from "./flow";
 
 export interface DailyLineChartQuery {
-  bookId?: number;
+  bookId?: string;
   flowType?: string;
   startDay?: string;
   endDay?: string;
@@ -15,7 +15,7 @@ export interface DailyLineChart {
 }
 
 export interface TypePieChartQuery {
-  bookId?: number;
+  bookId?: string;
   flowType?: string;
   startDay?: string;
   endDay?: string;

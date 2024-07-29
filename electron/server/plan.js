@@ -23,17 +23,17 @@ const readPlans = async (bookId) => {
 // 增加数据
 const addPlan = async (bookId, plan) => {
   const arr = [];
-  arr.push(
-    new Plan(
-      serverApi.getUUID(),
-      bookId,
-      plan.month,
-      plan.limitMoney,
-      plan.usedMoney,
-      serverApi.getNow()
-    )
+  const PLAN = new Plan(
+    serverApi.getUUID(),
+    bookId,
+    plan.month,
+    plan.limitMoney,
+    plan.usedMoney,
+    serverApi.getNow()
   );
-  return await serverApi.addDatas(getFileName(bookId), arr);
+  arr.push(PLAN);
+  await serverApi.addDatas(getFileName(bookId), arr);
+  return serverApi.toResult(200, PLAN);
 };
 
 // 批量增加数据
@@ -48,7 +48,8 @@ const deletePlan = async (bookId, id) => {
 
 // 修改数据
 const updatePlan = async (bookId, id, data) => {
-  return await userverApi.pdateData(getFileName(bookId), id, data);
+  await userverApi.pdateData(getFileName(bookId), id, data);
+  return serverApi.toResult(200, PLAN);
 };
 
 // 基于查询条件的查询
@@ -69,9 +70,9 @@ const queryPlans = async (bookId, query) => {
 };
 
 const getPlan = async (bookId, month) => {
-  const data = await readPlans(bookId);
-  if (month) {
-    data = data.filter((item) => item.month == query.month);
+  let data = await readPlans(bookId);
+  if (data.length > 0) {
+    data = data.filter((item) => item.month == month);
   }
   return serverApi.toResult(200, data[0]);
 };

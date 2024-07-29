@@ -1,6 +1,6 @@
 <template>
   <h4>{{ title }}</h4>
-  <div id="pieDiv" :style="style"></div>
+  <div id="monthBarDiv" :style="style"></div>
 </template>
 
 <script setup lang="ts">
@@ -116,12 +116,13 @@ const optionRef = ref({
   ]
 })
 
-let pieDiv: any
+let monthBarDiv: any
 let pieChart: echarts.ECharts
 
 const doQuery = () => {
   monthBar().then((res) => {
     if (res) {
+      // console.log(res)
       if (res.length === 0) {
         console.log('MonthBar未查询到数据！')
         return
@@ -130,8 +131,8 @@ const doQuery = () => {
       dataListIn.length = 0
       notInOut.length = 0
       res.forEach((data) => {
-        xAxisList.push(data.type)
-        dataListOut.push(Number(data.typeSum).toFixed(2))
+        xAxisList.push(data.day)
+        dataListOut.push(Number(data.daySum).toFixed(2))
         dataListIn.push(Number(data.inSum).toFixed(2))
         notInOut.push(Number(data.zeroSum).toFixed(2))
       })
@@ -140,8 +141,8 @@ const doQuery = () => {
       optionRef.value.series[2].data = notInOut
       optionRef.value.xAxis.data = xAxisList
 
-      pieDiv = document.getElementById('pieDiv')
-      pieChart = echarts.init(pieDiv)
+      monthBarDiv = document.getElementById('monthBarDiv')
+      pieChart = echarts.init(monthBarDiv)
       pieChart.setOption(optionRef.value)
       pieChart.on('click', function(param) {
         resetFlowQuery()
@@ -181,7 +182,7 @@ onMounted(() => {
   margin: 8px 3px;
 }
 
-#pieDiv {
+#monthBarDiv {
   padding: 10px;
 }
 
@@ -200,12 +201,15 @@ onMounted(() => {
     margin: 8px 3px;
   }
 
-  #pieDiv {
+  #monthBarDiv {
     font-size: small;
   }
 
-  #pieDiv > div > canvas {
+  #monthBarDiv > div > canvas {
     margin: 20px;
   }
+}
+h4{
+  margin: 0.5rem;
 }
 </style>

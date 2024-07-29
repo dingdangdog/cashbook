@@ -24,6 +24,7 @@ const {
   deleteFlows,
   updateFlow,
   queryFlowPage,
+  getFlowList,
 } = require("./server/flow.js");
 
 const {
@@ -74,6 +75,7 @@ module.exports = {
   deleteFlows,
   updateFlow,
   queryFlowPage,
+  getFlowList,
 
   dailyLine: getDailyLine,
   typePie: getTypePie,

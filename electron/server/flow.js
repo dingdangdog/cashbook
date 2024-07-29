@@ -1,5 +1,32 @@
 const serverApi = require("./api.js");
 
+class Flow {
+  constructor(
+    id,
+    bookId,
+    day,
+    flowType,
+    type,
+    money,
+    payType,
+    name,
+    description
+  ) {
+    this.id = id;
+    this.bookId = bookId;
+    this.day = day;
+    // 流水类型：支出、收入
+    this.flowType = flowType;
+    // 消费类型、收入类型
+    this.type = type;
+    // 支付方式、收款方式
+    this.payType = payType;
+    this.money = money;
+    this.name = name;
+    this.description = description;
+  }
+}
+
 const getFileName = (bookId) => {
   return `flow${bookId}.csv`;
 };
@@ -10,10 +37,22 @@ const readFlows = (bookId) => {
 };
 
 // 增加数据
-const addFlow = (bookId, flow) => {
+const addFlow = async (bookId, flow) => {
   const arr = [];
-  arr.push(flow);
-  return serverApi.addDatas(getFileName(bookId), arr);
+  const FLOW = new Flow(
+    serverApi.getUUID(),
+    bookId,
+    flow.day,
+    flow.flowType,
+    flow.type,
+    flow.money,
+    flow.payType,
+    flow.name,
+    flow.description
+  );
+  arr.push(FLOW);
+  await serverApi.addDatas(getFileName(bookId), arr);
+  return serverApi.toResult(200, FLOW);
 };
 
 // 批量增加数据
@@ -27,17 +66,25 @@ const deleteAllFlow = (bookId) => {
 };
 
 // 批量删除数据
-const deleteFlows = (bookId, ids) => {
-  return serverApi.deleteDatas(getFileName(bookId), ids);
+const deleteFlows = async (bookId, ids) => {
+  await serverApi.deleteDatas(getFileName(bookId), ids);
+  return serverApi.toResult(200, ids.length);
 };
 
 // 修改数据
-const updateFlow = (bookId, data) => {
-  return serverApi.updateData(getFileName(bookId), data);
+const updateFlow = async (bookId, data) => {
+  await serverApi.updateData(getFileName(bookId), data);
+  return serverApi.toResult(200, data);
 };
 
-const updateFlows = (bookId, flows) => {
-  return serverApi.updateDatas(getFileName(bookId), flows);
+const updateFlows = async (bookId, flows) => {
+  await serverApi.updateDatas(getFileName(bookId), flows);
+  return serverApi.toResult(200, flows.length);
+};
+
+const getFlowList = async (bookId, query) => {
+  const flows = await queryFlows(bookId, query);
+  return serverApi.toResult(200, flows);
 };
 
 // 基于查询条件的查询
@@ -79,11 +126,11 @@ const queryFlows = async (bookId, query) => {
 };
 
 const queryFlowPage = async (bookId, query) => {
-  const result = await queryFlows(bookId, query);
+  let result = await queryFlows(bookId, query);
   // 排序
   if (query.moneySort) {
     result = result.sort((a, b) =>
-      query.moneySort === "asc" ? a.money - b.money : b.money - a.money
+      query.moneySort === "ASC" ? a.money - b.money : b.money - a.money
     );
   }
 
@@ -124,7 +171,25 @@ const importFlows = async (bookId, flag, flows) => {
   if (flag == "overwrite") {
     deleteAllFlow(bookId);
   }
-  return await addFlows(bookId, flows);
+  const FLOWS = [];
+  for (let flow of flows) {
+    // id, bookId, day, flowType, type, money, payType, name, description
+    FLOWS.push(
+      new Flow(
+        serverApi.getUUID(),
+        bookId,
+        flow.day,
+        flow.flowType,
+        flow.type,
+        flow.money,
+        flow.payType,
+        flow.name,
+        flow.description
+      )
+    );
+  }
+  await addFlows(bookId, FLOWS);
+  return serverApi.toResult(200, FLOWS.length);
 };
 
 module.exports = {
@@ -136,6 +201,7 @@ module.exports = {
   updateFlow,
   updateFlows,
   queryFlowPage,
+  getFlowList,
 };
 
 // console.log(queryFlows(101, {pageNum:1, pageSize: 10}))

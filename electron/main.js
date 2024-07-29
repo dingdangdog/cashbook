@@ -14,10 +14,9 @@ let mode = "pro";
 function createWindow() {
   // 创建浏览器窗口
   win = new BrowserWindow({
-    width: 1440,
+    width: 1660,
     height: 960,
-    // resizable: false, // 设置为 false 禁止缩小
-    //绝对路径
+    //绝对路径加载图标
     icon: path.join(__dirname, "icon.ico"),
     webPreferences: {
       nodeIntegration: false, // 关闭 Node.js 集成以增强安全性
@@ -26,6 +25,8 @@ function createWindow() {
     },
     frame: false, // 无边框窗口
     transparent: true, // 透明窗口
+    resizable: false, // 禁止拖拽放大缩小
+    maximizable: true, // 允许最大化
   });
   // 最大化窗口
   // win.maximize()
