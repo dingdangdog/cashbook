@@ -1,5 +1,5 @@
-server/resources/app/data/
-server/.idea/
-server/*.log
-server/*.exe
-server/*.md
+source/server/resources/app/data/
+source/server/.idea/
+source/server/*.log
+source/server/*.exe
+source/server/*.md

@@ -8,26 +8,14 @@
 /**/*.zip
 /**/*.exe
 /**/*.db
-/electron/resources/
 
 
 ### VS Code ###
 /**/.vscode/
 /**/node_modules/
 
-/webui/dist/
-/source/cloud/data/
-/source/cloud/src/test/
-
-### electron ###
-/electron/data/
-
-/**/package-lock.json
-pnpm-lock.yaml
-
-/**/cashbook-*.exe
 ### Mac OS ###
 .DS_Store
 
-/server/resources/**/*
+/server/resources/app/data/*
 /server/cashbook.log

@@ -1,17 +1,10 @@
 {
-  "name": "cashbook-desktop",
-  "version": "1.1.10",
+  "name": "cashbook",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
-    "build-books": "node scripts/build-books.ts",
-    "build-server": "node scripts/build-server.ts",
-    "build-docker": "node scripts/build-docker.ts",
-    "build-all": "node scripts/build.ts",
-    "package": "node scripts/package.ts",
-    "pre_package": "node scripts/pre_package.ts",
-    "up-version": "node scripts/up-version.ts",
-    "re-version": "node scripts/re-version.ts",
-    "release": "node scripts/release.ts"
+    "ui:dev": "cd ui && npm run dev",
+    "server:dev" : "cd server && go run ."
   },
   "devDependencies": {
     "@types/node": "^18.11.15"

@@ -1,0 +1,60 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+
+  /* 日间模式颜色 */
+  --write: #FFFFFF;
+  --black: #000000;
+
+  /* 夜间模式颜色 */
+}
+
+/* 日间模式变量赋值 */
+:root {
+  --color-background: var(--write);
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #3498db;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: #ecf0f1;
+  border-radius: 10px;
+}
+
+
+/* 夜间模式变量赋值 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--black);
+  }
+}
+
+body{
+  margin: 0;
+}
+
+/* 覆盖ElementPlus默认样式 */
+.el-main{
+  --el-main-padding: 0 !important;
+}
+
+.common-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#app {
+  margin: 0;
+  padding: 0;
+}
+
+html{
+  margin: 0;
+  padding: 0;
+}
