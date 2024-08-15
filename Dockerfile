@@ -1,38 +1,40 @@
-FROM golang:alpine AS binarybuilder
-
-LABEL author.name="DingDangDog"
-LABEL author.email="dingdangdogx@outlook.com"
-LABEL project.name="cashbook-desktop"
-LABEL project.version="1.1.9"
-LABEL project.github="https://github.com/DingDangDog/cashbook-desktop"
-
-
+FROM node:18-alpine AS ui-builder
+# 打包前端
 WORKDIR /app
+COPY ./ui .
+RUN npm install && npm run build-only
 
-# 后端
-COPY ./source/server/ .
-# 构建适用于linux的可执行程序
+FROM golang:alpine AS binarybuilder
+# 打包后端
+WORKDIR /app
+COPY ./server/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cashbook .
 
 # 构建最终镜像
 FROM alpine:latest
 
+LABEL author.name="DingDangDog"
+LABEL author.email="dingdangdogx@outlook.com"
+LABEL project.name="cashbook-web"
+LABEL project.version="2.0.0"
+LABEL project.github="https://github.com/DingDangDog/cashbook-web"
+
 RUN apk add --no-cache nginx
 
 WORKDIR /app
-
+# 后端
 COPY --from=binarybuilder /app/cashbook .
 COPY --from=binarybuilder /app/resources/ ./resources/
-
 # 前端
-COPY ./source/books/dist/ ./books/
+COPY --from=ui-builder /app/dist/ ./books/
+# Nginx
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 COPY ./docker/mime.types /etc/nginx/mime.types
 
 RUN nginx -t
 
 # 设置环境变量等
-VOLUME /app/resources/app/data
+VOLUME /app/resources/data
 
 # 运行应用
 #CMD ["./cashbook"]
