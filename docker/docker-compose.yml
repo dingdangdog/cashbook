@@ -5,4 +5,4 @@ services:
     ports:
       - 880:80
     volumes:
-      - ./data:/app/resources/app/data
+      - ./data:/app/resources/data

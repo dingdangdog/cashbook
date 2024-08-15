@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-const DataPath = "./resources/app/data/"
-const ConfigPath = "./resources/app/config/"
+const DataPath = "./resources/data/"
+const ConfigPath = "./resources/config/"
 
 func init() {
 	// 检测文件夹是否存在

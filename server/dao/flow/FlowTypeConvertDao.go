@@ -11,8 +11,6 @@ import (
 // TypeFile 文件路径
 const TypeFile = config.DataPath + "flow_type.json"
 
-//const FilePath = "./resources/app/config/"
-
 var typesRelation map[string]string
 
 // 初始化数据
@@ -44,7 +42,7 @@ func getRelationData() []byte {
 		if err := util.CopyFile(srcFile, TypeFile); err != nil {
 			panic(err) // 或者执行其他错误处理逻辑
 		}
-		fileBytes, err = os.ReadFile(TypeFile)
+		fileBytes, _ = os.ReadFile(TypeFile)
 	}
 	return fileBytes
 }
