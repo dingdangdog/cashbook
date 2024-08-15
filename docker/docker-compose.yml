@@ -1,6 +1,7 @@
 services:
   cashbook:
     image: dingdangdog/cashbook:latest
+    container_name: cashbook
     restart: always
     ports:
       - 880:80
