@@ -1,5 +1,9 @@
-source/server/resources/app/data/
-source/server/.idea/
-source/server/*.log
-source/server/*.exe
-source/server/*.md
+/server/resources/data/
+/server/.idea/
+/server/*.log
+/server/*.exe
+/server/*.md
+
+/ui/node_modules
+/ui/dist
+

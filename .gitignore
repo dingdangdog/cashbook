@@ -17,5 +17,6 @@
 ### Mac OS ###
 .DS_Store
 
-/server/resources/app/data/*
+/server/resources/data/*
 /server/cashbook.log
+/ui/dist
