@@ -1,24 +1,49 @@
 <template>
   <div class="chart-container">
     <!-- set input width -->
-    <div class="icon-container"><img src="@/assets/images/cashbook.png" width="60" /><h1 style="margin-left: 2rem;">Casbook-Desktop</h1></div>
+    <div class="icon-container">
+      <img src="@/assets/images/cashbook.png" width="60" />
+      <h1 style="margin-left: 2rem">Casbook-Web</h1>
+    </div>
     <div class="form-container">
       <el-form ref="loginForm" :model="formData" :rules="rules" label-width="10rem">
         <el-form-item label="帐号（Account）" prop="name" class="login-input">
           <el-input v-model="formData.userName" />
         </el-form-item>
         <el-form-item label="密码（Password）" prop="pass" class="login-input">
-          <el-input v-model="formData.password" type="password" autocomplete="off" @keyup.enter="submitForm(loginForm)" show-password/>
+          <el-input
+            v-model="formData.password"
+            type="password"
+            autocomplete="off"
+            @keyup.enter="submitForm(loginForm)"
+            show-password
+          />
         </el-form-item>
+        <a herf="javascript:void(0)" class="login-button" @click="toForget">忘记密码</a>
         <el-checkbox v-model="rememberUser" class="login-button">记住我</el-checkbox>
         <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
-        <el-button type="primary" class="login-button" @click="submitForm(loginForm)">登录</el-button>
+        <el-button type="primary" class="login-button" @click="submitForm(loginForm)"
+          >登录</el-button
+        >
       </el-form>
+    </div>
+
+    <div class="theme-switch">
+      <el-switch
+        v-model="themeValue"
+        @change="changeTheme()"
+        :active-action-icon="Sunny"
+        :inactive-action-icon="MoonNight"
+      />
     </div>
   </div>
 
   <!-- 弹出框表单：注册用户 -->
-  <el-dialog style="width: 25vw" v-model="registerDialog.visable" :title="registerDialog.title">
+  <el-dialog
+    style="min-width: 20rem; max-width: 30rem"
+    v-model="registerDialog.visable"
+    :title="registerDialog.title"
+  >
     <div class="el-dialog-main">
       <el-form ref="registerFormRef" :model="registerUser" :rules="registerUserRules">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
@@ -30,11 +55,28 @@
         </el-form-item>
 
         <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="registerUser.password" type="password" autocomplete="off" placeholder="Password" show-password/>
+          <el-input
+            v-model="registerUser.password"
+            type="password"
+            autocomplete="off"
+            placeholder="Password"
+            show-password
+          />
         </el-form-item>
 
-        <el-form-item label="确认密码" :label-width="formLabelWidth" prop="againPassword" class="is-required">
-          <el-input v-model="registerUser.againPassword" type="password" autocomplete="off" placeholder="Password Again" show-password/>
+        <el-form-item
+          label="确认密码"
+          :label-width="formLabelWidth"
+          prop="againPassword"
+          class="is-required"
+        >
+          <el-input
+            v-model="registerUser.againPassword"
+            type="password"
+            autocomplete="off"
+            placeholder="Password Again"
+            show-password
+          />
         </el-form-item>
       </el-form>
     </div>
@@ -46,21 +88,45 @@
       </span>
     </template>
   </el-dialog>
+  <!-- 找回密码 -->
+  <el-dialog style="min-width: 20rem; max-width: 30rem" v-model="showForgetDialog" title="密码重置">
+    <div class="el-dialog-main">
+      <el-form ref="resetPasswordForm" :model="resetFormData" :rules="resetRules">
+        <el-form-item label="账号" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="resetFormData.userName" placeholder="Name" />
+        </el-form-item>
+
+        <el-form-item label="服务密钥" :label-width="formLabelWidth" prop="userName">
+          <el-input v-model="resetFormData.serverKey" placeholder="Account" />
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 表单确认按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="resetPassword(resetPasswordForm)"> 确定 </el-button>
+        <el-button @click="cancelReset()"> 取消 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
+import { Sunny, MoonNight } from '@element-plus/icons-vue'
 import type { User } from '@/types/model/user'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { ref, reactive } from 'vue'
-import { login, registerApi } from '@/api/api.user'
+import { login, registerApi, resetPasswordApi } from '@/api/api.user'
 import router from '@/router/index'
 import { changeBackground } from '@/utils/common'
+import { useToggle } from '@vueuse/shared'
+import { isDark } from '@/utils/common'
 
 // 表单输入框宽度
-const formLabelWidth = ref('120px')
-if (document.body.clientWidth <= 480) {
-  formLabelWidth.value = '80px'
+const formLabelWidth = ref('8rem')
+if (document.body.clientWidth <= 720) {
+  formLabelWidth.value = '6rem'
 }
 
 const loginForm = ref<FormInstance>()
@@ -87,7 +153,7 @@ const submitForm = async (form: FormInstance | undefined) => {
   await form.validate((valid, data) => {
     if (valid) {
       //alert('submit!')
-      login(rememberUser.value,formData.value).then((res) => {
+      login(rememberUser.value, formData.value).then((res) => {
         if (res.id != 0) {
           ElMessage({
             type: 'success',
@@ -130,7 +196,7 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请再次输入密码'))
   } else if (value !== registerUser.value.password) {
-    callback(new Error("两次输入密码不一致"))
+    callback(new Error('两次输入密码不一致'))
   } else {
     callback()
   }
@@ -150,11 +216,8 @@ const registerUserRules = ref<FormRules>({
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 18, message: '字符限制：6-18', trigger: 'blur' }
   ],
-  againPassword: [
-    { validator: validatePass2, trigger: 'blur' }
-  ]
+  againPassword: [{ validator: validatePass2, trigger: 'blur' }]
 })
-
 
 const registerFormRef = ref<FormInstance>()
 
@@ -196,6 +259,60 @@ const cancel = () => {
   registerDialog.value.visable = false
 }
 
+const resetPasswordForm = ref<FormInstance>()
+const showForgetDialog = ref(false)
+
+const resetFormData = ref({
+  userName: '',
+  serverKey: ''
+})
+// 表单输入框校验规则
+const resetRules = ref<FormRules>({
+  userName: [
+    { required: true, message: '请输入登录名', trigger: 'blur' },
+    { min: 6, max: 18, message: '字符限制：6-18', trigger: 'blur' }
+  ],
+  serverKey: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+})
+const toForget = () => {
+  showForgetDialog.value = true
+}
+
+const resetPassword = (form: FormInstance | undefined) => {
+  if (!form) return
+  form.validate((valid, data) => {
+    if (valid) {
+      //alert('submit!')
+      resetPasswordApi(resetFormData.value).then((res) => {
+        if (res) {
+          ElMessage({
+            type: 'success',
+            message: '密码重置成功，默认密码为"cashbook"请登录！'
+          })
+          // 跳转到首页
+          // router.push({ path: '/' })
+          showForgetDialog.value = false
+          resetFormData.value.userName = ''
+          resetFormData.value.serverKey = ''
+          form.resetFields()
+        } else {
+          ElMessage({
+            type: 'error',
+            message: '密码重置失败，请重试！'
+          })
+        }
+      })
+    } else {
+      console.log('error submit!!')
+    }
+  })
+}
+const cancelReset = () => {
+  showForgetDialog.value = false
+}
+
+const themeValue = ref(false)
+const changeTheme = useToggle(isDark)
 </script>
 
 <style scoped>
@@ -231,7 +348,19 @@ const cancel = () => {
 }
 
 .login-button {
-  margin-left: 3rem !important;
+  margin-left: 1.5rem !important;
   font-size: medium;
 }
-</style>../../router/index
+
+.theme-switch {
+  position: absolute;
+  right: 5rem;
+  bottom: 5rem;
+}
+a {
+  cursor: pointer;
+}
+a:hover {
+  color: #409eff;
+}
+</style>
