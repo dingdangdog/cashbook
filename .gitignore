@@ -20,3 +20,5 @@
 /server/resources/data/*
 /server/cashbook.log
 /ui/dist
+
+.env

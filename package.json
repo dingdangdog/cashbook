@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "ui:dev": "cd ui && npm run dev",
-    "server:dev" : "cd server && go run ."
+    "server:dev": "node runserver-env.js"
   },
   "devDependencies": {
     "@types/node": "^18.11.15"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
   }
 }
