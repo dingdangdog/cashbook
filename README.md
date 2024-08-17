@@ -1,6 +1,6 @@
 <div align="center">
 <img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog1674980314.png" width="80px" alt="cashbook" />
-<h1>cashbook-desktop</h1>
+<h1>cashbook-web</h1>
 </div>
 
 <p align="center">
