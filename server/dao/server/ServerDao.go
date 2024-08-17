@@ -3,7 +3,6 @@ package server
 import (
 	"cashbook-server/config"
 	"cashbook-server/types"
-	"encoding/json"
 	"fmt"
 	"os"
 )
@@ -21,14 +20,10 @@ func init() {
 
 // 加载文件
 func loadConfig() types.Server {
-	fileBytes, _ := os.ReadFile(ConfigFile)
-	var server types.Server
-	if len(fileBytes) != 0 {
-		if err := json.Unmarshal(fileBytes, &server); err != nil {
-			return types.Server{}
-		}
-	}
-	return server
+	version := os.Getenv("CASHBOOK_VERSION")
+	secret := os.Getenv("TOKEN_SALT")
+	env := os.Getenv("ENVIRONMENT")
+	return types.Server{Version: version, Secret: secret, Environment: env}
 }
 
 // GetServerInfo 获取服务信息
