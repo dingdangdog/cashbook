@@ -16,7 +16,7 @@ FROM alpine:latest
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook-web"
-LABEL project.version="2.0.0"
+LABEL project.version="2.0.1"
 LABEL project.github="https://github.com/DingDangDog/cashbook-web"
 
 RUN apk add --no-cache nginx
@@ -35,6 +35,12 @@ RUN nginx -t
 
 # 设置环境变量等
 VOLUME /app/resources/data
+
+ENV CASHBOOK_VERSION=2.0.1
+ENV TOKEN_SALT=spend-money-like-water
+ENV ENVIRONMENT=PRO
+ENV SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
+ENV DEFAULT_PASSWORD=cashbook
 
 # 运行应用
 #CMD ["./cashbook"]
