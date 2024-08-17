@@ -7,3 +7,10 @@ services:
       - 880:80
     volumes:
       - ./data:/app/resources/data
+    environment:
+      - TOKEN_SALT=spend-money-like-water
+      - ENVIRONMENT=PRO
+      # 服务密钥，请自行修改
+      - SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
+      # 默认密码，请自行修改
+      - DEFAULT_PASSWORD=cashbook

@@ -44,6 +44,14 @@ services:
       - 880:80
     volumes:
       - ./data:/app/resources/data
+    # v2.0.1新增环境变量配置
+    environment:
+      - TOKEN_SALT=spend-money-like-water
+      - ENVIRONMENT=PRO
+      # 服务密钥，请自行修改
+      - SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
+      # 默认密码，请自行修改
+      - DEFAULT_PASSWORD=cashbook
 ```
 
 如果你不喜欢使用 `docker-compose`，也可以执行以下命令一件执行：
