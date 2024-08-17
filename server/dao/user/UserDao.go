@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 )
 
 // FileName 文件名称
@@ -110,7 +109,7 @@ func FindUsers(u types.User) []types.User {
 				flag = ui.Id == u.Id
 			}
 			if flag && uQuery.UserName {
-				flag = strings.Contains(ui.UserName, u.UserName)
+				flag = ui.UserName == u.UserName
 			}
 			if flag && uQuery.Password {
 				flag = ui.Password == u.Password
