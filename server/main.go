@@ -30,6 +30,7 @@ func main() {
 	api.GET("/server", controller.GetServerInfo)
 	api.POST("/register", controller.Register)
 	api.POST("/login", controller.Login)
+	api.POST("/resetPassword", controller.ResetPassword)
 
 	adminApi := api.Group("/admin")
 	adminApi.Use(checkToken())

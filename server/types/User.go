@@ -28,3 +28,8 @@ type NewPassword struct {
 	Old string `json:"old"`
 	New string `json:"new"`
 }
+
+type ResetPassword struct {
+	UserName  string `json:"userName"`
+	ServerKey string `json:"serverKey"`
+}

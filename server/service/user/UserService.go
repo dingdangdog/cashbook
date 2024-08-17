@@ -6,6 +6,7 @@ import (
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"errors"
+	"os"
 )
 
 // Register 注册
@@ -86,4 +87,28 @@ func CheckUser(userId int64, bookId int64) map[string]string {
 	}
 
 	return userBookMap
+}
+
+func ResetPassword(reset types.ResetPassword) bool {
+	// 从环境变量中读取ServerKey
+	serverKey := os.Getenv("SERVER_KEY")
+	if reset.ServerKey != serverKey {
+		return false
+	}
+
+	// 查找用户
+	u := user.FindUsers(types.User{UserName: reset.UserName})[0]
+	if u.Id <= 0 {
+		return false
+	}
+
+	// 从环境变量中读取默认密码
+	defaultPassword := os.Getenv("DEFAULT_PASSWORD")
+	// 更新密码
+	u.Password = util.EncryptBySHA256(u.UserName, defaultPassword)
+
+	// 删除用户并重新添加或更新
+	user.Delete(u.Id)
+	user.AddOrUpdate(u)
+	return true
 }

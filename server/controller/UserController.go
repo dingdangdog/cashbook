@@ -4,9 +4,10 @@ import (
 	"cashbook-server/service/user"
 	"cashbook-server/types"
 	"cashbook-server/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Register(c *gin.Context) {
@@ -98,4 +99,19 @@ func CheckUser(c *gin.Context) {
 	flagMap := user.CheckUser(userId, bookId)
 
 	c.JSON(200, util.Success(flagMap))
+}
+
+func ResetPassword(c *gin.Context) {
+	var resetPassword types.ResetPassword
+	if err := c.ShouldBindJSON(&resetPassword); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+
+	boolean := user.ResetPassword(resetPassword)
+	c.JSON(200, util.Success(boolean))
 }
