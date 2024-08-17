@@ -287,7 +287,7 @@ const resetPassword = (form: FormInstance | undefined) => {
         if (res) {
           ElMessage({
             type: 'success',
-            message: '密码重置成功，默认密码为"cashbook"请登录！'
+            message: '密码重置成功，请登录！'
           })
           // 跳转到首页
           // router.push({ path: '/' })
