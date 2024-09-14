@@ -38,8 +38,8 @@ export interface UpdateFlowDto {
 }
 
 export class FlowQuery {
-  pageNum: number = 1
-  pageSize: number = 20
+  pageNum?: number = 1
+  pageSize?: number = 20
   id?: string
   bookId?: string
   startDay?: string

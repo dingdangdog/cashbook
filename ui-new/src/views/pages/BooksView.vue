@@ -11,6 +11,9 @@
           clearable
         ></v-text-field>
       </div>
+      <v-btn variant="elevated" class="btn-group-btn" color="success" @click="toAddBook()">
+        新建账本
+      </v-btn>
     </div>
 
     <hr />
@@ -59,6 +62,7 @@
             label="账本名称"
             variant="outlined"
             v-model="editBook.bookName"
+            required
           ></v-text-field>
           <v-text-field
             clearable
@@ -70,8 +74,15 @@
         </v-card-text>
         <v-card-actions>
           <div style="text-align: center; width: 100%; margin-bottom: 1rem">
-            <v-btn class="btn-group-btn" type="primary" @click="confirmBookForm()"> 确定 </v-btn>
-            <v-btn class="btn-group-btn" @click="cancelEdit"> 取消 </v-btn>
+            <v-btn variant="elevated" class="btn-group-btn" @click="cancelEdit"> 取消 </v-btn>
+            <v-btn
+              variant="elevated"
+              class="btn-group-btn"
+              color="primary"
+              @click="confirmBookForm()"
+            >
+              确定
+            </v-btn>
           </div>
         </v-card-actions>
       </v-card>
@@ -84,7 +95,7 @@
 import { ref, onMounted, watch } from 'vue'
 
 // 私有引入
-import { deleteBook, getBook, updateBook } from '@/api/api.book'
+import { createBook, deleteBook, getBook, updateBook } from '@/api/api.book'
 import type { BookQuery, Book } from '@/model/book'
 import { checkUserAndBook } from '@/utils/common'
 import { errorAlert, successAlert } from '@/utils/alert'
@@ -94,11 +105,7 @@ onMounted(() => {
   doQuery()
 })
 
-const booksQueryRef = ref<BookQuery>({
-  id: undefined,
-  bookName: '',
-  createDate: undefined
-})
+const booksQueryRef = ref<BookQuery>({})
 
 /**
  * 组件属性绑定
@@ -113,6 +120,8 @@ if (document.body.clientWidth <= 480) {
 // 分页数据绑定
 const books = ref<Book[]>([])
 
+const allBooks = ref<Book[]>([])
+
 const headers = ref([
   { title: 'ID', key: 'id' },
   { title: '账本名称', key: 'bookName' },
@@ -122,15 +131,23 @@ const headers = ref([
 
 // 执行分页数据查询
 const doQuery = () => {
-  getBook(booksQueryRef.value.bookName).then((res) => {
-    // console.log(res)
-    books.value = res
-    loading.value = false
-  })
+  loading.value = true
+  getBook(booksQueryRef.value.bookName || '')
+    .then((res) => {
+      if (res) {
+        books.value = res
+        allBooks.value = res
+      }
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
 watch(booksQueryRef.value, () => {
-  doQuery()
+  books.value = allBooks.value.filter((book) => {
+    return book.bookName?.indexOf(booksQueryRef.value.bookName || '') !== -1
+  })
 })
 
 const addBookDialog = ref({
@@ -138,35 +155,50 @@ const addBookDialog = ref({
   title: '账本改名'
 })
 
-// 账本编辑表单实例
-const form = ref()
+const toAddBook = () => {
+  addBookDialog.value.visible = true
+  addBookDialog.value.title = '创建账本'
+}
 
-const editBook = ref<Book>({
-  id: 0,
-  bookName: '',
-  userId: 0,
-  createDate: ''
-})
+const editBook = ref<Book>({})
 
 const openUpdateDialog = (row: Book) => {
   editBook.value = row
   addBookDialog.value.visible = true
 }
 const confirmBookForm = () => {
-  if (!form.value) return
-  updateBook(editBook.value)
-    .then((_res) => {
-      successAlert('修改成功')
-      addBookDialog.value.visible = false
-      doQuery()
-    })
-    .catch((err) => {
-      errorAlert('修改失败')
-      console.log(err)
-    })
+  if (!editBook.value.bookName || editBook.value.bookName === '') {
+    errorAlert('账本名称不能为空')
+    return
+  }
+
+  if (addBookDialog.value.title === '创建账本') {
+    createBook({ bookName: editBook.value.bookName })
+      .then((_res) => {
+        successAlert('账本创建成功')
+        editBook.value = {}
+        addBookDialog.value.visible = false
+        doQuery()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  } else {
+    updateBook(editBook.value)
+      .then((_res) => {
+        successAlert('修改成功')
+        addBookDialog.value.visible = false
+        doQuery()
+      })
+      .catch((err) => {
+        errorAlert('修改失败')
+        console.log(err)
+      })
+  }
 }
 const cancelEdit = () => {
   addBookDialog.value.visible = false
+  editBook.value = {}
 }
 
 // 确认删除的一些逻辑

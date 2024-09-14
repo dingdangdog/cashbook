@@ -1,5 +1,30 @@
 <template>
   <div class="type-container">
+    <v-navigation-drawer v-model="searchDrawer" temporary location="top">
+      <div class="main-inner-header">
+        <div class="queryParam">
+          <v-autocomplete
+            label="类型的类型"
+            hide-details="auto"
+            variant="outlined"
+            v-model="typeQueryRef.type"
+            :items="typerOptions"
+            clearable
+          >
+          </v-autocomplete>
+        </div>
+        <div class="queryParam">
+          <v-text-field
+            clearable
+            label="类型名称"
+            hide-details="auto"
+            variant="outlined"
+            v-model="typeQueryRef.value"
+          ></v-text-field>
+        </div>
+        <!-- <v-btn class="btn-group-btn" color="primary" @click="doQuery">筛选</v-btn> -->
+      </div>
+    </v-navigation-drawer>
     <!-- 表格查询框与操作按钮 -->
     <div class="main-inner-header">
       <!-- 点击自动映射会发生什么？会将现有的流水数据中的`消费类型`按照`自动映射配置`的设置关系进行自动转换。 -->
@@ -27,33 +52,6 @@
         </template>
       </v-data-table-virtual>
     </div>
-
-    <v-navigation-drawer v-model="searchDrawer" temporary location="top">
-      <div class="main-inner-header">
-        <div class="queryParam">
-          <v-text-field
-            clearable
-            label="类型名称"
-            hide-details="auto"
-            variant="outlined"
-            v-model="typeQueryRef.value"
-          ></v-text-field>
-        </div>
-        <div class="queryParam">
-          <v-autocomplete
-            label="类型的类型"
-            hide-details="auto"
-            variant="outlined"
-            v-model="typeQueryRef.type"
-            :items="typerOptions"
-            clearable
-          >
-          </v-autocomplete>
-        </div>
-
-        <v-btn class="btn-group-btn" color="primary" @click="doQuery">筛选</v-btn>
-      </div>
-    </v-navigation-drawer>
 
     <v-dialog
       width="25rem"
@@ -125,8 +123,10 @@ const headers = ref([
 ])
 // 列表数据绑定
 const types = ref<Typer[]>([])
+const allTypes = ref<Typer[]>([])
 
 const typeQueryRef = ref<Typer>({
+  type: '',
   value: ''
 })
 
@@ -172,14 +172,20 @@ const cancelEdit = () => {
 }
 
 const doQuery = () => {
+  loading.value = true
   getAll(typeQueryRef.value)
     .then((res) => {
-      types.value = res
-      loading.value = false
+      if (res) {
+        types.value = res
+        allTypes.value = res
+      }
     })
     .catch((err) => {
       errorAlert('查询出错')
       console.log(err)
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 
@@ -188,7 +194,12 @@ onMounted(() => {
 })
 
 watch(typeQueryRef.value, () => {
-  doQuery()
+  types.value = allTypes.value.filter((type) => {
+    return (
+      type.type?.indexOf(typeQueryRef.value.type || '') !== -1 &&
+      type.value?.indexOf(typeQueryRef.value.value || '') !== -1
+    )
+  })
 })
 
 const hisFlowTypeConvert = async () => {

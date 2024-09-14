@@ -19,9 +19,9 @@
               >
                 总支出：<b> {{ getOutMonth() }} </b> </v-chip
               >&nbsp;
-              <v-chip :style="outPlan()" class="cursor-pointer">
+              <!-- <v-chip :style="outPlan()" class="cursor-pointer">
                 支出限额：<b>{{ plan.limitMoney }} </b>
-              </v-chip>
+              </v-chip> -->
             </div>
             <div
               style="flex: 1; display: flex; justify-content: space-between; align-items: center"
@@ -76,14 +76,12 @@ import { getPlan } from '@/api/api.plan'
 import type { Plan } from '@/model/plan'
 import type { DailyLineChartQuery } from '@/model/analysis'
 import { dateFormater } from '@/utils/common'
-import { flowQuery, resetFlowQuery, updatePlanFlag } from '@/utils/store'
-import { showFlowTableDialog } from '@/stores/flag'
+import { updatePlanFlag } from '@/utils/store'
+import { flowTableQuery, showFlowTableDialog } from '@/stores/flag'
 import { errorAlert } from '@/utils/alert'
 import MonthAnalysis from '@/components/MonthAnalysis.vue'
 import { VCalendar } from 'vuetify/labs/VCalendar'
-
-// 获取今天日期
-const day = ref(new Date())
+import type { FlowQuery } from '@/model/flow'
 
 const doQuery = async (param: DailyLineChartQuery) => {
   return await dailyLine(param)
@@ -105,18 +103,33 @@ const getOutMonth = (): number => {
   return Number(outMonthCount.value[title] ? Number(outMonthCount.value[title]).toFixed(2) : 0)
 }
 
+const query = ref<FlowQuery>({
+  pageNum: 1,
+  pageSize: 20
+})
+
 // 日期点击事件
-const clickDay = (param: any, flowType?: string) => {
-  // let month = dayToMonth(param)
-  resetFlowQuery()
-  flowQuery.value.startDay = param
-  flowQuery.value.endDay = param.day
-  if (flowType) {
-    flowQuery.value.flowType = flowType
+const clickDay = (day: string | any, flowType?: string) => {
+  if (day == '') {
+    query.value.startDay = dateFormater(
+      'YYYY-MM-dd',
+      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth(), 1)
+    )
+    query.value.endDay = dateFormater(
+      'YYYY-MM-dd',
+      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth() + 1, 0)
+    )
+  } else {
+    query.value.startDay = day
+    query.value.endDay = day
   }
-  day.value = new Date(param)
-  showFlowTableDialog.value.visible = true
-  // console.log(param)
+  if (flowType) {
+    query.value.flowType = flowType
+  } else {
+    query.value.flowType = ''
+  }
+  flowTableQuery.value = query.value
+  showFlowTableDialog.value = true
 }
 
 const nowDate = ref(new Date())
@@ -244,10 +257,9 @@ const outPlan = () => {
   return ''
 }
 
-initQuery()
-
 let bookId = localStorage.getItem('bookId')
 onMounted(() => {
+  initQuery()
   // 定时任务，用于在数据变更时自动刷新页面 TODO 待优化
   setInterval(() => {
     if (bookId != localStorage.getItem('bookId') || localStorage.getItem('changePlan') === 'true') {
@@ -275,127 +287,29 @@ const showMonthAnalysis = (month: string) => {
 
 <style>
 .calendar-main {
+  min-width: 55rem;
   padding: 1rem;
   border-radius: 10px;
   border: solid 1px var(--el-menu-border-color);
 }
 
-.el-calendar-table .el-calendar-day {
-  height: calc(var(--el-calendar-cell-width) * 1.5) !important;
-}
-.el-calendar-day {
-  padding: 0 !important;
-}
-
-.day-container {
-  height: 100%;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.day-container span {
-  border-radius: 0.5rem;
-}
-
-.day-container span:hover {
-  background-color: rgba(100, 100, 100, 0.5);
-}
-
-.day-title {
-  flex: 1;
-  padding: 0.5rem;
-}
-
-.day-count {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-}
-
-.day-count span {
-  height: 1.5rem;
-  display: flex;
-  justify-content: center;
-  padding: 0.2rem;
-}
-
-.is-selected {
-  color: #1989fa;
-}
-
 .thousand-flow {
-  color: #f56c6c;
+  color: #d50000;
+  font-weight: bold;
 }
 .five-hundred-flow {
-  color: #d485e1;
+  color: #6a1b9a;
+  font-weight: bolder;
 }
-
 .have-flow {
-  color: #cc9200;
+  color: #f57c00;
 }
 
-.no-flow,
 .have-in {
-  color: #2f8f00;
+  color: #2e7d32;
 }
-
+.no-flow,
 .no-in {
-  color: var(--el-text-color-placeholder);
-}
-
-.el-calendar__body {
-  padding: 0 1rem;
-}
-
-@media screen and (max-height: 860px) {
-  .day-container span {
-    margin: 0.1rem !important;
-  }
-}
-
-@media screen and (max-width: 1660px) {
-  .el-calendar-table .el-calendar-day {
-    height: calc(var(--el-calendar-cell-width) * 1.2);
-  }
-}
-@media screen and (max-width: 480px) {
-  .calendar-main {
-    font-size: small;
-  }
-
-  .el-calendar {
-    width: 100%;
-    height: auto;
-    font-size: smaller;
-  }
-
-  .el-dialog__body {
-    padding: 0;
-  }
-
-  .v-btn {
-    font-size: small;
-  }
-
-  .el-calendar__header {
-    padding: 10px;
-  }
-
-  .el-calendar__header > span {
-    width: 100%;
-    margin: 5px 5px;
-    font-size: small;
-  }
-
-  .el-calendar__body {
-    padding: 0 10px;
-  }
-
-  .mini-button-group {
-    /* display: inline; */
-    display: flex;
-    flex-wrap: wrap;
-  }
+  color: #d7ccc8;
 }
 </style>

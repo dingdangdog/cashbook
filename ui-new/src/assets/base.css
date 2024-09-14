@@ -33,11 +33,10 @@ body {
 }
 
 .chart-common-container {
-  min-width: 30rem;
-  margin: 1rem;
+  margin: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 1rem;
-  border: 1px solid rgb(113, 113, 113);
+  border: 1px solid rgb(160, 160, 160);
 }

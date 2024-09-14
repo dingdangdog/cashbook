@@ -1,7 +1,9 @@
 <template>
   <div class="chart-common-container">
+    <div id="pieDiv" :style="`width: ${width}; height: ${height};`">
+      <h3 v-if="noData">暂无数据</h3>
+    </div>
     <h4 class="row-header">{{ title }}</h4>
-    <div id="pieDiv" :style="style"></div>
   </div>
 </template>
 
@@ -9,17 +11,19 @@
 import * as echarts from 'echarts'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
-import { chartDialog, flowQuery, resetFlowQuery } from '@/utils/store'
-
-import { showFlowTableDialog } from '@/stores/flag'
+import { flowTableQuery, showFlowTableDialog } from '@/stores/flag'
+import type { FlowQuery } from '@/model/flow'
 
 // 使用 props 来接收外部传入的参数
-const { title, style } = defineProps(['title', 'style'])
+const { title, width, height } = defineProps(['title', 'width', 'height'])
 
 const dataListOut: any[] = []
 const dataListIn: any[] = []
 const notInOut: any[] = []
 const xAxisList: any[] = []
+const noData = ref(false)
+
+const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20 })
 
 const optionRef = ref({
   tooltip: {
@@ -126,6 +130,7 @@ const doQuery = () => {
     if (res) {
       if (res.length === 0) {
         console.log('MonthBar未查询到数据！')
+        noData.value = true
         return
       }
       dataListOut.length = 0
@@ -146,12 +151,11 @@ const doQuery = () => {
       pieChart = echarts.init(pieDiv)
       pieChart.setOption(optionRef.value)
       pieChart.on('click', function (param) {
-        resetFlowQuery()
         flowQuery.value.startDay = param.name + '-01'
         flowQuery.value.endDay = param.name + '-31'
 
-        chartDialog.chartDiaLogShow = false
-        showFlowTableDialog.value.visible = true
+        flowTableQuery.value = flowQuery.value
+        showFlowTableDialog.value = true
       })
     }
   })
@@ -178,8 +182,6 @@ onMounted(() => {
 .row-header {
   margin: 0.5rem;
 }
-
-
 
 #pieDiv {
   padding: 10px;

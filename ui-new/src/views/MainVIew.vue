@@ -103,11 +103,12 @@
     <BookDialog v-if="showBookDialogFlag.visible" />
     <!-- 弹出框表单：类型转换配置 -->
     <SetConvertDialog v-if="showSetConvertDialog" />
+    <FlowTableDialog v-if="showFlowTableDialog" />
   </v-layout>
 </template>
 
 <script setup lang="ts">
-import { cleanLoginInfo } from '@/utils/common'
+import { checkUserAndBook, cleanLoginInfo } from '@/utils/common'
 import { onMounted, ref } from 'vue'
 import CalendarView from './pages/CalendarView.vue'
 import AnalyticsView from './pages/AnalyticsView.vue'
@@ -116,9 +117,10 @@ import FlowsView from './pages/FlowsView.vue'
 import AboutView from './pages/AboutView.vue'
 import TypeView from './pages/TypeView.vue'
 import BookDialog from '@/components/dialogs/BookDialog.vue'
-import { showSetConvertDialog, showBookDialogFlag } from '@/stores/flag'
+import { showSetConvertDialog, showBookDialogFlag, showFlowTableDialog } from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import SetConvertDialog from '@/components/dialogs/SetConvertDialog.vue'
+import FlowTableDialog from '@/components/dialogs/FlowTableDialog.vue'
 
 const theme = useTheme()
 const themeValue = ref(false)
@@ -163,25 +165,14 @@ const items = ref<Menu[]>([
 ])
 
 const toPath = (menu: Menu) => {
-  if (menu.path == '/website/') {
-    window.open('https://www.aitlog.com')
-    return
-  }
-
   openMenu.value = menu.title
-}
-
-const selected = (id: string) => {
-  const menuDiv = document.getElementById(id)
-  if (menuDiv) {
-    menuDiv.className = menuDiv.className + ' open-menu'
-  }
 }
 
 onMounted(() => {
   if (!localStorage.getItem('bookId')) {
     showBookDialogFlag.value.visible = true
   }
+  checkUserAndBook()
 })
 </script>
 

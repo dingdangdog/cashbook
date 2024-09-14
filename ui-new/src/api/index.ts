@@ -50,10 +50,10 @@ $http.interceptors.response.use(
       cleanLoginInfo()
       return Promise.reject('请先登录')
     } else if (err.response.status === 500) {
-      errorAlert(err.response.data.message)
+      errorAlert('接口异常，请联系管理员！')
       return
     }
-    errorAlert('接口异常，请联系管理员！')
+    errorAlert('未知错误！')
     console.log(err)
   }
 )

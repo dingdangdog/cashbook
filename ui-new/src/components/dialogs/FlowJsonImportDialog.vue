@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showFlowJsonImportDialogFlag.visible" max-width="40rem">
+  <v-dialog v-model="showFlowJsonImportDialog" max-width="40rem">
     <v-card style="margin-top: -10rem">
       <v-card-title>Json导入</v-card-title>
       <v-card-text>
@@ -25,11 +25,7 @@
           <p v-else style="margin: 0.5rem 0; color: #ff6d00">请选择要导入的Json文件</p>
           <div>
             <span class="btn-group-btn">
-              <v-btn
-                variant="elevated"
-                color="error"
-                @click="showFlowJsonImportDialogFlag.visible = false"
-              >
+              <v-btn variant="elevated" color="error" @click="showFlowJsonImportDialog = false">
                 取消
               </v-btn>
             </span>
@@ -53,7 +49,7 @@
 <script setup lang="ts">
 import { importFlows } from '@/api/api.flow'
 import type { Flow } from '@/model/flow'
-import { showFlowJsonImportDialogFlag } from '@/stores/flag'
+import { showFlowJsonImportDialog } from '@/stores/flag'
 import { errorAlert, successAlert, warningAlert } from '@/utils/alert'
 import { ref } from 'vue'
 
@@ -111,7 +107,7 @@ const submitImport = () => {
       if (res > 0) {
         successAlert('导入成功, 共导入' + res + '条流水')
         successCallback()
-        showFlowJsonImportDialogFlag.value.visible = false
+        showFlowJsonImportDialog.value = false
       } else {
         errorAlert('导入失败，请检查数据！')
       }

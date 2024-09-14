@@ -24,7 +24,7 @@
         :itemsLength="flowPageRef.totalCount"
         :headers="headers"
         :loading="loading"
-        @update:options="doQuery"
+        @update:options="changePage"
       >
         <template v-slot:item.day="{ value }">
           <p class="common-text-column" :title="value">
@@ -120,17 +120,6 @@
       </span>
     </div>
   </div>
-
-  <!-- 流水编辑弹窗 -->
-  <EditFlowDialog
-    v-if="showFlowEditDialog"
-    :title="dialogFormTitle"
-    :flow="editItem"
-    :success-callback="doQuery"
-  />
-  <!-- 文件导入窗口 -->
-  <ImportJsonFlowDialog v-if="showFlowJsonImportDialogFlag.visible" :success-callback="doQuery" />
-
   <v-navigation-drawer v-model="searchDrawer" temporary location="top">
     <div class="main-inner-header">
       <div class="queryParam">
@@ -224,32 +213,31 @@
         </v-autocomplete>
       </div>
 
-      <v-btn class="btn-group-btn" color="primary" @click="doQuery()">筛选 </v-btn>
+      <!-- <v-btn class="btn-group-btn" color="primary" @click="doQuery()">筛选 </v-btn> -->
     </div>
   </v-navigation-drawer>
   <v-navigation-drawer v-model="selectHeaderDialog" temporary location="top">
-    <v-card-text>
-      <v-btn class="btn-group-btn" color="success" @click="showExcelImportDialogFlag.visible = true"
-        >Excel导入
+    <v-card-text style="text-align: right">
+      <v-btn class="btn-group-btn" color="success" @click="showFlowExcelImportDialog = true"
+        >CSV导入
       </v-btn>
-      <v-btn
-        class="btn-group-btn"
-        color="success"
-        @click="showFlowJsonImportDialogFlag.visible = true"
+      <v-btn class="btn-group-btn" color="success" @click="showFlowJsonImportDialog = true"
         >JSON导入
       </v-btn>
       <v-btn class="btn-group-btn" color="primary" @click="exportFlows()">JSON导出 </v-btn>
     </v-card-text>
   </v-navigation-drawer>
-  <!-- <el-dialog
-    v-model="showExcelImportDialogFlag.visible"
-    title="Excel导入流水"
-    :fullscreen="true"
-    destroy-on-close
-    :close-on-click-modal="false"
-  >
-    <FlowExcelImport />
-  </el-dialog> -->
+
+  <!-- 流水编辑弹窗 -->
+  <FlowEditDialog
+    v-if="showFlowEditDialog"
+    :title="dialogFormTitle"
+    :flow="editItem"
+    :success-callback="doQuery"
+  />
+  <!-- 文件导入窗口 -->
+  <FlowJsonImportDialog v-if="showFlowJsonImportDialog" :success-callback="doQuery" />
+  <FlowExcelImportDialog v-if="showFlowExcelImportDialog" :success-callback="doQuery" />
 </template>
 
 <script setup lang="ts">
@@ -260,46 +248,29 @@ import { ref, onMounted, watch } from 'vue'
 import { getFlowPage, deleteFlow, getAll, deleteFlowsApi } from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
 import { exportJson } from '@/utils/fileUtils'
-import { flowQuery } from '@/utils/store'
 import type { FlowExport } from '@/model/view'
 import type { Page } from '@/model/page'
-import type { Flow } from '@/model/flow'
+import type { Flow, FlowQuery } from '@/model/flow'
 
 import {
-  showExcelImportDialogFlag,
+  showFlowExcelImportDialog,
   showFlowEditDialog,
-  showFlowJsonImportDialogFlag
+  showFlowJsonImportDialog
 } from '@/stores/flag'
 import { errorAlert, successAlert } from '@/utils/alert'
-import EditFlowDialog from '@/components/dialogs/EditFlowDialog.vue'
-import ImportJsonFlowDialog from '@/components/dialogs/ImportJsonFlowDialog.vue'
+import FlowEditDialog from '@/components/dialogs/FlowEditDialog.vue'
+import FlowJsonImportDialog from '@/components/dialogs/FlowJsonImportDialog.vue'
+import FlowExcelImportDialog from '@/components/dialogs/FlowExcelImportDialog.vue'
+
+const flowQuery = ref<FlowQuery>({
+  pageNum: 1,
+  pageSize: 20
+})
 
 const bookName = localStorage.getItem('bookName')
-// 异步组件引用
-// const FlowExcelImport = defineAsyncComponent(
-//   () => import('@/components/dialog/FlowExcelImport.vue')
-// )
-
-// 使用 props 来接收外部传入的参数
-// const { edit } = defineProps(['edit'])
-const edit = 'show'
 
 const searchDrawer = ref(false)
 const selectHeaderDialog = ref(false)
-const funcs = ref({
-  import: false,
-  export: true,
-  start: false,
-  end: false,
-  flowType: true,
-  type: true,
-  payType: true,
-  name: false,
-  desc: false,
-  add: false,
-  delete: false,
-  excel: true
-})
 
 // 初始化后自动执行
 onMounted(() => {
@@ -354,13 +325,13 @@ const changeTypes = () => {
 }
 
 const headers = ref([
-  { title: '日期', key: 'day' },
-  { title: '流水类型', key: 'flowType' },
-  { title: '消费类型', key: 'type' },
-  { title: '支付方式', key: 'payType' },
+  { title: '日期', key: 'day', sortable: false },
+  { title: '流水类型', key: 'flowType', sortable: false },
+  { title: '消费类型', key: 'type', sortable: false },
+  { title: '支付方式', key: 'payType', sortable: false },
   { title: '金额', key: 'money' },
-  { title: '名称', key: 'name' },
-  { title: '备注', key: 'description' },
+  { title: '名称', key: 'name', sortable: false },
+  { title: '备注', key: 'description', sortable: false },
   { title: '操作', key: 'actions', sortable: false }
 ])
 
@@ -369,15 +340,8 @@ const headers = ref([
  */
 // 加载蒙版显示控制器
 const loading = ref(true)
-// 导入弹窗显示控制器
-const dialogUpdateVisible = ref(false)
 // 表单弹窗标题
 const dialogFormTitle = ref(formTitle[0])
-// 表单输入框宽度
-const formLabelWidth = ref('200px')
-if (document.body.clientWidth <= 480) {
-  formLabelWidth.value = '100px'
-}
 // 分页数据绑定
 const flowPageRef = ref<Page<Flow>>({
   pageNum: 1,
@@ -390,12 +354,32 @@ const flowPageRef = ref<Page<Flow>>({
   pageData: []
 })
 
+const changePage = (param: {
+  page: number
+  itemsPerPage: number
+  sortBy: { key: string; order: string }[]
+}) => {
+  console.log(param)
+  flowQuery.value.pageNum = param.page
+  flowQuery.value.pageSize = param.itemsPerPage
+  if (param.sortBy[0] && param.sortBy[0].key === 'money') {
+    flowQuery.value.moneySort = param.sortBy[0].order
+  } else {
+    flowQuery.value.moneySort = ''
+  }
+  doQuery()
+}
+
 // 执行分页数据查询
 const doQuery = () => {
-  getFlowPage(flowQuery.value).then((res) => {
-    flowPageRef.value = res
-    loading.value = false
-  })
+  loading.value = true
+  getFlowPage(flowQuery.value)
+    .then((res) => {
+      flowPageRef.value = res
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
 // 金额排序

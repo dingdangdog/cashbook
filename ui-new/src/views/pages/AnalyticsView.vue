@@ -11,31 +11,72 @@
     <v-tabs-window v-model="chartTab">
       <v-tabs-window-item :value="0">
         <div class="chart-row">
-          <TypePieChart :title="'支出类型统计'" :style="allChartStyle" v-if="chartTab === 0" />
-          <PayTypeBar :title="'支付方式统计'" :style="allChartStyle" v-if="chartTab === 0" />
+          <TypePieChart
+            :title="'支出类型统计'"
+            :width="groupChartWidth"
+            :height="groupChartHeigth"
+            v-if="chartTab === 0"
+          />
+          <PayTypeBar
+            :title="'支付方式统计'"
+            :width="groupChartWidth"
+            :height="groupChartHeigth"
+            v-if="chartTab === 0"
+          />
         </div>
         <div class="chart-row">
-          <DailyLineChart :title="'每日流水统计'" :style="allChartStyle" v-if="chartTab === 0" />
-          <MonthBar :title="'每月流水统计'" :style="allChartStyle" v-if="chartTab === 0" />
+          <DailyLineChart
+            :title="'每日流水统计'"
+            :width="groupChartWidth"
+            :height="groupChartHeigth"
+            v-if="chartTab === 0"
+          />
+          <MonthBar
+            :title="'每月流水统计'"
+            :width="groupChartWidth"
+            :height="groupChartHeigth"
+            v-if="chartTab === 0"
+          />
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item :value="1">
-        <TypePieChart :title="''" :style="singleChartStyle" v-if="chartTab === 1" />
+        <TypePieChart
+          :title="''"
+          :width="singleChartWidth"
+          :height="singleChartHeight"
+          v-if="chartTab === 1"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item :value="2">
-        <PayTypeBar :title="''" :style="singleChartStyle" v-if="chartTab === 2" />
+        <PayTypeBar
+          :title="''"
+          :width="singleChartWidth"
+          :height="singleChartHeight"
+          v-if="chartTab === 2"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item :value="3">
-        <DailyLineChart :title="''" :style="singleChartStyle" v-if="chartTab === 3" />
+        <DailyLineChart
+          :title="''"
+          :width="singleChartWidth"
+          :height="singleChartHeight"
+          v-if="chartTab === 3"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item :value="4">
-        <MonthBar :title="''" :style="singleChartStyle" v-if="chartTab === 4" />
+        <MonthBar
+          :title="''"
+          :width="singleChartWidth"
+          :height="singleChartHeight"
+          v-if="chartTab === 4"
+        />
       </v-tabs-window-item>
     </v-tabs-window>
   </div>
 </template>
 
 <script setup lang="ts">
+import { DialogFullscreen } from '@/stores/flag'
 import { defineAsyncComponent, ref } from 'vue'
 // 异步组件引用
 const DailyLineChart = defineAsyncComponent(() => import('@/components/charts/DailyLineChart.vue'))
@@ -43,20 +84,22 @@ const TypePieChart = defineAsyncComponent(() => import('@/components/charts/Type
 const PayTypeBar = defineAsyncComponent(() => import('@/components/charts/PayTypeBar.vue'))
 const MonthBar = defineAsyncComponent(() => import('@/components/charts/MonthBar.vue'))
 
-const tabPosition = ref('left')
 const chartTab = ref(0)
 
-const singleChartStyle = ref('width: 80vw;height: 70vh;')
-const allChartStyle = ref('width: 40vw;height: 33vh;')
+const singleChartWidth = ref('80vw')
+const singleChartHeight = ref('70vh')
+const groupChartWidth = ref('40vw')
+const groupChartHeigth = ref('40vh')
+
+if (DialogFullscreen.value) {
+  singleChartWidth.value = '100vw'
+  singleChartHeight.value = '70vh'
+  groupChartWidth.value = '95vw'
+  groupChartHeigth.value = '120vw'
+}
 </script>
 
 <style scoped>
-.chart-container {
-  padding: 1rem;
-  border-radius: 10px;
-  margin: 1rem;
-  border: solid 1px var(--el-menu-border-color);
-}
 .chart-row {
   width: 100%;
   display: flex;
