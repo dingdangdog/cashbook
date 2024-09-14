@@ -21,9 +21,9 @@
         </el-form-item>
         <a herf="javascript:void(0)" class="login-button" @click="toForget">忘记密码</a>
         <el-checkbox v-model="rememberUser" class="login-button">记住我</el-checkbox>
-        <el-button type="success" class="login-button" @click="toRegister">注册</el-button>
-        <el-button type="primary" class="login-button" @click="submitForm(loginForm)"
-          >登录</el-button
+        <v-btn type="success" class="login-button" @click="toRegister">注册</v-btn>
+        <v-btn type="primary" class="login-button" @click="submitForm(loginForm)"
+          >登录</v-btn
         >
       </el-form>
     </div>
@@ -83,8 +83,8 @@
     <!-- 表单确认按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="register(registerFormRef)"> 确定 </el-button>
-        <el-button @click="cancel()"> 取消 </el-button>
+        <v-btn type="primary" @click="register(registerFormRef)"> 确定 </v-btn>
+        <v-btn @click="cancel()"> 取消 </v-btn>
       </span>
     </template>
   </el-dialog>
@@ -104,8 +104,8 @@
     <!-- 表单确认按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="resetPassword(resetPasswordForm)"> 确定 </el-button>
-        <el-button @click="cancelReset()"> 取消 </el-button>
+        <v-btn type="primary" @click="resetPassword(resetPasswordForm)"> 确定 </v-btn>
+        <v-btn @click="cancelReset()"> 取消 </v-btn>
       </span>
     </template>
   </el-dialog>

@@ -5,7 +5,12 @@
       <el-input v-model="typeQueryRef.value" placeholder="类型名称" />
     </div>
     <div class="queryParam">
-      <el-select v-model="typeQueryRef.type" class="m-2" placeholder="类型类型" clearable>
+      <el-select
+        v-model="typeQueryRef.type"
+        style="min-width: 8rem"
+        placeholder="类型类型"
+        clearable
+      >
         <el-option
           v-for="item in typerOptions"
           :key="item.value"
@@ -15,19 +20,16 @@
       </el-select>
     </div>
     <div class="queryParam">
-      <el-button type="primary" @click="hisFlowTypeConvert">自动映射</el-button>
+      <!-- 点击自动映射会发生什么？会将现有的流水数据中的`消费类型`按照`自动映射配置`的设置关系进行自动转换。 -->
+      <el-button type="primary" @click="showSetConvertDialog()">分类映射配置</el-button>
+      <el-button type="warning" @click="hisFlowTypeConvert()">历史数据映射</el-button>
     </div>
   </el-row>
 
   <hr />
   <!-- 表格主体数据列表 -->
   <div class="el-table-div">
-    <el-table
-      v-loading="loading"
-      :data="types"
-      row-key="row"
-      max-height="calc(100vh - 12rem)"
-    >
+    <el-table v-loading="loading" :data="types" row-key="row" max-height="calc(100vh - 12rem)">
       <el-table-column type="index" label="序号" min-width="40" />
       <el-table-column prop="flowType" label="所属流水类型" min-width="100" />
       <el-table-column prop="type" label="Type类型" min-width="100" />
@@ -40,7 +42,7 @@
     </el-table>
   </div>
 
-  <el-dialog style="width: 20vw" v-model="typeDialog.visible" :title="typeDialog.title">
+  <el-dialog style="width: 20rem" v-model="typeDialog.visible" :title="typeDialog.title">
     <div class="el-dialog-main">
       <el-form ref="typeFormRef" :model="editType" :rules="typeFormRules">
         <el-form-item label="关联流水类型" :label-width="formLabelWidth" prop="flowType">
@@ -64,6 +66,11 @@
       </span>
     </template>
   </el-dialog>
+    <!-- 弹出框表单：类型转换配置 -->
+    <el-dialog style="width: 35rem" v-model="setConvertDialog.visible" :title="setConvertDialog.title">
+    <SetConvertDialog />
+  </el-dialog>
+
 </template>
 
 <script setup lang="ts">
@@ -74,6 +81,7 @@ import type { Typer } from '@/types/model/typer'
 import { ElMessage, type FormInstance, type FormRules, ElLoading, ElMessageBox } from 'element-plus'
 import { update, getAll } from '@/api/api.typer'
 import { typeConvert } from '@/utils/flowConvert'
+import SetConvertDialog from '@/components/dialog/SetConvertDialog.vue'
 
 // 加载蒙版显示控制器
 const loading = ref(true)
@@ -83,10 +91,7 @@ if (document.body.clientWidth <= 480) {
   formLabelWidth.value = '60px'
 }
 
-const typerOptions = ref<Typer[]>([
-  { value: '消费类型' },
-  { value: '支付方式' }
-])
+const typerOptions = ref<Typer[]>([{ value: '消费类型' }, { value: '支付方式' }])
 
 // 列表数据绑定
 const types = ref<Typer[]>([])
@@ -147,13 +152,15 @@ const cancelEdit = () => {
 }
 
 const doQuery = () => {
-  getAll(typeQueryRef.value).then((res) => {
-    types.value = res
-    loading.value = false
-  }).catch((err) => {
-    ElMessage.error('查询出错')
-    console.log(err)
-  })
+  getAll(typeQueryRef.value)
+    .then((res) => {
+      types.value = res
+      loading.value = false
+    })
+    .catch((err) => {
+      ElMessage.error('查询出错')
+      console.log(err)
+    })
 }
 
 onMounted(() => {
@@ -188,15 +195,11 @@ const hisFlowTypeConvert = async () => {
       }
     }
   }
-  ElMessageBox.alert(
-    doConvert.length === 0 ? '没有类型需要转换' : doConvert,
-    '转换结果',
-    {
-      confirmButtonText: 'OK',
-      center: true,
-      dangerouslyUseHTMLString: true
-    }
-  )
+  ElMessageBox.alert((doConvert.length === 0 ? '没有类型需要转换' : doConvert), '转换结果', {
+    confirmButtonText: 'OK',
+    center: true,
+    dangerouslyUseHTMLString: true
+  })
     .then(() => {
       loading.close()
       doQuery()
@@ -205,6 +208,15 @@ const hisFlowTypeConvert = async () => {
       loading.close()
       doQuery()
     })
+}
+
+const setConvertDialog = ref({
+  visible: false,
+  title: ''
+})
+const showSetConvertDialog = () => {
+  setConvertDialog.value.visible = true
+  setConvertDialog.value.title = '分类映射配置'
 }
 </script>
 

@@ -1,10 +1,20 @@
-### Run
+# Server
+
+## Run
 
 ```shell
 go build main.go
 ```
 
-### Package exe
+## 开发
+
+```sh
+set SERVER_KEY=testkey
+set DEFAULT_PASSWORD=cashbook
+go run .
+```
+
+## Package exe
 
 ```shell
 set GOOS=windows

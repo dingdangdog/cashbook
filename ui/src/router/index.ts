@@ -28,7 +28,7 @@ const publicRoutes = [
     component: IndexView,
     children: [
       {
-        path: '/index/',
+        path: '/index/calendar',
         name: 'calendar',
         component: CalendarView
       },

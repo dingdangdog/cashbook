@@ -1,0 +1,43 @@
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #3498db;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: #ecf0f1;
+  border-radius: 10px;
+}
+
+html,
+body {
+  margin: 0;
+  overflow: hidden !important;
+}
+
+.main-inner-header {
+  width: 100%;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: right;
+}
+.queryParam {
+  min-width: 12rem;
+}
+.btn-group-btn {
+  margin: 0 0.5rem;
+}
+
+.chart-common-container {
+  min-width: 30rem;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1rem;
+  border: 1px solid rgb(113, 113, 113);
+}

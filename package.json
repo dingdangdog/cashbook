@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "ui:dev": "cd ui && npm run dev",
-    "server:dev": "node runserver-env.js"
+    "ui-new:dev": "cd ui && npm run dev",
+    "server:dev": "set SERVER_KEY=testkey && set DEFAULT_PASSWORD=cashbook && node runserver-env.js"
   },
   "devDependencies": {
     "@types/node": "^18.11.15"

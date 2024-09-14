@@ -1,27 +1,28 @@
 <template>
   <div class="header-container">
-   <div class="header-left">
-     <!-- 图标 --> 
-     <div id="iconTitle">
+    <div class="header-left mini-hidden">
+      <!-- 页面标题 -->
+      <!-- <h3 style="padding-top: 0.3rem">Thanks for you Uesd</h3> -->
+      <div id="iconTitle">
        <img alt="cashbook logo" src="@/assets/images/cashbook.png" style="width: 2.8rem" />
      </div>
-     <!-- 页面标题 --> 
-     <!-- <h3 style="padding-top: 0.3rem">Cashbook</h3> -->
-   </div>
+    </div>
 
     <div class="header-center">
       <span>当前用户：{{ name }}&nbsp;&nbsp;</span>
       <span>当前账本：{{ bookName }}&nbsp;&nbsp;</span>
     </div>
 
-    <div class="header-right">
+    <div class="header-right mini-hidden">
       <!-- 其他按钮 -->
       <div class="header-info header-buttons">
         <!-- <el-button plain @click="showOnlineDialog()"> 在线同步 </el-button> -->
+        <el-button plain @click="showSetConvertDialog()"> 分类映射 </el-button>
         <el-button plain @click="showPlanDialog()"> 额度设置 </el-button>
         <el-button plain @click="showBookDialog()"> 切换账本 </el-button>
       </div>
-
+    </div>
+    <div>
       <!-- 其他信息 -->
       <div class="header-info header-setting">
         <el-dropdown id="setting-dropdown">
@@ -30,6 +31,15 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
+              <el-dropdown-item class="max-hidden" @click="showSetConvertDialog()">
+                分类映射
+              </el-dropdown-item>
+              <el-dropdown-item class="max-hidden" @click="showPlanDialog()">
+                额度设置
+              </el-dropdown-item>
+              <el-dropdown-item class="max-hidden" @click="showBookDialog()">
+                切换账本
+              </el-dropdown-item>
               <el-dropdown-item @click="changePassword()"> 修改密码 </el-dropdown-item>
               <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
             </el-dropdown-menu>
@@ -39,23 +49,38 @@
     </div>
   </div>
 
+  <!-- 弹出框表单：类型转换配置 -->
+  <el-dialog
+    style="width: 30rem"
+    v-model="setConvertDialog.visible"
+    :title="setConvertDialog.title"
+  >
+    <SetConvertDialog />
+  </el-dialog>
+
   <!-- 弹出框表单：账本密钥修改 -->
-  <el-dialog style="width: 30vw" v-model="passwordDialog.visible" :title="passwordDialog.title">
+  <el-dialog style="width: 30rem" v-model="passwordDialog.visible" :title="passwordDialog.title">
     <ChangePasswordDialog />
   </el-dialog>
 
   <!-- 弹出框表单：额度设置 -->
-  <el-dialog style="width: 30vw" v-model="planDialog.visible" :title="planDialog.title">
+  <el-dialog style="width: 30rem" v-model="planDialog.visible" :title="planDialog.title">
     <PlanDialog />
   </el-dialog>
 
   <!-- 弹出框：账本设置 -->
-  <el-dialog style="width: 50vw" v-model="showBookDialogFlag.visible" :title="bookDialog.title" @close="checkBook" destroy-on-close>
+  <el-dialog
+    style="width: 30rem"
+    v-model="showBookDialogFlag.visible"
+    :title="bookDialog.title"
+    @close="checkBook"
+    destroy-on-close
+  >
     <BookDialog />
   </el-dialog>
 
   <!-- 弹出框表单：在线同步 -->
-  <el-dialog style="width: 30vw" v-model="onlineDialog.visable" :title="onlineDialog.title">
+  <el-dialog style="width: 30rem" v-model="onlineDialog.visable" :title="onlineDialog.title">
     <OnlineDialog />
   </el-dialog>
 </template>
@@ -69,6 +94,7 @@ import { showBookDialogFlag } from '@/stores/flag'
 import BookDialog from '@/components/dialog/BookDialog.vue'
 import PlanDialog from '@/components/dialog/PlanDialog.vue'
 import OnlineDialog from '@/components/dialog/OnlineDialog.vue'
+import SetConvertDialog from '@/components/dialog/SetConvertDialog.vue'
 import ChangePasswordDialog from '@/components/dialog/ChangePasswordDialog.vue'
 
 import { getServerInfo } from '@/api/api.server'
@@ -81,12 +107,12 @@ onMounted(() => {
       confirmButtonText: '确定',
       type: 'warning'
     })
-    .then(() => {
-      showBookDialog()
-    })
-    .catch(() => {
-      showBookDialog()
-    })
+      .then(() => {
+        showBookDialog()
+      })
+      .catch(() => {
+        showBookDialog()
+      })
   }
 
   setInterval(() => {
@@ -97,30 +123,17 @@ onMounted(() => {
 
 const checkBook = () => {
   if (!localStorage.getItem('bookId')) {
-    ElMessage.error("请先选择账本！")
+    ElMessage.error('请先选择账本！')
     setTimeout(() => {
       showBookDialog()
-    }, 500);
+    }, 500)
   }
 }
 
-// 服务器信息封装
-const serverInfo = ref({
-  id: 1,
-  version: '',
-  environment: '',
-  createDate: new Date(),
-  startDate: new Date()
-})
-
 // 获取服务器信息
 getServerInfo().then((res) => {
-  serverInfo.value.id = res.id
-  serverInfo.value.version = res.version || ''
-  serverInfo.value.environment = res.environment || ''
-  serverInfo.value.createDate = res.createDate
-
-  localStorage.setItem('version', serverInfo.value.version)
+  console.log(res, 'version')
+  localStorage.setItem('version', res.version || "")
 })
 
 // 图标大小设置
@@ -182,6 +195,15 @@ const showOnlineDialog = () => {
   onlineDialog.value.title = '额度设置'
 }
 
+const setConvertDialog = ref({
+  visible: false,
+  title: ''
+})
+const showSetConvertDialog = () => {
+  setConvertDialog.value.visible = true
+  setConvertDialog.value.title = '分类映射配置'
+}
+
 const logout = () => {
   ElMessageBox.confirm('确定退出登录？', '退出登录', {
     confirmButtonText: '确定',
@@ -203,8 +225,7 @@ const logout = () => {
 <style scoped>
 .header-container {
   display: flex;
-  justify-content: left;
-  align-items: center;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -218,29 +239,30 @@ const logout = () => {
 }
 
 .header-left {
-  flex: 1;
   width: 100%;
   display: flex;
   justify-content: left;
+  align-items: center;
 }
 .header-center {
-  flex: 3;
+  /* flex: 2; */
   width: 100%;
   display: flex;
-  justify-content: right;
+  justify-content: center;
+  align-items: center;
 }
 .header-right {
-  flex: 2;
   width: 100%;
   display: flex;
   justify-content: right;
+  align-items: center;
 }
 
 .header-setting {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 5rem;
+  /* min-width: 5rem; */
 }
 #setting-dropdown {
   font-size: 1rem;
@@ -251,5 +273,17 @@ const logout = () => {
   padding: 0.5rem;
   float: left;
   width: auto;
+}
+
+@media screen and (max-width: 1280px) {
+  .mini-hidden {
+    display: none;
+  }
+  .max-hidden {
+    display: show;
+  }
+}
+.max-hidden {
+  display: none;
 }
 </style>

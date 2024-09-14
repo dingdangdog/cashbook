@@ -1,5 +1,5 @@
 import $http from './index'
-import type { User, LoginUser, NewPassword } from '../types/model/user'
+import type { User, LoginUser, NewPassword } from '@/model/user'
 
 /**
  * 登录
