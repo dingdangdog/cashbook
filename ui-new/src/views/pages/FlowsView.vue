@@ -172,7 +172,7 @@
           label="备注"
           hide-details="auto"
           variant="outlined"
-          v-model="flowQuery.name"
+          v-model="flowQuery.description"
           clearable
         ></v-text-field>
       </div>
@@ -272,12 +272,6 @@ const bookName = localStorage.getItem('bookName')
 const searchDrawer = ref(false)
 const selectHeaderDialog = ref(false)
 
-// 初始化后自动执行
-onMounted(() => {
-  doQuery()
-  changeTypes()
-})
-
 const typeLabel = ref('支出/收入类型')
 const payTypeLabel = ref('支付/收款方式')
 const formTitle = ['新增流水', '修改流水']
@@ -359,7 +353,7 @@ const changePage = (param: {
   itemsPerPage: number
   sortBy: { key: string; order: string }[]
 }) => {
-  console.log(param)
+  // console.log(param)
   flowQuery.value.pageNum = param.page
   flowQuery.value.pageSize = param.itemsPerPage
   if (param.sortBy[0] && param.sortBy[0].key === 'money') {
@@ -375,7 +369,9 @@ const doQuery = () => {
   loading.value = true
   getFlowPage(flowQuery.value)
     .then((res) => {
-      flowPageRef.value = res
+      if (res) {
+        flowPageRef.value = res
+      }
     })
     .finally(() => {
       loading.value = false
@@ -475,15 +471,11 @@ const exportFlows = () => {
     })
 }
 
-watch(flowQuery, () => {
+doQuery()
+changeTypes()
+watch(flowQuery.value, () => {
   doQuery()
 })
-
-const flowMethods: FlowExport = {
-  query: () => {
-    doQuery()
-  }
-}
 </script>
 
 <style scoped>

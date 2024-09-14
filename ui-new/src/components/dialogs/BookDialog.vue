@@ -17,6 +17,7 @@
       <hr />
       <v-card-actions>
         <div style="text-align: center; width: 100%">
+          <v-btn color="warning" @click="showBookDialogFlag.visible = false">取消</v-btn>
           <v-btn color="success" @click="addBook">新建账本</v-btn>
         </div>
       </v-card-actions>

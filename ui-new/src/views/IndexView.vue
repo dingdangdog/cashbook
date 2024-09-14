@@ -15,7 +15,7 @@ if (token) {
   userInfo.value.id = String(localStorage.getItem('userId'))
   userInfo.value.name = String(localStorage.getItem('name'))
   if (localStorage.getItem('bookId')) {
-    bookInfo.value.id = String(localStorage.getItem('bookId'))
+    bookInfo.value.id = Number(localStorage.getItem('bookId'))
     bookInfo.value.bookName = String(localStorage.getItem('bookName'))
   }
 }

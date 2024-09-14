@@ -85,14 +85,9 @@ const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20 })
 const { query } = defineProps(['query'])
 
 // 初始化后自动执行
-onMounted(() => {
-  if (query) {
-    flowQuery.value = query
-  }
-  doQuery()
-  changeTypes()
-})
-
+if (query) {
+  flowQuery.value = query
+}
 const searchDrawer = ref(false)
 
 const typeLabel = ref('支出/收入类型')
@@ -219,6 +214,9 @@ const exportFlows = () => {
       errorAlert('数据获取出错，无法导出！')
     })
 }
+
+doQuery()
+changeTypes()
 
 watch(flowQuery, () => {
   doQuery()

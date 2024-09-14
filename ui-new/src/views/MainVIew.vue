@@ -1,6 +1,6 @@
 <template>
-  <v-layout id="admin-container">
-    <v-app-bar>
+  <v-layout>
+    <v-app-bar class="layout-border-radius drag-area">
       <template v-slot:prepend>
         <v-app-bar-nav-icon v-if="miniWindow" @click="menuer = !menuer"></v-app-bar-nav-icon>
       </template>
@@ -10,10 +10,10 @@
         </v-btn>
         Cashbook
         <!-- <span>Cashbook</span> -->
-        <v-btn @click="showBookDialogFlag.visible = true"> 切换账本 </v-btn>
+        <v-btn class="no-drag" @click="showBookDialogFlag.visible = true"> 切换账本 </v-btn>
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> 管理 </v-btn>
+            <v-btn v-bind="props" class="no-drag"> 管理 </v-btn>
           </template>
           <v-list>
             <v-list-item class="cursor-pointer" @click="showSetConvertDialog = true">
@@ -24,9 +24,16 @@
         </v-menu>
       </v-app-bar-title>
 
-      <v-btn icon="mdi-close"> </v-btn>
+      <template v-slot:append>
+        <div>
+          <v-btn class="no-drag window-actions" icon="mdi-minus"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-dock-window"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-window-maximize"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-close"> </v-btn>
+        </div>
+      </template>
     </v-app-bar>
-    <v-navigation-drawer v-model="menuer" location="left" :width="200">
+    <v-navigation-drawer v-model="menuer" location="left" class="layout-border-radius" width="180">
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -85,7 +92,7 @@
           <template v-slot:label>
             <v-icon
               :icon="themeValue ? 'mdi-emoticon-cool-outline' : 'mdi-weather-night'"
-              :color="themeValue ? 'black' : 'white'"
+              :color="themeValue ? 'warning' : 'white'"
             ></v-icon>
           </template>
         </v-switch>
@@ -125,12 +132,14 @@ import FlowTableDialog from '@/components/dialogs/FlowTableDialog.vue'
 const theme = useTheme()
 const themeValue = ref(false)
 if (theme.global.name.value == 'light') {
-  console.log(theme.global.name.value)
+  // console.log(theme.global.name.value)
   themeValue.value = true
 }
 const toggleTheme = () => {
   console.log(themeValue.value)
-  theme.global.name.value = theme.global.name.value == 'light' ? 'dark' : 'light'
+  const to = theme.global.name.value == 'light' ? 'dark' : 'light'
+  theme.global.name.value = to
+  localStorage.setItem('theme', to)
 }
 
 const miniWindow = ref(window.innerWidth < 1280)
@@ -181,6 +190,17 @@ onMounted(() => {
   width: 100vw;
   height: 100vh;
   overflow: auto;
+  border-radius: 0.5rem;
+  box-shadow:
+    2px 2px 5px 2px rgba(112, 225, 137, 0.1),
+    -2px -2px 5px 2px rgba(112, 225, 137, 0.1) !important;
+}
+
+.window-actions {
+  color: rgba(19, 116, 33);
+}
+.window-actions:hover {
+  color: rgba(182, 6, 6);
 }
 
 .menu-icon {
@@ -188,7 +208,7 @@ onMounted(() => {
 }
 
 .open-menu {
-  background: rgba(205, 255, 200, 0.2);
+  background: rgba(55, 97, 50, 0.2);
 }
 .menu:hover {
   background: rgba(126, 126, 126, 0.2);
