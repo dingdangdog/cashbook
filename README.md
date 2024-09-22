@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog1674980314.png" width="80px" alt="cashbook" />
+<img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog-1674980314.png" width="80px" alt="cashbook" />
 <h1>cashbook-web</h1>
 </div>
 
