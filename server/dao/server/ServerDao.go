@@ -3,6 +3,7 @@ package server
 import (
 	"cashbook-server/config"
 	"cashbook-server/types"
+	"encoding/json"
 	"fmt"
 	"os"
 )
@@ -20,13 +21,38 @@ func init() {
 
 // 加载文件
 func loadConfig() types.Server {
-	version := os.Getenv("CASHBOOK_VERSION")
-	secret := os.Getenv("TOKEN_SALT")
-	env := os.Getenv("ENVIRONMENT")
-	return types.Server{Version: version, Secret: secret, Environment: env}
+	fileBytes, _ := os.ReadFile(ConfigFile)
+	var server types.Server
+	if len(fileBytes) != 0 {
+		if err := json.Unmarshal(fileBytes, &server); err != nil {
+			return types.Server{}
+		}
+	}
+	// return server
+	if len(server.Version) <= 0 {
+		server.Version = os.Getenv("CASHBOOK_VERSION")
+	}
+	if len(server.Secret) <= 0 {
+		server.Secret = os.Getenv("TOKEN_SALT")
+	}
+	if len(server.Environment) <= 0 {
+		server.Environment = os.Getenv("ENVIRONMENT")
+	}
+	return server
 }
 
 // GetServerInfo 获取服务信息
 func GetServerInfo() types.Server {
 	return serverInfo
+}
+
+func UpdateServerInfo(server types.Server) {
+	serverInfo = server
+	saveFile()
+}
+
+// 保存文件
+func saveFile() {
+	jsonData, _ := json.Marshal(serverInfo)
+	_ = os.WriteFile(ConfigFile, jsonData, os.ModePerm)
 }

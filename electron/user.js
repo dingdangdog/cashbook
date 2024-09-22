@@ -1,5 +1,6 @@
 const serverApi = require("./api.js");
 const crypto = require("crypto");
+const { getServerInfo } = require("./server.js");
 
 class User {
   constructor(id, name, userName, password, createDate) {
@@ -109,6 +110,19 @@ const login = async (flag, param) => {
   return serverApi.toResult(401, "", "用户名或密码错误");
 };
 
+const resetPassword = async (userId, data) => {
+  const serverInfo = getServerInfo();
+  // userName serverKey
+  if (data.serverKey == serverInfo.key) {
+    const user = await serverApi.findById(getFileName(), userId);
+    user.password = encryptBySHA256(user.userName, serverInfo.password);
+    updateUser(password.id, user);
+    // 修改密码
+    return serverApi.toResult(200, user, "重置成功");
+  }
+  return serverApi.toResult(500, "", "服务密钥错误");
+};
+
 // 校验密码是否正确
 const checkPassword = async (id, password) => {
   const user = await serverApi.findById(getFileName(), id);
@@ -144,4 +158,5 @@ module.exports = {
   readUsers,
   deleteUser,
   checkUser,
+  resetPassword,
 };

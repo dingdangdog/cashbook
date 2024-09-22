@@ -24,4 +24,5 @@ const getVersion = () => {
 
 module.exports = {
   getVersion,
+  getServerInfo,
 };

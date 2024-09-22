@@ -8,6 +8,7 @@ const {
   readUsers,
   deleteUser,
   checkUser,
+  resetPassword,
 } = require("./electron/user.js");
 
 const {
@@ -64,6 +65,7 @@ module.exports = {
   readUsers,
   deleteUser,
   checkUser,
+  resetPassword,
 
   queryBooks,
   addBook,

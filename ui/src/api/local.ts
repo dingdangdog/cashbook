@@ -6,7 +6,7 @@ import { errorAlert } from '@/utils/alert'
 import { cleanLoginInfo } from '@/utils/common'
 
 // 创建api调用者
-const api = async (functionName: string, ...args: any) => {
+const local = async (functionName: string, ...args: any) => {
   // console.log(request)
   let serializedArgs = args.length > 0 ? args.map((arg: any) => JSON.stringify(arg)) : undefined
   // console.log(functionName, serializedArgs)
@@ -32,4 +32,4 @@ const api = async (functionName: string, ...args: any) => {
     return res.d
   }
 }
-export default api
+export default local

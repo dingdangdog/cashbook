@@ -1,27 +1,32 @@
-// 引入自定义样式
 import './assets/base.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
-import router from './router'
 
-// 引入ElementPlus
-import ElementPlus from 'element-plus';
-// 引入中文支持
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
-// 引入ElementPlus-css
-import 'element-plus/dist/index.css';
-// 如果只想导入css变量
-import 'element-plus/theme-chalk/dark/css-vars.css';
-
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+import { zhHans } from 'vuetify/locale'
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(router)
 
-// 应用ElementPlus
-app.use(ElementPlus, { locale: zhCn })
+const vuetify = createVuetify({
+  components,
+  directives,
+  theme: {
+    defaultTheme: 'dark'
+  },
+  locale: {
+    locale: 'zhHans',
+    messages: { zhHans }
+  }
+})
+app.use(vuetify)
 
 app.mount('#app')

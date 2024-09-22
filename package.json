@@ -3,8 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "ui:dev": "cd ui && npm run dev",
-    "ui": "cd ui-new && npm run dev",
+    "ui": "cd ui && npm run dev",
     "server": "set SERVER_KEY=testkey && set DEFAULT_PASSWORD=cashbook && node runserver-env.js",
     "electron": "electron .",
     "package": "electron-builder"

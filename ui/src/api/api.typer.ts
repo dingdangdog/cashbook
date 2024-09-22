@@ -1,13 +1,20 @@
-import type { Typer } from '@/types/model/typer';
+import { MOD } from '@/stores/flag'
 import $http from './index'
+import local from './local'
 
-const prefix = '/admin';
+import type { Typer } from '@/model/typer'
+
+const prefix = '/admin'
 
 /**
  * 流水类型
  */
 export function getFlowType(): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getFlowType", method: "get" });
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/dict/getFlowType', method: 'get' })
+  } else {
+    return local('getFlowType', localStorage.getItem('bookId'))
+  }
 }
 
 /**
@@ -15,7 +22,11 @@ export function getFlowType(): Promise<Typer[]> {
  * @param type
  */
 export function getExpenseType(type: string): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getExpenseType/" + type, method: "get" });
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/dict/getExpenseType/' + type, method: 'get' })
+  } else {
+    return local('getExpenseType', localStorage.getItem('bookId'), type)
+  }
 }
 
 /**
@@ -23,31 +34,53 @@ export function getExpenseType(type: string): Promise<Typer[]> {
  * @param type
  */
 export function getPaymentType(type: string): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getPaymentType/" + type, method: "get" });
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/dict/getPaymentType/' + type, method: 'get' })
+  } else {
+    return local('getPaymentType', localStorage.getItem('bookId'), type)
+  }
 }
 
 export function getAll(typer: Typer): Promise<Typer[]> {
-  return $http({ url: prefix + "/dict/getAll?type=" + typer.type + "&value=" + typer.value, method: "get" });
+  if (MOD.value === 'WEB') {
+    return $http({
+      url: prefix + '/dict/getAll?type=' + typer.type + '&value=' + typer.value,
+      method: 'get'
+    })
+  } else {
+    return local('getPaymentType', localStorage.getItem('bookId'), typer)
+  }
 }
 
 /**
  * 更新类型
  */
 export function update(type: Typer): Promise<number> {
-  return $http({ url: prefix + "/dict/update", method: "post", data: type });
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/dict/update', method: 'post', data: type })
+  } else {
+    return local('updateType', localStorage.getItem('bookId'), type)
+  }
 }
-
 
 /**
  * 获取类型关系
  */
 export function getTypeRelation(): Promise<Record<string, string>> {
-  return $http({ url: prefix + "/type/getTypeRelation", method: "get"});
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/type/getTypeRelation', method: 'get' })
+  } else {
+    return local('getTypeRelation', localStorage.getItem('bookId'))
+  }
 }
 
 /**
  * 更新类型关系
  */
 export function updateTypeRelation(types: Record<string, string>): Promise<number> {
-  return $http({ url: prefix + "/type/updateTypeRelation", method: "post", data: types});
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/type/updateTypeRelation', method: 'post', data: types })
+  } else {
+    return local('saveTypeConvertConfig', localStorage.getItem('bookId'), types)
+  }
 }

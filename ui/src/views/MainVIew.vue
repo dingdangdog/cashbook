@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-app-bar class="layout-border-radius drag-area">
+    <v-app-bar class="layout-border-radius" :class="MOD == 'LOCAL' ? 'drag-area' : ''">
       <template v-slot:prepend>
         <v-app-bar-nav-icon v-if="miniWindow" @click="menuer = !menuer"></v-app-bar-nav-icon>
       </template>
@@ -25,11 +25,11 @@
       </v-app-bar-title>
 
       <template v-slot:append>
-        <div>
-          <v-btn class="no-drag window-actions" icon="mdi-minus"> </v-btn>
-          <v-btn class="no-drag window-actions" icon="mdi-dock-window"> </v-btn>
-          <v-btn class="no-drag window-actions" icon="mdi-window-maximize"> </v-btn>
-          <v-btn class="no-drag window-actions" icon="mdi-close"> </v-btn>
+        <div v-if="MOD == 'LOCAL'">
+          <v-btn class="no-drag window-actions" icon="mdi-minus"  @click="minimize"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-dock-window"  @click="maximize" v-show="!isMax"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-window-maximize"  @click="maximize" v-show="!isMax"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-close" @click="close"> </v-btn>
         </div>
       </template>
     </v-app-bar>
@@ -124,10 +124,12 @@ import FlowsView from './pages/FlowsView.vue'
 import AboutView from './pages/AboutView.vue'
 import TypeView from './pages/TypeView.vue'
 import BookDialog from '@/components/dialogs/BookDialog.vue'
-import { showSetConvertDialog, showBookDialogFlag, showFlowTableDialog } from '@/stores/flag'
+import { showSetConvertDialog, showBookDialogFlag, showFlowTableDialog, MOD } from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import SetConvertDialog from '@/components/dialogs/SetConvertDialog.vue'
 import FlowTableDialog from '@/components/dialogs/FlowTableDialog.vue'
+
+import { getServerInfo } from '@/api/api.server'
 
 const theme = useTheme()
 const themeValue = ref(false)
@@ -177,11 +179,51 @@ const toPath = (menu: Menu) => {
   openMenu.value = menu.title
 }
 
+const minimize = () => {
+  // @ts-ignore
+  window.electron.minimize()
+}
+
+// 最大化标志
+const isMax = ref(false)
+const maximize = () => {
+  // @ts-ignore
+  window.electron.maximize()
+  isMas()
+}
+
+const close = () => {
+  if (!localStorage.getItem('remember')) {
+    localStorage.clear()
+  }
+  // @ts-ignore
+  window.electron.close()
+}
+
+// 判断窗口是否最大化
+const isMas = () => {
+  // @ts-ignore
+  window.electron.isMaximized().then((flag: boolean) => {
+    isMax.value = flag
+  })
+}
+
 onMounted(() => {
   if (!localStorage.getItem('bookId')) {
     showBookDialogFlag.value.visible = true
   }
   checkUserAndBook()
+
+  getServerInfo().then((res) => {
+    if (res) {
+      localStorage.setItem('version', res.version || '')
+      localStorage.setItem('environment', res.environment || '')
+      localStorage.setItem('secret', res.secret || '')
+      MOD.value = res.environment || 'WEB'
+    }
+  })
+
+  isMas()
 })
 </script>
 

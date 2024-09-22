@@ -1,92 +1,84 @@
 <template>
-  <el-row class="queryRow">
-    <h4 class="row-header">{{ title }}</h4>
-    <div class="row-header queryParam">
-      <el-date-picker
-        v-model="queryRef.startDay"
-        type="date"
-        style="width: auto"
-        format="YYYY/MM/DD"
-        value-format="YYYY-MM-DD"
-        placeholder="开始时间"
-      />
-    </div>
-    <div class="row-header queryParam">
-      <el-date-picker
-        v-model="queryRef.endDay"
-        style="width: auto"
-        type="date"
-        format="YYYY/MM/DD"
-        value-format="YYYY-MM-DD"
-        placeholder="结束时间"
-      />
-    </div>
-    <div class="row-header queryParam">
-      <el-select v-model="queryRef.flowType" class="m-2" placeholder="流水类型">
-        <el-option
-          v-for="item in flowTypeOptions"
-          :key="item.value"
-          :label="item.value"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-<!--    <div class="row-header pc-button">-->
-<!--      <el-button :icon="Search" circle @click="doQuery(queryRef)" />-->
-<!--    </div>-->
-  </el-row>
+  <div class="chart-common-container">
+    <v-navigation-drawer v-model="searchDrawer" temporary location="bottom">
+      <div class="row-header">
+        <div class="queryParam">
+          <v-text-field
+            label="开始时间"
+            clearable
+            v-model="chartParam.startDay"
+            hide-details="auto"
+            variant="outlined"
+          ></v-text-field>
+        </div>
+        <div class="queryParam">
+          <v-text-field
+            label="结束时间"
+            clearable
+            v-model="chartParam.endDay"
+            variant="outlined"
+            hide-details="auto"
+          ></v-text-field>
+        </div>
+      </div>
+    </v-navigation-drawer>
 
-  <el-row class="mini-buttons">
-    <div class="queryParam">
-      <el-date-picker
-        v-model="queryRef.endDay"
-        type="date"
-        format="YYYY/MM/DD"
-        value-format="YYYY-MM-DD"
-        placeholder="结束时间"
-      />
+    <div id="typePieDiv" :style="`width: ${width}; height: ${height};`">
+      <h3 v-if="noData">暂无数据</h3>
     </div>
-    <div class="queryParam">
-      <el-button :icon="Search" circle @click="doQuery(queryRef)" />
+
+    <div class="row-header queryParam">
+      <v-autocomplete
+        label="流水类型"
+        v-model="chartParam.flowType"
+        :items="flowTypeOptions"
+        hide-details="auto"
+        variant="outlined"
+      >
+      </v-autocomplete>
+      <v-btn class="btn-group-btn" color="primary" @click="searchDrawer = true">筛选 </v-btn>
     </div>
-  </el-row>
-  <div id="typePieDiv" :style="style"></div>
+
+    <h4 class="row-header">{{ title }}【{{ chartParam.flowType }}】</h4>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { ElMessage } from 'element-plus'
+import { DialogFullscreen, flowTableQuery } from '@/stores/flag'
 import { onMounted, ref, watch } from 'vue'
 import { typePie } from '@/api/api.analysis'
-import { flowQuery, resetFlowQuery } from '@/utils/store'
-import { isDark } from '@/utils/common'
-import type { TypePieChartQuery } from '@/types/model/analysis'
+import type { TypePieChartQuery } from '@/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
+import { useTheme } from 'vuetify'
+import type { FlowQuery } from '@/model/flow'
+
+const theme = useTheme()
 
 // 使用 props 来接收外部传入的参数
-const { title, style } = defineProps(['title', 'style'])
+const { title, width, height } = defineProps(['title', 'width', 'height'])
 
-const query: TypePieChartQuery = {
-  flowType: '支出'
-}
+const searchDrawer = ref(false)
+
 // 流水类型
-const flowTypeOptions = ref<any[]>([{ value: '支出' }, { value: '收入' }, { value: '不计收支' }])
+const flowTypeOptions = ref<any[]>(['支出', '收入', '不计收支'])
 
-const queryRef = ref(query)
+const queryRef = ref<FlowQuery>({ pageNum: 1, pageSize: 20, flowType: '支出' })
+const chartParam = ref<FlowQuery>({ flowType: '支出' })
 
 const dataList: any[] = []
+const noData = ref(false)
 
 const optionRef = ref({
   tooltip: {
     trigger: 'item'
   },
   legend: {
-    top: '5%',
-    left: '0',
-    orient: 'vertical',
+    // top: 'bottom',
+    // left: '0',
+    // orient: 'vertical', // 图例的排列方向
     textStyle: {
-      color: '#fff'
+      color: '#fff' // 图例文字颜色
     }
   },
   toolbox: {
@@ -99,13 +91,13 @@ const optionRef = ref({
     {
       name: '消费类型',
       type: 'pie',
-      radius: ['60%', '80%'],
+      radius: ['60%', '80%'], // 饼图的半径，数组的第一项是内半径，第二项是外半径
       // center: ['10%', '30%'],
       avoidLabelOverlap: false,
       itemStyle: {
-        borderRadius: 10,
-        borderColor: '#fff',
-        borderWidth: 2
+        borderRadius: 10, // 饼图扇形的边框弧度
+        borderColor: '#fff', // 饼图扇形的边框颜色
+        borderWidth: 1 // 饼图扇形的边框线宽
       },
       // grid: {
       //   left: '30',
@@ -140,12 +132,11 @@ let typePieDiv: any
 let typePieChart: echarts.ECharts
 
 const doQuery = (query: TypePieChartQuery) => {
-  flowQuery.startDay = queryRef.value.startDay
-  flowQuery.endDay = queryRef.value.endDay
   typePie(query).then((res) => {
     if (res) {
       if (res.length === 0) {
         console.log('TypePieChart未查询到数据！')
+        noData.value = true
         return
       }
       dataList.length = 0
@@ -156,7 +147,9 @@ const doQuery = (query: TypePieChartQuery) => {
         })
       })
       optionRef.value.series[0].data = dataList
-      optionRef.value.legend.textStyle.color = isDark.value.valueOf() ? '#fff' : '#000'
+      optionRef.value.legend.textStyle.color = theme.global.name.value == 'dark' ? '#fff' : '#000'
+      optionRef.value.series[0].itemStyle.borderColor =
+        theme.global.name.value == 'dark' ? '#fff' : '#000'
 
       if (document.body.clientWidth <= 480) {
         optionRef.value.series[0].radius = ['30%', '50%']
@@ -165,67 +158,41 @@ const doQuery = (query: TypePieChartQuery) => {
       typePieDiv = document.getElementById('typePieDiv')
       typePieChart = echarts.init(typePieDiv)
       typePieChart.setOption(optionRef.value)
-      typePieChart.on('click', function(param) {
-        resetFlowQuery()
-        flowQuery.startDay = queryRef.value.startDay
-        flowQuery.endDay = queryRef.value.endDay
-        flowQuery.type = param.name
-        flowQuery.flowType = queryRef.value.flowType
-        showFlowTableDialog.value.visible = true
+      typePieChart.on('click', function (param) {
+        queryRef.value.type = param.name
+        flowTableQuery.value = queryRef.value
+        showFlowTableDialog.value = true
       })
     }
   })
 }
-watch(queryRef.value, () => {
-  doQuery(queryRef.value)
+watch(chartParam.value, () => {
+  doQuery(chartParam.value)
 })
 
 onMounted(() => {
-  queryRef.value.startDay = flowQuery.startDay
-  queryRef.value.endDay = flowQuery.endDay
-  doQuery(queryRef.value)
+  if (DialogFullscreen.value) {
+    // @ts-ignore
+    optionRef.value.legend.top = '0'
+  } else {
+    // @ts-ignore
+    optionRef.value.legend.left = '0'
+    // @ts-ignore
+    optionRef.value.legend.orient = 'vertical'
+  }
+  doQuery(chartParam.value)
 })
 </script>
 
 <style scoped>
-.queryRow {
-  margin: 8px 3px;
-}
-
-
 .row-header {
-  margin: auto 0.5rem;
-}
-
-.queryParam {
-  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;
 }
 
 #typePieDiv {
-  padding: 10px;
-}
-
-@media screen and (min-width: 960px) {
-  .mini-buttons {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .pc-button {
-    display: none;
-  }
-
-  .mini-buttons {
-    margin: 8px 3px;
-  }
-
-  #typePieDiv {
-    font-size: small;
-  }
-
-  #typePieDiv > div > canvas {
-    margin: 20px;
-  }
+  padding: 0.5rem;
 }
 </style>
