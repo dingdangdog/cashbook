@@ -4,19 +4,19 @@
 </div>
 
 <p align="center">
-  <img alt="release" src="https://img.shields.io/github/v/release/dingdangdog/cashbook-desktop" />
-  <img alt="stars" src="https://img.shields.io/github/stars/dingdangdog/cashbook-desktop" />
-  <img alt="dorks" src="https://img.shields.io/github/forks/dingdangdog/cashbook-desktop" />
+  <img alt="release" src="https://img.shields.io/github/v/release/dingdangdog/cashbook" />
+  <img alt="stars" src="https://img.shields.io/github/stars/dingdangdog/cashbook" />
+  <img alt="dorks" src="https://img.shields.io/github/forks/dingdangdog/cashbook" />
 </p>
 <p align="center">
-  <img alt="issues-open" src="https://img.shields.io/github/issues/dingdangdog/cashbook-desktop?color=important" />
-  <img alt="issues-close" src="https://img.shields.io/github/issues-closed/dingdangdog/cashbook-desktop?color=green" />
+  <img alt="issues-open" src="https://img.shields.io/github/issues/dingdangdog/cashbook?color=important" />
+  <img alt="issues-close" src="https://img.shields.io/github/issues-closed/dingdangdog/cashbook?color=green" />
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow.svg" />
   <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/dingdangdog/cashbook.svg" />
-  <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook-desktop/total.svg" />
+  <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook/total.svg" />
 </p>
 
-- Github：[https://github.com/dingdangdog/cashbook-web](https://github.com/dingdangdog/cashbook-web)
+- Github：[https://github.com/dingdangdog/cashbook](https://github.com/dingdangdog/cashbook)
 - Gitee：[https://gitee.com/dddogx/cashbook-desktop](https://gitee.com/dddogx/cashbook-desktop)
 - 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号：cashbook/cashbook `也可注册体验`)
 - QQ交流群：564081656
