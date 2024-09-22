@@ -83,7 +83,6 @@ func GetPaymentType(bookId int64, flowType string) []types.Typer {
 }
 
 func UpdateType(typer types.Typer, bookId int64) int {
-	typer.Mu.Lock()
 	flowParam := types.FlowParam{
 		BookId:   bookId,
 		FlowType: typer.FlowType,
@@ -105,15 +104,15 @@ func UpdateType(typer types.Typer, bookId int64) int {
 		newFlows = append(newFlows, f)
 	}
 	dFlow.UpdateByBatch(newFlows, bookId)
-	defer typer.Mu.Unlock()
+
 	return len(flows)
 }
 
-func GetTypeRelation() map[string]string {
-	return dFlow.GetTypeRelation()
+func GetTypeRelation(bookId int64) map[string]string {
+	return dFlow.GetTypeRelation(bookId)
 }
 
-func UpdateTypeRelation(data map[string]string) int {
-	dFlow.UpdateTypeRelation(data)
+func UpdateTypeRelation(bookId int64, data map[string]string) int {
+	dFlow.UpdateTypeRelation(bookId, data)
 	return 1
 }

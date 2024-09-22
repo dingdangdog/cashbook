@@ -79,7 +79,8 @@ func UpdateType(c *gin.Context) {
 }
 
 func GetTypeRelation(c *gin.Context) {
-	types := sTyper.GetTypeRelation()
+	bookId := util.GetBookId(c)
+	types := sTyper.GetTypeRelation(bookId)
 	c.JSON(200, util.Success(types))
 }
 
@@ -94,6 +95,7 @@ func UpdateTypeRelation(c *gin.Context) {
 		})
 		return
 	}
-	num := sTyper.UpdateTypeRelation(data)
+	bookId := util.GetBookId(c)
+	num := sTyper.UpdateTypeRelation(bookId, data)
 	c.JSON(200, util.Success(num))
 }

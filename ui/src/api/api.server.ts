@@ -12,10 +12,6 @@ export function getServerInfo(): Promise<Server> {
   return $http({ url: prefix, method: 'get' })
 }
 
-/**
- * 查询服务信息
- * @return Server
- */
-export function getVersion(): Promise<string> {
-  return local('getVersion')
+export function saveServerInfo(data: Server): Promise<any> {
+  return $http({ url: '/admin' + prefix, method: 'post', data })
 }

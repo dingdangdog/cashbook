@@ -1,7 +1,7 @@
 <template>
   <div class="type-container">
-    <v-navigation-drawer v-model="searchDrawer" temporary location="top">
-      <div class="main-inner-header">
+    <v-navigation-drawer v-model="searchDrawer" temporary location="right">
+      <div style="padding: 0.5rem">
         <div class="queryParam">
           <v-autocomplete
             label="类型的类型"
@@ -61,12 +61,22 @@
     >
       <v-card>
         <v-card-title>{{ typeDialog.title }}</v-card-title>
+        <p style="margin: 0.5rem 1rem; font-size: 0.9rem; color: pink">
+          修改类型名称会自动修改关联的所有流水
+        </p>
         <v-card-text>
           <v-text-field
             clearable
-            label="关联流水类型"
+            label="流水类型"
             variant="outlined"
             v-model="editType.flowType"
+            disabled
+          ></v-text-field>
+          <v-text-field
+            clearable
+            label="类型的类型"
+            variant="outlined"
+            v-model="editType.type"
             disabled
           ></v-text-field>
           <v-text-field
@@ -78,22 +88,23 @@
           ></v-text-field>
           <v-text-field
             clearable
+            focused
             label="新类型名称"
             variant="outlined"
             v-model="editType.value"
           ></v-text-field>
-          <v-text-field
-            clearable
-            label="类型的类型"
-            variant="outlined"
-            v-model="editType.type"
-            disabled
-          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <div style="text-align: center; width: 100%; margin-bottom: 1rem">
-            <v-btn class="btn-group-btn" type="primary" @click="confirmTypeForm()"> 确定 </v-btn>
-            <v-btn class="btn-group-btn" @click="cancelEdit"> 取消 </v-btn>
+            <v-btn class="btn-group-btn" color="warning" @click="cancelEdit"> 取消 </v-btn>
+            <v-btn
+              class="btn-group-btn"
+              color="primary"
+              variant="elevated"
+              @click="confirmTypeForm()"
+            >
+              确定
+            </v-btn>
           </div>
         </v-card-actions>
       </v-card>
@@ -116,17 +127,16 @@ const loading = ref(true)
 const typerOptions = ref<string[]>(['消费类型', '支付方式'])
 
 const headers = ref([
-  { title: '序号', key: 'index' },
   { title: '所属流水类型', key: 'flowType' },
   { title: '类型的类型', key: 'type' },
-  { title: '类型的名称', key: 'value' }
+  { title: '类型的名称', key: 'value' },
+  { title: '操作', key: 'actions' }
 ])
 // 列表数据绑定
 const types = ref<Typer[]>([])
 const allTypes = ref<Typer[]>([])
 
 const typeQueryRef = ref<Typer>({
-  type: '',
   value: ''
 })
 
@@ -141,8 +151,6 @@ const typeDialog = ref({
 })
 
 // 账本编辑表单实例
-const form = ref()
-
 const openUpdateDialog = (row: Typer) => {
   editType.value.flowType = row.flowType
   editType.value.type = row.type
@@ -151,7 +159,7 @@ const openUpdateDialog = (row: Typer) => {
   typeDialog.value.visible = true
 }
 const confirmTypeForm = () => {
-  if (!form.value) return
+  if (!editType.value.value) return
   update(editType.value)
     .then((res) => {
       if (res > 0) {
@@ -176,6 +184,7 @@ const doQuery = () => {
   getAll(typeQueryRef.value)
     .then((res) => {
       if (res) {
+        successAlert('查询成功')
         types.value = res
         allTypes.value = res
       }

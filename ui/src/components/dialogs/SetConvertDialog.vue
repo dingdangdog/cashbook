@@ -9,21 +9,29 @@
               clearable
               label="原类型"
               hide-details="auto"
-              variant="outlined"
+              variant="underlined"
               v-model="pair.key"
+              color="warning"
+              :style="`color:${getItemColor(pair.value)}`"
+              style="text-shadow: black 1px 1px 1px"
             ></v-text-field>
           </v-col>
           <v-col cols="5">
             <v-text-field
               clearable
-              label="新类型"
+              label="映射后类型"
               hide-details="auto"
-              variant="outlined"
+              variant="underlined"
               v-model="pair.value"
+              color="success"
+              :style="`color:${getItemColor(pair.value)}`"
+              style="text-shadow: black 1px 1px 1px"
             ></v-text-field>
           </v-col>
           <v-col cols="2">
-            <v-btn variant="text" color="error" @click="removePair(index)">删除</v-btn>
+            <div style="height: 100%; display: flex; align-items: center">
+              <v-btn variant="text" color="warning" @click="removePair(index)">删除</v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-card-text>
@@ -67,7 +75,13 @@ const keyValues = ref<{ key: string; value: string }[]>([])
 onMounted(() => {
   getTypeRelation().then((res) => {
     typeRelation.value = res
-    keyValues.value = Object.keys(res).map((key) => ({ key, value: res[key] }))
+    const sortedEntries = Object.entries(res).sort(([, valueA], [, valueB]) =>
+      valueA.localeCompare(valueB)
+    ) // 对 value 进行排序
+
+    // 将排序后的数组转换回对象
+    typeRelation.value = Object.fromEntries(sortedEntries)
+    keyValues.value = Object.keys(typeRelation.value).map((key) => ({ key, value: res[key] }))
   })
 })
 
@@ -102,6 +116,45 @@ const confirmTypeRelationChange = () => {
 // Cancel changes and reset to the original data
 const cancelTypeRelationChange = () => {
   showSetConvertDialog.value = false
+}
+
+const colorArray = [
+  '#E57373',
+  '#9FA8DA',
+  '#FF80AB',
+  '#90CAF9',
+  '#EA80FC',
+  '#29B6F6',
+  '#B388FF',
+  '#4FC3F7',
+  '#00E676',
+  '#80CBC4',
+  '#F57F17',
+  '#1DE9B6',
+  '#64DD17',
+  '#78909C',
+  '#BCAAA4'
+] // 颜色数组
+const colorMap = new Map<string, string>() // 用于存储已经分配的文本及其对应颜色
+let colorIndex = 0
+
+const getItemColor = (text: string) => {
+  // 如果文本已经存在于 colorMap 中，则返回已有的颜色
+  if (colorMap.has(text)) {
+    return colorMap.get(text)!
+  }
+
+  // 否则，从颜色数组中获取一个颜色
+  const color = colorArray[colorIndex]
+
+  // 将文本和颜色映射存入 colorMap
+  colorMap.set(text, color)
+
+  // 更新 colorIndex，确保循环使用颜色数组
+  colorIndex = (colorIndex + 1) % colorArray.length
+
+  // 返回该文本的颜色
+  return color
 }
 </script>
 <style scoped>

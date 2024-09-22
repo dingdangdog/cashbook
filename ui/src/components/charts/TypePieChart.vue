@@ -23,8 +23,10 @@
       </div>
     </v-navigation-drawer>
 
+    <h4 class="row-header">{{ title }}【{{ chartParam.flowType }}】</h4>
+
     <div id="typePieDiv" :style="`width: ${width}; height: ${height};`">
-      <h3 v-if="noData">暂无数据</h3>
+      <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
     </div>
 
     <div class="row-header queryParam">
@@ -38,8 +40,6 @@
       </v-autocomplete>
       <v-btn class="btn-group-btn" color="primary" @click="searchDrawer = true">筛选 </v-btn>
     </div>
-
-    <h4 class="row-header">{{ title }}【{{ chartParam.flowType }}】</h4>
   </div>
 </template>
 
@@ -91,7 +91,7 @@ const optionRef = ref({
     {
       name: '消费类型',
       type: 'pie',
-      radius: ['60%', '80%'], // 饼图的半径，数组的第一项是内半径，第二项是外半径
+      radius: ['40%', '80%'], // 饼图的半径，数组的第一项是内半径，第二项是外半径
       // center: ['10%', '30%'],
       avoidLabelOverlap: false,
       itemStyle: {

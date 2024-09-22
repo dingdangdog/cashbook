@@ -6,12 +6,15 @@
       <v-card-text class="edit-dialog-main">
         <v-form v-model="editForm" ref="formRef">
           <!-- TODO 日期选择 -->
-          <v-text-field
-            clearable
+          <v-date-input
             label="日期"
+            cancel-text="取消"
+            ok-text="确定"
+            clearable
             variant="outlined"
-            v-model="flowEdit.day"
-          ></v-text-field>
+            v-model="day"
+            @update:modelValue="changeDay"
+          ></v-date-input>
           <v-combobox
             variant="outlined"
             label="流水类型"
@@ -25,6 +28,7 @@
             variant="outlined"
             :label="payTypeLabel"
             allow-new
+            clearable
             v-model="flowEdit.payType"
             :items="paymentTypeOptions"
           ></v-combobox>
@@ -32,6 +36,8 @@
           <v-combobox
             variant="outlined"
             :label="typeLabel"
+            allow-new
+            clearable
             v-model="flowEdit.type"
             :items="expenseTypeOptions"
           ></v-combobox>
@@ -84,6 +90,7 @@
 </template>
 
 <script setup lang="ts">
+import { VDateInput } from 'vuetify/labs/VDateInput'
 import { createFlow, update } from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
 import type { Flow } from '@/model/flow'
@@ -109,10 +116,17 @@ const flowEdit = ref<Flow>({})
 onMounted(() => {
   if (flow) {
     flowEdit.value = flow
+    day.value = new Date(flowEdit.value.day || '')
   }
   changeFlowTypes()
 })
-
+const day = ref()
+const changeDay = () => {
+  if (day.value) {
+    // console.log(endDay.value)
+    flowEdit.value.day = dateFormater('YYYY-MM-dd', day.value)
+  }
+}
 // 修改FlowType后联动
 const changeFlowTypes = () => {
   if (flowEdit.value.flowType === '支出') {
@@ -155,7 +169,7 @@ watch(searchType, (val) => {
 })
 
 // 提交表单（新增或修改）
-const confirmForm = async (closeDialog: boolean) => {
+const confirmForm = async (again: boolean) => {
   if (!editForm.value) {
     // formRef.validate()
     errorAlert('UnSubmit, Please Check Form!')
@@ -163,7 +177,7 @@ const confirmForm = async (closeDialog: boolean) => {
   }
   if (formTitle[0] == title) {
     // 新增
-    createOne(closeDialog)
+    createOne(again)
   } else {
     // 修改
     updateOne()
@@ -171,7 +185,7 @@ const confirmForm = async (closeDialog: boolean) => {
 }
 
 // 创建
-const createOne = (close: boolean) => {
+const createOne = (again: boolean) => {
   createFlow({
     day: dateFormater('YYYY-MM-dd', flowEdit.value.day || new Date()),
     bookId: parseInt(localStorage.getItem('bookId') || '0'),
@@ -186,9 +200,7 @@ const createOne = (close: boolean) => {
       if (res.id) {
         successCallback()
         successAlert('新增成功!')
-        if (close) {
-          showFlowEditDialog.value = false
-        }
+        showFlowEditDialog.value = again
       }
     })
     .catch(() => {

@@ -20,8 +20,8 @@
         height="75vh"
         noDataText="暂无数据"
         :items-per-page="flowQuery.pageSize"
-        :items="flowPageRef.pageData"
-        :itemsLength="flowPageRef.totalCount"
+        :items="flowPageRef?.pageData"
+        :itemsLength="flowPageRef?.totalCount || 0"
         :headers="headers"
         :loading="loading"
         @update:options="changePage"
@@ -109,54 +109,42 @@
     <div class="pageDiv">
       <span class="pageSpan">
         <v-chip color="rgb(76, 152, 112)">
-          总收入：<b>{{ Number(flowPageRef.totalIn.toFixed(2)) }}</b>
+          总收入：<b>{{ Number(flowPageRef?.totalIn.toFixed(2)) }}</b>
         </v-chip>
         <v-chip color="rgb(217, 159, 8)">
-          总支出：<b>{{ Number(flowPageRef.totalOut.toFixed(2)) }}</b>
+          总支出：<b>{{ Number(flowPageRef?.totalOut.toFixed(2)) }}</b>
         </v-chip>
         <v-chip color="rgb(120, 120, 120)">
-          不计收支：<b>{{ Number(flowPageRef.notInOut.toFixed(2)) }}</b>
+          不计收支：<b>{{ Number(flowPageRef?.notInOut.toFixed(2)) }}</b>
         </v-chip>
       </span>
     </div>
   </div>
-  <v-navigation-drawer v-model="searchDrawer" temporary location="top">
-    <div class="main-inner-header">
+  <v-navigation-drawer v-model="searchDrawer" temporary location="right">
+    <div style="padding: 0.5rem">
       <div class="queryParam">
-        <v-text-field
+        <v-date-input
+          label="开始日期"
+          cancel-text="取消"
+          ok-text="确定"
+          clearable
           variant="outlined"
           hide-details="auto"
-          v-model="flowQuery.startDay"
-          clearable
-          label="开始日期"
-        ></v-text-field>
-        <!-- <el-date-picker
-          :style="datePickerStyle"
-          class="date-picker"
-          v-model="flowQuery.startDay"
-          type="date"
-          format="YYYY/MM/DD"
-          value-format="YYYY-MM-DD"
-          placeholder="开始时间"
-        /> -->
+          v-model="startDay"
+          @update:modelValue="changeStartDay"
+        ></v-date-input>
       </div>
       <div class="queryParam">
-        <v-text-field
+        <v-date-input
           label="结束时间"
+          cancel-text="取消"
+          ok-text="确定"
           variant="outlined"
           hide-details="auto"
-          v-model="flowQuery.endDay"
+          v-model="endDay"
           clearable
-        ></v-text-field>
-        <!-- <el-date-picker
-          :style="datePickerStyle"
-          class="date-picker"
-          v-model="flowQuery.endDay"
-          type="date"
-          format="YYYY/MM/DD"
-          value-format="YYYY-MM-DD"
-          placeholder="结束时间"
-        /> -->
+          @update:modelValue="changeEndDay"
+        ></v-date-input>
       </div>
       <div class="queryParam">
         <v-text-field
@@ -216,15 +204,15 @@
       <!-- <v-btn class="btn-group-btn" color="primary" @click="doQuery()">筛选 </v-btn> -->
     </div>
   </v-navigation-drawer>
-  <v-navigation-drawer v-model="selectHeaderDialog" temporary location="top">
-    <v-card-text style="text-align: right">
-      <v-btn class="btn-group-btn" color="success" @click="showFlowExcelImportDialog = true"
-        >CSV导入
-      </v-btn>
-      <v-btn class="btn-group-btn" color="success" @click="showFlowJsonImportDialog = true"
+  <v-navigation-drawer v-model="selectHeaderDialog" temporary location="right">
+    <v-card-text style="text-align: left">
+      <v-btn class="btn-group-btn" color="error" @click="showFlowJsonImportDialog = true"
         >JSON导入
       </v-btn>
       <v-btn class="btn-group-btn" color="primary" @click="exportFlows()">JSON导出 </v-btn>
+      <v-btn class="btn-group-btn" color="success" @click="showFlowExcelImportDialog = true"
+        >CSV导入
+      </v-btn>
     </v-card-text>
   </v-navigation-drawer>
 
@@ -243,12 +231,12 @@
 <script setup lang="ts">
 // 第三方库引入
 import { ref, onMounted, watch } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
 // 私有引入
 import { getFlowPage, deleteFlow, getAll, deleteFlowsApi } from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
 import { exportJson } from '@/utils/fileUtils'
-import type { FlowExport } from '@/model/view'
 import type { Page } from '@/model/page'
 import type { Flow, FlowQuery } from '@/model/flow'
 
@@ -261,7 +249,10 @@ import { errorAlert, successAlert } from '@/utils/alert'
 import FlowEditDialog from '@/components/dialogs/FlowEditDialog.vue'
 import FlowJsonImportDialog from '@/components/dialogs/FlowJsonImportDialog.vue'
 import FlowExcelImportDialog from '@/components/dialogs/FlowExcelImportDialog.vue'
+import { dateFormater } from '@/utils/common'
 
+const startDay = ref()
+const endDay = ref()
 const flowQuery = ref<FlowQuery>({
   pageNum: 1,
   pageSize: 20
@@ -317,6 +308,18 @@ const changeTypes = () => {
     })
   })
 }
+const changeStartDay = () => {
+  if (startDay.value) {
+    // console.log(startDay.value)
+    flowQuery.value.startDay = dateFormater('YYYY-MM-dd', startDay.value)
+  }
+}
+const changeEndDay = () => {
+  if (endDay.value) {
+    // console.log(endDay.value)
+    flowQuery.value.endDay = dateFormater('YYYY-MM-dd', endDay.value)
+  }
+}
 
 const headers = ref([
   { title: '日期', key: 'day', sortable: false },
@@ -337,16 +340,7 @@ const loading = ref(true)
 // 表单弹窗标题
 const dialogFormTitle = ref(formTitle[0])
 // 分页数据绑定
-const flowPageRef = ref<Page<Flow>>({
-  pageNum: 1,
-  pageSize: 0,
-  totalPage: 1,
-  totalCount: 0,
-  totalOut: 0,
-  totalIn: 0,
-  notInOut: 0,
-  pageData: []
-})
+const flowPageRef = ref<Page<Flow>>()
 
 const changePage = (param: {
   page: number
@@ -370,25 +364,13 @@ const doQuery = () => {
   getFlowPage(flowQuery.value)
     .then((res) => {
       if (res) {
+        successAlert('查询成功')
         flowPageRef.value = res
       }
     })
     .finally(() => {
       loading.value = false
     })
-}
-
-// 金额排序
-const moneySortFunc = (obj: any) => {
-  console.log(obj)
-  if (obj.order === 'ascending') {
-    flowQuery.value.moneySort = 'ASC'
-  } else if (obj.order === 'descending') {
-    flowQuery.value.moneySort = 'DESC'
-  } else {
-    flowQuery.value.moneySort = ''
-  }
-  doQuery()
 }
 
 // 确认删除的一些逻辑
@@ -471,10 +453,11 @@ const exportFlows = () => {
     })
 }
 
-doQuery()
 changeTypes()
-watch(flowQuery.value, () => {
-  doQuery()
+onMounted(() => {
+  watch(flowQuery.value, () => {
+    doQuery()
+  })
 })
 </script>
 

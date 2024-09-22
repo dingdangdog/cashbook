@@ -1,9 +1,9 @@
 <template>
   <div class="chart-common-container">
-    <div id="lineDiv" :style="`width: ${width}; height: ${height};`">
-      <h3 v-if="noData">暂无数据</h3>
-    </div>
     <h4 class="row-header">{{ title }}</h4>
+    <div id="lineDiv" :style="`width: ${width}; height: ${height};`">
+      <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
+    </div>
   </div>
 </template>
 

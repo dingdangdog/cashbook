@@ -76,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+// 借用全屏标志，用于判断时不是小屏模式
 import { DialogFullscreen } from '@/stores/flag'
 import { defineAsyncComponent, ref } from 'vue'
 // 异步组件引用
@@ -93,9 +94,9 @@ const groupChartHeigth = ref('40vh')
 
 if (DialogFullscreen.value) {
   singleChartWidth.value = '100vw'
-  singleChartHeight.value = '70vh'
+  singleChartHeight.value = '60vh'
   groupChartWidth.value = '95vw'
-  groupChartHeigth.value = '120vw'
+  groupChartHeigth.value = '50vh'
 }
 </script>
 

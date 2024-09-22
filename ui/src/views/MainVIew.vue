@@ -5,10 +5,10 @@
         <v-app-bar-nav-icon v-if="miniWindow" @click="menuer = !menuer"></v-app-bar-nav-icon>
       </template>
       <v-app-bar-title>
-        <v-btn icon>
+        <v-btn v-if="!miniWindow" icon>
           <img src="@/assets/images/cashbook.png" height="40" alt="logo" />
         </v-btn>
-        Cashbook
+        <span v-if="!miniWindow">Cashbook</span>
         <!-- <span>Cashbook</span> -->
         <v-btn class="no-drag" @click="showBookDialogFlag.visible = true"> 切换账本 </v-btn>
         <v-menu>
@@ -17,7 +17,7 @@
           </template>
           <v-list>
             <v-list-item class="cursor-pointer" @click="showSetConvertDialog = true">
-              类型映射关系维护
+              分类映射配置
             </v-list-item>
             <v-list-item class="cursor-pointer" @click="cleanLoginInfo"> 退出登录 </v-list-item>
           </v-list>
@@ -26,9 +26,21 @@
 
       <template v-slot:append>
         <div v-if="MOD == 'LOCAL'">
-          <v-btn class="no-drag window-actions" icon="mdi-minus"  @click="minimize"> </v-btn>
-          <v-btn class="no-drag window-actions" icon="mdi-dock-window"  @click="maximize" v-show="!isMax"> </v-btn>
-          <v-btn class="no-drag window-actions" icon="mdi-window-maximize"  @click="maximize" v-show="!isMax"> </v-btn>
+          <v-btn class="no-drag window-actions" icon="mdi-minus" @click="minimize"> </v-btn>
+          <v-btn
+            class="no-drag window-actions"
+            icon="mdi-dock-window"
+            @click="maximize"
+            v-show="!isMax"
+          >
+          </v-btn>
+          <v-btn
+            class="no-drag window-actions"
+            icon="mdi-window-maximize"
+            @click="maximize"
+            v-show="!isMax"
+          >
+          </v-btn>
           <v-btn class="no-drag window-actions" icon="mdi-close" @click="close"> </v-btn>
         </div>
       </template>
@@ -105,6 +117,7 @@
       <FlowsView v-if="openMenu === '流水管理'" />
       <BooksView v-if="openMenu === '账本管理'" />
       <TypeView v-if="openMenu === '类型管理'" />
+      <SystemView v-if="openMenu === '系统管理'" />
       <AboutView v-if="openMenu === '关于'" />
     </v-main>
     <BookDialog v-if="showBookDialogFlag.visible" />
@@ -121,15 +134,15 @@ import CalendarView from './pages/CalendarView.vue'
 import AnalyticsView from './pages/AnalyticsView.vue'
 import BooksView from './pages/BooksView.vue'
 import FlowsView from './pages/FlowsView.vue'
-import AboutView from './pages/AboutView.vue'
 import TypeView from './pages/TypeView.vue'
+import SystemView from './pages/SystemView.vue'
+import AboutView from './pages/AboutView.vue'
+
 import BookDialog from '@/components/dialogs/BookDialog.vue'
 import { showSetConvertDialog, showBookDialogFlag, showFlowTableDialog, MOD } from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import SetConvertDialog from '@/components/dialogs/SetConvertDialog.vue'
 import FlowTableDialog from '@/components/dialogs/FlowTableDialog.vue'
-
-import { getServerInfo } from '@/api/api.server'
 
 const theme = useTheme()
 const themeValue = ref(false)
@@ -164,6 +177,7 @@ const items = ref<Menu[]>([
 
   { title: '账本管理', path: '/books', icon: 'mdi-notebook-edit', color: 'rgb(77,182,172)' },
   { title: '类型管理', path: '/types', icon: 'mdi-shape-plus', color: 'rgb(250,140,150)' },
+  { title: '系统管理', path: '/system', icon: 'mdi-cogs', color: '#8D6E63' },
   // {
   //   title: '辅助功能',
   //   icon: 'mdi-hand-water',
@@ -214,16 +228,9 @@ onMounted(() => {
   }
   checkUserAndBook()
 
-  getServerInfo().then((res) => {
-    if (res) {
-      localStorage.setItem('version', res.version || '')
-      localStorage.setItem('environment', res.environment || '')
-      localStorage.setItem('secret', res.secret || '')
-      MOD.value = res.environment || 'WEB'
-    }
-  })
-
-  isMas()
+  if (MOD.value == 'LOCLA') {
+    isMas()
+  }
 })
 </script>
 

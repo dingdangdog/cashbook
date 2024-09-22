@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 // 第三方库引入
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 // 私有引入
 import { createBook, deleteBook, getBook, updateBook } from '@/api/api.book'
@@ -101,9 +101,6 @@ import { checkUserAndBook } from '@/utils/common'
 import { errorAlert, successAlert } from '@/utils/alert'
 
 // 初始化后自动执行
-onMounted(() => {
-  doQuery()
-})
 
 const booksQueryRef = ref<BookQuery>({})
 
@@ -135,6 +132,7 @@ const doQuery = () => {
   getBook(booksQueryRef.value.bookName || '')
     .then((res) => {
       if (res) {
+        successAlert('查询成功')
         books.value = res
         allBooks.value = res
       }

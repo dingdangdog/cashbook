@@ -1,32 +1,30 @@
 <template>
   <div style="flex-direction: column; align-items: left !important" v-show="haveData">
     <div class="text-block">
-      <p>
-        总支出：<v-chip color="error">{{ monthData?.outSum }}元</v-chip>
+      <p style="margin: 0.5rem 0;">
+        <b>总支出：</b><v-chip color="error">{{ monthData?.outSum }}元</v-chip>
       </p>
-      <p>
-        总收入：<v-chip color="success">{{ monthData?.inSum }}元</v-chip>
+      <p style="margin: 0.5rem 0;">
+        <b>总收入：</b><v-chip color="success">{{ monthData?.inSum }}元</v-chip>
       </p>
-      <p>
-        不计收支：<v-chip color="warning">{{ monthData?.zeroSum }}元</v-chip>
+      <p style="margin: 0.5rem 0;">
+        <b>不计收支：</b><v-chip color="#78909C">{{ monthData?.zeroSum }}元</v-chip>
       </p>
     </div>
 
     <div class="text-block" v-show="monthData?.maxOut.money && monthData?.maxOut.money > 0">
-      最大单笔支出：
+      <b>最大单笔支出：</b>
       <div class="text-block">
         <p v-show="monthData?.maxOut.money && monthData.maxOut.money > 0">
-          日期：<b>{{ monthData?.maxOut.day }}</b>
+          日期：{{ monthData?.maxOut.day }}
         </p>
         <p v-show="monthData?.maxOut.money && monthData.maxOut.money > 0">
-          支出类型：<b>{{ monthData?.maxOut.type }}</b>
+          支出类型：{{ monthData?.maxOut.type }}
         </p>
         <p v-show="monthData?.maxOut.money && monthData.maxOut.money > 0">
-          支付方式：<b>{{ monthData?.maxOut.payType }}</b>
+          支付方式：{{ monthData?.maxOut.payType }}
         </p>
-        <p>
-          名称：<b>{{ monthData?.maxOut.name }}，{{ monthData?.maxOut.description }}</b>
-        </p>
+        <p>名称：{{ monthData?.maxOut.name }}，{{ monthData?.maxOut.description }}</p>
         <p v-show="monthData?.maxOut.money && monthData.maxOut.money > 0">
           金额：<v-chip color="error">{{ monthData?.maxOut.money }}元</v-chip>
         </p>
@@ -34,20 +32,12 @@
     </div>
 
     <div class="text-block" v-show="monthData?.maxIn.money && monthData.maxIn.money > 0">
-      最大单笔收入：
+      <b>最大单笔收入：</b>
       <div class="text-block">
-        <p>
-          日期：<b>{{ monthData?.maxIn.day }}</b>
-        </p>
-        <p>
-          收入类型：<b>{{ monthData?.maxIn.type }}</b>
-        </p>
-        <p>
-          收款方式：<b>{{ monthData?.maxIn.payType }}</b>
-        </p>
-        <p>
-          名称：<b>{{ monthData?.maxIn.name }}</b>
-        </p>
+        <p>日期：{{ monthData?.maxIn.day }}</p>
+        <p>收入类型：{{ monthData?.maxIn.type }}</p>
+        <p>收款方式：{{ monthData?.maxIn.payType }}</p>
+        <p>名称：{{ monthData?.maxIn.name }}</p>
         <p>
           金额：<v-chip color="success">{{ monthData?.maxIn.money }}元</v-chip>
         </p>
@@ -56,8 +46,8 @@
 
     <div class="text-block">
       <p>
-        最高支出类型： <v-chip>{{ monthData?.maxType }}</v-chip>
-        支出额：
+        <b>最高支出类型：</b><v-chip color="primary">{{ monthData?.maxType }}</v-chip>
+        <b> 支出额：</b>
         <v-chip color="error">{{ monthData?.maxTypeSum }}元</v-chip>
       </p>
     </div>

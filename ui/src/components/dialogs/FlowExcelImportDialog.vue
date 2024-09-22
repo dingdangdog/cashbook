@@ -70,7 +70,6 @@
           </div>
           <hr />
           <div class="csv-dialog-header" style="margin-top: 1rem">
-            <h4>解析结果：</h4>
             <!-- <div style="width: 10rem">
               <v-text-field
                 label="标题索引"
@@ -87,7 +86,7 @@
             </v-tooltip> -->
             <div style="width: 10rem">
               <v-text-field
-                label="流水数量"
+                label="解析到的流水数量"
                 variant="outlined"
                 hide-details="auto"
                 v-model="flowCount"

@@ -3,11 +3,23 @@ package user
 import (
 	"cashbook-server/dao/book"
 	"cashbook-server/dao/user"
+	"cashbook-server/service/server"
 	"cashbook-server/types"
 	"cashbook-server/util"
 	"errors"
-	"os"
 )
+
+func init() {
+	users := user.GetAll()
+	serverInfo := server.GetServer()
+	if len(users) == 0 {
+		// 创建默认用户
+		Register(types.User{
+			UserName: "cashbook",
+			Password: serverInfo.Password,
+		})
+	}
+}
 
 // Register 注册
 func Register(u types.User) int64 {
@@ -90,8 +102,9 @@ func CheckUser(userId int64, bookId int64) map[string]string {
 }
 
 func ResetPassword(reset types.ResetPassword) bool {
+	server := server.GetServer()
 	// 从环境变量中读取ServerKey
-	serverKey := os.Getenv("SERVER_KEY")
+	serverKey := server.Key
 	if reset.ServerKey != serverKey {
 		return false
 	}
@@ -103,7 +116,7 @@ func ResetPassword(reset types.ResetPassword) bool {
 	}
 
 	// 从环境变量中读取默认密码
-	defaultPassword := os.Getenv("DEFAULT_PASSWORD")
+	defaultPassword := server.Password
 	// 更新密码
 	u.Password = util.EncryptBySHA256(u.UserName, defaultPassword)
 

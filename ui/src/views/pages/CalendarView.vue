@@ -14,7 +14,7 @@
               >&nbsp;
               <v-chip
                 class="cursor-pointer"
-                :color="getInMonth() > 0 ? 'error' : ''"
+                :color="getOutMonth() > 0 ? 'error' : ''"
                 @click="clickDay('', '支出')"
               >
                 总支出：<b> {{ getOutMonth() }} </b> </v-chip

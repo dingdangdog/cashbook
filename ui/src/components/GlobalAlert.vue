@@ -15,7 +15,7 @@ const deleteAlert = (id: string) => {
   // console.log(id)
   setTimeout(() => {
     alertMap.value.delete(id)
-  }, 3000)
+  }, 2000)
 }
 </script>
 
@@ -38,8 +38,8 @@ const deleteAlert = (id: string) => {
 <style scoped>
 .alert-container {
   position: absolute;
-  top: 5rem;
-  right: 0;
+  top: 1rem;
+  right: 45%;
 }
 
 .v-alert {

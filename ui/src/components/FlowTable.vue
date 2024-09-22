@@ -67,18 +67,13 @@
 
 <script setup lang="ts">
 // 第三方库引入
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 // 私有引入
-import { getFlowPage, getAll } from '@/api/api.flow'
+import { getFlowPage } from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
-import { exportJson } from '@/utils/fileUtils'
 import type { Page } from '@/model/page'
 import type { Flow, FlowQuery } from '@/model/flow'
-
-import { errorAlert } from '@/utils/alert'
-
-const bookName = localStorage.getItem('bookName')
 
 const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20 })
 
@@ -88,15 +83,9 @@ const { query } = defineProps(['query'])
 if (query) {
   flowQuery.value = query
 }
-const searchDrawer = ref(false)
 
 const typeLabel = ref('支出/收入类型')
 const payTypeLabel = ref('支付/收款方式')
-/*
- * 集中定义常量
- */
-// 流水类型
-const flowTypeOptions = ref([{ title: '支出' }, { title: '收入' }, { title: '不计收支' }])
 
 const typeDefault = ['请先选择流水类型']
 // 消费类型/收入类型
@@ -187,31 +176,6 @@ const doQuery = () => {
     })
     .finally(() => {
       loading.value = false
-    })
-}
-
-// 金额排序
-const moneySortFunc = (obj: any) => {
-  console.log(obj)
-  if (obj.order === 'ascending') {
-    flowQuery.value.moneySort = 'ASC'
-  } else if (obj.order === 'descending') {
-    flowQuery.value.moneySort = 'DESC'
-  } else {
-    flowQuery.value.moneySort = ''
-  }
-  doQuery()
-}
-
-// 导出方法(前台导出，后台负责要导出的查询数据)
-const exportFlows = () => {
-  getAll(flowQuery.value)
-    .then((data) => {
-      const fileName = bookName + '-' + new Date().getTime() + '.json'
-      exportJson(fileName, JSON.stringify(data))
-    })
-    .catch(() => {
-      errorAlert('数据获取出错，无法导出！')
     })
 }
 

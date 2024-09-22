@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="showBookDialogFlag.visible" width="40rem" transition="dialog-top-transition">
+  <v-dialog
+    v-model="showBookDialogFlag.visible"
+    width="40rem"
+    transition="dialog-top-transition"
+    persistent
+  >
     <v-card>
       <v-card-title>打开账本</v-card-title>
       <v-card-text>
@@ -17,8 +22,12 @@
       <hr />
       <v-card-actions>
         <div style="text-align: center; width: 100%">
-          <v-btn color="warning" @click="showBookDialogFlag.visible = false">取消</v-btn>
-          <v-btn color="success" @click="addBook">新建账本</v-btn>
+          <v-btn color="warning" class="btn-group-btn" variant="outlined" @click="cancelChange"
+            >取消</v-btn
+          >
+          <v-btn color="success" class="btn-group-btn" variant="outlined" @click="addBook"
+            >新建账本</v-btn
+          >
         </div>
       </v-card-actions>
     </v-card>
@@ -103,6 +112,14 @@ const addBookDialog = ref({
   visible: false,
   title: '添加账本'
 })
+
+const cancelChange = () => {
+  if (localStorage.getItem('bookId')) {
+    showBookDialogFlag.value.visible = false
+  } else {
+    errorAlert('必须选择一个账本打开')
+  }
+}
 
 const addBook = () => {
   addBookDialog.value.visible = true
