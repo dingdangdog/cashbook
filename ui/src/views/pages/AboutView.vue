@@ -1,10 +1,6 @@
 <template>
   <div class="about">
-    <img
-      src="https://images.oldmoon.top/images/dingdangdog/dingdangdog-1674980314.png"
-      alt="icon"
-      style="width: 10rem; height: 10rem"
-    />
+    <img src="/cashbook.png" alt="icon" style="width: 10rem; height: 10rem" />
     <p>
       Powered by
       <a href="#" @click="openSource()">cashbook_v{{ version }}</a>
