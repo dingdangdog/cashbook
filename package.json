@@ -1,15 +1,88 @@
 {
   "name": "cashbook",
-  "version": "2.0.0",
+  "version": "3.0.1_BETA",
   "private": true,
   "scripts": {
-    "ui:dev": "cd ui && npm run dev",
-    "server:dev": "node runserver-env.js"
+    "ui": "cd ui && npm run dev",
+    "server": "set SERVER_KEY=testkey && set DEFAULT_PASSWORD=cashbook && node runserver-env.js",
+    "electron": "electron .",
+    "package": "electron-builder"
+  },
+  "main": "main.js",
+  "author": {
+    "name": "dingdangdog",
+    "email": "dingdangdogx@outlook.com"
+  },
+  "i18n": {
+    "locales": [
+      "zh-CN"
+    ],
+    "defaultLocale": "zh-CN"
+  },
+  "build": {
+    "asar": false,
+    "appId": "docash",
+    "productName": "DoCash",
+    "extends": null,
+    "directories": {
+      "output": "build"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "installerIcon": "./icon/icon.ico"
+    },
+    "files": [
+      "./main.js",
+      "./preload.js",
+      "./handler.js",
+      "./icon/**",
+      "./server/*.js",
+      "./server/config/*.json"
+    ],
+    "extraResources": [
+      {
+        "from": "ui/dist/",
+        "to": "app/ui/"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.finance",
+      "icon": "./icon/icon.icns",
+      "target": [
+        "dmg"
+      ],
+      "entitlements": "entitlements.mac.plist"
+    },
+    "win": {
+      "icon": "./icon/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "icon": "./icon/icon.png",
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office"
+    }
   },
   "devDependencies": {
-    "@types/node": "^18.11.15"
+    "@types/node": "^18.11.15",
+    "electron": "^24.8.8",
+    "electron-builder": "^24.13.3",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "@streamparser/json": "^0.0.21",
+    "csv-parser": "^3.0.0",
+    "fs": "0.0.1-security",
+    "json2csv": "6.0.0-alpha.2",
+    "lodash.get": "^4.4.2",
+    "uuid": "^10.0.0"
   }
 }

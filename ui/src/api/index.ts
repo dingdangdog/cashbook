@@ -2,13 +2,13 @@
  * 封装http请求工具
  */
 import axios from 'axios'
-import { toLogin } from '@/utils/common'
-import { ElMessage } from 'element-plus'
+import { errorAlert } from '@/utils/alert'
+import { cleanLoginInfo } from '@/utils/common'
 
 // 创建http调用者
 const $http = axios.create({
   baseURL: '/api',
-  timeout: 2000,
+  timeout: 6000,
   headers: {
     'Content-Type': 'application/json;chartset=utf-8'
   }
@@ -16,12 +16,11 @@ const $http = axios.create({
 
 // 请求拦截：为请求header中增加token
 $http.interceptors.request.use(async (config) => {
-  const bookId: any = localStorage.getItem('bookId')
-  const token: any = localStorage.getItem('token')
+  const token = localStorage.getItem('token')
+  const bookId = localStorage.getItem('bookId')
 
   if (!token && $http.getUri.toString().indexOf('admin') > 0) {
-    toLogin()
-    ElMessage.error('请先登录')
+    errorAlert('请先登录')
     return Promise.reject('请先登录')
   }
 
@@ -29,7 +28,7 @@ $http.interceptors.request.use(async (config) => {
   config.baseURL = config.baseURL || 'none'
   config.headers = config.headers || {}
 
-  config.headers.bookId = bookId || 0
+  config.headers['bookId'] = bookId || 0
   if (token) {
     config.headers.token = token
   }
@@ -39,22 +38,22 @@ $http.interceptors.request.use(async (config) => {
 // 响应拦截：解析响应结果，返回数据或捕获异常
 $http.interceptors.response.use(
   (res) => {
-    if (res.data.code != 200) {
-      ElMessage.error(res.data.message)
+    if (res.data.c != 200) {
+      errorAlert(res.data.m)
       return Promise.reject(res.data)
       // return res.data
     }
-    return res.data.data
+    return res.data.d
   },
   (err) => {
     if (err.response.status === 401) {
-      toLogin()
+      cleanLoginInfo()
       return Promise.reject('请先登录')
     } else if (err.response.status === 500) {
-      ElMessage.error(err.response.data.message)
+      errorAlert('接口异常，请联系管理员！')
       return
     }
-    ElMessage.error("接口异常，请联系管理员！")
+    errorAlert('未知错误！')
     console.log(err)
   }
 )

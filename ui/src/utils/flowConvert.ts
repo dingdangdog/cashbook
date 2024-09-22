@@ -1,4 +1,4 @@
-import type { Flow } from '@/types/model/flow'
+import type { Flow } from '@/model/flow'
 import { typeRelation } from './store'
 
 // | 本软件类型 | 支付宝 | 微信 | 京东金融 | 备注 |
@@ -40,8 +40,8 @@ export function alipayConvert(row: any[], indexMap: Map<any, any>): Flow {
 }
 
 export function typeConvert(type: any): string {
-  // console.log(type, typeRelation.value[type])
-  return typeRelation.value[type] || '其他'
+  // 20240922 类型转换，如果没有匹配的类型则保留原类型
+  return typeRelation.value[type] || type
 }
 
 /**

@@ -1,18 +1,21 @@
 <template>
-  <h4>{{ title }}</h4>
-  <div id="lineDiv" :style="style"></div>
+  <div class="chart-common-container">
+    <h4 class="row-header">{{ title }}</h4>
+    <div id="lineDiv" :style="`width: ${width}; height: ${height};`">
+      <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { dailyLine } from '@/api/api.analysis'
 import { dateFormater } from '@/utils/common'
-import type { DailyLineChartQuery } from '@/types/model/analysis'
+import type { DailyLineChartQuery } from '@/model/analysis'
 
 // 使用 props 来接收外部传入的参数
-const { title, style } = defineProps(['title', 'style'])
+const { title, width, height } = defineProps(['title', 'width', 'height'])
 
 // 横轴数据
 const xAxisList: string[] = []
@@ -22,6 +25,7 @@ const dataListOut: string[] = []
 const dataListIn: string[] = []
 // 不计收支数据
 const notInOut: string[] = []
+const noData = ref(false)
 
 const optionRef = ref({
   tooltip: {
@@ -32,9 +36,9 @@ const optionRef = ref({
   },
   legend: {
     selected: {
-      '支出': true,
-      '收入': true,
-      '不计收支': false
+      支出: true,
+      收入: true,
+      不计收支: false
     },
     data: [
       {
@@ -153,6 +157,7 @@ onMounted(() => {
     if (res) {
       if (res.length === 0) {
         console.log('DailyLineChart未查询到数据！')
+        noData.value = true
         return
       }
       xAxisList.length = 0
@@ -181,6 +186,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.row-header {
+  margin: 0.5rem;
+}
+
 #lineDiv {
   padding: 10px;
 }

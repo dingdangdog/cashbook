@@ -184,7 +184,7 @@ func FindLists(param types.FlowParam) []types.Flow {
 	}
 
 	if query.MoneySort {
-		if param.MoneySort == "ASC" {
+		if param.MoneySort == "asc" {
 			for i := 0; i < len(results); i++ {
 				for j := 0; j < len(results)-i-1; j++ {
 					if results[j].Money > results[j+1].Money {
@@ -192,7 +192,7 @@ func FindLists(param types.FlowParam) []types.Flow {
 					}
 				}
 			}
-		} else if param.MoneySort == "DESC" {
+		} else if param.MoneySort == "desc" {
 			for i := 0; i < len(results); i++ {
 				for j := 0; j < len(results)-i-1; j++ {
 					if results[j].Money < results[j+1].Money {

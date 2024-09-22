@@ -8,8 +8,10 @@ services:
     volumes:
       - ./data:/app/resources/data
     environment:
-      - TOKEN_SALT=spend-money-like-water
-      - ENVIRONMENT=PRO
+      # - CASHBOOK_VERSION=3.0.1_BETA
+      # - TOKEN_SALT=spend-money-like-water
+      # - ENVIRONMENT=PRO
+      # - MOD=WEB
       # 服务密钥，请自行修改
       - SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
       # 默认密码，请自行修改

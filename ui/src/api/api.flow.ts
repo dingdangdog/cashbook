@@ -1,15 +1,22 @@
+import { MOD } from '@/stores/flag'
 import $http from './index'
-import type { Page } from '@/types/page';
-import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '@/types/model/flow';
+import local from './local'
 
-const prefix = '/admin/flow';
+import type { Page } from '@/model/page'
+import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '@/model/flow'
+
+const prefix = '/admin/flow'
 
 /**
  * 查询全部流水
  * @returns FlowPage
  */
 export function getAll(query: FlowQuery): Promise<Flow[]> {
-    return $http({ url: prefix + "/getAll", method: "get", params: query })
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/getAll', method: 'get', params: query })
+  } else {
+    return local('getFlowList', localStorage.getItem('bookId'), query)
+  }
 }
 
 /**
@@ -17,52 +24,74 @@ export function getAll(query: FlowQuery): Promise<Flow[]> {
  * @returns Page<Flow>
  */
 export function getFlowPage(query: FlowQuery): Promise<Page<Flow>> {
-    return $http({ url: prefix, method: "get", params: query })
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix, method: 'get', params: query })
+  } else {
+    return local('queryFlowPage', localStorage.getItem('bookId'), query)
+  }
 }
-
 
 /**
  * 新增流水
  * @returns Page<Flow>
  */
 export function createFlow(createDto: CreateFlowDto): Promise<Flow> {
-    return $http({ url: prefix, method: "post", data: createDto })
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix, method: 'post', data: createDto })
+  } else {
+    return local('addFlow', localStorage.getItem('bookId'), createDto)
+  }
 }
-
 
 /**
  * 修改流水
  * @returns Page<Flow>
  */
 export function update(id: number, updateDto: UpdateFlowDto): Promise<Flow> {
-    return $http({ url: prefix + "/" + id, method: "put", data: updateDto })
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/' + id, method: 'put', data: updateDto })
+  } else {
+    return local('updateFlow', localStorage.getItem('bookId'), { id, ...updateDto })
+  }
 }
-
 
 /**
  * 删除流水
  * @returns any
  */
 export function deleteFlow(id: number): Promise<any> {
-    return $http({ url: prefix + "/" + id, method: "delete" })
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/' + id, method: 'delete' })
+  } else {
+    return local('deleteFlow', localStorage.getItem('bookId'), id)
+  }
 }
-
-
 
 /**
  * 批量删除流水
  * @returns any
  */
-export function deleteFlowsApi(id: number[] | any): Promise<any> {
-    return $http({ url: prefix + "/deleteFlows", method: "delete", data: {ids: id}})
+export function deleteFlowsApi(ids: number[] | any): Promise<any> {
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/deleteFlows', method: 'delete', data: { ids: ids } })
+  } else {
+    return local('deleteFlows', localStorage.getItem('bookId'), ids)
+  }
 }
-
 
 /**
  * 批量导入流水
- * @param flows 
- * @returns 
+ * @param flows
+ * @returns
  */
 export function importFlows(importFlag: string, flows: Flow[]): Promise<any> {
-    return $http({ url: prefix + "/importFlows?flag=" + importFlag, method: "post", data: { 'flows':flows }})
+  if (MOD.value === 'WEB') {
+    return $http({
+      url: prefix + '/importFlows?flag=' + importFlag,
+      method: 'post',
+      data: { flows: flows }
+    })
+  } else {
+    return local('importFlows', localStorage.getItem('bookId'), importFlag, flows)
+  }
 }

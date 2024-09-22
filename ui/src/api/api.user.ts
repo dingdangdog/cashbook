@@ -1,12 +1,19 @@
+import { MOD } from '@/stores/flag'
 import $http from './index'
-import type { User, LoginUser, NewPassword } from '../types/model/user'
+import local from './local'
+
+import type { User, LoginUser, NewPassword } from '@/model/user'
 
 /**
  * 登录
  * @returns Page<LoginUser>
  */
 export function login(flag: boolean, user: User): Promise<LoginUser> {
-  return $http({ url: '/login?flag=' + flag, method: 'post', data: user })
+  if (MOD.value === 'WEB') {
+    return $http({ url: '/login?flag=' + flag, method: 'post', data: user })
+  } else {
+    return local('login', flag, user)
+  }
 }
 
 /**
@@ -14,7 +21,11 @@ export function login(flag: boolean, user: User): Promise<LoginUser> {
  * @returns Page<number>
  */
 export function registerApi(user: User): Promise<number> {
-  return $http({ url: '/register', method: 'post', data: user })
+  if (MOD.value === 'WEB') {
+    return $http({ url: '/register', method: 'post', data: user })
+  } else {
+    return local('register', user)
+  }
 }
 
 /**
@@ -22,16 +33,25 @@ export function registerApi(user: User): Promise<number> {
  * @returns Page<boolean>
  */
 export function checkPassword(password: string): Promise<boolean> {
-  return $http({ url: '/admin/checkPassword/' + password, method: 'post' })
+  if (MOD.value === 'WEB') {
+    return $http({ url: '/admin/checkPassword/' + password, method: 'post' })
+  } else {
+    // TODO
+    return local('checkPassword', {})
+  }
 }
 
 /**
  * 重置密码
  * @param data
- * @returns 
+ * @returns
  */
 export function resetPasswordApi(data: any): Promise<boolean> {
-  return $http({ url: '/resetPassword', method: 'post', data })
+  if (MOD.value === 'WEB') {
+    return $http({ url: '/resetPassword', method: 'post', data })
+  } else {
+    return local('resetPassword', localStorage.getItem('userId'), data)
+  }
 }
 
 /**
@@ -39,17 +59,17 @@ export function resetPasswordApi(data: any): Promise<boolean> {
  * @returns Page<boolean>
  */
 export function changePassword(newPassword: NewPassword): Promise<boolean> {
-  return $http({ url: '/admin/changePassword', method: 'post', data: newPassword })
-}
-
-/**
- * 修改背景图片
- * @returns Page<boolean>
- */
-export function setBackground(background: string): Promise<boolean> {
-  return $http({ url: '/admin/setBackground?background=' + background, method: 'get' })
+  if (MOD.value === 'WEB') {
+    return $http({ url: '/admin/changePassword', method: 'post', data: newPassword })
+  } else {
+    return local('changePassword', newPassword)
+  }
 }
 
 export function checkUser(): Promise<{ user: string; book: string }> {
-  return $http({ url: '/admin/checkUser', method: 'get' })
+  if (MOD.value === 'WEB') {
+    return $http({ url: '/admin/checkUser', method: 'get' })
+  } else {
+    return local('checkUser', localStorage.getItem('userId'))
+  }
 }

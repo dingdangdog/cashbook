@@ -3,14 +3,15 @@ package util
 import (
 	"cashbook-server/service/server"
 	"cashbook-server/types"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
-	"time"
 )
 
 // GenerateToken 生成JWT
 func GenerateToken(rememberFlag bool, user types.User) (string, error) {
-	jwtSecret := []byte(server.GetServerInfo().Secret)
+	jwtSecret := []byte(server.GetServer().Salt)
 	defaultExpiredTime := time.Now().Add(time.Hour * 24).Unix()
 	if rememberFlag {
 		// set default expired time to forever(100 years)
@@ -27,7 +28,7 @@ func GenerateToken(rememberFlag bool, user types.User) (string, error) {
 
 // ParseToken 解析JWT
 func ParseToken(tokenString string) (*jwt.Token, *jwt.MapClaims, error) {
-	jwtSecret := []byte(server.GetServerInfo().Secret)
+	jwtSecret := []byte(server.GetServer().Salt)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})

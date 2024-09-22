@@ -1,23 +1,29 @@
 <template>
-  <h4>{{ title }}</h4>
-  <div id="pieDiv" :style="style"></div>
+  <div class="chart-common-container">
+    <h4 class="row-header">{{ title }}</h4>
+    <div id="pieDiv" :style="`width: ${width}; height: ${height};`">
+      <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import * as echarts from 'echarts'
 import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
-import { chartDialog, flowQuery, resetFlowQuery } from '@/utils/store'
-
-import { showFlowTableDialog } from '@/stores/flag'
+import { flowTableQuery, showFlowTableDialog } from '@/stores/flag'
+import type { FlowQuery } from '@/model/flow'
 
 // 使用 props 来接收外部传入的参数
-const { title, style } = defineProps(['title', 'style'])
+const { title, width, height } = defineProps(['title', 'width', 'height'])
 
 const dataListOut: any[] = []
 const dataListIn: any[] = []
 const notInOut: any[] = []
 const xAxisList: any[] = []
+const noData = ref(false)
+
+const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20 })
 
 const optionRef = ref({
   tooltip: {
@@ -42,12 +48,12 @@ const optionRef = ref({
     name: '金额(元)',
     type: 'value'
   },
-  
+
   legend: {
     selected: {
-      '支出': true,
-      '收入': true,
-      '不计收支': false
+      支出: true,
+      收入: true,
+      不计收支: false
     },
     data: [
       {
@@ -124,6 +130,7 @@ const doQuery = () => {
     if (res) {
       if (res.length === 0) {
         console.log('MonthBar未查询到数据！')
+        noData.value = true
         return
       }
       dataListOut.length = 0
@@ -143,13 +150,12 @@ const doQuery = () => {
       pieDiv = document.getElementById('pieDiv')
       pieChart = echarts.init(pieDiv)
       pieChart.setOption(optionRef.value)
-      pieChart.on('click', function(param) {
-        resetFlowQuery()
-        flowQuery.startDay = param.name + '-01'
-        flowQuery.endDay = param.name + '-31'
+      pieChart.on('click', function (param) {
+        flowQuery.value.startDay = param.name + '-01'
+        flowQuery.value.endDay = param.name + '-31'
 
-        chartDialog.chartDiaLogShow = false
-        showFlowTableDialog.value.visible = true
+        flowTableQuery.value = flowQuery.value
+        showFlowTableDialog.value = true
       })
     }
   })
@@ -173,12 +179,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.queryRow {
-  margin: 8px 3px;
-}
-
-.queryParam {
-  margin: 8px 3px;
+.row-header {
+  margin: 0.5rem;
 }
 
 #pieDiv {

@@ -14,7 +14,7 @@ type Page struct {
 
 // Result 返回数据同一封装
 type Result struct {
-	Code    int64  `json:"code"`
-	Message string `json:"message"`
-	Data    any    `json:"data"`
+	Code    int64  `json:"c"`
+	Message string `json:"m"`
+	Data    any    `json:"d"`
 }
