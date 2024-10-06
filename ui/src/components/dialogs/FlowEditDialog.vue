@@ -29,6 +29,7 @@
             :label="payTypeLabel"
             allow-new
             clearable
+            no-data-text="暂无数据，请输入"
             v-model="flowEdit.payType"
             :items="paymentTypeOptions"
           ></v-combobox>
@@ -38,6 +39,7 @@
             :label="typeLabel"
             allow-new
             clearable
+            no-data-text="暂无数据，请输入"
             v-model="flowEdit.type"
             :items="expenseTypeOptions"
           ></v-combobox>
