@@ -1,10 +1,14 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "打包Docker"
+        required: true
+        type: choice
+        options:
+          - WEB
 
 jobs:
   build:

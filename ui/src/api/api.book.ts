@@ -70,8 +70,8 @@ export async function openBookApi(): Promise<string> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix + '/openBook', method: 'post' })
   } else {
-    return new Promise(() => {
-      return '账本已打开'
+    return new Promise((resolve, reject) => {
+      resolve('账本已打开')
     })
   }
 }

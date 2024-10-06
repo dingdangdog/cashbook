@@ -2,6 +2,8 @@ FROM node:18-alpine AS ui-builder
 # 打包前端
 WORKDIR /app
 COPY ./ui .
+# WEB打包配置
+ENV VITE_MOD=WEB
 RUN npm install && npm run build-only
 
 FROM golang:alpine AS binarybuilder
@@ -11,13 +13,13 @@ COPY ./server/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cashbook .
 
 # 构建最终镜像
-FROM alpine:latest
+FROM node:18-alpine
 
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
-LABEL project.name="cashbook-web"
+LABEL project.name="cashbook"
 LABEL project.version="3.0.1_BETA"
-LABEL project.github="https://github.com/DingDangDog/cashbook-web"
+LABEL project.github="https://github.com/DingDangDog/cashbook"
 
 RUN apk add --no-cache nginx
 

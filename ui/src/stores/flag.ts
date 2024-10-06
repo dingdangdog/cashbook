@@ -23,4 +23,6 @@ export const bookInfo = ref<Book>({})
 
 export const DialogFullscreen = ref(false)
 // WEB LOCAL，系统初始化时从后端获取
-export const MOD = ref<string>('WEB')
+export const MOD = ref<string>('LOCAL')
+MOD.value = import.meta.env.VITE_MOD || 'WEB'
+console.log('model:', MOD.value)
