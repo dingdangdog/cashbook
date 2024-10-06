@@ -328,7 +328,8 @@ const isMas = () => {
   })
 }
 
-const openRegister = ref(localStorage.getItem('open_register') == 'true')
+const openRegister = ref(false)
+openRegister.value = localStorage.getItem('open_register') == 'true'
 onMounted(() => {
   if (MOD.value == 'LOCLA') {
     isMas()
