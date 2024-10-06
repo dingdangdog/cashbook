@@ -1,4 +1,4 @@
-const { getVersion } = require("./electron/server.js");
+const { getServerInfo, saveServerInfo } = require("./electron/server.js");
 const { SetUserPath } = require("./electron/api.js");
 
 const {
@@ -57,7 +57,8 @@ const {
 
 module.exports = {
   SetUserPath,
-  getVersion,
+  getServerInfo,
+  saveServerInfo,
 
   register,
   login,

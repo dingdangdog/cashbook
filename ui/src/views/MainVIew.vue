@@ -38,7 +38,7 @@
             class="no-drag window-actions"
             icon="mdi-window-maximize"
             @click="maximize"
-            v-show="!isMax"
+            v-show="isMax"
           >
           </v-btn>
           <v-btn class="no-drag window-actions" icon="mdi-close" @click="close"> </v-btn>
@@ -228,7 +228,7 @@ onMounted(() => {
   }
   checkUserAndBook()
 
-  if (MOD.value == 'LOCLA') {
+  if (MOD.value == 'LOCAL') {
     isMas()
   }
 })

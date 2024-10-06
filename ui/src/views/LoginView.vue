@@ -24,7 +24,7 @@
             class="no-drag window-actions"
             icon="mdi-window-maximize"
             @click="maximize"
-            v-show="!isMax"
+            v-show="isMax"
           >
           </v-btn>
           <v-btn class="no-drag window-actions" icon="mdi-close" @click="close"> </v-btn>
@@ -48,7 +48,6 @@
             :readonly="loading"
             :rules="[required]"
             class="mb-2"
-            clearable
             required
           ></v-text-field>
 
@@ -60,7 +59,6 @@
             :type="lookPs ? 'text' : 'password'"
             :readonly="loading"
             :rules="[required]"
-            clearable
             required
             :append-icon="lookPs ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="lookPs = !lookPs"
@@ -111,7 +109,6 @@
               :readonly="loading"
               :rules="[required]"
               class="mb-2"
-              clearable
               required
             ></v-text-field>
 
@@ -124,7 +121,6 @@
               :type="lookKey ? 'text' : 'password'"
               :readonly="loading"
               :rules="[required]"
-              clearable
               required
               :append-icon="lookKey ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="lookKey = !lookKey"
@@ -152,7 +148,6 @@
               v-model="registerUser.name"
               :rules="[required]"
               class="mb-2"
-              clearable
               required
             ></v-text-field>
             <v-text-field
@@ -162,7 +157,6 @@
               v-model="registerUser.userName"
               :rules="[required]"
               class="mb-2"
-              clearable
               required
             ></v-text-field>
 
@@ -174,7 +168,6 @@
               :type="lookKey ? 'text' : 'password'"
               :readonly="loading"
               :rules="[required]"
-              clearable
               required
               :append-icon="lookKey ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="lookKey = !lookKey"
@@ -187,7 +180,6 @@
               :type="lookKey ? 'text' : 'password'"
               :readonly="loading"
               :rules="[required]"
-              clearable
               required
               :append-icon="lookKey ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="lookKey = !lookKey"
@@ -238,13 +230,16 @@ const onSubmit = () => {
   loading.value = true
   login(true, signInParam.value)
     .then((res) => {
-      // console.log(res)
-      successAlert('Login success')
+      // console.log('登录成功', res)
+      successAlert('登录成功')
       loading.value = false
       setUserInfo(res)
+
+      // 跳转到首页
+      // window.location.reload()
     })
     .catch((err) => {
-      errorAlert('Login Error:' + err.message)
+      errorAlert('登录失败:' + err.message)
     })
     .finally(() => {
       // console.log(res)
@@ -331,7 +326,7 @@ const isMas = () => {
 const openRegister = ref(false)
 openRegister.value = localStorage.getItem('open_register') == 'true'
 onMounted(() => {
-  if (MOD.value == 'LOCLA') {
+  if (MOD.value == 'LOCAL') {
     isMas()
   }
 })
@@ -356,6 +351,13 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.window-actions {
+  color: rgba(19, 116, 33);
+}
+.window-actions:hover {
+  color: rgba(182, 6, 6);
 }
 
 .login-card {

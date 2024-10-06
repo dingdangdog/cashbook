@@ -22,5 +22,5 @@ export const userInfo = ref<LoginUser>({})
 export const bookInfo = ref<Book>({})
 
 export const DialogFullscreen = ref(false)
-
+// WEB LOCAL，系统初始化时从后端获取
 export const MOD = ref<string>('WEB')

@@ -2,13 +2,13 @@ import { MOD } from '@/stores/flag'
 import $http from './index'
 import local from './local'
 
-import type { User, LoginUser, NewPassword } from '@/model/user'
+import type { User, LoginUser, NewPassword, LoginParam } from '@/model/user'
 
 /**
  * 登录
  * @returns Page<LoginUser>
  */
-export function login(flag: boolean, user: User): Promise<LoginUser> {
+export function login(flag: boolean, user: LoginParam): Promise<LoginUser> {
   if (MOD.value === 'WEB') {
     return $http({ url: '/login?flag=' + flag, method: 'post', data: user })
   } else {
@@ -46,11 +46,11 @@ export function checkPassword(password: string): Promise<boolean> {
  * @param data
  * @returns
  */
-export function resetPasswordApi(data: any): Promise<boolean> {
+export function resetPasswordApi(data: { userName: string; serverKey: string }): Promise<boolean> {
   if (MOD.value === 'WEB') {
     return $http({ url: '/resetPassword', method: 'post', data })
   } else {
-    return local('resetPassword', localStorage.getItem('userId'), data)
+    return local('resetPassword', data)
   }
 }
 
@@ -70,6 +70,6 @@ export function checkUser(): Promise<{ user: string; book: string }> {
   if (MOD.value === 'WEB') {
     return $http({ url: '/admin/checkUser', method: 'get' })
   } else {
-    return local('checkUser', localStorage.getItem('userId'))
+    return local('checkUser', localStorage.getItem('userId'), localStorage.getItem('bookId'))
   }
 }

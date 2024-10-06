@@ -68,10 +68,6 @@ import { createBook, getBook, openBookApi } from '@/api/api.book'
 import { showBookDialogFlag } from '@/stores/flag'
 import { errorAlert, successAlert } from '@/utils/alert'
 
-onMounted(() => {
-  initBooks()
-})
-
 const books = ref<Book[]>([])
 
 const initBooks = () => {
@@ -83,6 +79,8 @@ const initBooks = () => {
       console.log(err)
     })
 }
+
+initBooks()
 
 const openBook = (book: Book) => {
   if (localStorage.getItem('bookId') === String(book.id)) {

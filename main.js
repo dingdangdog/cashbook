@@ -105,6 +105,7 @@ ipcMain.on("window-control", (event, action) => {
   }
 });
 ipcMain.handle("is-maximized", () => {
+  console.log("win.isMaximized()", win.isMaximized());
   return win.isMaximized();
 });
 

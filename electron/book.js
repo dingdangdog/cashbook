@@ -53,6 +53,7 @@ const updateBook = async (id, data) => {
 
 // 基于查询条件的查询
 const queryBooks = async (query) => {
+  // console.log(query)
   const data = await readBooks();
   let result = data;
 
@@ -71,11 +72,7 @@ const queryBooks = async (query) => {
 
 const checkBook = async (bookId) => {
   const book = await serverApi.findById(getFileName(), bookId);
-  if (book) {
-    return serverApi.toResult(200, book);
-  }
-
-  return serverApi.toResult(500, "", "无此账本");
+  return book;
 };
 
 module.exports = {

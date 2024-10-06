@@ -22,10 +22,12 @@ const local = async (functionName: string, ...args: any) => {
     errorAlert(res.m)
     throw Error(res.m)
   } else if (res.c == 403) {
-    localStorage.clear()
     // 403 登陆失效、无权限，跳转登陆页面
-    errorAlert(`${res.m}-请重新登录-`)
+    errorAlert(`${res.m}`)
     cleanLoginInfo()
+    throw Error(res.m)
+  } else if (res.c == 401) {
+    throw Error(res.m)
   } else {
     // 200 成功
     // 401 用户名密码错误

@@ -22,6 +22,7 @@ onMounted(() => {
       localStorage.setItem('mod', res.mod || '')
       localStorage.setItem('open_register', res.openRegister || '')
       MOD.value = res.mod || 'WEB'
+      console.log('model:', MOD.value)
     }
   })
 })

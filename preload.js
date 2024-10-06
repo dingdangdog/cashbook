@@ -1,11 +1,11 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electron", {
+  isMaximized: () => ipcRenderer.invoke("is-maximized"),
   minimize: () => ipcRenderer.send("window-control", "minimize"),
   maximize: () => ipcRenderer.send("window-control", "maximize"),
+  restoreWindow: () => ipcRenderer.send("window-control", "restore-window"),
   close: () => ipcRenderer.send("window-control", "close"),
-  isMaximized: () => ipcRenderer.invoke('is-maximized'),
-  restoreWindow: () => ipcRenderer.send('window-control', 'restore-window')
 });
 
 contextBridge.exposeInMainWorld("api", {

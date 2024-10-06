@@ -14,6 +14,7 @@ export function getBook(name: string | undefined): Promise<Book[]> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix + '?name=' + name, method: 'get' })
   } else {
+    // console.log(localStorage.getItem('userId'), localStorage.getItem('bookId'))
     return local('queryBooks', { userId: localStorage.getItem('userId'), bookName: name })
   }
 }
@@ -65,28 +66,12 @@ export function deleteBook(id: number): Promise<Book> {
   }
 }
 
-export function checkBook(bookId: string | null): Promise<Book> {
-  return local('checkBook', bookId)
-}
-
-/**
- * 修改账本密钥
- * @returns result
- */
-export function changeKey(book: Book): Promise<Book> {
-  return $http({ url: prefix + '/changeKey', method: 'post', data: book })
-  // if (MOD.value === 'WEB') {
-  //   return $http({ url: prefix + '/changeKey', method: 'post', data: book })
-  // } else {
-  //   return local('dailyLine', localStorage.getItem('bookId'), query)
-  // }
-}
-
 export async function openBookApi(): Promise<string> {
-  return $http({ url: prefix + '/openBook', method: 'post' })
-  // if (MOD.value === 'WEB') {
-  //   return $http({ url: prefix + '/openBook', method: 'post' })
-  // } else {
-  //   return null
-  // }
+  if (MOD.value === 'WEB') {
+    return $http({ url: prefix + '/openBook', method: 'post' })
+  } else {
+    return new Promise(() => {
+      return '账本已打开'
+    })
+  }
 }
