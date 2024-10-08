@@ -21,8 +21,8 @@
   },
   "build": {
     "asar": false,
-    "appId": "docash",
-    "productName": "DoCash",
+    "appId": "cashbook",
+    "productName": "Cashbook",
     "extends": null,
     "directories": {
       "output": "build"
