@@ -78,7 +78,7 @@ const register = async (user) => {
   // console.log(user);
   const existingUsers = await queryUsers({ userName: user.userName });
   if (existingUsers.length > 0) {
-    return -1;
+    return serverApi.toResult(500, "", "用户已存在");
   }
   const password = encryptBySHA256(user.userName, user.password);
 

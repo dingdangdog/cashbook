@@ -34,8 +34,8 @@
     <div class="login-form">
       <!-- set input width -->
       <div class="icon-container">
-        <img src="@/assets/images/cashbook.png" width="60" alt="logo" />
-        <h1 style="margin: 0 0.5rem">Cashbook/Docash</h1>
+        <!-- <img src="@/assets/images/cashbook.png" width="60" alt="logo" /> -->
+        <h1 style="margin: 0 0.5rem">Cashbook</h1>
       </div>
       <!-- <v-sheet rounded> -->
       <v-card class="login-card">
@@ -91,8 +91,8 @@
                 ></v-icon>
               </template>
             </v-switch>
-            <v-btn @click="resetPasswordDialog = true">忘记密码?</v-btn>
             <v-btn v-show="openRegister" @click="registerDialog = true">注册账号</v-btn>
+            <v-btn @click="resetPasswordDialog = true">忘记密码?</v-btn>
           </div>
         </v-form>
       </v-card>
@@ -200,6 +200,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { login, registerApi, resetPasswordApi } from '@/api/api.user'
+import { getServerInfo } from '@/api/api.server'
 import { errorAlert, successAlert } from '@/utils/alert'
 import { useTheme } from 'vuetify'
 import type { LoginParam, User } from '@/model/user'
@@ -290,7 +291,7 @@ const register = () => {
       registerUser.value = {}
     })
     .catch((err) => {
-      errorAlert('注册失败，请重试！' + err.message)
+      errorAlert('注册失败: ' + err.message)
     })
 }
 
@@ -324,11 +325,15 @@ const isMas = () => {
 }
 
 const openRegister = ref(false)
-openRegister.value = localStorage.getItem('open_register') == 'true'
 onMounted(() => {
   if (MOD.value == 'LOCAL') {
     isMas()
   }
+  getServerInfo().then((res) => {
+    if (res) {
+      openRegister.value = res.openRegister == 'true'
+    }
+  })
 })
 </script>
 
