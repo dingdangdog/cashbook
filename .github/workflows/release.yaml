@@ -75,7 +75,9 @@ jobs:
       - name: Install UI dependencies
         run: cd ui && npm ci
       - name: Build UI
-        run: cd ui && VITE_MOD=LOCAL && npm run build-only
+        env:
+          VITE_MOD: LOCAL # electron 打包需要
+        run: cd ui && npm run build-only
       - name: Install Main dependencies
         run: npm ci
 
