@@ -83,7 +83,7 @@ jobs:
 
       - name: Package Application
         env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: ${{ matrix.package_command }}
 
       - name: Show Builds
