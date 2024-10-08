@@ -32,7 +32,9 @@ Web 记账本。
 
 ## 开始使用（Get Started）
 
-推荐使用`docker-compose`：
+### Docker部署
+
+推荐使用`docker-compose`，示例如下：
 
 ```yaml
 services:
@@ -57,14 +59,34 @@ services:
 如果你不喜欢使用 `docker-compose`，也可以执行以下命令一件执行：
 
 ```sh
-# 数据卷请自行修改
+# 数据卷/环境变量等请自行修改命令
 docker run -d --name cashbook -p 880:80 -v ./data:/app/resources/data dingdangdog/cashbook:latest
 ```
 
-## 重要说明
+### 桌面安装
 
-1. 本仓库从 `2.0.0` 版本开始，将只保留 `Web/docker部署` 版本，因此进行了大量代码结构调整，删除了后续不再需要的代码及文件。
-2. 在发布 `2.0.1` 版本时，将删除 `2.0.0` 版本前的全部发布信息。
+请前往[Releases](https://github.com/dingdangdog/cashbook/releases)页面自行下载安装。
+
+## 主要功能（Features）
+
+- [x] 同一套代码，同样的页面，可以 `Web` 部署，也可以安装桌面程序；
+- [x] 支持 `Windows` 安装使用；
+- [x] 支持 `Macos` 安装使用(*未测试*)；
+- [x] 支持 `Linux` 安装使用(*未测试*)；
+- [x] 支持 `Docker` 部署；
+- [x] 支持 *支付宝CSV* 个人账单文件导入；
+- [x] 支持 *微信CSV* 个人账单文件导入；
+- [x] 支持 *京东金融CSV* 个人账单文件导入；
+- [x] 数据导入时，[消费类型自动映射转换](#类型映射)；
+- [x] 直观的消费日历看板；
+- [x] 美观的数据分析图表：支出类型统计饼图、支付方式统计饼图、每日流水统计曲线图、每月流水统计柱状图；
+- [x] 支持多用户模式；
+- [x] 每个用户可以有多个账本，其账本之间数据独立；
+- [x] 无需数据库；
+- [x] 数据快速迁移（导入/导出）；
+- [ ] 主题系统；
+- [ ] 桌面端自动更新；
+- [ ] ……
 
 ### 类型映射
 
@@ -90,44 +112,19 @@ docker run -d --name cashbook -p 880:80 -v ./data:/app/resources/data dingdangdo
 | 教育培训 | 教育培训 | | 教育培训 |
 | 退款 | 退款 | 退款 |          |
 | 微信交易 |  | 扫二维码付款/二维码收款/商户消费 | |
-|  其他    | 其他/商业服务/生活服务/借用借还 |      | 其他网购/其他/网购/收发快递/白条 |
 
-> PS：如果你不会账单导出，这里有一个图文教程：[微信/支付宝/京东金融导出账单文件](https://oldmoon.top/post/211)
+没有出现在上述表格中的类型，系统不会处理，将会保留原类型文字进行导入。详细映射关系可查看[type_convert.json](./electron/config/type_convert.json)（`key是原类型，value是目标类型`）。
 
-## 主要计划（Plan）
+> PS：如果你还不会账单导出，这里有一个图文教程：[微信/支付宝/京东金融导出账单文件](https://oldmoon.top/post/211)
 
-> 以下是一些比较重要的功能开发计划，不代表本系统全部功能，欢迎下载试用！  
-> 在目前没什么用户的情况下，不出意外的话，每月更新一次。
+## 开发技术栈
 
-- [x] Windows桌面应用（目前是简单的Electron套壳，以后可能还会重构）；
-- [x] Docker部署，重构后的系统从`v1.1.6`之后开始同步发布Docker；
-- [x] 使用JSON格式存储数据，拒绝一切三方数据库；
-- [x] 阿里支付宝CSV个人账单文件导入；
-- [x] 微信CSV个人账单文件导入；
-- [x] 生成分析报表，如月报/年报功能，暂定 `v1.1.8` 支持月报；
-- [ ] ~~数据云同步，暂定 `v1.2.0` 重新支持云同步；~~ 本仓库只保留Docker部署版，几乎不再需要云同步
-- [ ] ~~浏览器插件？`姑且想想`~~ 不想了
-- [ ] ~~小程序版本？`姑且想想`~~ 不想了
-- [ ] Android版本？`姑且想想`
-- [ ] ~~Mac版本？`纯属想想`~~ 不想了
-- [ ] ~~ios版本？`纯属想想`~~ 不想了
-
-## 开发
-
-### 目录
-
-- `docker`: 存放 `docker` 构建/部署 需要使用的一些文件
-- `ui`: 前端 `Vue + Element plus` 代码
-- `server`: 后端 `golang + gin` 代码
-
-### 开发命令
-
-```sh
-# 启动后端
-npm run server:dev
-# 启动前端
-npm run ui:dev
-```
+- Vue3
+- Vuetify
+- Golang
+- Electron
+- Javascript
+- Docker
 
 ## 鸣谢（Acknowledgments）
 
@@ -142,8 +139,8 @@ npm run ui:dev
 - 感谢以下优秀的开发工具
 
 <div style="display:flex; align-item:left">
-<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/webstorm.svg' width='80px' height='80px'/></a> &nbsp;
-<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/goland.svg' width='80px' height='80px'/></a> &nbsp;
-<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/get-icon/geticon/blob/master/icons/intellij-idea.svg' width='80px' height='80px'/></a> &nbsp;
-<a href='https://code.visualstudio.com/'><img src='https://github.com/get-icon/geticon/blob/master/icons/visual-studio-code.svg' width='60px' height='80px'/></a>
+<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/webstorm.svg' width='60px' height='60px'/></a> &nbsp;
+<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/goland.svg' width='60px' height='60px'/></a> &nbsp;
+<a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/get-icon/geticon/blob/master/icons/intellij-idea.svg' width='60px' height='60px'/></a> &nbsp;
+<a href='https://code.visualstudio.com/'><img src='https://github.com/get-icon/geticon/blob/master/icons/visual-studio-code.svg' width='60px' height='60px'/></a>
 </div>
