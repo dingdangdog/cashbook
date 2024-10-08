@@ -38,8 +38,8 @@
       "./preload.js",
       "./handler.js",
       "./icon/**",
-      "./server/*.js",
-      "./server/config/*.json"
+      "./electron/*.js",
+      "./electron/config/*.json"
     ],
     "extraResources": [
       {
