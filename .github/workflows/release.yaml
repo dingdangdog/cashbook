@@ -137,8 +137,8 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
       - name: Build Docker image
         run: docker build -t dingdangdog/cashbook:${{ github.event.inputs.target }} -t dingdangdog/cashbook:latest .
 
