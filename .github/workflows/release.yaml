@@ -83,6 +83,7 @@ jobs:
 
       - name: Package Application
         env:
+          NODE_ENV: production
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: ${{ matrix.package_command }}
 
