@@ -1,5 +1,3 @@
-// import { checkUser } from '@/api/api.user'
-// import { checkBook } from '@/api/api.book'
 import { bookInfo, userInfo } from '@/stores/flag'
 import { errorAlert } from './alert'
 import type { LoginUser } from '@/model/user'
@@ -77,6 +75,7 @@ export const dateFormater = (format: string, date: string | Date) => {
 }
 
 export const setUserInfo = (info: LoginUser) => {
+  // console.log(info)
   localStorage.setItem('userId', String(info.id))
   localStorage.setItem('name', String(info.name))
   localStorage.setItem('token', String(info.token))
@@ -93,6 +92,9 @@ export const cleanLoginInfo = () => {
   localStorage.clear()
   userInfo.value = {}
   bookInfo.value = {}
+  // setTimeout(() => {
+  //   window.location.reload()
+  // }, 2000)
 }
 
 export const checkUserAndBook = () => {

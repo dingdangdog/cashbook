@@ -131,7 +131,7 @@ const monthBar = async (bookId) => {
 
   const months = Object.keys(sumMap).map(
     (month) =>
-      new DailyLine(
+      new TypePie(
         month,
         sumMap[month].toFixed(2),
         inSumMap[month]?.toFixed(2) || "",
@@ -139,7 +139,7 @@ const monthBar = async (bookId) => {
       )
   );
 
-  const result = months.sort((a, b) => a.day.localeCompare(b.day));
+  const result = months.sort((a, b) => a.type.localeCompare(b.type));
 
   return { c: 200, d: result };
 };
@@ -147,10 +147,13 @@ const monthBar = async (bookId) => {
 // 按月统计分析
 const monthAnalysis = async (bookId, month) => {
   const monthBarData = await monthBar(bookId);
+  if (monthBarData.c != 200) {
+    return { c: 500, m: "查询出错" };
+  }
   const analysis = { month };
 
-  for (let data of monthBarData) {
-    if (data.type === month) {
+  for (let data of monthBarData.d) {
+    if (data.day === month) {
       analysis.outSum = data.typeSum;
       analysis.inSum = data.inSum;
       analysis.zeroSum = data.zeroSum;
@@ -168,8 +171,8 @@ const monthAnalysis = async (bookId, month) => {
     flowType: "支出",
   };
   const typeSum = await getTypePie(bookId, flowParam);
-  analysis.maxType = typeSum[0].type;
-  analysis.maxTypeSum = typeSum[0].typeSum;
+  analysis.maxType = typeSum[0]?.type || "无";
+  analysis.maxTypeSum = typeSum[0]?.typeSum || "0";
 
   const flowList = await queryFlows(bookId, {
     bookId,

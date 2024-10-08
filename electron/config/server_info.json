@@ -2,5 +2,8 @@
   "version": "2.0.0",
   "salt": "spend-money-like-water",
   "key": "CASHBOOK_KKKEY",
-  "password": "cashbook"
+  "password": "cashbook",
+  "environment": "",
+  "mod": "LOCAL",
+  "openRegister": "true"
 }

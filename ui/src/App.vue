@@ -21,7 +21,6 @@ onMounted(() => {
       localStorage.setItem('version', res.version || '')
       localStorage.setItem('mod', res.mod || '')
       localStorage.setItem('open_register', res.openRegister || '')
-      MOD.value = res.mod || 'WEB'
     }
   })
 })

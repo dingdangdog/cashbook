@@ -1,6 +1,7 @@
 const serverApi = require("./api.js");
 const crypto = require("crypto");
-const { getServerInfo } = require("./server.js");
+const { getServer } = require("./server.js");
+const { checkBook } = require("./book.js");
 
 class User {
   constructor(id, name, userName, password, createDate) {
@@ -45,8 +46,8 @@ const deleteUser = async (id) => {
 };
 
 // 修改数据
-const updateUser = async (id, data) => {
-  return await serverApi.updateData(getFileName(), id, data);
+const updateUser = async (data) => {
+  return await serverApi.updateData(getFileName(), data);
 };
 
 // 基于查询条件的查询
@@ -95,30 +96,35 @@ const register = async (user) => {
 // 登录
 const login = async (flag, param) => {
   // console.log(flag, param);
-  const encryptedPassword = encryptBySHA256(param.userName, param.password);
+  const encryptedPassword = encryptBySHA256(param.username, param.password);
   const users = await queryUsers({
-    userName: param.userName,
+    userName: param.username,
     password: encryptedPassword,
   });
-  // console.log(users);
   if (users.length === 1) {
     return serverApi.toResult(200, {
       id: users[0].id,
       name: users[0].name,
     });
   }
+  console.log("登陆失败");
   return serverApi.toResult(401, "", "用户名或密码错误");
 };
 
-const resetPassword = async (userId, data) => {
-  const serverInfo = getServerInfo();
+// 重置密码
+const resetPassword = async (data) => {
+  const server = getServer();
   // userName serverKey
-  if (data.serverKey == serverInfo.key) {
-    const user = await serverApi.findById(getFileName(), userId);
-    user.password = encryptBySHA256(user.userName, serverInfo.password);
-    updateUser(password.id, user);
-    // 修改密码
-    return serverApi.toResult(200, user, "重置成功");
+  if (data.serverKey == server.key) {
+    const user = await queryUsers({ userName: data.userName });
+    if (user.length === 1) {
+      user.password = encryptBySHA256(user.userName, server.password);
+      updateUser(user);
+      // 修改密码
+      return serverApi.toResult(200, user, "重置成功");
+    } else {
+      return serverApi.toResult(500, "", "用户不存在");
+    }
   }
   return serverApi.toResult(500, "", "服务密钥错误");
 };
@@ -137,18 +143,21 @@ const changePassword = async (password) => {
   }
   const user = await serverApi.findById(getFileName(), password.id);
   user.password = encryptBySHA256(user.userName, password.new);
-  updateUser(password.id, user);
+  updateUser(user);
   return serverApi.toResult(200, true);
 };
 
-const checkUser = async (userId) => {
+const checkUser = async (userId, bookId) => {
+  // console.log("userId", userId);
   const user = await serverApi.findById(getFileName(), userId);
-  // console.log(userId, user);
-  if (user) {
-    return serverApi.toResult(200, user);
-  }
 
-  return serverApi.toResult(403, "", "无此用户");
+  const res = {};
+  res.user = user?.name || "none";
+
+  const book = await checkBook(bookId);
+  res.book = book?.bookName || "none";
+
+  return serverApi.toResult(200, res);
 };
 
 module.exports = {

@@ -38,7 +38,7 @@
             class="no-drag window-actions"
             icon="mdi-window-maximize"
             @click="maximize"
-            v-show="!isMax"
+            v-show="isMax"
           >
           </v-btn>
           <v-btn class="no-drag window-actions" icon="mdi-close" @click="close"> </v-btn>
@@ -119,6 +119,7 @@
       <TypeView v-if="openMenu === '类型管理'" />
       <SystemView v-if="openMenu === '系统管理'" />
       <AboutView v-if="openMenu === '关于'" />
+      <DonateView v-if="openMenu === '捐赠'" />
     </v-main>
     <BookDialog v-if="showBookDialogFlag.visible" />
     <!-- 弹出框表单：类型转换配置 -->
@@ -137,6 +138,7 @@ import FlowsView from './pages/FlowsView.vue'
 import TypeView from './pages/TypeView.vue'
 import SystemView from './pages/SystemView.vue'
 import AboutView from './pages/AboutView.vue'
+import DonateView from './pages/DonateView.vue'
 
 import BookDialog from '@/components/dialogs/BookDialog.vue'
 import { showSetConvertDialog, showBookDialogFlag, showFlowTableDialog, MOD } from '@/stores/flag'
@@ -186,7 +188,8 @@ const items = ref<Menu[]>([
   //     { title: '分类管理', path: '/types', icon: 'mdi-shape-plus' }
   //   ]
   // },
-  { title: '关于', path: '/about', icon: 'mdi-information', color: 'rgb(251,140,0)' }
+  { title: '关于', path: '/about', icon: 'mdi-information', color: 'rgb(251,140,0)' },
+  { title: '捐赠', path: '/donate', icon: 'mdi-gift', color: 'rgb(218 70 70)' }
 ])
 
 const toPath = (menu: Menu) => {
@@ -228,7 +231,7 @@ onMounted(() => {
   }
   checkUserAndBook()
 
-  if (MOD.value == 'LOCLA') {
+  if (MOD.value == 'LOCAL') {
     isMas()
   }
 })
