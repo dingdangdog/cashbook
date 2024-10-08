@@ -8,7 +8,10 @@
         <v-btn v-if="!miniWindow" icon>
           <img src="@/assets/images/cashbook.png" height="40" alt="logo" />
         </v-btn>
-        <span v-if="!miniWindow">Cashbook</span>
+        <span style="margin: 0 auto; padding: 0 0.5rem" v-if="bookName && !miniWindow"
+          >当前账本：{{ bookName }}</span
+        >
+        <span v-else-if="!miniWindow">Cashbook</span>
         <!-- <span>Cashbook</span> -->
         <v-btn class="no-drag" @click="showBookDialogFlag.visible = true"> 切换账本 </v-btn>
         <v-menu>
@@ -17,9 +20,11 @@
           </template>
           <v-list>
             <v-list-item class="cursor-pointer" @click="showSetConvertDialog = true">
-              分类映射配置
+              <span style="font-size: 1rem">分类映射配置</span>
             </v-list-item>
-            <v-list-item class="cursor-pointer" @click="cleanLoginInfo"> 退出登录 </v-list-item>
+            <v-list-item class="cursor-pointer" @click="cleanLoginInfo">
+              <span style="font-size: 1rem">退出登录</span>
+            </v-list-item>
           </v-list>
         </v-menu>
       </v-app-bar-title>
@@ -225,7 +230,10 @@ const isMas = () => {
   })
 }
 
+const bookName = ref()
+
 onMounted(() => {
+  bookName.value = localStorage.getItem('bookName')
   if (!localStorage.getItem('bookId')) {
     showBookDialogFlag.value.visible = true
   }

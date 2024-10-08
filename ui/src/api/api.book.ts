@@ -32,14 +32,14 @@ export function getAllBook(): Promise<Book[]> {
 }
 
 /**
- * 注册账本
+ * 创建账本
  * @returns result
  */
 export function createBook(createDto: CreateBookDto): Promise<Book> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix, method: 'post', data: createDto })
   } else {
-    createDto.userId = localStorage.getItem('userId')
+    createDto.userId = localStorage.getItem('userId') || ''
     return local('addBook', createDto)
   }
 }

@@ -12,7 +12,7 @@
           v-for="book in books"
           :key="book.id"
           class="book-card"
-          :class="checkSelectBook(book.id || 0)"
+          :class="checkSelectBook(book.id || '')"
           @click="openBook(book)"
           :title="book.bookName"
         >
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import type { Book } from '@/model/book'
 
 import { createBook, getBook, openBookApi } from '@/api/api.book'
@@ -87,12 +87,15 @@ const openBook = (book: Book) => {
     showBookDialogFlag.value.visible = false
     return
   }
-  localStorage.setItem('bookId', String(book.id))
-  localStorage.setItem('bookName', book.bookName || '')
   openBookApi()
     .then((res) => {
-      successAlert(res)
+      localStorage.setItem('bookId', String(book.id))
+      localStorage.setItem('bookName', book.bookName || '')
+      successAlert(book.bookName + res + '，即将刷新')
       showBookDialogFlag.value.visible = false
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
     })
     .catch((err) => {
       errorAlert(err)
@@ -149,7 +152,7 @@ const confirmBookForm = () => {
     })
 }
 
-const checkSelectBook = (bookId: number) => {
+const checkSelectBook = (bookId: string | number) => {
   return localStorage.getItem('bookId') === bookId.toString() ? 'book-card-selected' : ''
 }
 </script>

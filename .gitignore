@@ -18,6 +18,7 @@
 .DS_Store
 
 /server/resources/data/*
+/Data
 /server/cashbook.log
 /ui/dist
 
