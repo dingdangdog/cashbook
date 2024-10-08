@@ -1,5 +1,5 @@
 export interface User {
-  id?: string
+  id?: string | number
   name?: string
   userName?: string
   password?: string
@@ -12,7 +12,7 @@ export interface LoginParam {
 }
 
 export interface LoginUser {
-  id?: string
+  id?: string | number
   name?: string
   token?: string
   background?: string

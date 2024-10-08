@@ -1,5 +1,5 @@
 export interface Flow {
-  id?: number
+  id?: number | string
   day?: string
   flowType?: string // 流水类型
   type?: string // 消费类型
@@ -15,7 +15,7 @@ export interface Flow {
 export interface CreateFlowDto {
   day?: string
   flowType?: string
-  bookId?: number
+  bookId?: number | string
   type?: string
   payType?: string
   money?: number
@@ -28,7 +28,7 @@ export interface CreateFlowDto {
  */
 export interface UpdateFlowDto {
   day?: string
-  bookId?: number
+  bookId?: number | string
   flowType?: string
   type?: string
   payType?: string
@@ -40,8 +40,8 @@ export interface UpdateFlowDto {
 export class FlowQuery {
   pageNum?: number = 1
   pageSize?: number = 20
-  id?: string
-  bookId?: string
+  id?: string | number
+  bookId?: string | number
   startDay?: string
   endDay?: string
   flowType?: string
