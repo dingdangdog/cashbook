@@ -101,8 +101,8 @@ jobs:
           name: 🎉Release ${{ github.event.inputs.target }}
           tag_name: ${{ github.event.inputs.target }}
           append_body: true
-          # DoCash-2.0.0-arm64.dmg
-          files: build/DoCash-${{ github.event.inputs.target }}-arm64.dmg
+          # Cashbook-2.0.0-arm64.dmg
+          files: build/Cashbook-${{ github.event.inputs.target }}-arm64.dmg
 
       - name: Linux Release
         uses: softprops/action-gh-release@v2
@@ -112,10 +112,10 @@ jobs:
           name: 🎉Release ${{ github.event.inputs.target }}
           tag_name: ${{ github.event.inputs.target }}
           append_body: true
-          # docash_2.0.0_amd64.deb/DoCash-2.0.0.AppImage
+          # docash_2.0.0_amd64.deb/Cashbook-2.0.0.AppImage
           files: |
             build/docash_${{ github.event.inputs.target }}_amd64.deb
-            build/DoCash-${{ github.event.inputs.target }}.AppImage
+            build/Cashbook-${{ github.event.inputs.target }}.AppImage
 
       - name: Wiindows Release
         uses: softprops/action-gh-release@v2
@@ -126,8 +126,8 @@ jobs:
           name: 🎉Release ${{ github.event.inputs.target }}
           tag_name: ${{ github.event.inputs.target }}
           append_body: true
-          # DoCash Setup 2.0.0.exe
-          files: build/DoCash Setup ${{ github.event.inputs.target }}.exe
+          # Cashbook Setup 2.0.0.exe
+          files: build/Cashbook Setup ${{ github.event.inputs.target }}.exe
 
   docker_build:
     environment: docker_hub
