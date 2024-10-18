@@ -1,4 +1,5 @@
 <template>
+  <!-- 流水表格，用于其他页面引用，不是流水管理页面的表格 -->
   <div class="flow-container">
     <!-- 表格主体数据列表 -->
     <div>
