@@ -240,7 +240,7 @@ const onSubmit = () => {
       // window.location.reload()
     })
     .catch((err) => {
-      errorAlert('登录失败:' + err.message)
+      console.log(err)
     })
     .finally(() => {
       // console.log(res)
