@@ -9,10 +9,10 @@ func GetServer() types.Server {
 	return dServer.GetServer()
 }
 
-func GetServerInfo() types.Server {
+func GetServerInfo() types.PublicConfig {
 	return dServer.GetServerInfo()
 }
 
-func UpdateServerInfo(server types.Server) {
+func UpdateServerInfo(server types.PublicConfig) {
 	dServer.UpdateServerInfo(server)
 }

@@ -1,9 +1,1 @@
-{
-  "version": "3.0.1",
-  "environment": "",
-  "mod": "",
-  "salt": "",
-  "key": "",
-  "password": "cashbook",
-  "openRegister": "true"
-}
+{"environment":"","salt":"","key":"","password":"cashbook","public":{"version":"","openRegister":"true"}}

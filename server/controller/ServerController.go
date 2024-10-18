@@ -17,7 +17,7 @@ func GetServerInfo(c *gin.Context) {
 }
 
 func UpdateServerInfo(c *gin.Context) {
-	var data types.Server
+	var data types.PublicConfig
 	if err := c.ShouldBindJSON(&data); err != nil {
 		util.CheckErr(err)
 		c.JSON(http.StatusBadRequest, gin.H{

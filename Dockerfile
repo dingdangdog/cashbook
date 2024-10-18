@@ -27,6 +27,16 @@ WORKDIR /app
 # 后端
 COPY --from=binarybuilder /app/cashbook .
 COPY --from=binarybuilder /app/resources/ ./resources/
+
+ENV GIN_MODE=release
+
+ENV CASHBOOK_VERSION=3.0.1_BETA
+ENV ENVIRONMENT=PRO
+ENV MOD=WEB
+ENV TOKEN_SALT=spend-money-like-water
+ENV SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
+ENV DEFAULT_PASSWORD=cashbook
+
 # 前端
 COPY --from=ui-builder /app/dist/ ./books/
 # Nginx
@@ -37,13 +47,6 @@ RUN nginx -t
 
 # 设置环境变量等
 VOLUME /app/resources/data
-
-ENV CASHBOOK_VERSION=3.0.1_BETA
-ENV ENVIRONMENT=PRO
-ENV MOD=WEB
-ENV TOKEN_SALT=spend-money-like-water
-ENV SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
-ENV DEFAULT_PASSWORD=cashbook
 
 # 运行应用
 #CMD ["./cashbook"]
