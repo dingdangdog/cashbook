@@ -95,3 +95,20 @@ export function importFlows(importFlag: string, flows: Flow[]): Promise<any> {
     return local('importFlows', localStorage.getItem('bookId'), importFlag, flows)
   }
 }
+
+export function uploadInvoiceFileApi(form: FormData): Promise<any> {
+  return $http({
+    url: prefix + '/uploadInvoice',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data: form
+  })
+}
+
+export function showInvoice(invoice: string): Promise<any> {
+  return $http({
+    url: prefix + '/showInvoice?invoice=' + invoice,
+    method: 'get',
+    responseType: 'blob'
+  })
+}

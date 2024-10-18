@@ -1,11 +1,15 @@
 package controller
 
 import (
+	"cashbook-server/config"
 	"cashbook-server/service/flow"
 	"cashbook-server/service/plan"
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -145,4 +149,47 @@ func ImportFlows(c *gin.Context) {
 	c.JSON(200, util.Success(nums))
 
 	go plan.UpdatePlanUsed(bookId)
+}
+
+func UploadInvoice(c *gin.Context) {
+	// 从请求中获取上传的文件
+	id := c.PostForm("id")
+	file, err := c.FormFile("invoice")
+	if err != nil {
+		c.JSON(500, util.Error("获取图片失败", err.Error()))
+		return
+	}
+	ext := filepath.Ext(file.Filename) // 获取文件扩展名
+	fileName := id + ext
+	// 指定保存文件的路径（你可以自定义路径）
+	filePath := filepath.Join(config.ImagePath, fileName)
+
+	// 将图片保存到指定的路径
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.String(http.StatusInternalServerError, fmt.Sprintf("保存图片失败: %s", err.Error()))
+		return
+	}
+	bookId := util.GetBookId(c)
+	flowId, err := strconv.ParseInt(id, 10, 64)
+	util.CheckErr(err)
+	// 保存文件名到流水信息中
+	flow.UploadInvoice(bookId, flowId, fileName)
+
+	c.JSON(200, util.Success("上传成功"))
+}
+
+func ShowInvoice(c *gin.Context) {
+	invoice := c.Query("invoice")
+	// 拼接图片的完整路径，假设图片保存在 invoices/ 目录下
+	imagePath := filepath.Join(config.ImagePath, invoice)
+
+	// 检查文件是否存在
+	if _, err := os.Stat(imagePath); os.IsNotExist(err) {
+		c.JSON(500, util.Error("图片不存在", ""))
+		return
+	}
+
+	// 设置响应头，告知客户端这是图片类型
+	c.Writer.Header().Set("Content-Type", "application/octet-stream") // 根据实际图片类型设置
+	c.File(imagePath)                                                 // 将图片文件发送给客户端
 }

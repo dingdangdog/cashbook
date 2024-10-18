@@ -69,3 +69,15 @@ func ImportFlows(flag string, flows []types.Flow, bookId int64) int {
 func InitFlows(bookId int64) {
 	dFlow.InitFlows(bookId)
 }
+
+func UploadInvoice(bookId int64, flowId int64, invoice string) {
+	flows := GetBookAll(bookId)
+
+	for _, flow := range flows {
+		if flow.Id == flowId {
+			flow.Invoice = invoice
+			UpdateFlow(flow)
+			return
+		}
+	}
+}

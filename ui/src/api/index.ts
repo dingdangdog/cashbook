@@ -38,6 +38,9 @@ $http.interceptors.request.use(async (config) => {
 // 响应拦截：解析响应结果，返回数据或捕获异常
 $http.interceptors.response.use(
   (res) => {
+    if (res.request.responseType === 'blob') {
+      return res
+    }
     if (res.data.c != 200) {
       errorAlert(res.data.m)
       return Promise.reject(res.data)

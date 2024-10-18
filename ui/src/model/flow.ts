@@ -7,6 +7,7 @@ export interface Flow {
   payType?: string // 支付方式
   money?: number
   name?: string
+  invoice?: string // 小票
   description?: string
 }
 /**

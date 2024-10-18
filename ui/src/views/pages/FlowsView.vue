@@ -59,6 +59,15 @@
             {{ value }}
           </p>
         </template>
+        <template v-slot:item.invoice="{ value }">
+          <v-img
+            style="height: 3rem; min-width: 3rem; cursor: pointer"
+            fit="contain"
+            :src="InvoiceUrls[value]"
+            @click="openFullscreen(InvoiceUrls[value])"
+          >
+          </v-img>
+        </template>
         <template v-slot:top>
           <v-dialog v-model="deleteConfirmDialog" width="auto">
             <v-card>
@@ -83,6 +92,18 @@
               @click="openUpdateDialog('编辑流水', item)"
             >
               mdi-pencil
+            </v-icon>
+            <v-icon
+              class="btn-group-btn"
+              color="primary"
+              @click="
+                () => {
+                  uploadInvoice.id = item.id
+                  showInvoiceDialog = true
+                }
+              "
+            >
+              mdi-invoice-text-edit-outline
             </v-icon>
             <v-icon class="btn-group-btn" color="error" @click="toDelete(item)">
               mdi-delete
@@ -216,6 +237,52 @@
     </v-card-text>
   </v-navigation-drawer>
 
+  <v-dialog v-model="showInvoiceDialog" width="30rem" transition="dialog-top-transition" persistent>
+    <v-card>
+      <v-card-title>上传小票</v-card-title>
+      <v-card-text>
+        <v-text-field disabled label="流水ID" v-model="uploadInvoice.id"></v-text-field>
+        <v-file-input
+          label="选择小票文件"
+          variant="outlined"
+          accept="image/*"
+          small-chips
+          hide-details="auto"
+          prepend-icon="mdi-invoice-text-outline"
+          show-size
+          v-model="uploadInvoice.invoice"
+        ></v-file-input>
+      </v-card-text>
+      <hr />
+      <v-card-actions>
+        <div style="text-align: center; width: 100%">
+          <v-btn
+            color="warning"
+            class="btn-group-btn"
+            variant="outlined"
+            @click="showInvoiceDialog = false"
+            >取消
+          </v-btn>
+          <v-btn color="success" class="btn-group-btn" variant="outlined" @click="uploadInvoiceFile"
+            >上传
+          </v-btn>
+        </div>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- 图片蒙版 -->
+  <div class="overlay" v-if="fullscrenn">
+    <div style="max-width: 30rem; width: 100%; height: 100%; max-height: 30rem">
+      <v-img
+        :src="fullscreenImage"
+        style="height: 100%; width: 100%"
+        contain
+        alt="Fullscreen Image"
+      />
+    </div>
+    <span class="close-button" @click="closeFullscreen">&times;</span>
+  </div>
   <!-- 流水编辑弹窗 -->
   <FlowEditDialog
     v-if="showFlowEditDialog"
@@ -234,7 +301,14 @@ import { ref, onMounted, watch } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 
 // 私有引入
-import { getFlowPage, deleteFlow, getAll, deleteFlowsApi } from '@/api/api.flow'
+import {
+  getFlowPage,
+  deleteFlow,
+  getAll,
+  deleteFlowsApi,
+  uploadInvoiceFileApi,
+  showInvoice
+} from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
 import { exportJson } from '@/utils/fileUtils'
 import type { Page } from '@/model/page'
@@ -332,6 +406,7 @@ const headers = ref([
   { title: '支付方式', key: 'payType', sortable: false },
   { title: '金额', key: 'money' },
   { title: '名称', key: 'name', sortable: false },
+  { title: '小票', key: 'invoice', sortable: false },
   { title: '备注', key: 'description', sortable: false },
   { title: '操作', key: 'actions', sortable: false }
 ])
@@ -362,6 +437,51 @@ const changePage = (param: {
   doQuery()
 }
 
+const showInvoiceDialog = ref(false)
+const uploadInvoice = ref<{ id?: any; invoice?: any }>({})
+const uploadInvoiceFile = () => {
+  const formdata = new FormData()
+  formdata.append('id', uploadInvoice.value.id)
+  formdata.append('invoice', uploadInvoice.value.invoice)
+  uploadInvoiceFileApi(formdata).then((res) => {
+    successAlert('上传成功')
+    showInvoiceDialog.value = false
+    uploadInvoice.value = {}
+    doQuery()
+  })
+}
+const InvoiceUrls = ref<Record<string, string>>({})
+const getInvoiceUrl = async (invoice: string) => {
+  const defalutImage = '/cashbook-mini.jpg'
+  if (!invoice) {
+    InvoiceUrls.value[invoice] = defalutImage
+  }
+  try {
+    const res = await showInvoice(invoice)
+    InvoiceUrls.value[invoice] = URL.createObjectURL(res.data)
+  } catch (e) {
+    InvoiceUrls.value[invoice] = defalutImage
+  }
+}
+// 全屏展示小票
+const fullscrenn = ref(false)
+const fullscreenImage = ref('')
+const openFullscreen = (image: string) => {
+  fullscrenn.value = true
+  fullscreenImage.value = image.replace('/thumbs', '')
+  window.addEventListener('keydown', handleKeydown)
+}
+const closeFullscreen = () => {
+  fullscrenn.value = false
+  window.removeEventListener('keydown', handleKeydown)
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && fullscrenn.value) {
+    fullscrenn.value = false
+  }
+}
+
 // 执行分页数据查询
 const doQuery = () => {
   loading.value = true
@@ -370,6 +490,9 @@ const doQuery = () => {
       if (res) {
         successAlert('查询成功')
         flowPageRef.value = res
+        for (let flow of flowPageRef.value.pageData) {
+          getInvoiceUrl(flow.invoice || '')
+        }
       }
     })
     .finally(() => {
@@ -491,5 +614,36 @@ onMounted(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+/* 在这里添加样式来隐藏 overlay 和 fullscreen-image */
+.overlay {
+  z-index: 11111;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(55, 55, 55, 0.8);
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
+
+.close-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;
+  /* padding: 0 0.5rem; */
+  background-color: rgb(79, 79, 79);
+  color: rgb(255, 131, 131);
+  border-radius: 50%;
+  font-size: 30px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
 }
 </style>

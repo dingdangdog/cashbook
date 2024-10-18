@@ -11,6 +11,7 @@ type Flow struct {
 	PayType     string  `json:"payType"` // 支付方式
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
+	Invoice     string  `json:"invoice"`
 }
 
 type FlowParam struct {
