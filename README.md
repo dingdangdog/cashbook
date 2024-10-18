@@ -1,6 +1,6 @@
 <div align="center">
 <img src="https://images.oldmoon.top/images/dingdangdog/dingdangdog-1674980314.png" width="80px" alt="cashbook" />
-<h1>cashbook-web</h1>
+<h1>cashbook</h1>
 </div>
 
 <p align="center">
@@ -23,12 +23,13 @@
 
 ## 简述（Description）
 
-Web 记账本。
+Cashbook记账本。
 
 - 在数据记录上追求简单、易用、自主可控；
 - 在统计分析上力求清晰、美观、简洁有效。
 
-**重要提示：当前版本尚不成熟，后续升级可能有较大变动，请谨慎使用！**
+**重要提示1：当前版本尚不成熟，后续升级可能有较大变动，请谨慎使用！**
+**重要提示2：如果使用docker部署到公网，请自行修改服务密钥和默认密码！！！**
 
 ## 开始使用（Get Started）
 
