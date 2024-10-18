@@ -22,6 +22,9 @@
             <v-list-item class="cursor-pointer" @click="showSetConvertDialog = true">
               <span style="font-size: 1rem">分类映射配置</span>
             </v-list-item>
+            <v-list-item class="cursor-pointer" @click="showChangePasswordDialog = true">
+              <span style="font-size: 1rem">修改密码</span>
+            </v-list-item>
             <v-list-item class="cursor-pointer" @click="cleanLoginInfo">
               <span style="font-size: 1rem">退出登录</span>
             </v-list-item>
@@ -130,6 +133,7 @@
     <!-- 弹出框表单：类型转换配置 -->
     <SetConvertDialog v-if="showSetConvertDialog" />
     <FlowTableDialog v-if="showFlowTableDialog" />
+    <ChangePasswordDialog v-if="showChangePasswordDialog" />
   </v-layout>
 </template>
 
@@ -146,10 +150,17 @@ import AboutView from './pages/AboutView.vue'
 import DonateView from './pages/DonateView.vue'
 
 import BookDialog from '@/components/dialogs/BookDialog.vue'
-import { showSetConvertDialog, showBookDialogFlag, showFlowTableDialog, MOD } from '@/stores/flag'
+import {
+  showSetConvertDialog,
+  showBookDialogFlag,
+  showFlowTableDialog,
+  MOD,
+  showChangePasswordDialog
+} from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import SetConvertDialog from '@/components/dialogs/SetConvertDialog.vue'
 import FlowTableDialog from '@/components/dialogs/FlowTableDialog.vue'
+import ChangePasswordDialog from '@/components/dialogs/ChangePasswordDialog.vue'
 
 const theme = useTheme()
 const themeValue = ref(false)

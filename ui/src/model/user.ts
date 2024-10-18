@@ -19,8 +19,9 @@ export interface LoginUser {
 }
 
 export interface NewPassword {
-  old: string
-  new: string
+  old?: string
+  new?: string
+  againNew?: string
 }
 
 export interface PageInfo<T> {

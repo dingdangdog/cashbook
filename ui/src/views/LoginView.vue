@@ -96,36 +96,37 @@
           </div>
         </v-form>
       </v-card>
-      <v-dialog v-model="resetPasswordDialog" transition="dialog-bottom-transition" width="25rem">
+      <v-dialog v-model="resetPasswordDialog" transition="dialog-bottom-transition" width="30rem">
         <template v-slot:default="{ isActive }">
-          <v-card style="padding: 1rem">
+          <v-card>
             <v-card-title> 重置密码 </v-card-title>
-            <v-text-field
-              label="账号"
-              autocomplete="username"
-              placeholder="请输入账号"
-              variant="outlined"
-              v-model="resetFormData.userName"
-              :readonly="loading"
-              :rules="[required]"
-              class="mb-2"
-              required
-            ></v-text-field>
+            <v-card-text>
+              <v-text-field
+                label="账号"
+                autocomplete="username"
+                placeholder="请输入账号"
+                variant="outlined"
+                v-model="resetFormData.userName"
+                :readonly="loading"
+                :rules="[required]"
+                class="mb-2"
+                required
+              ></v-text-field>
 
-            <v-text-field
-              label="服务密钥"
-              autocomplete="server-key"
-              placeholder="请输入服务密钥"
-              variant="outlined"
-              v-model="resetFormData.serverKey"
-              :type="lookKey ? 'text' : 'password'"
-              :readonly="loading"
-              :rules="[required]"
-              required
-              :append-icon="lookKey ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append="lookKey = !lookKey"
-            ></v-text-field>
-
+              <v-text-field
+                label="服务密钥"
+                autocomplete="server-key"
+                placeholder="请输入服务密钥"
+                variant="outlined"
+                v-model="resetFormData.serverKey"
+                :type="lookKey ? 'text' : 'password'"
+                :readonly="loading"
+                :rules="[required]"
+                required
+                :append-icon="lookKey ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="lookKey = !lookKey"
+              ></v-text-field>
+            </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn text="取消" @click="resetPasswordDialog = false"></v-btn>
               <v-btn text="重置" variant="elevated" color="success" @click="submitReset"></v-btn>

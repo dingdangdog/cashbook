@@ -15,6 +15,7 @@ export const showFlowTableDialog = ref(false)
 export const flowTableQuery = ref<FlowQuery>()
 
 export const showSetConvertDialog = ref(false)
+export const showChangePasswordDialog = ref(false)
 
 export const showFlowEditDialog = ref(false)
 
