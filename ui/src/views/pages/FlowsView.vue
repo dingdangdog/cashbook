@@ -15,9 +15,9 @@
     </div>
     <hr />
     <!-- 表格主体数据列表 -->
-    <div class="el-table-div">
+    <div class="flow-table">
       <v-data-table-server
-        height="75vh"
+        :height="getTableHeight()"
         noDataText="暂无数据"
         :items-per-page="flowQuery.pageSize"
         :items="flowPageRef?.pageData"
@@ -104,9 +104,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <hr />
+
     <!-- 表格分页插件 -->
-    <div class="pageDiv">
+    <div style="margin-top: 0.5rem">
       <span class="pageSpan">
         <v-chip color="rgb(76, 152, 112)">
           总收入：<b>{{ Number(flowPageRef?.totalIn.toFixed(2)) }}</b>
@@ -120,7 +120,7 @@
       </span>
     </div>
   </div>
-  <v-navigation-drawer v-model="searchDrawer" temporary location="right">
+  <v-navigation-drawer v-model="searchDrawer" temporary location="left">
     <div style="padding: 0.5rem">
       <div class="queryParam">
         <v-date-input
@@ -204,15 +204,15 @@
       <!-- <v-btn class="btn-group-btn" color="primary" @click="doQuery()">筛选 </v-btn> -->
     </div>
   </v-navigation-drawer>
-  <v-navigation-drawer v-model="selectHeaderDialog" temporary location="right">
+  <v-navigation-drawer v-model="selectHeaderDialog" temporary location="left">
     <v-card-text style="text-align: left">
+      <v-btn class="btn-group-btn" color="success" @click="showFlowExcelImportDialog = true"
+        >CSV导入
+      </v-btn>
       <v-btn class="btn-group-btn" color="error" @click="showFlowJsonImportDialog = true"
         >JSON导入
       </v-btn>
       <v-btn class="btn-group-btn" color="primary" @click="exportFlows()">JSON导出 </v-btn>
-      <v-btn class="btn-group-btn" color="success" @click="showFlowExcelImportDialog = true"
-        >CSV导入
-      </v-btn>
     </v-card-text>
   </v-navigation-drawer>
 
@@ -312,12 +312,16 @@ const changeStartDay = () => {
   if (startDay.value) {
     // console.log(startDay.value)
     flowQuery.value.startDay = dateFormater('YYYY-MM-dd', startDay.value)
+  } else {
+    flowQuery.value.startDay = ''
   }
 }
 const changeEndDay = () => {
   if (endDay.value) {
     // console.log(endDay.value)
     flowQuery.value.endDay = dateFormater('YYYY-MM-dd', endDay.value)
+  } else {
+    flowQuery.value.endDay = ''
   }
 }
 
@@ -453,10 +457,23 @@ const exportFlows = () => {
     })
 }
 
+const getTableHeight = () => {
+  return window.innerWidth < 1080 ? window.innerHeight - 64 * 5 : window.innerHeight - 64 * 4
+}
+
 changeTypes()
+
+const searching = ref(false)
 onMounted(() => {
   watch(flowQuery.value, () => {
-    doQuery()
+    if (searching.value) {
+      return
+    }
+    searching.value = true
+    setTimeout(() => {
+      searching.value = false
+      doQuery()
+    }, 500)
   })
 })
 </script>

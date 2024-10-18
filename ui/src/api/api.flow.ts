@@ -47,7 +47,7 @@ export function createFlow(createDto: CreateFlowDto): Promise<Flow> {
  * 修改流水
  * @returns Page<Flow>
  */
-export function update(id: number, updateDto: UpdateFlowDto): Promise<Flow> {
+export function update(id: string | number, updateDto: UpdateFlowDto): Promise<Flow> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix + '/' + id, method: 'put', data: updateDto })
   } else {
@@ -59,7 +59,7 @@ export function update(id: number, updateDto: UpdateFlowDto): Promise<Flow> {
  * 删除流水
  * @returns any
  */
-export function deleteFlow(id: number): Promise<any> {
+export function deleteFlow(id: string | number): Promise<any> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix + '/' + id, method: 'delete' })
   } else {

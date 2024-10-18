@@ -1,6 +1,6 @@
 <template>
   <!-- 弹出框表单：新增和修改通用 -->
-  <v-dialog v-model="showFlowEditDialog" width="40rem" :fullscreen="DialogFullscreen">
+  <v-dialog v-model="showFlowEditDialog" width="40rem" :fullscreen="miniFullscreen()">
     <v-card>
       <v-card-title>{{ title }}</v-card-title>
       <v-card-text class="edit-dialog-main">
@@ -96,9 +96,9 @@ import { VDateInput } from 'vuetify/labs/VDateInput'
 import { createFlow, update } from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
 import type { Flow } from '@/model/flow'
-import { DialogFullscreen, showFlowEditDialog } from '@/stores/flag'
+import { showFlowEditDialog } from '@/stores/flag'
 import { errorAlert, successAlert } from '@/utils/alert'
-import { dateFormater } from '@/utils/common'
+import { dateFormater, miniFullscreen } from '@/utils/common'
 import { onMounted, ref, watch } from 'vue'
 
 const { title, flow, successCallback } = defineProps(['title', 'flow', 'successCallback'])
@@ -158,13 +158,13 @@ const changeFlowTypes = () => {
 const searchPayType = ref('')
 const searchType = ref('')
 watch(searchPayType, (val) => {
-  console.log(val)
+  // console.log(val)
   if (val && !expenseTypeOptions.value.includes(val)) {
     expenseTypeOptions.value.push(val)
   }
 })
 watch(searchType, (val) => {
-  console.log(val)
+  // console.log(val)
   if (val && !paymentTypeOptions.value.includes(val)) {
     paymentTypeOptions.value.push(val)
   }
@@ -177,12 +177,12 @@ const confirmForm = async (again: boolean) => {
     errorAlert('UnSubmit, Please Check Form!')
     return
   }
-  if (formTitle[0] == title) {
-    // 新增
-    createOne(again)
-  } else {
+  if (flowEdit.value.id) {
     // 修改
     updateOne()
+  } else {
+    // 新增
+    createOne(again)
   }
 }
 
@@ -212,7 +212,11 @@ const createOne = (again: boolean) => {
 
 // 更新
 const updateOne = () => {
-  update(flowEdit.value.id || -1, {
+  if (!flowEdit.value.id) {
+    errorAlert('请选择要修改的数据')
+    return
+  }
+  update(flowEdit.value.id, {
     day: dateFormater('YYYY-MM-dd', flowEdit.value.day || new Date()),
     bookId: parseInt(localStorage.getItem('bookId') || '0'),
     flowType: flowEdit.value.flowType,
@@ -227,6 +231,7 @@ const updateOne = () => {
       if (res.id) {
         successCallback()
         successAlert('更新成功!')
+        showFlowEditDialog.value = false
       }
     })
     .catch(() => {

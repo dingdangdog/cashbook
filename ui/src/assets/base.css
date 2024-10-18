@@ -43,13 +43,14 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: right;
+  justify-content: left;
 }
 .queryParam {
   margin-bottom: 0.5rem;
   min-width: 12rem;
 }
 .btn-group-btn {
+  min-width: 10rem;
   margin: 0 0.5rem;
   margin-bottom: 0.5rem;
 }
