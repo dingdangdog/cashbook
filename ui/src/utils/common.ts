@@ -110,3 +110,7 @@ export const checkUserAndBook = () => {
     }
   })
 }
+
+export const miniFullscreen = () => {
+  return window.innerWidth < 1080
+}

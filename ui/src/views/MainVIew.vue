@@ -50,7 +50,7 @@
         </div>
       </template>
     </v-app-bar>
-    <v-navigation-drawer v-model="menuer" location="left" class="layout-border-radius" width="180">
+    <v-navigation-drawer v-model="menuer" location="left" class="layout-border-radius" width="200">
       <v-list>
         <v-list-item
           v-for="(item, i) in items"

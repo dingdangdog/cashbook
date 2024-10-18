@@ -45,13 +45,14 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import { DialogFullscreen, flowTableQuery } from '@/stores/flag'
+import { flowTableQuery } from '@/stores/flag'
 import { onMounted, ref, watch } from 'vue'
 import { typePie } from '@/api/api.analysis'
 import type { TypePieChartQuery } from '@/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import type { FlowQuery } from '@/model/flow'
+import { miniFullscreen } from '@/utils/common'
 
 const theme = useTheme()
 
@@ -91,7 +92,7 @@ const optionRef = ref({
     {
       name: '消费类型',
       type: 'pie',
-      radius: ['40%', '80%'], // 饼图的半径，数组的第一项是内半径，第二项是外半径
+      radius: ['50%', '80%'], // 饼图的半径，数组的第一项是内半径，第二项是外半径
       // center: ['10%', '30%'],
       avoidLabelOverlap: false,
       itemStyle: {
@@ -151,10 +152,6 @@ const doQuery = (query: TypePieChartQuery) => {
       optionRef.value.series[0].itemStyle.borderColor =
         theme.global.name.value == 'dark' ? '#fff' : '#000'
 
-      if (document.body.clientWidth <= 480) {
-        optionRef.value.series[0].radius = ['30%', '50%']
-      }
-
       typePieDiv = document.getElementById('typePieDiv')
       typePieChart = echarts.init(typePieDiv)
       typePieChart.setOption(optionRef.value)
@@ -171,7 +168,7 @@ watch(chartParam.value, () => {
 })
 
 onMounted(() => {
-  if (DialogFullscreen.value) {
+  if (miniFullscreen()) {
     // @ts-ignore
     optionRef.value.legend.top = '0'
   } else {

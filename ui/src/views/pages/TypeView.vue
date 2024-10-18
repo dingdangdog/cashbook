@@ -1,6 +1,6 @@
 <template>
   <div class="type-container">
-    <v-navigation-drawer v-model="searchDrawer" temporary location="right">
+    <v-navigation-drawer v-model="searchDrawer" temporary location="left">
       <div style="padding: 0.5rem">
         <div class="queryParam">
           <v-autocomplete
@@ -57,7 +57,7 @@
       width="25rem"
       v-model="typeDialog.visible"
       :title="typeDialog.title"
-      :fullscreen="DialogFullscreen"
+      :fullscreen="miniFullscreen"
     >
       <v-card>
         <v-card-title>{{ typeDialog.title }}</v-card-title>
@@ -119,7 +119,8 @@ import type { Typer } from '@/model/typer'
 import { update, getAll } from '@/api/api.typer'
 import { typeConvert } from '@/utils/flowConvert'
 import { errorAlert, infoAlert, successAlert } from '@/utils/alert'
-import { DialogFullscreen, showSetConvertDialog } from '@/stores/flag'
+import { showSetConvertDialog } from '@/stores/flag'
+import { miniFullscreen } from '@/utils/common'
 
 // 加载蒙版显示控制器
 const searchDrawer = ref(false)

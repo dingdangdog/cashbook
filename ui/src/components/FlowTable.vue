@@ -4,7 +4,7 @@
     <!-- 表格主体数据列表 -->
     <div>
       <v-data-table-server
-        height="40rem"
+        :height="getTableHeight()"
         noDataText="暂无数据"
         :items-per-page="flowQuery.pageSize"
         :items="flowPageRef.pageData"
@@ -50,7 +50,7 @@
     </div>
     <hr />
     <!-- 表格分页插件 -->
-    <div class="pageDiv">
+    <div style="margin-top: 0.5rem;">
       <span class="pageSpan">
         <v-chip color="rgb(76, 152, 112)">
           总收入：<b>{{ Number(flowPageRef.totalIn.toFixed(2)) }}</b>
@@ -182,9 +182,21 @@ const doQuery = () => {
 
 doQuery()
 changeTypes()
+const searching = ref(false)
 
-watch(flowQuery, () => {
-  doQuery()
+const getTableHeight = () => {
+  return window.innerWidth < 1080 ? window.innerHeight - 64 * 4.5 : window.innerHeight - 64 * 5
+}
+
+watch(flowQuery.value, () => {
+  if (searching.value) {
+    return
+  }
+  searching.value = true
+  setTimeout(() => {
+    searching.value = false
+    doQuery()
+  }, 1000)
 })
 </script>
 

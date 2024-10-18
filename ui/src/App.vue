@@ -2,7 +2,6 @@
 import { onMounted } from 'vue'
 import GlobalAlert from './components/GlobalAlert.vue'
 import IndexView from './views/IndexView.vue'
-import { DialogFullscreen, MOD } from './stores/flag'
 import { useTheme } from 'vuetify'
 import { getServerInfo } from './api/api.server'
 
@@ -12,10 +11,6 @@ if (localStorage.getItem('theme')) {
 }
 
 onMounted(() => {
-  if (document.body.clientWidth <= 720) {
-    DialogFullscreen.value = true
-  }
-
   getServerInfo().then((res) => {
     if (res) {
       localStorage.setItem('version', res.version || '')

@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 // 借用全屏标志，用于判断时不是小屏模式
-import { DialogFullscreen } from '@/stores/flag'
+import { miniFullscreen } from '@/utils/common'
 import { defineAsyncComponent, ref } from 'vue'
 // 异步组件引用
 const DailyLineChart = defineAsyncComponent(() => import('@/components/charts/DailyLineChart.vue'))
@@ -92,11 +92,11 @@ const singleChartHeight = ref('70vh')
 const groupChartWidth = ref('40vw')
 const groupChartHeigth = ref('40vh')
 
-if (DialogFullscreen.value) {
+if (miniFullscreen()) {
   singleChartWidth.value = '100vw'
-  singleChartHeight.value = '60vh'
+  singleChartHeight.value = '65vh'
   groupChartWidth.value = '95vw'
-  groupChartHeigth.value = '50vh'
+  groupChartHeigth.value = '65vh'
 }
 </script>
 

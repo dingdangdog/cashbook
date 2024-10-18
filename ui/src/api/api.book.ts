@@ -59,7 +59,7 @@ export function updateBook(book: Book): Promise<Book> {
  * 删除账本
  * @returns result
  */
-export function deleteBook(id: number): Promise<Book> {
+export function deleteBook(id: string | number): Promise<Book> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix + '/' + id, method: 'delete' })
   } else {

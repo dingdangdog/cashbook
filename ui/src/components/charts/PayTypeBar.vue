@@ -24,7 +24,7 @@
     </v-navigation-drawer>
 
     <h4 class="row-header">{{ title }}【{{ chartParam.flowType }}】</h4>
-    
+
     <div id="payTypeDiv" :style="`width: ${width}; height: ${height};`">
       <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
     </div>
@@ -48,9 +48,10 @@ import * as echarts from 'echarts'
 import { onMounted, ref, watch } from 'vue'
 import { payTypeBar } from '@/api/api.analysis'
 import type { TypePieChartQuery } from '@/model/analysis'
-import { DialogFullscreen, flowTableQuery, showFlowTableDialog } from '@/stores/flag'
+import { flowTableQuery, showFlowTableDialog } from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import type { FlowQuery } from '@/model/flow'
+import { miniFullscreen } from '@/utils/common'
 
 const theme = useTheme()
 
@@ -89,7 +90,7 @@ const optionRef = ref({
     {
       name: '支付类型',
       type: 'pie',
-      radius: ['40%', '80%'],
+      radius: ['50%', '80%'],
       // center: ['10%', '30%'],
       avoidLabelOverlap: false,
       itemStyle: {
@@ -149,10 +150,6 @@ const doQuery = (query: TypePieChartQuery) => {
       optionRef.value.series[0].itemStyle.borderColor =
         theme.global.name.value == 'dark' ? '#fff' : '#000'
 
-      if (document.body.clientWidth <= 480) {
-        optionRef.value.series[0].radius = ['30%', '50%']
-      }
-
       payTypeDiv = document.getElementById('payTypeDiv')
       payTypeChart = echarts.init(payTypeDiv)
       payTypeChart.setOption(optionRef.value)
@@ -170,7 +167,7 @@ watch(chartParam.value, () => {
 })
 
 onMounted(() => {
-  if (DialogFullscreen.value) {
+  if (miniFullscreen()) {
     // @ts-ignore
     optionRef.value.legend.top = '0'
   } else {

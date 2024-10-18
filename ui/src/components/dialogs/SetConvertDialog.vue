@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showSetConvertDialog" width="40rem" :fullscreen="DialogFullscreen">
+  <v-dialog v-model="showSetConvertDialog" width="40rem" :fullscreen="miniFullscreen()">
     <v-card>
       <v-card-title>类型映射配置</v-card-title>
       <v-card-text class="form-inputs">
@@ -66,7 +66,8 @@ import { onMounted, ref } from 'vue'
 import { typeRelation } from '@/utils/store'
 import { getTypeRelation, updateTypeRelation } from '@/api/api.typer'
 import { errorAlert, successAlert } from '@/utils/alert'
-import { DialogFullscreen, showSetConvertDialog } from '@/stores/flag'
+import { showSetConvertDialog } from '@/stores/flag'
+import { miniFullscreen } from '@/utils/common'
 
 // Array to hold key-value pairs
 const keyValues = ref<{ key: string; value: string }[]>([])
