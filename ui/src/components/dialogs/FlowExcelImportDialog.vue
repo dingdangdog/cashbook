@@ -48,7 +48,7 @@
               >京东金融</v-btn
             >
           </div>
-          <div style="margin: 0.5rem auto; width: 35rem">
+          <div style="margin: 0.5rem auto; max-width: 35rem">
             <p class="upload-tip">
               1、目前仅支持移动端 <b>支付宝/微信/京东金融</b> 导出的 <b>CSV</b> 账单文件；
             </p>
@@ -84,14 +84,8 @@
                 <v-btn icon="mdi-help" v-bind="props"></v-btn>
               </template>
             </v-tooltip> -->
-            <div style="width: 10rem">
-              <v-text-field
-                label="解析到的流水数量"
-                variant="outlined"
-                hide-details="auto"
-                v-model="flowCount"
-                disabled
-              ></v-text-field>
+            <div>
+              <span style="color: gray">解析到的流水数量:{{ flowCount }}</span>
             </div>
           </div>
         </div>
@@ -352,7 +346,7 @@ onMounted(() => {
 
 .excel-table {
   width: 100%;
-  max-height: 40rem;
+  max-height: 60vh;
   overflow-y: auto;
   border-collapse: collapse;
 }
@@ -366,8 +360,8 @@ onMounted(() => {
 }
 
 .excel-td {
-  min-width: 6rem;
-  max-width: 15rem;
+  /* min-width: 6rem; */
+  max-width: 12rem;
   padding: 0.5rem;
   border-collapse: collapse;
   border-bottom: 1px solid;
