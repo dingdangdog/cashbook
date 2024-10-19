@@ -18,7 +18,6 @@ FROM node:18-alpine
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook"
-LABEL project.version="3.0.1_BETA"
 LABEL project.github="https://github.com/DingDangDog/cashbook"
 
 RUN apk add --no-cache nginx

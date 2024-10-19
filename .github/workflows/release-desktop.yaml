@@ -1,4 +1,4 @@
-name: TAG Build Release
+name: Release Desktop
 
 on:
   workflow_dispatch:
@@ -130,28 +130,3 @@ jobs:
           append_body: true
           # Cashbook Setup 2.0.0.exe
           files: build/Cashbook Setup ${{ github.event.inputs.target }}.exe
-
-  docker_build:
-    environment: docker_hub
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Build Docker image
-        run: docker build -t dingdangdog/cashbook:${{ github.event.inputs.target }} -t dingdangdog/cashbook:latest .
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Push Docker image
-        run: |
-          docker push dingdangdog/cashbook:${{ github.event.inputs.target }}
-          docker push dingdangdog/cashbook:latest
-
-      - name: Clean up Docker images
-        run: docker system prune -af
