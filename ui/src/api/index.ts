@@ -53,10 +53,12 @@ $http.interceptors.response.use(
       cleanLoginInfo()
       return Promise.reject('请先登录')
     } else if (err.response.status === 500) {
-      errorAlert('接口异常，请联系管理员！')
+      errorAlert('接口异常，欢迎提交反馈！')
+      window.open("https://github.com/dingdangdog/cashbook/issues", "_blank")
       return
     }
     errorAlert('未知错误！')
+    window.open("https://github.com/dingdangdog/cashbook/issues", "_blank")
     console.log(err)
   }
 )
