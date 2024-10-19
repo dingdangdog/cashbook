@@ -3,31 +3,40 @@
     <v-navigation-drawer v-model="searchDrawer" temporary location="bottom">
       <div class="row-header">
         <div class="queryParam">
-          <v-text-field
-            label="开始时间"
+          <v-date-input
+            label="开始日期"
+            cancel-text="取消"
+            ok-text="确定"
             clearable
-            v-model="chartParam.startDay"
-            hide-details="auto"
             variant="outlined"
-          ></v-text-field>
+            hide-details="auto"
+            v-model="startDay"
+            @update:modelValue="changeStartDay"
+            @click:clear="clearStartDay"
+          ></v-date-input>
         </div>
         <div class="queryParam">
-          <v-text-field
+          <v-date-input
             label="结束时间"
-            clearable
-            v-model="chartParam.endDay"
+            cancel-text="取消"
+            ok-text="确定"
             variant="outlined"
             hide-details="auto"
-          ></v-text-field>
+            v-model="endDay"
+            clearable
+            @update:modelValue="changeEndDay"
+            @click:clear="clearEndDay"
+          ></v-date-input>
         </div>
       </div>
     </v-navigation-drawer>
 
     <h4 class="row-header">{{ title }}【{{ chartParam.flowType }}】</h4>
 
-    <div id="typePieDiv" :style="`width: ${width}; height: ${height};`">
-      <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
+    <div v-show="noData" :style="`width: ${width}; height: ${height};`">
+      <h3 style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
     </div>
+    <div v-show="!noData" id="typePieDiv" :style="`width: ${width}; height: ${height};`"></div>
 
     <div class="row-header queryParam">
       <v-autocomplete
@@ -44,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+import { VDateInput } from 'vuetify/labs/VDateInput'
 import * as echarts from 'echarts'
 import { flowTableQuery } from '@/stores/flag'
 import { onMounted, ref, watch } from 'vue'
@@ -52,7 +62,7 @@ import type { TypePieChartQuery } from '@/model/analysis'
 import { showFlowTableDialog } from '@/stores/flag'
 import { useTheme } from 'vuetify'
 import type { FlowQuery } from '@/model/flow'
-import { miniFullscreen } from '@/utils/common'
+import { dateFormater, miniFullscreen } from '@/utils/common'
 
 const theme = useTheme()
 
@@ -69,6 +79,33 @@ const chartParam = ref<FlowQuery>({ flowType: '支出' })
 
 const dataList: any[] = []
 const noData = ref(false)
+
+const startDay = ref()
+const endDay = ref()
+const changeStartDay = () => {
+  if (startDay.value) {
+    // console.log(startDay.value)
+    chartParam.value.startDay = dateFormater('YYYY-MM-dd', startDay.value)
+  } else {
+    chartParam.value.startDay = ''
+  }
+}
+const clearStartDay = () => {
+  startDay.value = null
+  chartParam.value.startDay = ''
+}
+const changeEndDay = () => {
+  if (endDay.value) {
+    // console.log(endDay.value)
+    chartParam.value.endDay = dateFormater('YYYY-MM-dd', endDay.value)
+  } else {
+    chartParam.value.endDay = ''
+  }
+}
+const clearEndDay = () => {
+  endDay.value = null
+  chartParam.value.endDay = ''
+}
 
 const optionRef = ref({
   tooltip: {
@@ -139,6 +176,8 @@ const doQuery = (query: TypePieChartQuery) => {
         console.log('TypePieChart未查询到数据！')
         noData.value = true
         return
+      } else {
+        noData.value = false
       }
       dataList.length = 0
       res.forEach((data) => {
@@ -151,15 +190,7 @@ const doQuery = (query: TypePieChartQuery) => {
       optionRef.value.legend.textStyle.color = theme.global.name.value == 'dark' ? '#fff' : '#000'
       optionRef.value.series[0].itemStyle.borderColor =
         theme.global.name.value == 'dark' ? '#fff' : '#000'
-
-      typePieDiv = document.getElementById('typePieDiv')
-      typePieChart = echarts.init(typePieDiv)
       typePieChart.setOption(optionRef.value)
-      typePieChart.on('click', function (param) {
-        queryRef.value.type = param.name
-        flowTableQuery.value = queryRef.value
-        showFlowTableDialog.value = true
-      })
     }
   })
 }
@@ -177,6 +208,14 @@ onMounted(() => {
     // @ts-ignore
     optionRef.value.legend.orient = 'vertical'
   }
+
+  typePieDiv = document.getElementById('typePieDiv')
+  typePieChart = echarts.init(typePieDiv)
+  typePieChart.on('click', function (param) {
+    queryRef.value.type = param.name
+    flowTableQuery.value = queryRef.value
+    showFlowTableDialog.value = true
+  })
   doQuery(chartParam.value)
 })
 </script>

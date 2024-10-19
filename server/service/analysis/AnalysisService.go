@@ -225,8 +225,13 @@ func MonthAnalysis(bookId int64, month string) types.MonthAnalysis {
 	flowParam := types.FlowParam{BookId: bookId, StartDay: month + "-01", EndDay: month + "-31", FlowType: "支出"}
 	// 复用饼图统计获得最大消费类型
 	typeSum := GetTypePie(flowParam)
-	monthAnalysis.MaxType = typeSum[0].Type
-	monthAnalysis.MaxTypeSum = typeSum[0].TypeSum
+	if len(typeSum) > 0 {
+		monthAnalysis.MaxType = typeSum[0].Type
+		monthAnalysis.MaxTypeSum = typeSum[0].TypeSum
+	} else {
+		monthAnalysis.MaxType = "无"
+		monthAnalysis.MaxTypeSum = "0"
+	}
 
 	// 找出最大单笔支出和收入
 	flowParam.FlowType = ""
