@@ -3,5 +3,5 @@
   "salt": "spend-money-like-water",
   "key": "CASHBOOK_KKKEY",
   "password": "cashbook",
-  "public": { "version": "", "openRegister": "true", "dataPath": "" }
+  "public": { "version": "3.0.2", "openRegister": "true", "dataPath": "" }
 }
