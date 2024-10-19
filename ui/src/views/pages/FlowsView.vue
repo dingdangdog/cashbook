@@ -461,11 +461,13 @@ const uploadInvoiceFile = () => {
     doQuery()
   })
 }
+// 获取小票图片url的一些逻辑
 const InvoiceUrls = ref<Record<string, string>>({})
 const getInvoiceUrl = async (invoice: string) => {
   const defalutImage = '/cashbook-mini.jpg'
-  if (!invoice) {
+  if (!invoice || invoice === '') {
     InvoiceUrls.value[invoice] = defalutImage
+    return
   }
   try {
     const res = await showInvoice(invoice)
@@ -590,7 +592,7 @@ const exportFlows = () => {
       errorAlert('数据获取出错，无法导出！')
     })
 }
-
+// 动态设置列表高度
 const getTableHeight = () => {
   return window.innerWidth < 1080 ? window.innerHeight - 64 * 5 : window.innerHeight - 64 * 4
 }
