@@ -1,18 +1,12 @@
 <template>
-  <LoginView v-if="!logined" />
-  <MainView v-if="logined" />
+  <LoginView v-if="!userInfo.id" />
+  <MainView v-if="userInfo.id" />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import LoginView from '@/views/LoginView.vue'
 import MainView from '@/views/MainVIew.vue'
 import { userInfo, bookInfo } from '@/stores/flag'
-
-const logined = computed(() => {
-  return userInfo.value?.id ? true : false
-})
 
 // 用户信息初始化
 const userId = localStorage.getItem('userId')
