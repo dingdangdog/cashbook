@@ -27,18 +27,32 @@ const getDailyLine = async (bookId, param) => {
     return { c: 200, d: [], m: "暂无数据" };
   }
   for (let flow of flowList) {
+    const day = flow.day;
+    const money = Number(flow.money);
     if (flow.flowType === "支出") {
-      sumMap[flow.day] = (sumMap[flow.day] || 0) + Number(flow.money);
+      sumMap[day] = (sumMap[day] || 0) + money;
     } else if (flow.flowType === "收入") {
-      inSumMap[flow.day] = (inSumMap[flow.day] || 0) + Number(flow.money);
+      inSumMap[day] = (inSumMap[day] || 0) + money;
     } else {
-      zeroSumMap[flow.day] = (zeroSumMap[flow.day] || 0) + Number(flow.money);
+      zeroSumMap[day] = (zeroSumMap[day] || 0) + money;
     }
   }
 
-  for (let day of Object.keys(inSumMap)) {
-    if (!sumMap[day]) sumMap[day] = 0;
-    if (!zeroSumMap[day]) zeroSumMap[day] = 0;
+  // 使用 Set 来保存所有的天数，统一同步横轴
+  const allDays =
+    new Set() <
+    string >
+    [
+      ...Object.keys(sumMap),
+      ...Object.keys(inSumMap),
+      ...Object.keys(zeroSumMap),
+    ];
+
+  // 遍历所有的天数，确保 sumMap、inSumMap 和 zeroSumMap 中都有相应的值
+  for (const day of allDays) {
+    sumMap[day] = sumMap[day] || 0;
+    inSumMap[day] = inSumMap[day] || 0;
+    zeroSumMap[day] = zeroSumMap[day] || 0;
   }
 
   const lines = Object.keys(sumMap).map(
@@ -115,18 +129,31 @@ const monthBar = async (bookId) => {
   }
   for (let flow of flowList) {
     const month = flow.day.slice(0, 7);
+    const money = Number(flow.money);
     if (flow.flowType === "支出") {
-      sumMap[month] = (sumMap[month] || 0) + Number(flow.money);
+      sumMap[month] = (sumMap[month] || 0) + money;
     } else if (flow.flowType === "收入") {
-      inSumMap[month] = (inSumMap[month] || 0) + Number(flow.money);
+      inSumMap[month] = (inSumMap[month] || 0) + money;
     } else {
-      zeroSumMap[month] = (zeroSumMap[month] || 0) + Number(flow.money);
+      zeroSumMap[month] = (zeroSumMap[month] || 0) + money;
     }
   }
 
-  for (let month of Object.keys(inSumMap)) {
-    if (!sumMap[month]) sumMap[month] = 0;
-    if (!zeroSumMap[month]) zeroSumMap[month] = 0;
+  // 使用 Set 来保存所有的天数，统一同步横轴
+  const allMonths =
+    new Set() <
+    string >
+    [
+      ...Object.keys(sumMap),
+      ...Object.keys(inSumMap),
+      ...Object.keys(zeroSumMap),
+    ];
+
+  // 遍历所有的天数，确保 sumMap、inSumMap 和 zeroSumMap 中都有相应的值
+  for (const month of allMonths) {
+    sumMap[month] = sumMap[month] || 0;
+    inSumMap[month] = inSumMap[month] || 0;
+    zeroSumMap[month] = zeroSumMap[month] || 0;
   }
 
   const months = Object.keys(sumMap).map(

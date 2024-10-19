@@ -3,45 +3,46 @@ package analysis
 import (
 	dFlow "cashbook-server/dao/flow"
 	"cashbook-server/types"
+	"math"
 	"strconv"
 )
 
 // GetDailyLine 获取每日流水折线图数据
 func GetDailyLine(param types.FlowParam) []types.DailyLine {
 	flowList := dFlow.FindLists(param)
-	sumMap := make(map[string]float64)
-	inSumMap := make(map[string]float64)
-	zeroSumMap := make(map[string]float64)
 
+	sumMap := make(map[string]float64)     // 支出集合
+	inSumMap := make(map[string]float64)   // 收入集合
+	zeroSumMap := make(map[string]float64) // 不计收支集合
+	// 计算每一天的支出、收入、不计收支
 	for _, flow := range flowList {
-		if flow.FlowType == "支出" {
-			if sumMap[flow.Day] == 0 {
-				sumMap[flow.Day] = flow.Money
-			} else {
-				sumMap[flow.Day] += flow.Money
-			}
-		} else if flow.FlowType == "收入" {
-			if inSumMap[flow.Day] == 0 {
-				inSumMap[flow.Day] = flow.Money
-			} else {
-				inSumMap[flow.Day] += flow.Money
-			}
-		} else {
-			if zeroSumMap[flow.Day] == 0 {
-				zeroSumMap[flow.Day] = flow.Money
-			} else {
-				zeroSumMap[flow.Day] += flow.Money
-			}
+		switch flow.FlowType {
+		case "支出":
+			sumMap[flow.Day] += flow.Money
+		case "收入":
+			inSumMap[flow.Day] += flow.Money
+		default:
+			zeroSumMap[flow.Day] += flow.Money
 		}
 	}
-	// 收入日期和支出日期合并，防止横轴不同步
+
+	// 处理横轴同步，确保所有天数在三个集合中都有值
+	allDays := make(map[string]struct{}) // 用于保存所有的日期
+	for day := range sumMap {
+		allDays[day] = struct{}{}
+	}
 	for day := range inSumMap {
-		if sumMap[day] <= 0 {
-			sumMap[day] = 0
-		}
-		if zeroSumMap[day] <= 0 {
-			zeroSumMap[day] = 0
-		}
+		allDays[day] = struct{}{}
+	}
+	for day := range zeroSumMap {
+		allDays[day] = struct{}{}
+	}
+
+	// 遍历所有天数，同步收支数据，确保每一天都有值
+	for day := range allDays {
+		sumMap[day] = math.Max(sumMap[day], 0)
+		inSumMap[day] = math.Max(inSumMap[day], 0)
+		zeroSumMap[day] = math.Max(zeroSumMap[day], 0)
 	}
 
 	lines := make([]types.DailyLine, 0)
@@ -151,36 +152,36 @@ func MonthBar(bookId int64) []types.TypePie {
 	inSumMap := make(map[string]float64)
 	zeroSumMap := make(map[string]float64)
 
+	// 计算每一天的支出、收入、不计收支
 	for _, flow := range flowList {
 		month := flow.Day[0:7]
-		if flow.FlowType == "支出" {
-			if sumMap[month] == 0 {
-				sumMap[month] = flow.Money
-			} else {
-				sumMap[month] += flow.Money
-			}
-		} else if flow.FlowType == "收入" {
-			if inSumMap[month] == 0 {
-				inSumMap[month] = flow.Money
-			} else {
-				inSumMap[month] += flow.Money
-			}
-		} else {
-			if zeroSumMap[month] == 0 {
-				zeroSumMap[month] = flow.Money
-			} else {
-				zeroSumMap[month] += flow.Money
-			}
+		switch flow.FlowType {
+		case "支出":
+			sumMap[month] += flow.Money
+		case "收入":
+			inSumMap[month] += flow.Money
+		default:
+			zeroSumMap[month] += flow.Money
 		}
 	}
-	// 收入月份和支出月份合并，防止横轴不同步
+
+	// 处理横轴同步，确保所有天数在三个集合中都有值
+	allMonths := make(map[string]struct{}) // 用于保存所有的日期
+	for month := range sumMap {
+		allMonths[month] = struct{}{}
+	}
 	for month := range inSumMap {
-		if sumMap[month] <= 0 {
-			sumMap[month] = 0
-		}
-		if zeroSumMap[month] <= 0 {
-			zeroSumMap[month] = 0
-		}
+		allMonths[month] = struct{}{}
+	}
+	for month := range zeroSumMap {
+		allMonths[month] = struct{}{}
+	}
+
+	// 遍历所有天数，同步收支数据，确保每一天都有值
+	for month := range allMonths {
+		sumMap[month] = math.Max(sumMap[month], 0)
+		inSumMap[month] = math.Max(inSumMap[month], 0)
+		zeroSumMap[month] = math.Max(zeroSumMap[month], 0)
 	}
 
 	months := make([]types.TypePie, 0)
