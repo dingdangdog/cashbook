@@ -126,6 +126,15 @@ let pieDiv: any
 let pieChart: echarts.ECharts
 
 const doQuery = () => {
+  pieDiv = document.getElementById('pieDiv')
+  pieChart = echarts.init(pieDiv)
+  pieChart.on('click', function (param) {
+    flowQuery.value.startDay = param.name + '-01'
+    flowQuery.value.endDay = param.name + '-31'
+
+    flowTableQuery.value = flowQuery.value
+    showFlowTableDialog.value = true
+  })
   monthBar().then((res) => {
     if (res) {
       if (res.length === 0) {
@@ -147,16 +156,7 @@ const doQuery = () => {
       optionRef.value.series[2].data = notInOut
       optionRef.value.xAxis.data = xAxisList
 
-      pieDiv = document.getElementById('pieDiv')
-      pieChart = echarts.init(pieDiv)
       pieChart.setOption(optionRef.value)
-      pieChart.on('click', function (param) {
-        flowQuery.value.startDay = param.name + '-01'
-        flowQuery.value.endDay = param.name + '-31'
-
-        flowTableQuery.value = flowQuery.value
-        showFlowTableDialog.value = true
-      })
     }
   })
 }

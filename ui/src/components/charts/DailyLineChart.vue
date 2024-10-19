@@ -153,6 +153,8 @@ const zoomChange = (total: number): number => {
 }
 
 onMounted(() => {
+  lineDiv = document.getElementById('lineDiv')
+  lineChart = echarts.init(lineDiv)
   doQuery({}).then((res) => {
     if (res) {
       if (res.length === 0) {
@@ -177,8 +179,6 @@ onMounted(() => {
       optionRef.value.dataZoom[1].start = zoomChange(xAxisList.length)
       optionRef.value.dataZoom[2].start = zoomChange(xAxisList.length)
 
-      lineDiv = document.getElementById('lineDiv')
-      lineChart = echarts.init(lineDiv)
       lineChart.setOption(optionRef.value)
     }
   })

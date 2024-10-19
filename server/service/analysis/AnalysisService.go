@@ -220,10 +220,11 @@ func MonthAnalysis(bookId int64, month string) types.MonthAnalysis {
 		}
 	}
 	if monthAnalysis.OutSum == "" && monthAnalysis.InSum == "" {
+		// 当月支出和收入都是空的，无需继续查询
 		return monthAnalysis
 	}
+	// 复用饼图统计获得最大消费(支出)类型
 	flowParam := types.FlowParam{BookId: bookId, StartDay: month + "-01", EndDay: month + "-31", FlowType: "支出"}
-	// 复用饼图统计获得最大消费类型
 	typeSum := GetTypePie(flowParam)
 	if len(typeSum) > 0 {
 		monthAnalysis.MaxType = typeSum[0].Type
@@ -233,7 +234,7 @@ func MonthAnalysis(bookId int64, month string) types.MonthAnalysis {
 		monthAnalysis.MaxTypeSum = "0"
 	}
 
-	// 找出最大单笔支出和收入
+	// 查询当月全部流水，找出最大单笔支出和收入
 	flowParam.FlowType = ""
 	flowList := dFlow.FindLists(flowParam)
 	maxOutFlow := types.Flow{}
