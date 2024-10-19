@@ -153,6 +153,7 @@
           hide-details="auto"
           v-model="startDay"
           @update:modelValue="changeStartDay"
+          @click:clear="clearStartDay"
         ></v-date-input>
       </div>
       <div class="queryParam">
@@ -165,6 +166,7 @@
           v-model="endDay"
           clearable
           @update:modelValue="changeEndDay"
+          @click:clear="clearEndDay"
         ></v-date-input>
       </div>
       <div class="queryParam">
@@ -325,8 +327,6 @@ import FlowJsonImportDialog from '@/components/dialogs/FlowJsonImportDialog.vue'
 import FlowExcelImportDialog from '@/components/dialogs/FlowExcelImportDialog.vue'
 import { dateFormater } from '@/utils/common'
 
-const startDay = ref()
-const endDay = ref()
 const flowQuery = ref<FlowQuery>({
   pageNum: 1,
   pageSize: 20
@@ -382,6 +382,9 @@ const changeTypes = () => {
     })
   })
 }
+
+const startDay = ref()
+const endDay = ref()
 const changeStartDay = () => {
   if (startDay.value) {
     // console.log(startDay.value)
@@ -390,6 +393,10 @@ const changeStartDay = () => {
     flowQuery.value.startDay = ''
   }
 }
+const clearStartDay = () => {
+  startDay.value = null
+  flowQuery.value.startDay = ''
+}
 const changeEndDay = () => {
   if (endDay.value) {
     // console.log(endDay.value)
@@ -397,6 +404,10 @@ const changeEndDay = () => {
   } else {
     flowQuery.value.endDay = ''
   }
+}
+const clearEndDay = () => {
+  endDay.value = null
+  flowQuery.value.endDay = ''
 }
 
 const headers = ref([
