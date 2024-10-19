@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const handler = require("./handler.js"); // 假设你的函数封装在handler.js中
 require("dotenv").config(); // Load environment variables from .env file
@@ -6,11 +6,19 @@ require("dotenv").config(); // Load environment variables from .env file
 let win;
 
 if (process.env.NODE_ENV === "development") {
-  handler.SetUserPath(__dirname);
+  const devPath = path.join(__dirname, "Data");
+  handler.SetDataDir(devPath);
 } else {
-  console.log(app.getPath("userData"));
-  handler.SetUserPath(app.getPath("userData"));
+  const defaultPath = path.join(app.getPath("userData"), "Data");
+  handler.SetDataDir(defaultPath);
 }
+
+const config = handler.getServerInfo();
+if (config.d.dataPath) {
+  console.log(config);
+  handler.SetDataDir(config.d.dataPath);
+}
+
 function createWindow() {
   // 创建浏览器窗口
   win = new BrowserWindow({
@@ -104,8 +112,9 @@ ipcMain.on("window-control", (event, action) => {
       break;
   }
 });
+// 判断是否最大化
 ipcMain.handle("is-maximized", () => {
-  console.log("win.isMaximized()", win.isMaximized());
+  // console.log("win.isMaximized()", win.isMaximized());
   return win.isMaximized();
 });
 
@@ -131,4 +140,12 @@ ipcMain.handle("invoke-handler", async (event, functionName, args) => {
   } else {
     return { c: 500, m: `Function ${functionName} not found` };
   }
+});
+
+// 监听渲染进程的事件，弹出选择文件夹对话框
+ipcMain.handle("select-folder", async () => {
+  const { filePaths } = await dialog.showOpenDialog(win, {
+    properties: ["openDirectory"], // 仅允许选择文件夹
+  });
+  return filePaths[0]; // 返回选中的文件夹路径
 });

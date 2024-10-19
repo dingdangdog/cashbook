@@ -1,5 +1,5 @@
 const { getServerInfo, saveServerInfo } = require("./electron/server.js");
-const { SetUserPath } = require("./electron/api.js");
+const { SetDataDir } = require("./electron/api.js");
 
 const {
   register,
@@ -56,7 +56,7 @@ const {
 } = require("./electron/type.js");
 
 module.exports = {
-  SetUserPath,
+  SetDataDir,
   getServerInfo,
   saveServerInfo,
 

@@ -5,26 +5,35 @@ const csvParser = require("csv-parser");
 const { v4: uuidv4 } = require("uuid");
 
 // 系统用户数据文件夹
-let DATA_PATH = "";
-// 软件名称，用于构建软件数据存放文件夹
-const DATA_DIR = "Data";
+let DATA_DIR = "";
 
-const SetUserPath = (path) => {
-  DATA_PATH = path;
+// 设置数据文件夹
+const SetDataDir = (dir) => {
+  console.log("SetDataDir", dir);
+  // 检查 dir 是否为有效字符串
+  if (typeof dir !== "string" || dir.trim() === "") {
+    throw new Error("Invalid directory path");
+  }
+
+  // D:\\Data
+  dir = dir.replace(/\\/g, "/");
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  // console.log(dir);
+  DATA_DIR = dir;
 };
-
+const GetDataDir = () => {
+  return DATA_DIR;
+};
+// 获取数据文件路径
 const GetFilePath = (fileName) => {
-  const dirPath = path.join(DATA_PATH, DATA_DIR);
-  const filePath = path.join(dirPath, fileName);
-  return filePath;
+  return path.join(DATA_DIR, fileName);
 };
+
 // 通用数据保存函数
 const saveData = (data, fileName) => {
-  const dirPath = path.join(DATA_PATH, DATA_DIR);
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-  const filePath = path.join(dirPath, fileName);
+  const filePath = GetFilePath(fileName);
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, "");
   }
@@ -55,7 +64,7 @@ const readData = (fileName) => {
       .on("error", reject);
   });
 };
-
+// 根据ID获取单条数据
 const findById = async (fileName, id) => {
   const data = await readData(fileName);
   for (let item of data) {
@@ -73,7 +82,7 @@ const addDatas = async (fileName, newDatas) => {
   data = data.concat(newDatas);
   saveData(data, fileName);
 };
-
+// 清空数据
 const deleteAll = (fileName) => {
   saveData([], fileName);
 };
@@ -91,7 +100,7 @@ const updateData = async (fileName, d) => {
   data = data.map((item) => (item.id == d.id ? { ...item, ...d } : item));
   saveData(data, fileName);
 };
-
+// 批量更新数据
 const updateDatas = async (fileName, ds) => {
   let data = await readData(fileName);
   data = data.map((item) => {
@@ -101,15 +110,15 @@ const updateDatas = async (fileName, ds) => {
   });
   saveData(data, fileName);
 };
-
+// 生成UUID
 const getUUID = () => {
   return uuidv4();
 };
-
+// 通用返回数据封装
 const toResult = (code, data, msg) => {
   return { c: code, m: msg, d: data };
 };
-
+// 获取当前时间
 const getNow = () => {
   let fmt = "YYYY-mm-dd HH:MM:SS";
   const date = new Date(); // 默认预先转译一次
@@ -147,6 +156,7 @@ module.exports = {
   getUUID,
   toResult,
   getNow,
-  SetUserPath,
+  SetDataDir,
+  GetDataDir,
   GetFilePath,
 };

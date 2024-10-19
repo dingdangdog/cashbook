@@ -41,7 +41,7 @@ const getDailyLine = async (bookId, param) => {
   // 使用 Set 来保存所有的天数，统一同步横轴
   const allDays =
     new Set() <
-    string >
+    String >
     [
       ...Object.keys(sumMap),
       ...Object.keys(inSumMap),
@@ -49,7 +49,7 @@ const getDailyLine = async (bookId, param) => {
     ];
 
   // 遍历所有的天数，确保 sumMap、inSumMap 和 zeroSumMap 中都有相应的值
-  for (const day of allDays) {
+  for (const day in allDays) {
     sumMap[day] = sumMap[day] || 0;
     inSumMap[day] = inSumMap[day] || 0;
     zeroSumMap[day] = zeroSumMap[day] || 0;
@@ -142,7 +142,7 @@ const monthBar = async (bookId) => {
   // 使用 Set 来保存所有的天数，统一同步横轴
   const allMonths =
     new Set() <
-    string >
+    String >
     [
       ...Object.keys(sumMap),
       ...Object.keys(inSumMap),
@@ -150,7 +150,7 @@ const monthBar = async (bookId) => {
     ];
 
   // 遍历所有的天数，确保 sumMap、inSumMap 和 zeroSumMap 中都有相应的值
-  for (const month of allMonths) {
+  for (const month in allMonths) {
     sumMap[month] = sumMap[month] || 0;
     inSumMap[month] = inSumMap[month] || 0;
     zeroSumMap[month] = zeroSumMap[month] || 0;

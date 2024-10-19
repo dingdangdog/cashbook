@@ -194,6 +194,12 @@ const importFlows = async (bookId, flag, flows) => {
   return serverApi.toResult(200, FLOWS.length);
 };
 
+const uploadInvoice = async (param) => {
+  // bookId, flowId, invoice
+  const { bookId, flowId, invoice } = param;
+  // return await serverApi.uploadFile(getFileName(bookId), file);
+};
+
 module.exports = {
   readFlows,
   queryFlows,

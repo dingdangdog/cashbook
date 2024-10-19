@@ -19,14 +19,15 @@ const local = async (functionName: string, ...args: any) => {
   }
   if (res.c == 500) {
     // 500 服务异常
-    // errorAlert(res.m)
+    errorAlert(res.m)
     throw Error(res.m)
   } else if (res.c == 403) {
     // 403 登陆失效、无权限，跳转登陆页面
-    errorAlert(`${res.m}`)
+    errorAlert(res.m)
     cleanLoginInfo()
     throw Error(res.m)
   } else if (res.c == 401) {
+    errorAlert(res.m)
     throw Error(res.m)
   } else {
     // 200 成功

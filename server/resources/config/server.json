@@ -1,1 +1,7 @@
-{"environment":"","salt":"","key":"","password":"cashbook","public":{"version":"","openRegister":"true"}}
+{
+  "environment": "",
+  "salt": "",
+  "key": "",
+  "password": "cashbook",
+  "public": { "version": "", "openRegister": "true" }
+}
