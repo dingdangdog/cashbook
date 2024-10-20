@@ -28,14 +28,14 @@ Cashbook记账本。
 - 在数据记录上追求简单、易用、自主可控；
 - 在统计分析上力求清晰、美观、简洁有效。
 
-**重要提示1：当前版本尚不成熟，后续升级可能有较大变动，请谨慎使用！**
+**重要提示1：当前版本尚不成熟，后续升级可能有较大变动，请谨慎使用！**  
 **重要提示2：如果使用docker部署到公网，请自行修改服务密钥和默认密码！！！**
 
 ## 开始使用（Get Started）
 
 ### Docker部署
 
-推荐使用`docker-compose`，示例如下：
+推荐使用`docker-compose`部署，示例如下：
 
 ```yaml
 services:
@@ -84,6 +84,7 @@ docker run -d --name cashbook -p 880:80 -v ./data:/app/resources/data dingdangdo
 - [x] 支持多用户模式；
 - [x] 每个用户可以有多个账本，其账本之间数据独立；
 - [x] 无需数据库；
+- [x] 上传小票图片；
 - [x] 数据快速迁移（导入/导出）；
 - [ ] 主题系统；
 - [ ] 桌面端自动更新；
@@ -118,26 +119,17 @@ docker run -d --name cashbook -p 880:80 -v ./data:/app/resources/data dingdangdo
 
 > PS：如果你还不会账单导出，这里有一个图文教程：[微信/支付宝/京东金融导出账单文件](https://oldmoon.top/post/211)
 
-## 开发技术栈
+## Star
 
-- Vue3
-- Vuetify
-- Golang
-- Electron
-- Javascript
-- Docker
+[![Star History Chart](https://api.star-history.com/svg?repos=dingdangdog/cashbook&type=Date)](https://star-history.com/#dingdangdog/cashbook&Date)
 
 ## 鸣谢（Acknowledgments）
 
 ### 贡献者（Contributor）
 
-- 感谢以下贡献者，排名不分先后
-
 <a href="https://github.com/dingdangdog/cashbook-desktop/graphs/contributors"><img src="https://contrib.rocks/image?repo=dingdangdog/cashbook-desktop" /></a>
 
 ### 开发工具（Tools）
-
-- 感谢以下优秀的开发工具
 
 <div style="display:flex; align-item:left">
 <a href='https://www.jetbrains.com/community/opensource' ref='nofollow'><img src='https://github.com/gilbarbara/logos/blob/main/logos/webstorm.svg' width='60px' height='60px'/></a> &nbsp;
