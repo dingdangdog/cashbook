@@ -38,9 +38,7 @@ func loadConfig() types.Server {
 	if len(server.Password) <= 0 {
 		server.Password = os.Getenv("DEFAULT_PASSWORD")
 	}
-	if len(server.Public.Version) <= 0 {
-		server.Public.Version = os.Getenv("CASHBOOK_VERSION")
-	}
+	server.Public.Version = os.Getenv("CASHBOOK_VERSION")
 	saveFile(server)
 	return server
 }

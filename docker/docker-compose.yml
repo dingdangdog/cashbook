@@ -8,7 +8,6 @@ services:
     volumes:
       - ./data:/app/resources/data
     environment:
-      # - CASHBOOK_VERSION=3.0.1_BETA
       # - TOKEN_SALT=spend-money-like-water
       # - ENVIRONMENT=PRO
       # - MOD=WEB
