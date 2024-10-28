@@ -96,19 +96,43 @@ export function importFlows(importFlag: string, flows: Flow[]): Promise<any> {
   }
 }
 
+/**
+ * 上传流水小票
+ * @param form
+ * @returns
+ */
 export function uploadInvoiceFileApi(form: FormData): Promise<any> {
-  return $http({
-    url: prefix + '/uploadInvoice',
-    method: 'post',
-    headers: { 'Content-Type': 'multipart/form-data' },
-    data: form
-  })
+  if (MOD.value === 'WEB') {
+    return $http({
+      url: prefix + '/uploadInvoice',
+      method: 'post',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: form
+    })
+  } else {
+    const flowId = form.get('id')
+    // @ts-ignore
+    const file: File = form.get('invoice')
+    console.log('invoice', file)
+    return local(
+      'uploadInvoice',
+      localStorage.getItem('bookId'),
+      flowId,
+      flowId + '.invoice',
+      // @ts-ignore
+      file.path
+    )
+  }
 }
 
 export function showInvoice(invoice: string): Promise<any> {
-  return $http({
-    url: prefix + '/showInvoice?invoice=' + invoice,
-    method: 'get',
-    responseType: 'blob'
-  })
+  if (MOD.value === 'WEB') {
+    return $http({
+      url: prefix + '/showInvoice?invoice=' + invoice,
+      method: 'get',
+      responseType: 'blob'
+    })
+  } else {
+    return local('showInvoice', invoice)
+  }
 }

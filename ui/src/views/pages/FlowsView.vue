@@ -451,6 +451,10 @@ const changePage = (param: {
 const showInvoiceDialog = ref(false)
 const uploadInvoice = ref<{ id?: any; invoice?: any }>({})
 const uploadInvoiceFile = () => {
+  if (!uploadInvoice.value.invoice) {
+    errorAlert('未选择小票')
+    return
+  }
   const formdata = new FormData()
   formdata.append('id', uploadInvoice.value.id)
   formdata.append('invoice', uploadInvoice.value.invoice)
@@ -471,7 +475,8 @@ const getInvoiceUrl = async (invoice: string) => {
   }
   try {
     const res = await showInvoice(invoice)
-    InvoiceUrls.value[invoice] = URL.createObjectURL(res.data)
+    console.log(res)
+    InvoiceUrls.value[invoice] = res.data ? URL.createObjectURL(res.data) : res
   } catch (e) {
     InvoiceUrls.value[invoice] = defalutImage
   }
@@ -531,7 +536,7 @@ const confirmDelete = () => {
   }
   deleteFlow(deleteItem.value?.id)
     .then((res) => {
-      successAlert("删除成功")
+      successAlert('删除成功')
       doQuery()
     })
     .catch((res) => {

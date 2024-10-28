@@ -27,6 +27,8 @@ const {
   updateFlow,
   queryFlowPage,
   getFlowList,
+  uploadInvoice,
+  showInvoice
 } = require("./electron/flow.js");
 
 const {
@@ -81,6 +83,8 @@ module.exports = {
   updateFlow,
   queryFlowPage,
   getFlowList,
+  uploadInvoice,
+  showInvoice,
 
   dailyLine: getDailyLine,
   typePie: getTypePie,

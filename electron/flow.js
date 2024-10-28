@@ -1,4 +1,6 @@
 const serverApi = require("./api.js");
+const path = require("path");
+const fs = require("fs");
 
 class Flow {
   constructor(
@@ -9,6 +11,7 @@ class Flow {
     type,
     money,
     payType,
+    invoice,
     name,
     description
   ) {
@@ -21,6 +24,7 @@ class Flow {
     this.type = type;
     // 支付方式、收款方式
     this.payType = payType;
+    this.invoice = invoice;
     this.money = money;
     this.name = name;
     this.description = description;
@@ -194,10 +198,38 @@ const importFlows = async (bookId, flag, flows) => {
   return serverApi.toResult(200, FLOWS.length);
 };
 
-const uploadInvoice = async (param) => {
-  // bookId, flowId, invoice
-  const { bookId, flowId, invoice } = param;
-  // return await serverApi.uploadFile(getFileName(bookId), file);
+const uploadInvoice = async (bookId, flowId, fileName, invoice) => {
+  console.log("uploadInvoice", bookId, flowId, fileName, invoice);
+
+  const flow = await serverApi.findById(getFileName(bookId), flowId);
+
+  const invoiceDir = path.join(serverApi.GetDataDir(), "invoice");
+  if (!fs.existsSync(invoiceDir)) {
+    fs.mkdirSync(invoiceDir, { recursive: true });
+  }
+
+  const invoiceName = path.join(invoiceDir, fileName);
+
+  if (fs.statSync(invoice).isFile()) {
+    console.log(1);
+    fs.copyFileSync(invoice, invoiceName);
+    flow.invoice = fileName;
+    await updateFlow(bookId, flow);
+    console.log(2, flow);
+    return serverApi.toResult(200, flow);
+  } else {
+    return serverApi.toResult(500, "文件不存在");
+  }
+};
+
+const showInvoice = (fileName) => {
+  const filePath = path.join(serverApi.GetDataDir(), "invoice", fileName);
+
+  const imageBuffer = fs.readFileSync(filePath);
+  const base64Data = imageBuffer.toString("base64");
+  const imageSrc = `data:image/png;base64,${base64Data}`;
+
+  return serverApi.toResult(200, imageSrc);
 };
 
 module.exports = {
@@ -210,6 +242,8 @@ module.exports = {
   updateFlows,
   queryFlowPage,
   getFlowList,
+  uploadInvoice,
+  showInvoice,
 };
 
 // console.log(queryFlows(101, {pageNum:1, pageSize: 10}))
