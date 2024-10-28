@@ -211,11 +211,11 @@ const uploadInvoice = async (bookId, flowId, fileName, invoice) => {
   const invoiceName = path.join(invoiceDir, fileName);
 
   if (fs.statSync(invoice).isFile()) {
-    console.log(1);
+    // console.log(1);
     fs.copyFileSync(invoice, invoiceName);
     flow.invoice = fileName;
     await updateFlow(bookId, flow);
-    console.log(2, flow);
+    // console.log(2, flow);
     return serverApi.toResult(200, flow);
   } else {
     return serverApi.toResult(500, "文件不存在");

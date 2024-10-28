@@ -475,7 +475,7 @@ const getInvoiceUrl = async (invoice: string) => {
   }
   try {
     const res = await showInvoice(invoice)
-    console.log(res)
+    // console.log(res)
     InvoiceUrls.value[invoice] = res.data ? URL.createObjectURL(res.data) : res
   } catch (e) {
     InvoiceUrls.value[invoice] = defalutImage
