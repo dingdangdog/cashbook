@@ -16,7 +16,7 @@
         <v-btn class="no-drag" @click="showBookDialogFlag.visible = true"> 切换账本 </v-btn>
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="no-drag"> 管理 </v-btn>
+            <v-btn v-bind="props" class="no-drag"> 系统管理 </v-btn>
           </template>
           <v-list>
             <v-list-item class="cursor-pointer" @click="showSetConvertDialog = true">
