@@ -501,7 +501,7 @@ const doQuery = () => {
   getFlowPage(flowQuery.value)
     .then((res) => {
       if (res) {
-        successAlert('查询成功')
+        // successAlert('查询成功')
         flowPageRef.value = res
         for (let flow of flowPageRef.value.pageData) {
           getInvoiceUrl(flow.invoice || '')
@@ -531,10 +531,11 @@ const confirmDelete = () => {
   }
   deleteFlow(deleteItem.value?.id)
     .then((res) => {
-      successAlert(res)
+      successAlert("删除成功")
       doQuery()
     })
-    .catch(() => {
+    .catch((res) => {
+      console.log(res)
       errorAlert('删除失败')
     })
   deleteConfirmDialog.value = false

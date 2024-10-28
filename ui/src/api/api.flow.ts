@@ -63,7 +63,7 @@ export function deleteFlow(id: string | number): Promise<any> {
   if (MOD.value === 'WEB') {
     return $http({ url: prefix + '/' + id, method: 'delete' })
   } else {
-    return local('deleteFlow', localStorage.getItem('bookId'), id)
+    return local('deleteFlows', localStorage.getItem('bookId'), [id])
   }
 }
 
