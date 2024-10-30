@@ -1,6 +1,6 @@
 {
   "name": "cashbook",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "private": true,
   "scripts": {
     "ui": "cd ui && npm run dev",

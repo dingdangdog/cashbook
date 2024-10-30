@@ -29,7 +29,7 @@ COPY --from=binarybuilder /app/resources/ ./resources/
 
 ENV GIN_MODE=release
 
-ENV CASHBOOK_VERSION=3.0.2
+ENV CASHBOOK_VERSION=3.0.3
 ENV ENVIRONMENT=PRO
 ENV MOD=WEB
 ENV TOKEN_SALT=spend-money-like-water
