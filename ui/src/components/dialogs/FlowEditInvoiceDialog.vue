@@ -9,7 +9,7 @@ const { successCallback, item } = defineProps(['successCallback', 'item'])
 
 const editInvoice = ref<Flow>({})
 editInvoice.value = item
-
+const invoices = ref<string[]>([])
 const getInvoiceImage = async (invoice: string) => {
   if (!invoice || invoice === '') {
     return ''
@@ -26,8 +26,10 @@ const invoiceImage = ref<Record<string, string>>({})
 
 const initInvoiceImage = () => {
   if (editInvoice.value.invoice) {
+    invoices.value = []
     for (let invoice of editInvoice.value.invoice?.split(',')) {
       getInvoiceImage(invoice).then((res) => {
+        invoices.value.push(invoice)
         invoiceImage.value[invoice] = res
       })
     }
@@ -72,6 +74,7 @@ const confirmDeleteInvoice = () => {
     .then((res) => {
       editInvoice.value = res
       successAlert('删除成功!')
+      initInvoiceImage()
       deleteInvoiceConfirmDialog.value = false
     })
     .catch(() => {
@@ -98,7 +101,7 @@ const cancelDeleteInvoice = () => {
         <div>
           <h4 style="padding: 0.5rem 0">现有小票</h4>
           <div style="display: flex; align-items: center; flex-wrap: wrap">
-            <div v-for="(img, index) in editInvoice.invoice?.split(',')" :key="index">
+            <div v-for="(img, index) in invoices" :key="index">
               <div
                 v-if="img"
                 @mouseover="isHovering = img"
