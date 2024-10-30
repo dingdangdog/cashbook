@@ -61,13 +61,16 @@
         </template>
         <template v-slot:item.invoice="{ value }">
           <div style="display: flex">
+            <!-- <div></div> -->
             <v-img
               v-for="img in value.split(',')"
-              style="height: 3rem; min-width: 3rem; margin-right: 0.5rem; cursor: pointer"
+              v-show="img"
+              style="height: 3rem;min-width: 2rem;  margin-right: 0.5rem; cursor: pointer"
               :src="InvoiceUrls[img]"
               @click="openFullscreen(InvoiceUrls[img])"
             >
             </v-img>
+            <div v-show="!value" style="width: 100%; text-align: center">未上传</div>
           </div>
         </template>
         <template v-slot:top>
