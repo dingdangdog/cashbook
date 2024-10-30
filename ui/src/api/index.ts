@@ -53,12 +53,14 @@ $http.interceptors.response.use(
       cleanLoginInfo()
       return Promise.reject('请先登录')
     } else if (err.response.status === 500) {
-      errorAlert('接口异常，欢迎提交反馈！')
-      window.open("https://github.com/dingdangdog/cashbook/issues", "_blank")
+      errorAlert('接口异常，3秒后将自动打开 Github Issues，欢迎提交反馈！')
+      setTimeout(() => {
+        window.open('https://github.com/dingdangdog/cashbook/issues', '_blank')
+      }, 3000)
       return
     }
     errorAlert('未知错误！')
-    window.open("https://github.com/dingdangdog/cashbook/issues", "_blank")
+    window.open('https://github.com/dingdangdog/cashbook/issues', '_blank')
     console.log(err)
   }
 )
