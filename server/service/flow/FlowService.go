@@ -76,7 +76,6 @@ func UploadInvoice(bookId int64, flowId int64, invoice string) types.Flow {
 	var newflow types.Flow
 	for _, flow := range flows {
 		if flow.Id == flowId {
-			newflow = flow
 			invoices := []string{}
 			if len(flow.Invoice) > 0 {
 				invoices = append(invoices, flow.Invoice)
@@ -84,6 +83,7 @@ func UploadInvoice(bookId int64, flowId int64, invoice string) types.Flow {
 			invoices = append(invoices, invoice)
 			flow.Invoice = strings.Join(invoices, ",")
 			UpdateFlow(flow)
+			newflow = flow
 			break
 		}
 	}
@@ -107,8 +107,8 @@ func DeleteInvoice(bookId int64, data types.Flow) types.Flow {
 			}
 			flow.Invoice = strings.Join(invoices, ",")
 
-			newflow = flow
 			UpdateFlow(flow)
+			newflow = flow
 			break
 		}
 	}

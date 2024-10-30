@@ -23,13 +23,17 @@ const getInvoiceImage = async (invoice: string) => {
   }
 }
 const invoiceImage = ref<Record<string, string>>({})
-if (editInvoice.value.invoice) {
-  for (let invoice of editInvoice.value.invoice?.split(',')) {
-    getInvoiceImage(invoice).then((res) => {
-      invoiceImage.value[invoice] = res
-    })
+
+const initInvoiceImage = () => {
+  if (editInvoice.value.invoice) {
+    for (let invoice of editInvoice.value.invoice?.split(',')) {
+      getInvoiceImage(invoice).then((res) => {
+        invoiceImage.value[invoice] = res
+      })
+    }
   }
 }
+initInvoiceImage()
 // 上传新小票
 const newInvoice = ref()
 
@@ -44,6 +48,8 @@ const uploadInvoiceFile = () => {
   uploadInvoiceFileApi(formdata).then((res) => {
     successAlert('上传成功')
     editInvoice.value = res
+
+    initInvoiceImage()
   })
 }
 
