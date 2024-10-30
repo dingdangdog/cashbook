@@ -223,6 +223,10 @@
         >
         </v-autocomplete>
       </div>
+      <div class="queryParam" style="text-align: center">
+        <v-btn style="margin-right: 0.5rem" color="success" @click="resetQuery()">重置</v-btn>
+        <v-btn style="margin-left: 0.5rem" color="primary" @click="doQuery()">查询</v-btn>
+      </div>
 
       <!-- <v-btn class="btn-group-btn" color="primary" @click="doQuery()">筛选 </v-btn> -->
     </div>
@@ -409,6 +413,11 @@ const clearEndDay = () => {
   endDay.value = null
   flowQuery.value.endDay = ''
 }
+const resetQuery = () => {
+  flowQuery.value = {}
+  searchDrawer.value = false
+  doQuery()
+}
 
 const headers = ref([
   { title: '日期', key: 'day', sortable: false },
@@ -503,6 +512,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 // 执行分页数据查询
 const doQuery = () => {
   loading.value = true
+  searchDrawer.value = false
   getFlowPage(flowQuery.value)
     .then((res) => {
       if (res) {
@@ -607,16 +617,16 @@ changeTypes()
 
 const searching = ref(false)
 onMounted(() => {
-  watch(flowQuery.value, () => {
-    if (searching.value) {
-      return
-    }
-    searching.value = true
-    setTimeout(() => {
-      searching.value = false
-      doQuery()
-    }, 500)
-  })
+  // watch(flowQuery.value, () => {
+  //   if (searching.value) {
+  //     return
+  //   }
+  //   searching.value = true
+  //   setTimeout(() => {
+  //     searching.value = false
+  //     doQuery()
+  //   }, 500)
+  // })
 })
 </script>
 
