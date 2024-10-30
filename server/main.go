@@ -71,6 +71,7 @@ func main() {
 		adminApi.POST("/flow", controller.AddFlow)
 		adminApi.POST("/flow/uploadInvoice", controller.UploadInvoice)
 		adminApi.GET("/flow/showInvoice", controller.ShowInvoice)
+		adminApi.POST("/flow/deleteInvoice", controller.DeleteInvoice)
 		adminApi.PUT("/flow/:id", controller.UpdateFlow)
 		adminApi.DELETE("/flow/:id", controller.DeleteFlow)
 		adminApi.DELETE("/flow/deleteFlows", controller.DeleteFlows)

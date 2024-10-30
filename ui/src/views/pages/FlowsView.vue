@@ -60,13 +60,15 @@
           </p>
         </template>
         <template v-slot:item.invoice="{ value }">
-          <v-img
-            style="height: 3rem; min-width: 3rem; cursor: pointer"
-            fit="contain"
-            :src="InvoiceUrls[value]"
-            @click="openFullscreen(InvoiceUrls[value])"
-          >
-          </v-img>
+          <div style="display: flex">
+            <v-img
+              v-for="img in value.split(',')"
+              style="height: 3rem; min-width: 3rem; margin-right: 0.5rem; cursor: pointer"
+              :src="InvoiceUrls[img]"
+              @click="openFullscreen(InvoiceUrls[img])"
+            >
+            </v-img>
+          </div>
         </template>
         <template v-slot:top>
           <v-dialog v-model="deleteConfirmDialog" width="auto">
@@ -93,16 +95,7 @@
             >
               mdi-pencil
             </v-icon>
-            <v-icon
-              class="btn-group-btn"
-              color="primary"
-              @click="
-                () => {
-                  uploadInvoice.id = item.id
-                  showInvoiceDialog = true
-                }
-              "
-            >
+            <v-icon class="btn-group-btn" color="primary" @click="editInvoice(item)">
               mdi-invoice-text-edit-outline
             </v-icon>
             <v-icon class="btn-group-btn" color="error" @click="toDelete(item)">
@@ -243,40 +236,6 @@
     </v-card-text>
   </v-navigation-drawer>
 
-  <v-dialog v-model="showInvoiceDialog" width="30rem" transition="dialog-top-transition" persistent>
-    <v-card>
-      <v-card-title>上传小票</v-card-title>
-      <v-card-text>
-        <v-text-field disabled label="流水ID" v-model="uploadInvoice.id"></v-text-field>
-        <v-file-input
-          label="选择小票文件"
-          variant="outlined"
-          accept="image/*"
-          small-chips
-          hide-details="auto"
-          prepend-icon="mdi-invoice-text-outline"
-          show-size
-          v-model="uploadInvoice.invoice"
-        ></v-file-input>
-      </v-card-text>
-      <hr />
-      <v-card-actions>
-        <div style="text-align: center; width: 100%">
-          <v-btn
-            color="warning"
-            class="btn-group-btn"
-            variant="outlined"
-            @click="showInvoiceDialog = false"
-            >取消
-          </v-btn>
-          <v-btn color="success" class="btn-group-btn" variant="outlined" @click="uploadInvoiceFile"
-            >上传
-          </v-btn>
-        </div>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
   <!-- 图片蒙版 -->
   <div class="overlay" v-if="fullscrenn">
     <div style="max-width: 30rem; width: 100%; height: 100%; max-height: 30rem">
@@ -299,6 +258,11 @@
   <!-- 文件导入窗口 -->
   <FlowJsonImportDialog v-if="showFlowJsonImportDialog" :success-callback="doQuery" />
   <FlowExcelImportDialog v-if="showFlowExcelImportDialog" :success-callback="doQuery" />
+  <FlowEditInvoiceDialog
+    v-if="showFlowEditInvoiceDialog"
+    :success-callback="doQuery"
+    :item="editInvoiceItem"
+  />
 </template>
 
 <script setup lang="ts">
@@ -307,14 +271,7 @@ import { ref, onMounted, watch } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 
 // 私有引入
-import {
-  getFlowPage,
-  deleteFlow,
-  getAll,
-  deleteFlowsApi,
-  uploadInvoiceFileApi,
-  showInvoice
-} from '@/api/api.flow'
+import { getFlowPage, deleteFlow, getAll, deleteFlowsApi, showInvoice } from '@/api/api.flow'
 import { getExpenseType, getPaymentType } from '@/api/api.typer'
 import { exportJson } from '@/utils/fileUtils'
 import type { Page } from '@/model/page'
@@ -323,12 +280,14 @@ import type { Flow, FlowQuery } from '@/model/flow'
 import {
   showFlowExcelImportDialog,
   showFlowEditDialog,
-  showFlowJsonImportDialog
+  showFlowJsonImportDialog,
+  showFlowEditInvoiceDialog
 } from '@/stores/flag'
 import { errorAlert, successAlert } from '@/utils/alert'
 import FlowEditDialog from '@/components/dialogs/FlowEditDialog.vue'
 import FlowJsonImportDialog from '@/components/dialogs/FlowJsonImportDialog.vue'
 import FlowExcelImportDialog from '@/components/dialogs/FlowExcelImportDialog.vue'
+import FlowEditInvoiceDialog from '@/components/dialogs/FlowEditInvoiceDialog.vue'
 import { dateFormater } from '@/utils/common'
 
 const flowQuery = ref<FlowQuery>({
@@ -457,35 +416,26 @@ const changePage = (param: {
   doQuery()
 }
 
-const showInvoiceDialog = ref(false)
-const uploadInvoice = ref<{ id?: any; invoice?: any }>({})
-const uploadInvoiceFile = () => {
-  if (!uploadInvoice.value.invoice) {
-    errorAlert('未选择小票')
-    return
-  }
-  const formdata = new FormData()
-  formdata.append('id', uploadInvoice.value.id)
-  formdata.append('invoice', uploadInvoice.value.invoice)
-  uploadInvoiceFileApi(formdata).then((res) => {
-    successAlert('上传成功')
-    showInvoiceDialog.value = false
-    uploadInvoice.value = {}
-    doQuery()
-  })
+const editInvoiceItem = ref<Flow>({})
+const editInvoice = (item: Flow) => {
+  editInvoiceItem.value = item
+  showFlowEditInvoiceDialog.value = true
 }
+
 // 获取小票图片url的一些逻辑
 const InvoiceUrls = ref<Record<string, string>>({})
 const getInvoiceUrl = async (invoice: string) => {
   const defalutImage = '/cashbook-mini.jpg'
-  if (!invoice || invoice === '') {
+  if (!invoice) {
     InvoiceUrls.value[invoice] = defalutImage
     return
   }
   try {
-    const res = await showInvoice(invoice)
-    // console.log(res)
-    InvoiceUrls.value[invoice] = res.data ? URL.createObjectURL(res.data) : res
+    for (let img of invoice.split(',')) {
+      const res = await showInvoice(img)
+      // console.log(res)
+      InvoiceUrls.value[img] = res.data ? URL.createObjectURL(res.data) : res
+    }
   } catch (e) {
     InvoiceUrls.value[invoice] = defalutImage
   }

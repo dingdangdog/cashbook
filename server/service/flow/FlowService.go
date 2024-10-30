@@ -4,6 +4,7 @@ import (
 	dFlow "cashbook-server/dao/flow"
 	"cashbook-server/types"
 	"cashbook-server/util"
+	"strings"
 )
 
 // AddFlow 添加流水
@@ -70,14 +71,46 @@ func InitFlows(bookId int64) {
 	dFlow.InitFlows(bookId)
 }
 
-func UploadInvoice(bookId int64, flowId int64, invoice string) {
+func UploadInvoice(bookId int64, flowId int64, invoice string) types.Flow {
 	flows := GetBookAll(bookId)
-
+	var newflow types.Flow
 	for _, flow := range flows {
 		if flow.Id == flowId {
-			flow.Invoice = invoice
+			newflow = flow
+			invoices := []string{}
+			if len(flow.Invoice) > 0 {
+				invoices = append(invoices, flow.Invoice)
+			}
+			invoices = append(invoices, invoice)
+			flow.Invoice = strings.Join(invoices, ",")
 			UpdateFlow(flow)
-			return
+			break
 		}
 	}
+	return newflow
+}
+
+func DeleteInvoice(bookId int64, data types.Flow) types.Flow {
+	flows := GetBookAll(bookId)
+	var newflow types.Flow
+	for _, flow := range flows {
+		if flow.Id == data.Id {
+			invoices := []string{}
+			if len(flow.Invoice) > 0 {
+				invoices = strings.Split(flow.Invoice, ",")
+			}
+			for i, invoice := range invoices {
+				if invoice == data.Invoice {
+					invoices = append(invoices[:i], invoices[i+1:]...)
+					break
+				}
+			}
+			flow.Invoice = strings.Join(invoices, ",")
+
+			newflow = flow
+			UpdateFlow(flow)
+			break
+		}
+	}
+	return newflow
 }

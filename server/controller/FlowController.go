@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -160,7 +161,8 @@ func UploadInvoice(c *gin.Context) {
 		return
 	}
 	ext := filepath.Ext(file.Filename) // 获取文件扩展名
-	fileName := id + ext
+	// 生成随机文件名
+	fileName := id + strconv.FormatInt(time.Now().UnixMilli(), 10) + ext
 	// 指定保存文件的路径（你可以自定义路径）
 	filePath := filepath.Join(config.ImagePath, fileName)
 
@@ -173,9 +175,9 @@ func UploadInvoice(c *gin.Context) {
 	flowId, err := strconv.ParseInt(id, 10, 64)
 	util.CheckErr(err)
 	// 保存文件名到流水信息中
-	flow.UploadInvoice(bookId, flowId, fileName)
+	newflow := flow.UploadInvoice(bookId, flowId, fileName)
 
-	c.JSON(200, util.Success("上传成功"))
+	c.JSON(200, util.Success(newflow))
 }
 
 func ShowInvoice(c *gin.Context) {
@@ -192,4 +194,22 @@ func ShowInvoice(c *gin.Context) {
 	// 设置响应头，告知客户端这是图片类型
 	c.Writer.Header().Set("Content-Type", "application/octet-stream") // 根据实际图片类型设置
 	c.File(imagePath)                                                 // 将图片文件发送给客户端
+}
+
+func DeleteInvoice(c *gin.Context) {
+	var data types.Flow
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		util.CheckErr(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success":      false,
+			"errorMessage": err.Error(),
+		})
+		return
+	}
+	bookId := util.GetBookId(c)
+
+	newFlow := flow.DeleteInvoice(bookId, data)
+
+	c.JSON(200, util.Success(newFlow))
 }

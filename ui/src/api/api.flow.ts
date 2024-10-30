@@ -4,6 +4,7 @@ import local from './local'
 
 import type { Page } from '@/model/page'
 import type { Flow, FlowQuery, CreateFlowDto, UpdateFlowDto } from '@/model/flow'
+import { generateMixed } from '@/utils/common'
 
 const prefix = '/admin/flow'
 
@@ -118,7 +119,7 @@ export function uploadInvoiceFileApi(form: FormData): Promise<any> {
       'uploadInvoice',
       localStorage.getItem('bookId'),
       flowId,
-      flowId + '.invoice',
+      flowId + generateMixed(8) + '.invoice',
       // @ts-ignore
       file.path
     )
@@ -134,5 +135,20 @@ export function showInvoice(invoice: string): Promise<any> {
     })
   } else {
     return local('showInvoice', invoice)
+  }
+}
+
+export function deleteInvoiceApi(id: any, invoice: string): Promise<any> {
+  if (MOD.value === 'WEB') {
+    return $http({
+      url: prefix + '/deleteInvoice',
+      method: 'post',
+      data: {
+        id,
+        invoice
+      }
+    })
+  } else {
+    return local('deleteInvoice', localStorage.getItem('bookId'), id, invoice)
   }
 }

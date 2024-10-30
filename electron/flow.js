@@ -213,7 +213,12 @@ const uploadInvoice = async (bookId, flowId, fileName, invoice) => {
   if (fs.statSync(invoice).isFile()) {
     // console.log(1);
     fs.copyFileSync(invoice, invoiceName);
-    flow.invoice = fileName;
+    const invoices = [];
+    if (flow.invoice) {
+      invoices.push(...flow.invoice.split(","));
+    }
+    invoices.push(fileName);
+    flow.invoice = invoices.join(",");
     await updateFlow(bookId, flow);
     // console.log(2, flow);
     return serverApi.toResult(200, flow);
@@ -232,6 +237,25 @@ const showInvoice = (fileName) => {
   return serverApi.toResult(200, imageSrc);
 };
 
+const deleteInvoice = async (bookId, flowId, invoice) => {
+  const invoiceDir = path.join(serverApi.GetDataDir(), "invoice");
+  const invoiceName = path.join(invoiceDir, invoice);
+  // 删除文件
+  if (fs.statSync(invoiceName).isFile()) {
+    fs.unlinkSync(invoiceName);
+  }
+  const flow = await serverApi.findById(getFileName(bookId), flowId);
+  if (flow.invoice) {
+    // 更新数据
+    const invoices = flow.invoice.split(",");
+    invoices.splice(invoices.indexOf(invoice), 1);
+    flow.invoice = invoices.join(",");
+    await updateFlow(bookId, flow);
+  }
+  return serverApi.toResult(200, flow);
+  //
+};
+
 module.exports = {
   readFlows,
   queryFlows,
@@ -244,6 +268,7 @@ module.exports = {
   getFlowList,
   uploadInvoice,
   showInvoice,
+  deleteInvoice,
 };
 
 // console.log(queryFlows(101, {pageNum:1, pageSize: 10}))

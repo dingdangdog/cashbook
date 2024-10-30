@@ -57,6 +57,7 @@ func loadPublicConfig() types.PublicConfig {
 		savePublicConfig(publicConfig)
 		fmt.Println("publicConfig init")
 	}
+	publicConfig.Version = os.Getenv("CASHBOOK_VERSION")
 	return publicConfig
 }
 
