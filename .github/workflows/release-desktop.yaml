@@ -114,9 +114,9 @@ jobs:
           name: 🎉Release ${{ github.event.inputs.target }}
           tag_name: ${{ github.event.inputs.target }}
           append_body: true
-          # docash_2.0.0_amd64.deb/Cashbook-2.0.0.AppImage
+          # Cashbook_2.0.0_amd64.deb/Cashbook-2.0.0.AppImage
           files: |
-            build/docash_${{ github.event.inputs.target }}_amd64.deb
+            build/Cashbook_${{ github.event.inputs.target }}_amd64.deb
             build/Cashbook-${{ github.event.inputs.target }}.AppImage
 
       - name: Wiindows Release
