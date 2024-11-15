@@ -86,7 +86,16 @@ export function deleteFlowsApi(ids: number[] | any): Promise<any> {
  * @returns
  */
 export function importFlows(importFlag: string, flows: Flow[]): Promise<any> {
+  flows.forEach((flow) => {
+    flow.invoice = ''
+    if (MOD.value === 'WEB') {
+      flow.money = Number(flow.money)
+      flow.id = 0
+    }
+  })
   if (MOD.value === 'WEB') {
+    // flows.forEach((flow) => {
+    // })
     return $http({
       url: prefix + '/importFlows?flag=' + importFlag,
       method: 'post',
