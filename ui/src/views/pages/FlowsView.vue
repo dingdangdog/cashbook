@@ -65,7 +65,7 @@
             <v-img
               v-for="img in value.split(',')"
               v-show="img"
-              style="height: 3rem;min-width: 2rem;  margin-right: 0.5rem; cursor: pointer"
+              style="height: 3rem; min-width: 2rem; margin-right: 0.5rem; cursor: pointer"
               :src="InvoiceUrls[img]"
               @click="openFullscreen(InvoiceUrls[img])"
             >
@@ -235,7 +235,16 @@
       <v-btn class="btn-group-btn" color="error" @click="showFlowJsonImportDialog = true"
         >JSON导入
       </v-btn>
-      <v-btn class="btn-group-btn" color="primary" @click="exportFlows()">JSON导出 </v-btn>
+      <v-btn class="btn-group-btn" color="primary" @click="exportFlows()">
+        JSON导出
+        <template v-slot:append>
+          <v-tooltip text="不会导出小票图片">
+            <template v-slot:activator="{ props }">
+              <v-icon v-bind="props" icon="mdi-progress-question"> </v-icon>
+            </template>
+          </v-tooltip>
+        </template>
+      </v-btn>
     </v-card-text>
   </v-navigation-drawer>
 
