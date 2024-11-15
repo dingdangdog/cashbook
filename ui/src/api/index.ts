@@ -59,8 +59,11 @@ $http.interceptors.response.use(
       }, 3000)
       return
     }
-    errorAlert('未知错误！')
-    window.open('https://github.com/dingdangdog/cashbook/issues', '_blank')
+    errorAlert('未知错误！3秒后将自动打开 Github Issues，欢迎提交反馈！')
+    setTimeout(() => {
+      window.open('https://github.com/dingdangdog/cashbook/issues', '_blank')
+    }, 3000)
+    // window.open('https://github.com/dingdangdog/cashbook/issues', '_blank')
     console.log(err)
   }
 )
