@@ -78,7 +78,7 @@ const readJsonInfo = () => {
   // 设置文件读取完成后的回调函数
   reader.onload = (event) => {
     try {
-      console.log('1234567')
+      // console.log('1234567')
       // 将读取的文本解析为JSON对象
       jsonFlows.value = JSON.parse(String(event.target?.result))
       jsonFlows.value.forEach((flow) => {

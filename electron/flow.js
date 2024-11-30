@@ -11,8 +11,8 @@ class Flow {
     type,
     money,
     payType,
-    invoice,
     name,
+    invoice,
     description
   ) {
     this.id = id;
@@ -190,6 +190,7 @@ const importFlows = async (bookId, flag, flows) => {
         flow.money,
         flow.payType,
         flow.name,
+        flow.invoice,
         flow.description
       )
     );
