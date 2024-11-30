@@ -2,7 +2,11 @@
   <v-layout>
     <v-app-bar class="layout-border-radius" :class="MOD == 'LOCAL' ? 'drag-area' : ''">
       <template v-slot:prepend>
-        <v-app-bar-nav-icon v-if="miniWindow" @click="menuer = !menuer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          v-if="miniWindow"
+          @click="menuer = !menuer"
+          class="no-drag"
+        ></v-app-bar-nav-icon>
       </template>
       <v-app-bar-title>
         <v-btn v-if="!miniWindow" icon>
