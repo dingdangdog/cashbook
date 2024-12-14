@@ -174,19 +174,19 @@ const monthBar = async (bookId) => {
 // 按月统计分析
 const monthAnalysis = async (bookId, month) => {
   const monthBarData = await monthBar(bookId);
+  console.log("monthBarData", monthBarData);
   if (monthBarData.c != 200) {
     return { c: 500, m: "查询出错" };
   }
   const analysis = { month };
-
   for (let data of monthBarData.d) {
-    if (data.day === month) {
+    if (data.type == month) {
       analysis.outSum = data.typeSum;
       analysis.inSum = data.inSum;
       analysis.zeroSum = data.zeroSum;
     }
   }
-
+  console.log("analysis", analysis);
   if (!analysis.outSum && !analysis.inSum) {
     return analysis;
   }
@@ -198,6 +198,7 @@ const monthAnalysis = async (bookId, month) => {
     flowType: "支出",
   };
   const typeSum = await getTypePie(bookId, flowParam);
+  console.log("typeSum", typeSum);
   analysis.maxType = typeSum[0]?.type || "无";
   analysis.maxTypeSum = typeSum[0]?.typeSum || "0";
 
@@ -206,17 +207,18 @@ const monthAnalysis = async (bookId, month) => {
     startDay: `${month}-01`,
     endDay: `${month}-31`,
   });
+  console.log("flowList", flowList);
   let maxOutFlow = {};
   let maxInFlow = {};
 
   for (let flow of flowList) {
     if (
-      flow.flowType === "支出" &&
+      flow.flowType == "支出" &&
       (!maxOutFlow.money || Number(flow.money) > Number(maxOutFlow.money))
     ) {
       maxOutFlow = flow;
     } else if (
-      flow.flowType === "收入" &&
+      flow.flowType == "收入" &&
       (!maxInFlow.money || Number(flow.money) > Number(maxInFlow.money))
     ) {
       maxInFlow = flow;

@@ -73,8 +73,10 @@ onMounted(() => {
   if (monthParam.split('-')[1] && monthParam.split('-')[1].length === 1) {
     monthParam = monthParam.split('-')[0] + '-0' + monthParam.split('-')[1]
   }
+  console.log(monthParam)
   monthAnalysis(monthParam)
     .then((res) => {
+      console.log(res)
       if (!res || (!res.inSum && !res.outSum)) {
         errorAlert('暂无数据')
         return
