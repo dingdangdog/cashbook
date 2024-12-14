@@ -10,6 +10,7 @@
             clearable
             variant="outlined"
             hide-details="auto"
+            :hide-actions="true"
             v-model="startDay"
             @update:modelValue="changeStartDay"
             @click:clear="clearStartDay"
@@ -24,6 +25,7 @@
             hide-details="auto"
             v-model="endDay"
             clearable
+            :hide-actions="true"
             @update:modelValue="changeEndDay"
             @click:clear="clearEndDay"
           ></v-date-input>

@@ -13,6 +13,7 @@
             clearable
             variant="outlined"
             v-model="day"
+            :hide-actions="true"
             @update:modelValue="changeDay"
           ></v-date-input>
           <v-combobox
@@ -203,6 +204,12 @@ const createOne = (again: boolean) => {
         successCallback()
         successAlert('新增成功!')
         showFlowEditDialog.value = again
+        // 清空名称、备注和金额
+        if (again) {
+          flowEdit.value.money = undefined
+          flowEdit.value.name = undefined
+          flowEdit.value.description = undefined
+        }
       }
     })
     .catch(() => {

@@ -5,13 +5,13 @@
       <v-btn class="btn-group-btn" color="success" @click="selectHeaderDialog = true"
         >导入导出
       </v-btn>
-      <v-btn class="btn-group-btn" color="success" @click="openCreateDialog(formTitle[0])"
-        >新增
-      </v-btn>
       <!-- <span class="btn-group-btn">
           <v-btn color="error" @click="toDeleteBatch">删除</v-btn>
         </span> -->
       <v-btn class="btn-group-btn" color="primary" @click="searchDrawer = true">筛选 </v-btn>
+      <v-btn class="btn-group-btn" color="success" @click="openCreateDialog(formTitle[0])"
+        >新增
+      </v-btn>
     </div>
     <hr />
     <!-- 表格主体数据列表 -->
@@ -148,6 +148,7 @@
           variant="outlined"
           hide-details="auto"
           v-model="startDay"
+          :hide-actions="true"
           @update:modelValue="changeStartDay"
           @click:clear="clearStartDay"
         ></v-date-input>
@@ -161,6 +162,7 @@
           hide-details="auto"
           v-model="endDay"
           clearable
+          :hide-actions="true"
           @update:modelValue="changeEndDay"
           @click:clear="clearEndDay"
         ></v-date-input>
