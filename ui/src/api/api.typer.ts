@@ -48,7 +48,7 @@ export function getAll(typer: Typer): Promise<Typer[]> {
       method: 'get'
     })
   } else {
-    return local('getPaymentType', localStorage.getItem('bookId'), typer)
+    return local('getAll', localStorage.getItem('bookId'), typer)
   }
 }
 

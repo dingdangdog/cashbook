@@ -16,7 +16,7 @@
         <div class="queryParam">
           <v-text-field
             clearable
-            label="类型名称"
+            label="支出类型/收入类型"
             hide-details="auto"
             variant="outlined"
             v-model="typeQueryRef.value"
@@ -57,7 +57,7 @@
       width="25rem"
       v-model="typeDialog.visible"
       :title="typeDialog.title"
-      :fullscreen="miniFullscreen"
+      :fullscreen="miniFullscreen()"
     >
       <v-card>
         <v-card-title>{{ typeDialog.title }}</v-card-title>
@@ -128,9 +128,9 @@ const loading = ref(true)
 const typerOptions = ref<string[]>(['消费类型', '支付方式'])
 
 const headers = ref([
-  { title: '所属流水类型', key: 'flowType' },
+  { title: '流水类型', key: 'flowType' },
   { title: '类型的类型', key: 'type' },
-  { title: '类型的名称', key: 'value' },
+  { title: '支出类型/收入类型', key: 'value' },
   { title: '操作', key: 'actions' }
 ])
 // 列表数据绑定
@@ -182,8 +182,10 @@ const cancelEdit = () => {
 
 const doQuery = () => {
   loading.value = true
+  console.log(typeQueryRef.value)
   getAll(typeQueryRef.value)
     .then((res) => {
+      console.log(res)
       if (res) {
         successAlert('查询成功')
         types.value = res

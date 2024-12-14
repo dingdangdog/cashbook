@@ -42,17 +42,19 @@ const getFlowType = async (bookId) => {
 const getExpenseType = async (bookId, flowType) => {
   const flows = await readFlows(bookId);
   const results = [];
+  if (flowType) {
+    flows.filter((flow) => flow.flowType == flowType);
+  }
   // 提取type属性并去重
   const uniqueTypes = Array.from(
-    new Set(
-      flows.filter((flow) => flow.flowType == flowType).map((flow) => flow.type)
-    )
+    new Set(flows.map((flow) => flow.type + "___" + flow.flowType))
   );
   for (let type of uniqueTypes) {
+    const types = type.split("___");
     results.push({
       type: "消费类型",
-      value: type,
-      flowType: flowType,
+      value: types[0],
+      flowType: types[1],
     });
   }
 
@@ -64,24 +66,52 @@ const getExpenseType = async (bookId, flowType) => {
 const getPaymentType = async (bookId, flowType) => {
   const flows = await readFlows(bookId);
   const results = [];
+  if (flowType) {
+    flows.filter((flow) => flow.flowType == flowType);
+  }
   // 提取payType属性并去重
   const uniqueTypes = Array.from(
-    new Set(
-      flows
-        .filter((flow) => flow.flowType == flowType)
-        .map((flow) => flow.payType)
-    )
+    new Set(flows.map((flow) => flow.payType + "___" + flow.flowType))
   );
   for (let type of uniqueTypes) {
+    const types = type.split("___");
     results.push({
       type: "支付方式",
-      value: type,
-      flowType: flowType,
+      value: types[0],
+      flowType: types[1],
     });
   }
 
   results.sort((a, b) => a.flowType.localeCompare(b.flowType));
   return { c: 200, d: results };
+};
+
+/**
+  type?: string;
+  value?: string;
+ */
+const getAll = async (bookId, typer) => {
+  let data = [];
+  if (typer.type == "消费类型") {
+    const res = await getExpenseType(bookId, "");
+    data = res.d;
+  } else if (typer.type == "支付方式") {
+    const res = await getPaymentType(bookId, "");
+    data = res.d;
+  } else {
+    const eRes = await getExpenseType(bookId, "");
+    const pRes = await getPaymentType(bookId, "");
+    // console.log(eRes, pRes);
+    data.push(...eRes.d);
+    data.push(...pRes.d);
+  }
+
+  // 查询条件：按名称过滤
+  data.filter((item) => {
+    item.value == typer.value;
+  });
+
+  return { c: 200, d: data };
 };
 
 // 更新类型
@@ -118,6 +148,7 @@ module.exports = {
   getFlowType,
   getExpenseType,
   getPaymentType,
+  getAll,
   updateType,
   arrayContains,
   getTypeConvertConfig,
