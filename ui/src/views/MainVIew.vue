@@ -129,7 +129,7 @@
       <FlowsView v-if="openMenu === '流水管理'" />
       <BooksView v-if="openMenu === '账本管理'" />
       <TypeView v-if="openMenu === '类型管理'" />
-      <SystemView v-if="openMenu === '系统管理'" />
+      <SystemView v-if="openMenu === '系统设置'" />
       <AboutView v-if="openMenu === '关于'" />
       <DonateView v-if="openMenu === '捐赠'" />
     </v-main>
@@ -199,7 +199,7 @@ const items = ref<Menu[]>([
 
   { title: '账本管理', path: '/books', icon: 'mdi-notebook-edit', color: 'rgb(77,182,172)' },
   { title: '类型管理', path: '/types', icon: 'mdi-shape-plus', color: 'rgb(250,140,150)' },
-  { title: '系统管理', path: '/system', icon: 'mdi-cogs', color: '#8D6E63' },
+  { title: '系统设置', path: '/system', icon: 'mdi-cogs', color: '#8D6E63' },
   // {
   //   title: '辅助功能',
   //   icon: 'mdi-hand-water',

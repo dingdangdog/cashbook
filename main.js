@@ -149,3 +149,16 @@ ipcMain.handle("select-folder", async () => {
   });
   return filePaths[0]; // 返回选中的文件夹路径
 });
+
+// 监听渲染进程的事件，弹出选择文件夹对话框
+ipcMain.handle("open-folder", (event, dir) => {
+  // 打开文件夹
+  const dirs = dir.split("/");
+  const folder = path.join(...dirs);
+  if (fs.existsSync(folder)) {
+    shell.openPath(folder);
+    return success("文件夹已打开");
+  } else {
+    return error("本地项目不存在，请先下载！");
+  }
+});

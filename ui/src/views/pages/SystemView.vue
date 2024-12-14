@@ -20,7 +20,7 @@
         variant="outlined"
         disabled
       ></v-text-field>
-      <v-btn class="btn-group-btn" color="primary" @click="selectFloder()">修改文件夹</v-btn>
+      <!-- <v-btn class="btn-group-btn" color="primary" @click="selectFloder()">修改文件夹</v-btn> -->
       <v-btn class="btn-group-btn" color="primary" @click="openFloder()">打开文件夹</v-btn>
     </div>
     <div style="margin-top: 1rem">
@@ -75,7 +75,11 @@ const selectFloder = () => {
       errorAlert('取消修改')
     })
 }
-const openFloder = () => {}
+
+const openFloder = () => {
+  // @ts-ignore
+  window.electron.openFolder(serverInfo.value.dataPath)
+}
 </script>
 
 <style></style>
