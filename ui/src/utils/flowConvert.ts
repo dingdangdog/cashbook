@@ -52,15 +52,19 @@ export function typeConvert(type: any): string {
 export function wxpayConvert(row: any[], indexMap: Map<any, any>): Flow {
   const flow: Flow = {}
   flow.day = row[indexMap.get('交易时间')]
-  flow.flowType = row[indexMap.get('收/支')] == '/' ? '不计收支' : row[indexMap.get('收/支')];
+  flow.flowType = row[indexMap.get('收/支')] == '/' ? '不计收支' : row[indexMap.get('收/支')]
   flow.type = String(typeConvert(row[indexMap.get('交易类型')]))
   flow.payType = '微信'
-  flow.money = parseFloat((row[indexMap.get('金额(元)')]).replace('¥', ''))
+  flow.money = parseFloat(row[indexMap.get('金额(元)')].replace('¥', ''))
   flow.name = String(row[indexMap.get('商品')])
-  flow.description = row[indexMap.get('交易对方')] + '-' + row[indexMap.get('支付方式')] + '-' + row[indexMap.get('备注')]
+  flow.description =
+    row[indexMap.get('交易对方')] +
+    '-' +
+    row[indexMap.get('支付方式')] +
+    '-' +
+    row[indexMap.get('备注')]
   return flow
 }
-
 
 /**
  * 京东金融
@@ -73,8 +77,24 @@ export function jdFinanceConvert(row: any[], indexMap: Map<any, any>): Flow {
   flow.flowType = String(row[indexMap.get('收/支')])
   flow.type = typeConvert(row[indexMap.get('交易分类')])
   flow.payType = '京东金融'
-  flow.money = parseFloat(row[indexMap.get('金额')])
+
+  // 京东的金额有特殊处理
+  const jdMoney = String(row[indexMap.get('金额')])
+  const indexOfKuoHao = jdMoney.indexOf('(')
+  let desc = ''
+  if (indexOfKuoHao < 0) {
+    flow.money = parseFloat(jdMoney)
+  } else {
+    flow.money = parseFloat(jdMoney.substring(1, indexOfKuoHao))
+    desc = jdMoney.substring(indexOfKuoHao, jdMoney.length - 1)
+  }
   flow.name = String(row[indexMap.get('交易说明')])
-  flow.description = row[indexMap.get('商户名称')] + '-' + row[indexMap.get('收/付款方式')] + '-' + row[indexMap.get('备注')]
+  flow.description =
+    desc +
+    row[indexMap.get('商户名称')] +
+    '-' +
+    row[indexMap.get('收/付款方式')] +
+    '-' +
+    row[indexMap.get('备注')]
   return flow
 }
