@@ -4,6 +4,17 @@
     <div id="pieDiv" :style="`width: ${width}; height: ${height};`">
       <h3 v-if="noData" style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
     </div>
+    <div class="row-header queryParam">
+      <v-select
+        v-model="filterYear"
+        :items="years"
+        label="年份筛选"
+        hide-details="auto"
+        clearable
+        variant="outlined"
+        @update:model-value="filterYearChange"
+      ></v-select>
+    </div>
   </div>
 </template>
 
@@ -13,6 +24,8 @@ import { onMounted, ref } from 'vue'
 import { monthBar } from '@/api/api.analysis'
 import { flowTableQuery, showFlowTableDialog } from '@/stores/flag'
 import type { FlowQuery } from '@/model/flow'
+import type { SelectOption } from '@/utils/common'
+import type { TypePieChart } from '@/model/analysis'
 
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(['title', 'width', 'height'])
@@ -24,6 +37,41 @@ const xAxisList: any[] = []
 const noData = ref(false)
 
 const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20 })
+
+const years = ref<SelectOption[]>([])
+const allData = ref<TypePieChart[]>([])
+const filterYear = ref()
+const filterYearChange = () => {
+  dataListOut.length = 0
+  dataListIn.length = 0
+  notInOut.length = 0
+  xAxisList.length = 0
+
+  let data = []
+  console.log('filterYear.value:', filterYear.value)
+  console.log('allData.value', allData.value)
+  if (filterYear.value) {
+    data = allData.value.filter((d) => {
+      return d.type.startsWith(filterYear.value)
+    })
+  } else {
+    data = allData.value
+  }
+
+  data.forEach((data) => {
+    xAxisList.push(data.type)
+    dataListOut.push(Number(data.typeSum).toFixed(2))
+    dataListIn.push(Number(data.inSum).toFixed(2))
+    notInOut.push(Number(data.zeroSum).toFixed(2))
+  })
+
+  optionRef.value.series[0].data = dataListOut
+  optionRef.value.series[1].data = dataListIn
+  optionRef.value.series[2].data = notInOut
+  optionRef.value.xAxis.data = xAxisList
+
+  pieChart.setOption(optionRef.value)
+}
 
 const optionRef = ref({
   tooltip: {
@@ -138,19 +186,31 @@ const doQuery = () => {
   monthBar().then((res) => {
     if (res) {
       if (res.length === 0) {
+        allData.value = []
         console.log('MonthBar未查询到数据！')
         noData.value = true
         return
       }
+      years.value = []
+      allData.value = res
       dataListOut.length = 0
       dataListIn.length = 0
       notInOut.length = 0
+      const monthYears: string[] = []
       res.forEach((data) => {
+        monthYears.push(data.type.split('-')[0])
         xAxisList.push(data.type)
         dataListOut.push(Number(data.typeSum).toFixed(2))
         dataListIn.push(Number(data.inSum).toFixed(2))
         notInOut.push(Number(data.zeroSum).toFixed(2))
       })
+
+      // 去重
+      const uniqueYears = Array.from(new Set(monthYears))
+      uniqueYears.forEach((year) => {
+        years.value.push({ title: year, value: year })
+      })
+
       optionRef.value.series[0].data = dataListOut
       optionRef.value.series[1].data = dataListIn
       optionRef.value.series[2].data = notInOut

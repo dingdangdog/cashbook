@@ -114,3 +114,8 @@ export const checkUserAndBook = () => {
 export const miniFullscreen = () => {
   return window.innerWidth < 1080
 }
+
+export interface SelectOption {
+  title: string
+  value: string
+}
