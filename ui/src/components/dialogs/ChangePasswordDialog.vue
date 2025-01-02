@@ -7,7 +7,7 @@
           <v-text-field
             label="原密码"
             autocomplete="current-password"
-            placeholder="请输入原密码"
+            placeholder="请输入旧密码"
             variant="outlined"
             v-model="changPasswordData.old"
             :type="lookKey ? 'text' : 'password'"
@@ -19,7 +19,7 @@
           ></v-text-field>
           <v-text-field
             label="新密码"
-            placeholder="请输入旧密码"
+            placeholder="请输入新密码"
             variant="outlined"
             v-model="changPasswordData.new"
             :type="lookKey ? 'text' : 'password'"
@@ -31,7 +31,7 @@
           ></v-text-field>
           <v-text-field
             label="重复新密码"
-            placeholder="请再次输入旧密码"
+            placeholder="请再次输入新密码"
             variant="outlined"
             v-model="changPasswordData.againNew"
             :type="lookKey ? 'text' : 'password'"
