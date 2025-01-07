@@ -214,8 +214,8 @@ onMounted(() => {
   payTypeDiv = document.getElementById('payTypeDiv')
   payTypeChart = echarts.init(payTypeDiv)
   payTypeChart.on('click', function (param) {
-    queryRef.value.payType = param.name
-    flowTableQuery.value = queryRef.value
+    const tableParam = { ...chartParam.value, type: param.name }
+    flowTableQuery.value = tableParam
     showFlowTableDialog.value = true
   })
   doQuery(chartParam.value)

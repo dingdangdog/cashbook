@@ -214,8 +214,8 @@ onMounted(() => {
   typePieDiv = document.getElementById('typePieDiv')
   typePieChart = echarts.init(typePieDiv)
   typePieChart.on('click', function (param) {
-    queryRef.value.type = param.name
-    flowTableQuery.value = queryRef.value
+    const tableParam = { ...chartParam.value, type: param.name }
+    flowTableQuery.value = tableParam
     showFlowTableDialog.value = true
   })
   doQuery(chartParam.value)
