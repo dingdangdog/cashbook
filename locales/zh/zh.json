@@ -1,0 +1,11 @@
+{
+  "title": "{ait}老哥",
+  "hello": "欢迎",
+  "menu": {
+    "menu1": "菜单1",
+    "menu2": "菜单2",
+    "menu3": "菜单3",
+    "menu4": "菜单4"
+  },
+  "noDataText": "暂无数据"
+}

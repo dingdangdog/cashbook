@@ -1,25 +1,27 @@
+# Nuxt dev/build outputs
+.output
+.data
+data
+.nuxt
+.nitro
+.cache
+dist
 
-### IntelliJ IDEA ###
-/**/.idea/
-/**/target/
-/**/build/
-/**/cashbook.db
-/**/*.iml
-/**/*.zip
-/**/*.exe
-/**/*.db
+# Node dependencies
+node_modules
 
+# Logs
+logs
+*.log
 
-### VS Code ###
-/**/.vscode/
-/**/node_modules/
-
-### Mac OS ###
+# Misc
 .DS_Store
+.fleet
+.idea
 
-/server/resources/data/*
-/Data/
-/server/cashbook.log
-/ui/dist
-
+# Local env files
 .env
+.env.*
+!.env.example
+
+prisma/migrations/*

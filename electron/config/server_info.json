@@ -1,7 +1,0 @@
-{
-  "environment": "",
-  "salt": "spend-money-like-water",
-  "key": "CASHBOOK_KKKEY",
-  "password": "cashbook",
-  "public": { "version": "3.0.6", "openRegister": "true", "dataPath": "" }
-}

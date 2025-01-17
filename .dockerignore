@@ -1,9 +1,8 @@
-/server/resources/data/
-/server/.idea/
-/server/*.log
-/server/*.exe
-/server/*.md
+.nuxt/
+.output/
+.github/
+.git/
 
-/ui/node_modules
-/ui/dist
-
+node_modules/
+data/
+doc/

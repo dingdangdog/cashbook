@@ -1,53 +1,61 @@
-FROM node:18-alpine AS ui-builder
-# 打包前端
-WORKDIR /app
-COPY ./ui .
-# WEB打包配置
-ENV VITE_MOD=WEB
-RUN npm install && npm run build-only
+FROM node:20-alpine3.21 AS BUILDER
 
-FROM golang:alpine AS binarybuilder
-# 打包后端
 WORKDIR /app
-COPY ./server/ .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cashbook .
 
-# 构建最终镜像
-FROM node:18-alpine
+COPY package*.json ./
+
+# 安装依赖并生成 Prisma Client
+RUN npm install
+
+COPY . .
+
+RUN npx prisma generate 
+RUN npm run build
+# RUN npm run prisma:build
+
+FROM node:20-alpine3.21 AS RUNNER
 
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook"
-LABEL project.github="https://github.com/DingDangDog/cashbook"
-
-RUN apk add --no-cache nginx
+LABEL project.version="4.0.1"
 
 WORKDIR /app
-# 后端
-COPY --from=binarybuilder /app/cashbook .
-COPY --from=binarybuilder /app/resources/ ./resources/
 
-ENV GIN_MODE=release
+# 复制生产环境需要的文件
+COPY --from=BUILDER /app/.output/ ./ 
+COPY --from=BUILDER /app/.output/server/node_modules/ ./node_modules/
+COPY --from=BUILDER /app/.output/server/node_modules/.prisma/ ./.prisma/
+COPY ./prisma/ ./prisma/
+COPY database.sql ./database.sql
+# COPY package.json ./package.json
 
-ENV CASHBOOK_VERSION=3.0.6
-ENV ENVIRONMENT=PRO
-ENV MOD=WEB
-ENV TOKEN_SALT=spend-money-like-water
-ENV SERVER_KEY=08cc0348-061d-4193-af05-b6cc02df28ea
-ENV DEFAULT_PASSWORD=cashbook
+# RUN npm run prisma:build
+# 预装prisma，可以提升容器启动速度，但镜像体积会大一倍
+# RUN npm install -g prisma@6.2.1
 
-# 前端
-COPY --from=ui-builder /app/dist/ ./books/
-# Nginx
-COPY ./docker/nginx.conf /etc/nginx/nginx.conf
-COPY ./docker/mime.types /etc/nginx/mime.types
+# 安装 PostgreSQL 客户端，用于初始化数据库
+# RUN apk add --no-cache postgresql-client
 
-RUN nginx -t
+# ENV DATEBASE_PROVIDER="postgresql"
+ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
-# 设置环境变量等
-VOLUME /app/resources/data
+ENV NUXT_APP_VERSION="4.0.1"
+ENV NUXT_DATA_PATH="E:/Code/cashbook-nuxt/data"
 
-# 运行应用
-#CMD ["./cashbook"]
-EXPOSE 80
-CMD  ["sh", "-c", "nginx && ./cashbook"]
+ENV NUXT_AUTH_SECRET="auth123"
+ENV NUXT_AUTH_ORIGIN="http://localhost:9090/api/auth"
+# ENV NUXT_ADMIN_SECRET="admin123"
+ENV NUXT_ADMIN_USERNAME="admin"
+# 密码是加密后的，加密方法见 server/utils 中的 test.js 或 common.ts
+ENV NUXT_ADMIN_PASSWORD="fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb6ed05f4cc"
+
+ENV PORT="9090"
+
+VOLUME /app/.data/
+
+COPY ./entrypoint.sh ./entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+EXPOSE 9090
+CMD ["/app/entrypoint.sh"]

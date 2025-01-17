@@ -128,6 +128,35 @@ docker run -d --name cashbook -p 880:80 -v ./data:/app/resources/data dingdangdo
 
 > PS：如果你还不会账单导出，这里有一个图文教程：[微信/支付宝/京东金融导出账单文件](https://oldmoon.top/post/211)
 
+## 开发
+
+### 开发环境更新表结构
+
+```sh
+npx prisma migrate dev --name <migration-name>
+```
+
+- `<migration-name>` 是迁移的名称，通常描述你所做的更改，例如 `add-age-to-user` 或 `create-post-table`。
+- `npx prisma migrate dev` 会生成 SQL 迁移文件，并自动应用到开发环境的数据库中。
+
+示例：
+
+```sh
+npx prisma migrate dev --name add-age-to-user
+```
+
+### Docker
+
+```sh
+docker build -t dingdangdog/cashbook:4.0.1 .
+
+docker save -o cashbook.4.0.1.tar dingdangdog/cashbook:4.0.1
+
+docker load -i cashbook.4.0.1.tar
+```
+
+
+
 ## Star
 
 [![Star History Chart](https://api.star-history.com/svg?repos=dingdangdog/cashbook&type=Date)](https://star-history.com/#dingdangdog/cashbook&Date)

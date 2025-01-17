@@ -1,0 +1,39 @@
+html {
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgb(179, 179, 179);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(3 7 18);
+}
+
+.top-index {
+  z-index: 999;
+}
+
+.table-default-column {
+  width: 6rem;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.chart-common-container {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1rem;
+  border: 1px solid rgb(160, 160, 160);
+}
+
+.queryParam {
+  margin-bottom: 0.5rem;
+  min-width: 12rem;
+}
