@@ -36,11 +36,11 @@ export default defineNuxtConfig({
   auth: {
     // baseURL: process.env.NUXT_AUTH_ORIGIN,
     // globalAppMiddleware: false,
-    // originEnvKey: "NUXT_AUTH_ORIGIN",
+    originEnvKey: "NUXT_AUTH_ORIGIN",
     provider: {
       type: "authjs",
       trustHost: false,
-      addDefaultCallbackUrl: true,
+      addDefaultCallbackUrl: false,
     },
     sessionRefresh: {
       enablePeriodically: false,
