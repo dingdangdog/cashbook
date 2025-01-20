@@ -3,13 +3,13 @@ import { initTypeRelation } from "~/server/utils/data";
 
 export default defineEventHandler(async (event) => {
   const { bookId } = await readBody(event); // 获取查询参数
-  const userId = await getUserId(event);
+  // const userId = await getUserId(event);
 
   if (!bookId) {
     return;
   }
   const where: any = {
-    userId,
+    // userId,
     bookId: String(bookId),
   }; // 条件查询
 
