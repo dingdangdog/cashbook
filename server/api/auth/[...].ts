@@ -67,27 +67,17 @@ export default NuxtAuthHandler({
     },
     async redirect({ url, baseUrl }) {
       // console.log(1, url, baseUrl);
-      // 默认将用户重定向到有效的 URL
-      if (
-        url.startsWith("http://localhost:9090") ||
-        baseUrl.startsWith("http://localhost:9090")
-      ) {
-        const authOrigin = useRuntimeConfig().authOrigin;
-        // console.log(authOrigin);
-
-        let realBaseUrl = "";
-        if (authOrigin.startsWith("https://")) {
-          realBaseUrl = `https://${
-            authOrigin.replace("https://", "").split("/")[0]
-          }`;
-        } else if (authOrigin.startsWith("http://")) {
-          realBaseUrl = `http://${
-            authOrigin.replace("http://", "").split("/")[0]
-          }`;
-        }
-
-        url = url.replace("http://localhost:9090", realBaseUrl);
-        baseUrl = baseUrl.replace("http://localhost:9090", realBaseUrl);
+      const appUrl = String(useRuntimeConfig().appUrl);
+      console.log(appUrl);
+      const defaultBaseUrl = "http://localhost:9090";
+      if (baseUrl == defaultBaseUrl) {
+        baseUrl = appUrl;
+      }
+      if (url == defaultBaseUrl) {
+        url = appUrl;
+      } else if (url.indexOf(defaultBaseUrl) == 0) {
+        // 默认将用户重定向到有效的 URL
+        url = url.replace(defaultBaseUrl, appUrl);
       }
       // console.log(2, url, baseUrl);
       return url.startsWith(baseUrl) ? url : baseUrl + url;
