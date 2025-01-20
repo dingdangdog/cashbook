@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   //   datas[l.source] = l.target;
   // });
 
-  if (relations.length < 0) {
+  if (relations.length <= 0) {
     await initTypeRelation(String(bookId));
 
     const newRelations = await prisma.typeRelation.findMany({
