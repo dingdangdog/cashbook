@@ -27,8 +27,8 @@ COPY --from=BUILDER /app/.output/ ./
 COPY --from=BUILDER /app/.output/server/node_modules/ ./node_modules/
 COPY --from=BUILDER /app/.output/server/node_modules/.prisma/ ./.prisma/
 COPY ./prisma/ ./prisma/
-COPY database.sql ./database.sql
-COPY entrypoint.sh ./entrypoint.sh
+COPY ./docker/database.sql ./database.sql
+COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 # RUN ls
