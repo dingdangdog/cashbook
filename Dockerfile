@@ -28,7 +28,10 @@ COPY --from=BUILDER /app/.output/server/node_modules/ ./node_modules/
 COPY --from=BUILDER /app/.output/server/node_modules/.prisma/ ./.prisma/
 COPY ./prisma/ ./prisma/
 COPY database.sql ./database.sql
-# COPY package.json ./package.json
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x entrypoint.sh
+
+# RUN ls
 
 # 预装prisma，可以提升容器启动速度，但镜像体积会大很多
 # RUN npm install -g prisma@6.2.1
@@ -48,10 +51,10 @@ ENV NUXT_ADMIN_PASSWORD="fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb
 
 ENV PORT="9090"
 
-VOLUME /app/.data/
 
-COPY ./entrypoint.sh ./entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+VOLUME /app/data/
 
 EXPOSE 9090
-CMD ["/app/entrypoint.sh"]
+# ENTRYPOINT [ "sh","entrypoint.sh" ]
+ENTRYPOINT ["/app/entrypoint.sh"]
+# CMD ["/app/entrypoint.sh"]

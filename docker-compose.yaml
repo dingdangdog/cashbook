@@ -14,6 +14,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@cashbook_db:5432/cashbook?schema=public" # 数据库链接，【账号密码请自行修改，与你的数据库一致！】
       NUXT_DATA_PATH: "/app/data" # 数据存储未知，现在只有小票图片了，不建议修改
+      NUXT_APP_URL: "https://cashbook.oldmoon.top" # 服务根路径，如果有端口号，需要加上端口号
       NUXT_AUTH_ORIGIN: "https://cashbook.oldmoon.top/api/auth" # 登录权限地址 【请自行修改域名/IP，最后要以 /api/auth 结尾！】
       NUXT_AUTH_SECRET: "auth_secret" # 前台登录加密使用的密钥 【自行修改！】
       NUXT_ADMIN_USERNAME: "admin" # 后台登录用户名
