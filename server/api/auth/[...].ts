@@ -68,7 +68,7 @@ export default NuxtAuthHandler({
     async redirect({ url, baseUrl }) {
       // console.log(1, url, baseUrl);
       const appUrl = String(useRuntimeConfig().appUrl);
-      console.log(appUrl);
+      // console.log(appUrl);
       const defaultBaseUrl = "http://localhost:9090";
       if (baseUrl == defaultBaseUrl) {
         baseUrl = appUrl;
