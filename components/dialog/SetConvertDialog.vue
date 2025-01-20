@@ -7,7 +7,7 @@
     <v-card>
       <v-card-title>CSV导入映射配置</v-card-title>
       <v-card-text
-        class="form-inputs tw-border tw-border-gray-400 tw-m-2 tw-bg-gray-100"
+        class="form-inputs tw-border tw-border-gray-400 tw-m-2 tw-bg-gray-100/50"
       >
         <v-row
           class="form-row tw-border tw-rounded-md tw-border-gray-500 my-2 tw-bg-gray-500/10"
