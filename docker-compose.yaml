@@ -1,4 +1,3 @@
-# Use postgres/example user/password credentials
 version: "3.9"
 
 services:
