@@ -17,9 +17,9 @@
 </p>
 
 - Github：[https://github.com/dingdangdog/cashbook](https://github.com/dingdangdog/cashbook)
-- Gitee：[https://gitee.com/dddogx/cashbook-desktop](https://gitee.com/dddogx/cashbook-desktop)
-- 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号：cashbook/cashbook `也可注册体验`)
-- QQ交流群：564081656
+- 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号: `cashbook`/`cashbook`)
+- 在线体验后台：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/admin) (体验账号: `admin`/`admin123456`)
+- QQ交流群：`564081656`
 
 ## 简述（Description）
 
