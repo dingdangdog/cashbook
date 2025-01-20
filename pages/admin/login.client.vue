@@ -1,9 +1,12 @@
 <template>
+  <Head>
+    <Title>{{ SystemConfig?.title }} - 管理后台</Title>
+  </Head>
   <div class="login-container">
     <!-- set input width -->
     <div class="icon-container">
       <h1 class="tw-text-2xl tw-text-bold tw-my-4">
-        {{ SystemConfig?.title }} - 管理系统
+        {{ SystemConfig?.title }} - 管理后台
       </h1>
     </div>
     <!-- <v-sheet rounded> -->
@@ -16,7 +19,7 @@
           class="tw-mb-2"
           clearable
           required
-          label="Email *"
+          label="Accnout *"
           autocomplete="admin-account"
         ></v-text-field>
 

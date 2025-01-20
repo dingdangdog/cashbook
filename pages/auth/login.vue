@@ -132,6 +132,14 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Head>
+    <Title>{{ SystemConfig?.title }}</Title>
+    <Meta name="description" :content="SystemConfig?.description" />
+    <Meta
+      name="keywords"
+      :content="`Cashbook,记账本,私人记账,开源账本,dingdangdog,月上老狗,${SystemConfig?.keywords}`"
+    />
+  </Head>
   <div
     class="tw-tw-w-full tw-h-full tw-flex tw-flex-col tw-items-center tw-justify-center md:tw-pt-36"
   >
