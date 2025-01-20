@@ -16,11 +16,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {},
     appVersion: "",
+    appUrl: "",
+    dataPath: "",
     authSecret: "",
     authOrigin: "", // 即 NUXT_AUTH_ORIGIN，权限框架使用
     adminUsername: "",
     adminPassword: "",
-    dataPath: "",
   },
 
   modules: [
@@ -33,8 +34,7 @@ export default defineNuxtConfig({
   ],
 
   auth: {
-    baseURL:
-      process.env.NUXT_AUTH_ORIGIN || "https://cashbook.oldmoon.com/api/auth",
+    baseURL: process.env.NUXT_AUTH_ORIGIN,
     // globalAppMiddleware: false,
     // originEnvKey: "NUXT_AUTH_ORIGIN",
     provider: {

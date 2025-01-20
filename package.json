@@ -2,9 +2,10 @@
   "name": "cashbook4",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host 0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

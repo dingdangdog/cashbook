@@ -4,7 +4,7 @@ export interface SystemSetting {
   description: string;
   keywords: string;
   version: string;
-  openRegister: Boolean;
+  openRegister: boolean;
   createDate: Date;
   updateBy: Date;
 }

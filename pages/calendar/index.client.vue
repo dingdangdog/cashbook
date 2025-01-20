@@ -82,7 +82,7 @@
       <v-card>
         <v-card-title>{{ monthTitle + " 流水分析" }}</v-card-title>
         <v-card-text>
-          <MonthAnalysis :data="monthAnalysisData" />
+          <DatasMonthAnalysis :data="monthAnalysisData" />
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" @click="monthAnalysisDialog = false">
@@ -107,7 +107,7 @@
           </div>
         </v-card-title>
         <v-card-text>
-          <DataFlowTable :query="query" v-if="showFlowTable" />
+          <DatasFlowTable :query="query" v-if="showFlowTable" />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -125,7 +125,6 @@ import { VCalendar } from "vuetify/labs/VCalendar";
 import { daily } from "~/utils/apis";
 import { dateFormater } from "~/utils/common";
 import type { CommonChartQuery } from "~/utils/model";
-import MonthAnalysis from "~/components/data/MonthAnalysis.vue";
 
 const doQuery = async (param: CommonChartQuery) => {
   return await daily(param);

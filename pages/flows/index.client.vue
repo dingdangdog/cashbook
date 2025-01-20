@@ -306,7 +306,7 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <DataCsvFlowTable
+        <DatasCsvFlowTable
           :items="csvFlows"
           :table-head="csvHeaders"
           :table-body="csvDatas"

@@ -1,0 +1,155 @@
+<template>
+  <div class="dialog-container">
+    <div class="excel-table tw-flex tw-justify-center">
+      <table ref="excelTable" class="tw-flex tw-flex-col">
+        <thead ref="excelTableHead"></thead>
+        <tbody
+          ref="excelTableBody"
+          class="tw-flex-1 tw-overflow-y-auto"
+        ></tbody>
+      </table>
+    </div>
+    <hr />
+    <div class="csv-dialog-header" style="margin-top: 1rem">
+      <div>
+        <span style="color: gray" class="tw-mx-2"
+          >解析到的流水数量:{{ flows.length }}</span
+        >
+      </div>
+      <v-btn
+        variant="elevated"
+        color="primary"
+        @click="submitUpload"
+        :disabled="uploading"
+        >确定导入</v-btn
+      >
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+
+const { items, tableHead, tableBody, successCallback } = defineProps([
+  "items",
+  "tableHead",
+  "tableBody",
+  "successCallback",
+]);
+
+// console.log(items, tableHead, tableBody);
+
+const uploading = ref(false);
+// 待上传的流水数据
+const flows = ref<Flow[]>([]);
+flows.value.push(...items);
+
+const excelTable = ref();
+const excelTableHead = ref();
+const excelTableBody = ref();
+
+// 读取json文件并导入
+onMounted(() => {
+  if (excelTableHead.value) {
+    // 表头行元素
+    const head = document.createElement("tr");
+    for (let h in tableHead) {
+      // 创建表头单元格元素
+      const th = document.createElement("th");
+      th.innerText = h;
+      th.className = "excel-th";
+      th.style.textAlign = "left";
+      head.appendChild(th);
+    }
+    // 表头数据回显
+    excelTableHead.value.appendChild(head);
+  }
+  if (excelTableHead.value) {
+    for (let row of tableBody) {
+      // 创建行元素
+      const tr = document.createElement("tr");
+      // 部分数据字段格式化，并回显
+      for (let c of row) {
+        let cellValue = c;
+        // 创建单元格元素
+        const td = document.createElement("td");
+        td.innerText = cellValue;
+        td.className = "excel-td";
+        td.title = cellValue;
+        tr.appendChild(td);
+      }
+      excelTableBody.value.appendChild(tr);
+    }
+  }
+});
+
+// 确定提交
+const submitUpload = () => {
+  if (flows.value.length === 0) {
+    Alert.error("数据为空！");
+    return;
+  }
+  uploading.value = true;
+  doApi
+    .post("api/entry/flow/imports", {
+      flows: flows.value,
+      bookId: localStorage.getItem("bookId"),
+    })
+    .then((res: any) => {
+      // console.log(res)
+      if (res && res.count > 0) {
+        Alert.success("导入成功, 共导入" + res + "条流水");
+        successCallback();
+        showFlowExcelImportDialog.value = false;
+      } else {
+        Alert.error("导入失败，请重试！");
+      }
+    })
+    .catch(() => {
+      Alert.error("导入失败，请重试！");
+    })
+    .finally(() => {
+      uploading.value = false;
+    });
+};
+</script>
+
+<style>
+.csv-dialog-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-tip {
+  margin-top: 0.5rem;
+  color: rgb(237, 137, 137);
+}
+
+.excel-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  max-height: 80vh;
+  max-width: 90vw;
+  overflow-y: auto;
+}
+
+.excel-th {
+  width: 8rem;
+  padding: 0.5rem;
+  border-collapse: collapse;
+  border: 1px solid;
+}
+
+.excel-td {
+  min-width: 8rem;
+  max-width: 8rem;
+  padding: 0.2rem;
+  border-collapse: collapse;
+  border-bottom: 1px solid;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+</style>

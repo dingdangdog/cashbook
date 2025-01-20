@@ -45,7 +45,7 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <DataFlowTable :query="query" v-if="showFlowTable" />
+        <DatasFlowTable :query="query" v-if="showFlowTable" />
       </v-card-text>
     </v-card>
   </v-dialog>
