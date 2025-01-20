@@ -74,7 +74,7 @@ export default defineNitroPlugin((nitroApp) => {
 
       for (const [s, t] of Object.entries(typeRelations)) {
         dataList.push({
-          bookId: 0,
+          bookId: "0",
           userId: 0,
           source: s,
           target: t,
