@@ -281,10 +281,6 @@
     v-if="showFlowJsonImportDialog"
     :success-callback="doQuery"
   />
-  <FlowExcelImportDialog
-    v-if="showFlowExcelImportDialog"
-    :success-callback="doQuery"
-  />
   <FlowEditInvoiceDialog
     v-if="showFlowEditInvoiceDialog"
     :success-callback="doQuery"
@@ -795,7 +791,6 @@ const readJsonInfo = () => {
 };
 
 const importSuccess = () => {
-  removeFile();
   closeCsvTableDialog();
   doQuery();
 };
@@ -803,14 +798,14 @@ const removeFile = () => {
   csvFlows.value = [];
   csvHeaders.value = {};
   csvDatas.value = [];
+  csvFile.value = undefined; // 清楚选中的文件
   return true;
 };
 
 const closeCsvTableDialog = () => {
   showFlowExcelImportDialog.value = false;
+  removeFile();
 };
-// const clickButton = (type: string) => {
-// };
 </script>
 
 <style scoped>
