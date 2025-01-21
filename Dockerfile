@@ -1,4 +1,4 @@
-FROM node:20-alpine3.21 AS BUILDER
+FROM node:20-alpine3.21 AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN npx prisma generate
 RUN npm run build
 # RUN npm run prisma:build
 
-FROM node:20-alpine3.21 AS RUNNER
+FROM node:20-alpine3.21 AS runner
 
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
@@ -23,18 +23,18 @@ LABEL project.version="4.0.1"
 WORKDIR /app
 
 # 复制生产环境需要的文件
-COPY --from=BUILDER /app/.output/ ./ 
-COPY --from=BUILDER /app/.output/server/node_modules/ ./node_modules/
-COPY --from=BUILDER /app/.output/server/node_modules/.prisma/ ./.prisma/
+COPY --from=builder /app/.output/ ./ 
+COPY --from=builder /app/.output/server/node_modules/ ./node_modules/
+COPY --from=builder /app/.output/server/node_modules/.prisma/ ./.prisma/
 COPY ./prisma/ ./prisma/
-COPY ./docker/database.sql ./database.sql
+# COPY ./docker/database.sql ./database.sql
 COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 # RUN ls
 
 # 预装prisma，可以提升容器启动速度，但镜像体积会大很多
-RUN npm install -g prisma@6.2.1
+# RUN npm install -g prisma@6.2.1
 
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
