@@ -34,7 +34,7 @@ RUN chmod +x entrypoint.sh
 # RUN ls
 
 # 预装prisma，可以提升容器启动速度，但镜像体积会大很多
-# RUN npm install -g prisma@6.2.1
+RUN npm install -g prisma@6.2.1
 
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
