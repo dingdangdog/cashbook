@@ -73,6 +73,7 @@ services:
     environment:
       #POSTGRES_USER: postgres # 数据库用户名，不填默认为postgres
       POSTGRES_PASSWORD: postgres # 数据库密码 【自行修改！】
+      POSTGRES_DB: cashbook
     #ports:
     #  - 5432:5432 # 数据库端口，想要远程连接请放开注释，并建议自行修改端口
 ```
