@@ -86,11 +86,9 @@ services:
 services:
   main:
     container_name: cashbook4
-    depends_on: 
-      - "db"
     image: dingdangdog/cashbook:4.0.1
     restart: always
-    network_mode: "host"
+    #network_mode: "host"
     volumes:
       - ./data:/app/data # 数据挂载到本地，不建议修改
     environment:
@@ -102,6 +100,8 @@ services:
       NUXT_ADMIN_USERNAME: "admin" # 后台登录用户名
       # 【自行修改】后台登录密码，密码是加密后的，生成密码可前往 https://cashbook.oldmoon.top/admin/GetPassword 或独立部署后访问 `你的url/admin/GetPassword`
       NUXT_ADMIN_PASSWORD: "fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb6ed05f4cc"
+    ports:
+      - 9090:9090 # 账本开放端口 【自行修改！】
 ```
 
 ### 其他
