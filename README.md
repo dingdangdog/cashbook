@@ -32,81 +32,21 @@ Cashbook记账本。
 
 ## 开始使用（Get Started）
 
-### Docker部署
+### 部署教程
 
-推荐使用`docker-compose`部署，示例如下：
+[Cashbook4.0+部署教程](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B)
 
-#### Cashbook 和 数据库 一起部署
+### 使用教程
 
-```yaml
-services:
-  main:
-    container_name: cashbook4
-    depends_on: 
-      - "db"
-    image: dingdangdog/cashbook:4.0.1
-    restart: always
-    # network_mode: "host"
-    volumes:
-      - ./data:/app/data # 数据挂载到本地，不建议修改
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@cashbook_db:5432/cashbook?schema=public" # 数据库链接，【请自行修改！与你的数据库一致】
-      NUXT_DATA_PATH: "/app/data" # 数据存储未知，现在只有小票图片了，不建议修改
-      NUXT_APP_URL: "https://cashbook.oldmoon.top" # 服务根路径，如果有端口号，需要加上端口号
-      NUXT_AUTH_ORIGIN: "https://cashbook.oldmoon.top/api/auth" # 登录授权相关接口地址 【请自行修改域名/IP！最后要以 /api/auth 结尾！】
-      NUXT_AUTH_SECRET: "auth_secret" # 前台登录加密使用的密钥 【自行修改！】
-      NUXT_ADMIN_USERNAME: "admin" # 后台登录用户名
-      # 【自行修改】后台登录密码，密码是加密后的，生成密码可前往 https://cashbook.oldmoon.top/admin/GetPassword 或独立部署后访问 `你的url/admin/GetPassword`
-      NUXT_ADMIN_PASSWORD: "fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb6ed05f4cc"
-    ports:
-      - 9090:9090 # 账本开放端口 【自行修改！】
-  db:
-    container_name: cashbook_db
-    image: postgres
-    restart: always
-    #network_mode: "host"
-    # set shared memory limit when using docker-compose
-    shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    volumes:
-      - ./db:/var/lib/postgresql/data # 数据库容器数据挂载到本地，不建议修改
-    environment:
-      #POSTGRES_USER: postgres # 数据库用户名，不填默认为postgres
-      POSTGRES_PASSWORD: postgres # 数据库密码 【自行修改！】
-      POSTGRES_DB: cashbook
-    #ports:
-    #  - 5432:5432 # 数据库端口，想要远程连接请放开注释，并建议自行修改端口
-```
+[Cashbook4.0+使用教程](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B)
 
-#### 仅部署Cashbook（有已安装的Postgres数据库）
+### 常见问题
 
-仅部署 `Cashbook` 的难点在于配置数据库连接，建议自行了解 `docker网络` 相关知识！`(后续会出相关视频教学)`
+[Cashbook4.0+常见问题](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
 
-```yaml
-services:
-  main:
-    container_name: cashbook4
-    image: dingdangdog/cashbook:4.0.1
-    restart: always
-    #network_mode: "host"
-    volumes:
-      - ./data:/app/data # 数据挂载到本地，不建议修改
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/cashbook?schema=public" # 数据库链接，【账号密码请自行修改，与你的数据库一致！】
-      NUXT_DATA_PATH: "/app/data" # 数据存储未知，现在只有小票图片了，不建议修改
-      NUXT_APP_URL: "https://cashbook.oldmoon.top" # 服务根路径，如果有端口号，需要加上端口号
-      NUXT_AUTH_ORIGIN: "https://cashbook.oldmoon.top/api/auth" # 登录授权相关接口地址 【请自行修改域名/IP！最后要以 /api/auth 结尾！】
-      NUXT_AUTH_SECRET: "auth_secret" # 前台登录加密使用的密钥 【自行修改！】
-      NUXT_ADMIN_USERNAME: "admin" # 后台登录用户名
-      # 【自行修改】后台登录密码，密码是加密后的，生成密码可前往 https://cashbook.oldmoon.top/admin/GetPassword 或独立部署后访问 `你的url/admin/GetPassword`
-      NUXT_ADMIN_PASSWORD: "fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb6ed05f4cc"
-    ports:
-      - 9090:9090 # 账本开放端口 【自行修改！】
-```
+### 常见错误
 
-### 其他
-
-> 如果您不喜欢使用 `docker-compose`，非常抱歉，您自己研究吧 =.= ~
+[Cashbook4.0+常见错误](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF)
 
 ## 主要功能（Features）
 
