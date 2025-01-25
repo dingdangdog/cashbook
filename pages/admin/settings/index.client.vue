@@ -40,13 +40,13 @@ const saveConfig = () => {
       <v-textarea
         rows="2"
         label="站点描述"
-        :model-value="settings.description"
+        v-model="settings.description"
         variant="outlined"
       ></v-textarea>
       <v-textarea
         rows="2"
         label="站点关键词"
-        :model-value="settings.keywords"
+        v-model="settings.keywords"
         variant="outlined"
       ></v-textarea>
       <!-- <v-text-field
