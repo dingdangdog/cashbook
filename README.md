@@ -34,15 +34,15 @@ Cashbook记账本。
 
 ### 部署教程
 
-[Cashbook4.0+部署教程](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B)
+[Cashbook4.0+部署教程](https://www.oldmoon.top/post/444)
 
 ### 使用教程
 
-[Cashbook4.0+使用教程](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B)
+[Cashbook4.0+使用教程](https://www.oldmoon.top/post/446)
 
 ### 常见问题
 
-[Cashbook4.0+常见问题](https://github.com/dingdangdog/cashbook/wiki/Cashbook4.0%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+[Cashbook4.0+常见问题](https://www.oldmoon.top/post/448)
 
 ### 常见错误
 
