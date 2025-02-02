@@ -747,16 +747,28 @@ const readJsonInfo = () => {
           // 日期字段特殊处理，将日期数字转换为 JavaScript 日期对象
           // 目前京东/支付宝/微信可以统一处理
           if (i === timeIndex) {
-            // Excel 中日期从1899年12月30日开始
-            const excelStartDate = new Date(1899, 11, 30);
-            const resultDate = new Date(excelStartDate);
-            resultDate.setDate(resultDate.getDate() + cellValue);
-            // 添加时区偏移（假设是+8小时）
-            resultDate.setHours(resultDate.getHours() + 8);
-            // 简单的日期转字符串
-            cellValue = resultDate.toISOString().split("T")[0];
-            // 将格式化后的字符串重新赋值会sheetData，后续存储需要使用格式化后的的数据
-            row[i] = cellValue;
+            // console.log(cellValue);
+            if (typeof cellValue === "number" && cellValue > 0) {
+              // Excel 中日期从1899年12月30日开始
+              const excelStartDate = new Date(1899, 11, 30);
+              const resultDate = new Date(excelStartDate);
+              resultDate.setDate(resultDate.getDate() + cellValue);
+              // 添加时区偏移（假设是+8小时）
+              resultDate.setHours(resultDate.getHours() + 8);
+              // 简单的日期转字符串
+              cellValue = resultDate.toISOString().split("T")[0];
+              // 将格式化后的字符串重新赋值会sheetData，后续存储需要使用格式化后的的数据
+              row[i] = cellValue;
+            } else {
+              // 每年1月1日解析后不是数字，因此不需要特殊处理，直接当作日期处理即可
+              // 已知只有支付宝1月1日会报错。其他的还不知道
+              const resultDate = new Date(cellValue);
+              // 添加时区偏移（假设是+8小时）
+              resultDate.setHours(resultDate.getHours() + 8);
+              cellValue = resultDate.toISOString().split("T")[0];
+              // 将格式化后的字符串重新赋值会sheetData，后续存储需要使用格式化后的的数据
+              row[i] = cellValue;
+            }
           }
         }
         // data[i] = row;
@@ -782,6 +794,7 @@ const readJsonInfo = () => {
       Alert.warning("数据解析完成，请预览并点击【确定导入】保存数据");
       showFlowExcelImportDialog.value = true;
     } catch (error) {
+      console.error(error);
       Alert.error("数据解析出错了，请确认文件是否存在问题");
     }
   };
