@@ -163,11 +163,11 @@ npx prisma migrate dev --name add-age-to-user
 ### Docker
 
 ```sh
-docker build -t dingdangdog/cashbook:4.0.1 .
+docker build -t dingdangdog/cashbook:4.0.2 .
 
-docker save -o cashbook.4.0.1.tar dingdangdog/cashbook:4.0.1
+docker save -o cashbook.4.0.2.tar dingdangdog/cashbook:4.0.2
 
-docker load -i cashbook.4.0.1.tar
+docker load -i cashbook.4.0.2.tar
 ```
 
 ## Star

@@ -4,7 +4,7 @@ services:
     container_name: cashbook4
     depends_on: 
       - "db"
-    image: dingdangdog/cashbook:4.0.1
+    image: dingdangdog/cashbook:latest
     restart: always
     # network_mode: "host"
     volumes:
