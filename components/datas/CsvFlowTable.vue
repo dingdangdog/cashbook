@@ -135,11 +135,20 @@ const submitUpload = () => {
   overflow-y: auto;
 }
 
+.excel-table tbody tr:nth-child(odd) {
+  background-color: rgba(48, 48, 48, 0.3);
+}
+
+.excel-table tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .excel-th {
   width: 8rem;
   padding: 0.5rem;
   border-collapse: collapse;
   border: 1px solid;
+  /* color: rgb(101, 112, 119); */
 }
 
 .excel-td {
@@ -151,5 +160,6 @@ const submitUpload = () => {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  /* color: rgb(84, 101, 112); */
 }
 </style>
