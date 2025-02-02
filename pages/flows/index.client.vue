@@ -49,7 +49,7 @@
         </template>
         <template v-slot:item.money="{ value }">
           <v-chip :color="value > 100 ? 'error' : 'warning'">{{
-            value
+            Number(value).toFixed(2)
           }}</v-chip>
         </template>
         <template v-slot:item.name="{ value }">
@@ -433,7 +433,7 @@ const headers = ref([
   { title: "流水类型", key: "flowType", sortable: false },
   { title: "支出类型", key: "industryType", sortable: false },
   { title: "支付方式", key: "payType", sortable: false },
-  { title: "金额", key: "money" },
+  { title: "金额", key: "money", align: "end" },
   { title: "名称", key: "name", sortable: false },
   { title: "小票", key: "invoice", sortable: false },
   { title: "备注", key: "description", sortable: false },
