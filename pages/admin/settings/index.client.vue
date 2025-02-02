@@ -18,7 +18,7 @@ const getConfig = () => {
 };
 
 const saveConfig = () => {
-  doApi.post("api/admin/entry/setting/update", settings.value).then(() => {
+  doApi.post("api/admin/entry/settings/update", settings.value).then(() => {
     Alert.success("保存成功");
     getConfig();
   });
