@@ -136,11 +136,11 @@ const submitUpload = () => {
 }
 
 .excel-table tbody tr:nth-child(odd) {
-  background-color: rgba(48, 48, 48, 0.3);
+  background-color: rgba(70, 70, 70, 0.3);
 }
 
 .excel-table tbody tr:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(30, 30, 30, 0.3);
 }
 
 .excel-th {
@@ -148,7 +148,8 @@ const submitUpload = () => {
   padding: 0.5rem;
   border-collapse: collapse;
   border: 1px solid;
-  /* color: rgb(101, 112, 119); */
+  /* color: rgb(198, 234, 205); */
+  background-color: rgba(10, 10, 10, 0.3);
 }
 
 .excel-td {
@@ -160,6 +161,6 @@ const submitUpload = () => {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  /* color: rgb(84, 101, 112); */
+  /* color: rgb(162, 183, 167); */
 }
 </style>
