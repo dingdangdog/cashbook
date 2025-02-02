@@ -68,7 +68,9 @@ export default defineEventHandler(async (event) => {
     },
   ];
   if (body.moneySort) {
-    orderBy.push({ money: String(body.moneySort) });
+    // console.log(body.moneySort)
+    // 将金额排序设置到第一个
+    orderBy.unshift({ money: String(body.moneySort) });
   }
 
   // 【条件、排序、分页】 组合查询
