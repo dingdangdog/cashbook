@@ -78,9 +78,19 @@ const items = ref<Menu[]>([
     icon: "mdi-shape-plus",
     color: "#E57373",
   },
+  {
+    title: "Github",
+    path: "github",
+    icon: "mdi-github",
+    color: "black",
+  },
 ]);
 
 const toPath = (menu: Menu) => {
+  if (menu.path == "github") {
+    window.open(`https://github.com/dingdangdog/cashbook`, "_blank");
+    return;
+  }
   openMenu.value = menu.path || "calendar";
   navigateTo({ path: `/${openMenu.value}` });
 };

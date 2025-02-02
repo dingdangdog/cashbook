@@ -191,6 +191,11 @@ onMounted(async () => {
           <v-btn v-show="openRegister" @click="registerDialog = true"
             >注册账号</v-btn
           >
+          <v-btn
+            icon="mdi-github"
+            title="前往Github"
+            @click="toGithub()"
+          ></v-btn>
           <v-switch
             color="warning"
             v-model="themeValue"

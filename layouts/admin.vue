@@ -44,11 +44,19 @@ const items = ref<Menu[]>([
     path: "settings",
     icon: "mdi-cog",
   },
+  {
+    title: "Github",
+    path: "github",
+    icon: "mdi-github",
+  },
 ]);
 
 const toPath = (menu: Menu) => {
   if (menu.path == "website") {
     window.open(`/`, "_blank");
+    return;
+  } else if (menu.path == "github") {
+    window.open(`https://github.com/dingdangdog/cashbook`, "_blank");
     return;
   }
 

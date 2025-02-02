@@ -80,3 +80,7 @@ export const dateFormater = (format: string, date: string | Date) => {
   }
   return format;
 };
+
+export const toGithub = () => {
+  window.open(`https://github.com/dingdangdog/cashbook`, "_blank");
+};

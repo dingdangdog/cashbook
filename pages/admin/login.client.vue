@@ -5,9 +5,11 @@
   <div class="login-container">
     <!-- set input width -->
     <div class="icon-container">
-      <h1 class="tw-text-2xl tw-text-bold tw-my-4">
+      <h1 class="tw-text-2xl tw-text-bold tw-my-4 tw-mr-8">
         {{ SystemConfig?.title }} - 管理后台
       </h1>
+
+      <v-btn icon="mdi-github" title="前往Github" @click="toGithub()"></v-btn>
     </div>
     <!-- <v-sheet rounded> -->
     <v-card class="login-card">
