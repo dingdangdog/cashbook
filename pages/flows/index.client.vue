@@ -603,7 +603,10 @@ const openUpdateDialog = (title: string, updateFlow: Flow) => {
 // 导出方法(前台导出，后台负责要导出的查询数据)
 const exportFlows = () => {
   doApi
-    .post("api/entry/flow/list", flowQuery.value)
+    .post("api/entry/flow/list", {
+      ...flowQuery.value,
+      bookId: localStorage.getItem("bookId"),
+    })
     .then((data) => {
       const fileName = bookName + "-" + new Date().getTime() + ".json";
       exportJson(fileName, JSON.stringify(data));
