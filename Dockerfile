@@ -39,7 +39,7 @@ RUN npm install -g prisma@6.2.1
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
 ENV NUXT_APP_URL="http://localhost:9090"
-ENV NUXT_APP_VERSION="4.0.2"
+ENV NUXT_APP_VERSION="4.0.3"
 ENV NUXT_DATA_PATH="/app/data"
 
 ENV NUXT_AUTH_SECRET="auth123"
