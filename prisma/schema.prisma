@@ -28,7 +28,7 @@ model User {
   username   String
   password   String
   name       String?
-  email      String   @unique
+  email      String?
   createDate DateTime @default(now())
 }
 
