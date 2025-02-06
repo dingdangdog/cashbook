@@ -37,7 +37,9 @@
       class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b md:tw-h-16"
     >
       <div class="">
-        <h4 class="tw-text-lg my-2">{{ title }}【{{ chartParam.flowType }}】</h4>
+        <h4 class="tw-text-lg my-2">
+          {{ title }}【{{ chartParam.flowType }}】
+        </h4>
       </div>
 
       <div class="tw-flex tw-space-x-2 tw-items-center">
@@ -210,12 +212,28 @@ const doQuery = (query: CommonChartQuery) => {
           noData.value = false;
         }
         dataList.length = 0;
-        res.forEach((data) => {
-          dataList.push({
-            value: Number(data.outSum).toFixed(2),
-            name: data.type,
+        if (query.flowType == "支出") {
+          res.forEach((data) => {
+            dataList.push({
+              value: Number(data.outSum).toFixed(2),
+              name: data.type,
+            });
           });
-        });
+        } else if (query.flowType == "收入") {
+          res.forEach((data) => {
+            dataList.push({
+              value: Number(data.inSum).toFixed(2),
+              name: data.type,
+            });
+          });
+        } else {
+          res.forEach((data) => {
+            dataList.push({
+              value: Number(data.zeroSum).toFixed(2),
+              name: data.type,
+            });
+          });
+        }
         optionRef.value.series[0].data = dataList;
         optionRef.value.legend.textStyle.color =
           theme.global.name.value == "dark" ? "#fff" : "#000";
