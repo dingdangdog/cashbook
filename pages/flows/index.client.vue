@@ -111,6 +111,9 @@
         <v-chip color="rgb(217, 159, 8)">
           总支出：<b>{{ Number(flowPageRef?.totalOut.toFixed(2)) }}</b>
         </v-chip>
+        <v-chip color="primary">
+          净收入：<b>{{ Number(flowPageRef?.totalIn.toFixed(2)) - Number(flowPageRef?.totalOut.toFixed(2)) }}</b>
+        </v-chip>
         <v-chip color="rgb(120, 120, 120)">
           不计收支：<b>{{ Number(flowPageRef?.notInOut.toFixed(2)) }}</b>
         </v-chip>
