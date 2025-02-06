@@ -80,7 +80,7 @@ const toPath = (menu: Menu) => {
       </template>
       <v-btn icon @click="toIndex">
         <img
-          src="/cashbook.png"
+          src="/favicon.png"
           height="40"
           class="tw-rounded-full tw-overflow-hidden"
           alt="logo"
@@ -92,7 +92,7 @@ const toPath = (menu: Menu) => {
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" icon>
             <img
-              src="/cashbook.png"
+              src="/favicon.png"
               height="40"
               class="tw-rounded-full tw-overflow-hidden"
               alt="logo"

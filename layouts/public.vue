@@ -135,7 +135,7 @@ const openChangePasswordDialog = () => {
       </template>
       <v-app-bar-title>
         <v-btn v-if="!miniWindow" icon>
-          <img src="/cashbook.png" height="40" alt="logo" />
+          <img src="/favicon.png" height="40" alt="logo" />
         </v-btn>
         <span class="tw-ml-4" v-show="!miniWindow">Cashbook</span>
       </v-app-bar-title>

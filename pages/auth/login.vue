@@ -147,7 +147,7 @@ onMounted(async () => {
       class="tw-flex tw-items-center tw-max-w-[28rem] tw-w-full tw-justify-start tw-space-x-4 tw-py-4 tw-mt-8"
     >
       <img
-        src="/cashbook.png"
+        src="/favicon.png"
         class="tw-w-16 tw-h-16 tw-object-contain tw-rounded-full"
       />
       <h1 class="tw-text-2xl">欢迎使用{{ SystemConfig?.title }}</h1>
