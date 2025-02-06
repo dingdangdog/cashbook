@@ -212,6 +212,8 @@ const doQuery = (query: CommonChartQuery) => {
         }
         dataList.length = 0;
         if (query.flowType == "支出") {
+          // 先排序
+          res.sort((a, b) => Number(b.outSum) - Number(a.outSum));
           res.forEach((data) => {
             dataList.push({
               value: Number(data.outSum).toFixed(2),
@@ -219,6 +221,8 @@ const doQuery = (query: CommonChartQuery) => {
             });
           });
         } else if (query.flowType == "收入") {
+          // 先排序
+          res.sort((a, b) => Number(b.inSum) - Number(a.inSum));
           res.forEach((data) => {
             dataList.push({
               value: Number(data.inSum).toFixed(2),
@@ -226,6 +230,8 @@ const doQuery = (query: CommonChartQuery) => {
             });
           });
         } else {
+          // 先排序
+          res.sort((a, b) => Number(b.zeroSum) - Number(a.zeroSum));
           res.forEach((data) => {
             dataList.push({
               value: Number(data.zeroSum).toFixed(2),
