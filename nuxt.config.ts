@@ -5,6 +5,27 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-01-10",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
+  app: {
+    head: {
+      title: "原力推创作平台",
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+      link: [
+        {
+          rel: "manifest",
+          href: "/manifest.json",
+        },
+        {
+          rel: "shortcut icon",
+          href: "/favicon.png",
+        },
+        {
+          rel: "icon",
+          href: "/favicon.png",
+        },
+      ],
+    },
+  },
   devServer: {
     port: 9090,
   },
