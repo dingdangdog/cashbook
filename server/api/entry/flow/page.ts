@@ -54,6 +54,10 @@ export default defineEventHandler(async (event) => {
     where.day = {
       lte: body.endDay,
     };
+  } else if (body.description) {
+    where.description = {
+      contains: body.description,
+    };
   }
 
   // 分页条件
