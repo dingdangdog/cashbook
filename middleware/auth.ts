@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
   );
   if (error.value) {
-    return navigateTo("/500");
+    return navigateTo({ path: "/500", query: { e: String(error.value) } });
   }
   // console.log(res);
   // 用户信息获取成功，正常跳转
@@ -24,6 +24,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       query: { callbackUrl: to.fullPath },
     });
   } else {
-    return navigateTo("/500");
+    return navigateTo({ path: "/500", query: { e: JSON.stringify(res) } });
   }
 });
