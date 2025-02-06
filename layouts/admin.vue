@@ -27,7 +27,7 @@ const openMenu = ref<string>("orders");
 
 const items = ref<Menu[]>([
   // { title: "Overview", path: "home", icon: "mdi-home-analytics" },
-  { title: "主站", path: "website", icon: "mdi-home-circle" },
+  { title: "去记账", path: "website", icon: "mdi-home-circle" },
   { title: "用户", path: "users", icon: "mdi-account" },
   {
     title: "账本",

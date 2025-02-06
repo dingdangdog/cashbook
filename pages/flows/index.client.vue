@@ -78,10 +78,10 @@
               />
 
               <div
-                class="tw-absolute tw-top-0 tw-w-full tw-h-full tw-flex tw-bg-blue-400/20 tw-justify-center tw-items-center"
+                class="tw-absolute tw-top-0 tw-w-full tw-h-full tw-flex tw-bg-gray-800/60 tw-justify-center tw-items-center"
                 v-if="isHovering == img"
               >
-                <v-icon color="primary" size="large"> mdi-fullscreen</v-icon>
+                <v-icon color="white" size="large"> mdi-fullscreen</v-icon>
               </div>
             </div>
           </div>

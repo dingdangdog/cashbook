@@ -20,7 +20,7 @@ const deleteAlert = (id: string) => {
 </script>
 
 <template>
-  <div class="alert-container" style="z-index: 99999">
+  <div class="alert-container tw-py-2" style="z-index: 99999">
     <v-alert
       v-for="(alert, index) in Array.from(alertMap.values())"
       :key="index"

@@ -108,6 +108,9 @@ onMounted(() => {
   }
 });
 
+const openAdmin = () => {
+  window.open(`/admin`, "_blank");
+};
 const openCovertDialog = () => {
   showSetConvertDialog.value = true;
 };
@@ -166,6 +169,9 @@ const openChangePasswordDialog = () => {
             </v-btn>
           </template>
           <v-list>
+            <v-list-item class="cursor-pointer" @click="openAdmin()">
+              <span style="font-size: 1rem">后台管理</span>
+            </v-list-item>
             <v-list-item class="cursor-pointer" @click="openCovertDialog()">
               <span style="font-size: 1rem">CSV导入映射配置</span>
             </v-list-item>
