@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
       day: flow.day,
       description: flow.description,
       flowType: flow.flowType,
+      invoice: flow.invoice ? String(flow.invoice) : null,
       money: Number(flow.money),
       payType: flow.payType,
       industryType: flow.type ? flow.type : flow.industryType || "",
