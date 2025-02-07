@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   app: {
     head: {
-      title: "原力推创作平台",
+      title: "Cashbook",
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       link: [
