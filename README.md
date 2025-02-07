@@ -13,7 +13,7 @@
   <img alt="issues-close" src="https://img.shields.io/github/issues-closed/dingdangdog/cashbook?color=green" />
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow.svg" />
   <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/dingdangdog/cashbook.svg" />
-  <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook/total.svg" />
+<!--   <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook/total.svg" /> -->
 </p>
 
 - Github：[https://github.com/dingdangdog/cashbook](https://github.com/dingdangdog/cashbook)
