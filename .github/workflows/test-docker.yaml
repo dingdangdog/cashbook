@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t dingdangdog/cashbook:${{ github.event.inputs.target }}-test .
+        run: docker build -t dingdangdog/cashbook:${{ github.event.inputs.target }} .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -27,7 +27,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push dingdangdog/cashbook:${{ github.event.inputs.target }}-test
+          docker push dingdangdog/cashbook:${{ github.event.inputs.target }}
 
       - name: Clean up Docker images
         run: docker system prune -af
