@@ -129,8 +129,10 @@
         </v-chip>
         <v-chip color="primary">
           净收入：<b>{{
-            Number(flowPageRef?.totalIn.toFixed(2)) -
-            Number(flowPageRef?.totalOut.toFixed(2))
+            (
+              Number(flowPageRef?.totalIn.toFixed(2)) -
+              Number(flowPageRef?.totalOut.toFixed(2))
+            ).toFixed(2)
           }}</b>
         </v-chip>
         <v-chip color="rgb(120, 120, 120)">
