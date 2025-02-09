@@ -101,21 +101,27 @@ const ignoreAllBalance = () => {
     Alert.error("没有可忽略的数据");
     return;
   }
-  doApi
-    .post("api/entry/flow/condidate/ignoreAll", {
-      bookId: localStorage.getItem("bookId"),
-      ids: candidatePairs.value.map((p) => p.out.id),
-    })
-    .then((res) => {
-      Alert.warning("已忽略");
-      // 重新加载候选数据
-      // fetchCandidates();
-      closeDialog();
-    })
-    .catch((error) => {
-      console.error("忽略失败", error);
-      Alert.error("忽略失败");
-    });
+  Confirm.open({
+    title: "忽略确认",
+    content: `确定要忽略 ${candidatePairs.value.length} 条数据吗？忽略后这些数据无法再使用自动平账！`,
+    confirm: () => {
+      doApi
+        .post("api/entry/flow/condidate/ignoreAll", {
+          bookId: localStorage.getItem("bookId"),
+          ids: candidatePairs.value.map((p) => p.out.id),
+        })
+        .then((res) => {
+          Alert.warning("已忽略");
+          // 重新加载候选数据
+          // fetchCandidates();
+          closeDialog();
+        })
+        .catch((error) => {
+          console.error("忽略失败", error);
+          Alert.error("忽略失败");
+        });
+    },
+  });
 };
 
 const closeDialog = () => {

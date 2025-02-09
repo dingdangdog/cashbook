@@ -34,7 +34,7 @@ const closeConfirm = () => {
   <v-dialog
     v-model="openConfirmDialogFlag"
     transition="dialog-bottom-transition"
-    max-width="30rem"
+    max-width="40rem"
     persistent
   >
     <v-card v-if="ThisConfirmModel">
@@ -48,8 +48,8 @@ const closeConfirm = () => {
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="error" variant="elevated" @click="cancel()">取消 </v-btn>
-        <v-btn color="primary" variant="elevated" @click="confirm()"
+        <v-btn color="info" variant="elevated" @click="cancel()">取消 </v-btn>
+        <v-btn color="error" variant="elevated" @click="confirm()"
           >确定
         </v-btn>
       </v-card-actions>
