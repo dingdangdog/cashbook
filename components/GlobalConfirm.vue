@@ -42,7 +42,10 @@ const closeConfirm = () => {
         {{ ThisConfirmModel.title }}
       </v-card-title>
       <v-card-text v-show="ThisConfirmModel?.content">
-        {{ ThisConfirmModel.content }}
+        <!-- {{ ThisConfirmModel.content }} -->
+        <div class="tw-whitespace-pre">
+          {{ ThisConfirmModel.content }}
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-btn color="error" variant="elevated" @click="cancel()">取消 </v-btn>

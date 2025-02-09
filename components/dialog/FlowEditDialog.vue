@@ -20,13 +20,22 @@
             :hide-actions="true"
             @update:modelValue="changeDay"
           ></v-date-input>
-          <v-combobox
+          <v-select
             variant="outlined"
             label="流水类型"
-            placeholder="请选择流水类型"
             v-model="flowEdit.flowType"
             :items="flowTypeDialogOptions"
             @update:modelValue="changeFlowTypes"
+          ></v-select>
+          <!-- 支出类型/收入类型 -->
+          <v-combobox
+            variant="outlined"
+            :label="industryTypeLabel"
+            allow-new
+            clearable
+            no-data-text="暂无数据，请输入"
+            v-model="flowEdit.industryType"
+            :items="industryTypeOptions"
           ></v-combobox>
           <!-- 支付方式/收款方式 -->
           <v-combobox
@@ -37,16 +46,6 @@
             no-data-text="暂无数据，请输入"
             v-model="flowEdit.payType"
             :items="payTypeOptions"
-          ></v-combobox>
-          <!-- 支出类型/收入类型 -->
-          <v-combobox
-            variant="outlined"
-            :label="typeLabel"
-            allow-new
-            clearable
-            no-data-text="暂无数据，请输入"
-            v-model="flowEdit.industryType"
-            :items="industryTypeOptions"
           ></v-combobox>
           <v-text-field
             clearable
@@ -109,7 +108,7 @@ const { title, flow, successCallback } = defineProps([
 
 // 表单弹窗标题选项
 const formTitle = ["新增流水", "修改流水"];
-const typeLabel = ref("支出类型/收入类型");
+const industryTypeLabel = ref("支出类型/收入类型");
 const payTypeLabel = ref("支付方式/收款方式");
 const editForm = ref(false);
 const flowTypeDialogOptions = ref(["支出", "收入", "不计收支"]);
@@ -124,7 +123,6 @@ onMounted(() => {
     flowEdit.value = flow;
     day.value = new Date(flowEdit.value.day || "");
   }
-  changeFlowTypes();
 });
 const day = ref();
 const changeDay = () => {
@@ -136,28 +134,28 @@ const changeDay = () => {
 // 修改FlowType后联动
 const changeFlowTypes = () => {
   if (flowEdit.value.flowType === "支出") {
-    typeLabel.value = "支出类型";
+    industryTypeLabel.value = "支出类型";
     payTypeLabel.value = "支付方式";
   } else if (flowEdit.value.flowType === "收入") {
-    typeLabel.value = "收入类型";
+    industryTypeLabel.value = "收入类型";
     payTypeLabel.value = "收款方式";
   } else {
-    typeLabel.value = "支出类型/收入类型";
+    industryTypeLabel.value = "支出类型/收入类型";
     payTypeLabel.value = "支付方式/收款方式";
-    return;
   }
 
-  getIndustryType(flowEdit.value.flowType).then((data) => {
+  getIndustryType(flowEdit.value.flowType || "").then((data) => {
     industryTypeOptions.value = data.map((d) => {
       return d.industryType;
     });
   });
-  getPayType(flowEdit.value.flowType).then((data) => {
+  getPayType(flowEdit.value.flowType || "").then((data) => {
     payTypeOptions.value = data.map((d) => {
       return d.payType;
     });
   });
 };
+changeFlowTypes();
 
 const searchPayType = ref("");
 const searchType = ref("");
