@@ -21,7 +21,12 @@ export interface PageParam {
   pageNum: number;
   pageSize: number;
 }
-export interface UserInfo {}
+export interface UserInfo {
+  id: number;
+  name: string;
+  username: string;
+  createDate: Date;
+}
 export interface CommonOption {}
 export interface MonthAnalysis {
   month: string;
