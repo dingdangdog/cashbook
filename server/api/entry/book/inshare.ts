@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     },
   });
   if (books.length > 0) {
-    if (books.filter((b) => (b.userId = userId))) {
+    if (books.filter((b) => (b.userId == userId)).length > 0) {
       return error("账本已存在");
     }
     const book = books[0];
