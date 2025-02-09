@@ -512,7 +512,7 @@ const resetQuery = () => {
   doQuery();
 };
 
-const headers = ref([
+const headers = ref<any[]>([
   { title: "日期", key: "day", sortable: false },
   { title: "流水类型", key: "flowType", sortable: false },
   { title: "支出类型/收入类型", key: "industryType", sortable: false },
