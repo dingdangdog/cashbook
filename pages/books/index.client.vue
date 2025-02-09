@@ -6,8 +6,9 @@ definePageMeta({
 });
 
 import { del, page } from "./api";
-import { editInfoFlag } from "./flag";
+import { editInfoFlag, showGetShareDialog } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
+import GetShareDialog from "./GetShareDialog.vue";
 
 const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
 const query = ref<Book | any>({});
@@ -24,6 +25,7 @@ const headers = ref([
     },
     sortable: false,
   },
+  { title: "共享KEY", key: "shareKey", sortable: false },
   { title: "操作", key: "actions", sortable: false },
 ]);
 
@@ -40,6 +42,10 @@ const editItemInfo = (item: Book) => {
   editDialogTitle.value = "编辑账本";
   editItem.value = item;
   editInfoFlag.value = true;
+};
+
+const getShare = () => {
+  showGetShareDialog.value = true;
 };
 
 // 取消编辑的回调
@@ -86,6 +92,23 @@ const changePage = (param: {
   pageQuery.value.pageSize = param.itemsPerPage;
   getPages();
 };
+const toShare = (item: Book) => {
+  Confirm.open({
+    title: "提示",
+    content: `确定要分享账本【${item.bookName}】吗？分享后无法取消分享！`,
+    confirm: () => {
+      // Alert.info("分享成功");
+      doApi.post("api/entry/book/share", { id: item.id }).then((res) => {
+        Alert.success("分享成功");
+        getPages();
+      });
+    },
+    cancel: () => {
+      // 取消分享
+      Alert.info("取消分享");
+    },
+  });
+};
 </script>
 
 <template>
@@ -101,6 +124,7 @@ const changePage = (param: {
         ></v-text-field>
       </div>
       <v-btn color="primary" @click="getPages"> 查询 </v-btn>
+      <v-btn color="success" @click="getShare()"> 添加共享账本 </v-btn>
       <v-btn color="success" @click="addItem()"> 新增 </v-btn>
     </div>
     <v-data-table-server
@@ -116,15 +140,11 @@ const changePage = (param: {
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template v-slot:item.actions="{ item }">
         <div class="tw-flex tw-space-x-2">
-          <v-icon size="small" color="success" @click="editItemInfo(item)">
+          <v-icon color="success" @click="editItemInfo(item)">
             mdi-pencil
           </v-icon>
-          <!-- <v-icon size="small" class="me-2" @click="editItemFields(item)">
-          mdi-information
-        </v-icon> -->
-          <v-icon size="small" color="error" @click="toDelete(item)">
-            mdi-delete
-          </v-icon>
+          <v-icon color="primary" @click="toShare(item)"> mdi-share </v-icon>
+          <v-icon color="error" @click="toDelete(item)"> mdi-delete </v-icon>
         </div>
       </template>
     </v-data-table-server>
@@ -135,6 +155,11 @@ const changePage = (param: {
     @success="getPages"
     @cancel="cancelEdit"
     v-if="editInfoFlag"
+  />
+  <GetShareDialog
+    @success="getPages"
+    @cancel="cancelEdit"
+    v-if="showGetShareDialog"
   />
 </template>
 

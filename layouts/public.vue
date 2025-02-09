@@ -15,6 +15,8 @@ const toggleTheme = () => {
   localStorage.setItem("theme", to);
 };
 const logout = () => {
+  localStorage.removeItem("bookId");
+  localStorage.removeItem("bookName");
   useAuth().signOut();
 };
 const miniWindow = ref(false);

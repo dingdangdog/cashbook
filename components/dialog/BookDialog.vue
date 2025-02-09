@@ -25,6 +25,9 @@
           <v-btn color="warning" variant="outlined" @click="cancelChange"
             >取消</v-btn
           >
+          <v-btn color="success" variant="outlined" @click="getShare"
+            >添加共享账本</v-btn
+          >
           <v-btn color="success" variant="outlined" @click="addBook"
             >新建账本</v-btn
           >
@@ -48,11 +51,37 @@
       </v-card-text>
       <v-card-actions>
         <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
+          <v-btn variant="elevated" @click="addBookDialog.visible = false">
+            取消
+          </v-btn>
           <v-btn variant="elevated" color="primary" @click="confirmBookForm()">
             确定
           </v-btn>
-          <v-btn variant="elevated" @click="addBookDialog.visible = false">
+        </div>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog width="25rem" v-model="showGetShareDialog" scrim="rgba(0,0,0,0)">
+    <v-card>
+      <v-card-title>添加共享账本</v-card-title>
+      <v-card-text>
+        <v-text-field
+          label="共享Key"
+          v-model="shareKey"
+          clearable
+          hide-details="auto"
+          variant="outlined"
+          :rules="[required]"
+          required
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
+          <v-btn variant="elevated" @click="showGetShareDialog = false">
             取消
+          </v-btn>
+          <v-btn variant="elevated" color="primary" @click="confirmGetShare()">
+            确定
           </v-btn>
         </div>
       </v-card-actions>
@@ -142,6 +171,29 @@ const confirmBookForm = () => {
 
 const checkSelectBook = (bookId: string | number) => {
   return localStorage.getItem("bookId") === bookId ? "book-card-selected" : "";
+};
+
+const getShare = () => {
+  showGetShareDialog.value = true;
+};
+const showGetShareDialog = ref(false);
+const shareKey = ref("");
+const confirmGetShare = () => {
+  if (!shareKey.value) {
+    Alert.error("请输入共享KEY");
+    return;
+  }
+  doApi
+    .post("api/entry/book/inshare", { key: shareKey.value })
+    .then((res) => {
+      Alert.success("添加成功");
+      shareKey.value = "";
+      showGetShareDialog.value = false;
+      initBooks();
+    })
+    .catch((err) => {
+      // Alert.error(err);
+    });
 };
 </script>
 

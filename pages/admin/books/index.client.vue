@@ -18,6 +18,7 @@ const headers = ref([
   { title: "账本ID", key: "bookId", sortable: false },
   { title: "用户ID", key: "userId", sortable: false },
   { title: "账本名称", key: "bookName", sortable: false },
+  { title: "共享Key", key: "shareKey", sortable: false },
   {
     title: "创建时间",
     key: "createDate",
