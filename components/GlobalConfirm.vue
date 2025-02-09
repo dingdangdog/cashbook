@@ -43,7 +43,7 @@ const closeConfirm = () => {
       </v-card-title>
       <v-card-text v-show="ThisConfirmModel?.content">
         <!-- {{ ThisConfirmModel.content }} -->
-        <div class="tw-whitespace-pre">
+        <div class="tw-whitespace-pre tw-break-words">
           {{ ThisConfirmModel.content }}
         </div>
       </v-card-text>
