@@ -10,9 +10,22 @@
         <v-btn color="success" @click="openCreateDialog(formTitle[0])"
           >新增
         </v-btn>
+        <v-btn
+          v-show="selectedFlows.length > 0"
+          color="error"
+          @click="deleteItems()"
+          >删除
+        </v-btn>
+        <v-btn
+          v-show="selectedFlows.length > 0"
+          color="primary"
+          @click="toChangeTypeBatch()"
+          >类型修改
+        </v-btn>
       </div>
-      <div>
-        <v-btn color="primary" @click="searchDrawer = true">筛选 </v-btn>
+      <div class="tw-flex tw-space-x-2">
+        <v-btn color="primary" @click="searchDrawer = true">筛选</v-btn>
+        <v-btn color="success" @click="resetQuery()">重置</v-btn>
       </div>
     </div>
     <hr />
@@ -26,6 +39,9 @@
         :headers="headers"
         :loading="loading"
         @update:options="changePage"
+        v-model="selectedFlows"
+        item-value="id"
+        show-select
       >
         <template v-slot:item.day="{ value }">
           <p class="common-text-column" :title="value">
@@ -112,7 +128,10 @@
           总支出：<b>{{ Number(flowPageRef?.totalOut.toFixed(2)) }}</b>
         </v-chip>
         <v-chip color="primary">
-          净收入：<b>{{ Number(flowPageRef?.totalIn.toFixed(2)) - Number(flowPageRef?.totalOut.toFixed(2)) }}</b>
+          净收入：<b>{{
+            Number(flowPageRef?.totalIn.toFixed(2)) -
+            Number(flowPageRef?.totalOut.toFixed(2))
+          }}</b>
         </v-chip>
         <v-chip color="rgb(120, 120, 120)">
           不计收支：<b>{{ Number(flowPageRef?.notInOut.toFixed(2)) }}</b>
@@ -120,8 +139,13 @@
       </span>
     </div>
   </div>
-  <v-navigation-drawer v-model="searchDrawer" temporary location="right">
-    <div style="padding: 0.5rem">
+  <v-navigation-drawer
+    v-model="searchDrawer"
+    width="300"
+    temporary
+    location="right"
+  >
+    <div class="tw-m-4">
       <div class="queryParam">
         <v-date-input
           label="开始日期"
@@ -176,16 +200,15 @@
           v-model="flowQuery.flowType"
           :items="FlowTypes"
           clearable
-          @update:modelValue="changeTypes"
+          @update:modelValue="changeTypes(flowQuery.flowType)"
         >
         </v-autocomplete>
       </div>
       <div class="queryParam">
         <v-autocomplete
-          label="支出类型/收入类型"
           hide-details="auto"
           variant="outlined"
-          :placeholder="typeLabel"
+          :label="industryTypeLabel"
           clearable
           v-model="flowQuery.industryType"
           :items="industryTypeOptions"
@@ -194,10 +217,9 @@
       </div>
       <div class="queryParam">
         <v-autocomplete
-          label="支付方式/收款方式"
           hide-details="auto"
           variant="outlined"
-          :placeholder="payTypeLabel"
+          :label="payTypeLabel"
           clearable
           v-model="flowQuery.payType"
           :items="payTypeOptions"
@@ -205,15 +227,13 @@
         </v-autocomplete>
       </div>
       <div class="queryParam" style="text-align: center">
-        <v-btn
+        <!-- <v-btn
           style="margin-right: 0.5rem"
           color="success"
           @click="resetQuery()"
-          >重置</v-btn
-        >
-        <v-btn style="margin-left: 0.5rem" color="primary" @click="doQuery()"
-          >查询</v-btn
-        >
+          >清除条件</v-btn
+        > -->
+        <v-btn class="tw-w-full" color="primary" @click="doQuery()">查询</v-btn>
       </div>
     </div>
   </v-navigation-drawer>
@@ -314,6 +334,68 @@
       </v-card-text>
     </v-card>
   </v-dialog>
+
+  <v-dialog v-model="showChangeBatchTypeDialog" max-width="30rem">
+    <v-card>
+      <v-card-title
+        style="width: 100%; display: flex; justify-content: space-between"
+      >
+        <h3>批量修改 {{ selectedFlows.length }} 条流水的类型</h3>
+      </v-card-title>
+      <v-card-text>
+        <div class="queryParam">
+          <v-select
+            label="流水类型"
+            hide-details="auto"
+            variant="outlined"
+            :items="FlowTypes"
+            :item-value="(i) => i.value"
+            v-model="newTypes.flowType"
+            clearable
+            @update:modelValue="changeTypes(newTypes.flowType)"
+          >
+          </v-select>
+        </div>
+        <div class="queryParam">
+          <v-combobox
+            :label="industryTypeLabel"
+            hide-details="auto"
+            variant="outlined"
+            allow-new
+            clearable
+            v-model="newTypes.industryType"
+            :items="industryTypeOptions"
+          >
+          </v-combobox>
+        </div>
+        <div class="queryParam">
+          <v-combobox
+            :label="payTypeLabel"
+            hide-details="auto"
+            variant="outlined"
+            allow-new
+            clearable
+            v-model="newTypes.payType"
+            :items="payTypeOptions"
+          >
+          </v-combobox>
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
+          <v-btn
+            color="warning"
+            variant="outlined"
+            @click="cancelChangeBatchType"
+            >取消</v-btn
+          >
+          <v-btn color="success" variant="outlined" @click="changeItemsType"
+            >确定</v-btn
+          >
+        </div>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -353,7 +435,7 @@ const bookName = localStorage.getItem("bookName");
 const searchDrawer = ref(false);
 const selectHeaderDialog = ref(false);
 
-const typeLabel = ref("支出类型/收入类型");
+const industryTypeLabel = ref("支出类型/收入类型");
 const payTypeLabel = ref("支付方式/收款方式");
 const formTitle = ["新增流水", "修改流水"];
 /*
@@ -366,30 +448,29 @@ const industryTypeOptions = ref(typeDefault);
 const payTypeOptions = ref(typeDefault);
 
 // 修改FlowType后联动
-const changeTypes = () => {
-  if (flowQuery.value.flowType === "支出") {
-    typeLabel.value = "支出类型";
+const changeTypes = (type?: string) => {
+  if (type === "支出") {
+    industryTypeLabel.value = "支出类型";
     payTypeLabel.value = "支付方式";
-  } else if (flowQuery.value.flowType === "收入") {
-    typeLabel.value = "收入类型";
+  } else if (type === "收入") {
+    industryTypeLabel.value = "收入类型";
     payTypeLabel.value = "收款方式";
   } else {
-    typeLabel.value = "支出类型/收入类型";
+    industryTypeLabel.value = "支出类型/收入类型";
     payTypeLabel.value = "支付方式/收款方式";
   }
-  if (!flowQuery.value.flowType) {
-    industryTypeOptions.value = typeDefault;
-    payTypeOptions.value = typeDefault;
-    return;
-  }
-  getIndustryType(flowQuery.value.flowType).then((data) => {
-    console.log(data);
-
+  // if (!flowQuery.value.flowType) {
+  //   industryTypeOptions.value = typeDefault;
+  //   payTypeOptions.value = typeDefault;
+  //   return;
+  // }
+  getIndustryType(type || "").then((data) => {
+    // console.log(data);
     industryTypeOptions.value = data.map((d) => {
       return d.industryType;
     });
   });
-  getPayType(flowQuery.value.flowType).then((data) => {
+  getPayType(type || "").then((data) => {
     payTypeOptions.value = data.map((d) => {
       return d.payType;
     });
@@ -434,8 +515,8 @@ const resetQuery = () => {
 const headers = ref([
   { title: "日期", key: "day", sortable: false },
   { title: "流水类型", key: "flowType", sortable: false },
-  { title: "支出类型", key: "industryType", sortable: false },
-  { title: "支付方式", key: "payType", sortable: false },
+  { title: "支出类型/收入类型", key: "industryType", sortable: false },
+  { title: "支付方式/收款方式", key: "payType", sortable: false },
   { title: "金额", key: "money", align: "end" },
   { title: "名称", key: "name", sortable: false },
   { title: "小票", key: "invoice", sortable: false },
@@ -452,6 +533,8 @@ const loading = ref(true);
 const dialogFormTitle = ref(formTitle[0]);
 // 分页数据绑定
 const flowPageRef = ref<Page<Flow>>();
+
+const selectedFlows = ref<any[]>([]);
 
 const changePage = (param: {
   page: number;
@@ -540,55 +623,124 @@ const doQuery = () => {
 };
 
 // 确认删除的一些逻辑
-const deleteConfirmDialog = ref(false);
-const deleteItem = ref<Flow | any>({});
 const toDelete = (item: Flow) => {
-  deleteItem.value = item;
-  Confirm.open({
-    title: "删除确认",
-    content: `确定删除流水 【${deleteItem.value?.name}:${deleteItem.value?.money}】吗?`,
-    confirm: confirmDelete,
-  });
-};
-const confirmDelete = () => {
-  if (!deleteItem.value?.id) {
+  if (!item.id) {
     Alert.error("请选择要删除的数据");
     return;
   }
-  doApi
-    .post("api/entry/flow/del", {
-      id: deleteItem.value?.id,
-      bookId: localStorage.getItem("bookId"),
-    })
-    .then((res) => {
-      Alert.success("删除成功");
-      doQuery();
-    })
-    .catch((res) => {
-      console.log(res);
-      Alert.error("删除失败");
-    });
-  deleteConfirmDialog.value = false;
+  Confirm.open({
+    title: "删除确认",
+    content: `确定删除流水 【${item.name}:${item.money}】吗?`,
+    confirm: () => {
+      doApi
+        .post("api/entry/flow/del", {
+          id: item.id,
+          bookId: localStorage.getItem("bookId"),
+        })
+        .then((res) => {
+          Alert.success("删除成功");
+          doQuery();
+        })
+        .catch((res) => {
+          console.log(res);
+          Alert.error("删除失败");
+        });
+    },
+  });
 };
 
 // 批量删除
-const deleteBatchConfirmDialog = ref(false);
-const multipleSelection = ref<Flow[]>([]);
-const toDeleteBatch = () => {
-  if (multipleSelection.value.length <= 0) {
+const deleteItems = () => {
+  if (selectedFlows.value.length <= 0) {
     Alert.error("请至少选择一条要删除的流水");
     return;
   }
-  deleteBatchConfirmDialog.value = true;
+  console.log(selectedFlows.value);
+  Confirm.open({
+    title: "删除确认",
+    content: `确定删除流水 【${selectedFlows.value.length} 条】吗?`,
+    confirm: () => {
+      doApi
+        .post("api/entry/flow/dels", {
+          ids: selectedFlows.value,
+          bookId: localStorage.getItem("bookId"),
+        })
+        .then((res) => {
+          Alert.success("删除成功");
+          selectedFlows.value = [];
+          doQuery();
+        })
+        .catch((res) => {
+          console.log(res);
+          Alert.error("删除失败");
+        });
+    },
+  });
 };
 
-const cancelDeleteFlows = () => {
-  deleteBatchConfirmDialog.value = false;
+const newTypes = ref<any>({
+  flowType: undefined,
+  industryType: undefined,
+  payType: undefined,
+});
+const showChangeBatchTypeDialog = ref(false);
+const toChangeTypeBatch = () => {
+  if (selectedFlows.value.length <= 0) {
+    Alert.error("请至少选择一条要修改的流水");
+    return;
+  }
+  showChangeBatchTypeDialog.value = true;
+};
+const cancelChangeBatchType = () => {
+  showChangeBatchTypeDialog.value = false;
+  newTypes.value = {
+    flowType: undefined,
+    industryType: undefined,
+    payType: undefined,
+  };
+};
+// 批量修改类型
+const changeItemsType = () => {
+  console.log(newTypes.value);
+  let changeInfo = "";
+  if (newTypes.value.flowType) {
+    changeInfo += `  流水类型改为: "${newTypes.value.flowType}"\n`;
+  }
+  if (newTypes.value.industryType) {
+    changeInfo += `  支出类型/收入类型改为: "${newTypes.value.industryType}"\n`;
+  }
+  if (newTypes.value.payType) {
+    changeInfo += `  支付方式/收款方式改为: "${newTypes.value.payType}"`;
+  }
+  if (!changeInfo) {
+    Alert.error("未发现任何变更信息");
+    return;
+  }
+  Confirm.open({
+    title: "修改确认",
+    content: `确定对【${selectedFlows.value.length}】条流水进行如下修改吗? \n${changeInfo}`,
+    confirm: () => {
+      doApi
+        .post("api/entry/flow/updates", {
+          ids: selectedFlows.value,
+          bookId: localStorage.getItem("bookId"),
+          ...newTypes.value,
+        })
+        .then((res) => {
+          Alert.success("修改成功");
+          doQuery();
+        })
+        .catch((res) => {
+          console.log(res);
+          Alert.error("修改失败");
+        });
+    },
+  });
 };
 
 // 打开新增弹窗
 const openCreateDialog = (title: string) => {
-  typeLabel.value = "支出类型/收入类型";
+  industryTypeLabel.value = "支出类型/收入类型";
   payTypeLabel.value = "支付方式/收款方式";
   dialogFormTitle.value = title;
   showFlowEditDialog.value = true;
@@ -641,6 +793,7 @@ import {
   jdFinanceConvert,
   wxpayConvert,
 } from "@/utils/flowConvert";
+import type payType from "~/server/api/entry/analytics/payType";
 
 // 上传文件类型标识：none-未知文件；alipay-支付宝；wxpay-微信；jdFinance-京东
 const fileType = ref("none");
