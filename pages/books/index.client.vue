@@ -143,7 +143,9 @@ const toShare = (item: Book) => {
           <v-icon color="success" @click="editItemInfo(item)">
             mdi-pencil
           </v-icon>
-          <v-icon color="primary" @click="toShare(item)"> mdi-share </v-icon>
+          <v-icon color="primary" @click="toShare(item)" v-if="!item.shareKey">
+            mdi-share
+          </v-icon>
           <v-icon color="error" @click="toDelete(item)"> mdi-delete </v-icon>
         </div>
       </template>
