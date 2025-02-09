@@ -136,56 +136,69 @@ const openChangePasswordDialog = () => {
           @click="menuer = !menuer"
         ></v-app-bar-nav-icon>
       </template>
-      <v-app-bar-title>
-        <v-btn v-if="!miniWindow" icon>
-          <img src="/favicon.png" height="40" alt="logo" />
-        </v-btn>
-        <span class="tw-ml-4" v-show="!miniWindow">Cashbook</span>
-      </v-app-bar-title>
+      <div
+        class="tw-flex tw-items-center md:tw-justify-between tw-w-full md:tw-px-4 tw-space-x-2"
+      >
+        <div class="tw-hidden md:tw-flex tw-items-center">
+          <v-btn icon>
+            <img src="/favicon.png" height="40" alt="logo" />
+          </v-btn>
+          <div class="tw-ml-2 tw-mt-2 tw-text-lg tw-font-bold">Cashbook</div>
+        </div>
 
-      <div class="tw-flex tw-items-center tw-space-x-4 md:tw-pr-8">
-        <span
-          style="margin: 0 auto; padding: 0 0.5rem"
-          v-if="bookName && !miniWindow"
-          >当前账本：{{ bookName }}</span
-        >
-        <v-btn
-          class="no-drag"
-          color="teal-darken-3"
-          variant="elevated"
-          @click="showBookDialogFlag.visible = true"
-        >
-          切换账本
-        </v-btn>
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              class="no-drag"
-              color="blue-grey-darken-3"
-              variant="elevated"
-            >
-              系统管理
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item class="cursor-pointer" @click="openAdmin()">
-              <span style="font-size: 1rem">后台管理</span>
-            </v-list-item>
-            <v-list-item class="cursor-pointer" @click="openCovertDialog()">
-              <span style="font-size: 1rem">CSV导入映射配置</span>
-            </v-list-item>
-            <v-list-item
-              class="cursor-pointer"
-              @click="openChangePasswordDialog()"
-            >
-              <span style="font-size: 1rem">修改密码</span>
-            </v-list-item>
-            <v-list-item class="cursor-pointer" @click="logout()">
-              <span style="font-size: 1rem">退出登录</span>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <div class="tw-flex tw-items-center tw-space-x-4 md:tw-pr-8">
+          <span
+            class="tw-hidden md:tw-block"
+            style="margin: 0 auto; padding: 0 0.5rem"
+            v-if="bookName"
+            >当前账本：{{ bookName }}</span
+          >
+          <v-btn
+            class="no-drag"
+            color="teal-darken-3"
+            variant="elevated"
+            @click="showBookDialogFlag.visible = true"
+          >
+            切换账本
+          </v-btn>
+        </div>
+        <div class="tw-flex tw-items-center tw-space-x-4">
+          <span
+            class="tw-hidden md:tw-block"
+            style="margin: 0 auto; padding: 0 0.5rem"
+            v-if="GlobalUserInfo"
+            >欢迎：{{ GlobalUserInfo?.name }}</span
+          >
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                class="no-drag"
+                color="blue-grey-darken-3"
+                variant="elevated"
+              >
+                系统管理
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item class="cursor-pointer" @click="openAdmin()">
+                <span style="font-size: 1rem">后台管理</span>
+              </v-list-item>
+              <v-list-item class="cursor-pointer" @click="openCovertDialog()">
+                <span style="font-size: 1rem">CSV导入映射配置</span>
+              </v-list-item>
+              <v-list-item
+                class="cursor-pointer"
+                @click="openChangePasswordDialog()"
+              >
+                <span style="font-size: 1rem">修改密码</span>
+              </v-list-item>
+              <v-list-item class="cursor-pointer" @click="logout()">
+                <span style="font-size: 1rem">退出登录</span>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </div>
     </v-app-bar>
     <v-navigation-drawer v-model="menuer" location="left" width="200">
