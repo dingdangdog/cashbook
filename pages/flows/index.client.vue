@@ -794,9 +794,6 @@ const getTableHeight = () => {
 
 changeTypes();
 
-const searching = ref(false);
-onMounted(() => {});
-
 const openJsonImport = () => {
   showFlowJsonImportDialog.value = true;
 };
