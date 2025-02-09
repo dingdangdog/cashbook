@@ -83,6 +83,7 @@ const register = async () => {
       Alert.success("注册成功，请登录");
       loginParam.value.username = registerParam.value.username;
       loginParam.value.password = registerParam.value.password;
+      registerDialog.value = false;
       tab.value = "login";
     });
   }
