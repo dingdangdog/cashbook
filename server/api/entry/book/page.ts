@@ -18,7 +18,12 @@ export default defineEventHandler(async (event) => {
   }
   if (body.bookName) {
     where.bookName = {
-      equals: body.bookName,
+      contains: body.bookName,
+    };
+  }
+  if (body.shareKey) {
+    where.shareKey = {
+      equals: body.shareKey,
     };
   }
 

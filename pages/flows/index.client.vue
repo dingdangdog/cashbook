@@ -7,6 +7,9 @@
           >导入导出
         </v-btn>
         <!-- <v-btn color="error" @click="toDeleteBatch">删除</v-btn> -->
+        <v-btn color="deep-orange-darken-4" @click="toAutoMergeFlows()"
+          >自动平账
+        </v-btn>
         <v-btn color="success" @click="openCreateDialog(formTitle[0])"
           >新增
         </v-btn>
@@ -311,6 +314,11 @@
     :success-callback="doQuery"
     :item="editInvoiceItem"
   />
+  <FlowAutoMergeDialog
+    v-if="showAutoMergeFlowsDialog"
+    :success-callback="doQuery"
+    :item="editInvoiceItem"
+  />
 
   <v-dialog v-model="showFlowExcelImportDialog" :fullscreen="true">
     <v-card>
@@ -423,6 +431,7 @@ import {
 import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 import FlowJsonImportDialog from "~/components/dialog/FlowJsonImportDialog.vue";
 import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
+import FlowAutoMergeDialog from "~/components/dialog/FlowAutoMergeDialog.vue";
 import { dateFormater } from "@/utils/common";
 
 import { getIndustryType, getPayType } from "~/utils/apis";
@@ -622,6 +631,10 @@ const doQuery = () => {
     .finally(() => {
       loading.value = false;
     });
+};
+
+const toAutoMergeFlows = () => {
+  showAutoMergeFlowsDialog.value = true;
 };
 
 // 确认删除的一些逻辑

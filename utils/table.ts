@@ -23,6 +23,7 @@ export interface Book {
   id: number;
   bookId: string;
   bookName: string;
+  shareKey: string;
   userId: number;
   createDate: Date;
 }
@@ -39,6 +40,9 @@ export interface Flow {
   name?: string;
   description?: string;
   invoice?: string;
+  origin?: string; // 流水来源：谁谁-支付宝导入；谁谁手动输出
+  attribution?: string; // 流水归属（谁的收入/支出）
+  eliminate?: number; // 平账标志，0未平账；1已平账，-1忽略平账
 }
 
 // Plan 支出计划

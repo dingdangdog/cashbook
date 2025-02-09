@@ -23,6 +23,8 @@ export default defineNitroPlugin((nitroApp) => {
         id: 1,
       },
     });
+    // 保证eliminate字段有值，防止业务出错
+    await prisma.$executeRaw`UPDATE "Flow" SET "eliminate" = 0 WHERE "eliminate" is null;`;
     initTypeRelation();
   });
 });

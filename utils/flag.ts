@@ -15,3 +15,4 @@ export const showSetConvertDialog = ref(false);
 export const showChangePasswordDialog = ref(false);
 
 export const showFlowEditDialog = ref(false);
+export const showAutoMergeFlowsDialog = ref(false);

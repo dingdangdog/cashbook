@@ -36,6 +36,7 @@ model Book {
   id         Int      @id @default(autoincrement())
   bookId     String
   bookName   String
+  shareKey   String? // 分享key
   userId     Int
   createDate DateTime @default(now())
 }
@@ -52,6 +53,9 @@ model Flow {
   name         String?
   description  String?
   invoice      String?
+  origin       String? // 流水来源：谁谁-支付宝导入；谁谁手动输出
+  attribution  String? // 流水归属（谁的收入/支出）
+  eliminate    Int?    @default(0) // 平账标志，0未平账；1已平账，-1忽略平账
 }
 
 // Plan 支出计划
