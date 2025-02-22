@@ -242,6 +242,7 @@ const updateOne = () => {
       payType: flowEdit.value.payType,
       name: flowEdit.value.name,
       description: flowEdit.value.description,
+      attribution: flowEdit.value.attribution,
     })
     .then((res) => {
       // console.log(res);
