@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   for (const tableName of tableNames) {
     console.log(tableName);
     // const sql = 'SELECT * FROM "' + tableName + '"';
-    const data = await prisma.$executeRawUnsafe(
+    const data = await prisma.$queryRawUnsafe(
       'SELECT * FROM "' + tableName + '";'
     );
     allData[tableName] = data;
