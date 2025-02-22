@@ -1,0 +1,21 @@
+name: 萌新🤗提问
+about: 有不懂的问题，向大家提问
+title: "[提问]: "
+labels: [question]
+body:
+  - type: input
+    attributes:
+      label: 问题概述
+      description: 请简要描述您的问题。
+
+  - type: textarea
+    attributes:
+      label: 问题描述
+      description: 请详细描述您遇到的问题，包括具体错误信息、操作步骤等。
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 其他说明
+      description: 如果您有其他需要补充说明的内容，请在此处填写。
