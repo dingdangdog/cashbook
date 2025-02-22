@@ -81,6 +81,7 @@ export class FlowQuery {
   industryType?: string;
   payType?: string;
   name?: string;
+  attribution?: string;
   description?: string;
   moneySort?: string;
 }

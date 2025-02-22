@@ -180,13 +180,35 @@
         ></v-date-input>
       </div>
       <div class="queryParam">
-        <v-text-field
+        <v-combobox
+          label="流水归属"
+          hide-details="auto"
+          variant="outlined"
+          v-model="flowQuery.attribution"
+          :items="attributionList"
+          clearable
+        ></v-combobox>
+      </div>
+      <div class="queryParam">
+        <v-combobox
           label="名称"
           hide-details="auto"
           variant="outlined"
           v-model="flowQuery.name"
+          :items="nameList"
           clearable
-        ></v-text-field>
+        >
+          <template v-slot:item="{ item, props }">
+            <div
+              class="w-full tw-p-2 tw-cursor-pointer hover:tw-bg-gray-200/10 tw-duration-500 tw-ease-in-out"
+              @click="(props as any).onClick"
+            >
+              <p class="tw-max-w-64 tw-text-ellipsis tw-line-clamp-1">
+                {{ item.title }}
+              </p>
+            </div>
+          </template>
+        </v-combobox>
       </div>
       <div class="queryParam">
         <v-text-field
@@ -472,6 +494,24 @@ const typeDefault = ["请先选择流水类型"];
 const industryTypeOptions = ref(typeDefault);
 // 支付类型
 const payTypeOptions = ref(typeDefault);
+
+const nameList = ref<string[]>([]);
+
+const getNames = async () => {
+  const res = await doApi.post<string[]>("api/entry/flow/getNames", {
+    bookId: localStorage.getItem("bookId"),
+  });
+  nameList.value = res;
+};
+getNames();
+const attributionList = ref<string[]>([]);
+const getAttributions = async () => {
+  const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
+    bookId: localStorage.getItem("bookId"),
+  });
+  attributionList.value = res;
+};
+getAttributions();
 
 // 修改FlowType后联动
 const changeTypes = (type?: string) => {

@@ -54,18 +54,33 @@
             variant="outlined"
             v-model="flowEdit.money"
           ></v-text-field>
-          <v-text-field
+          <v-combobox
             clearable
             label="流水归属"
             variant="outlined"
+            allow-new
             v-model="flowEdit.attribution"
-          ></v-text-field>
-          <v-text-field
+            :items="attributionList"
+          ></v-combobox>
+          <v-combobox
             clearable
+            allow-new
             label="流水名称"
             variant="outlined"
             v-model="flowEdit.name"
-          ></v-text-field>
+            :items="nameList"
+          >
+            <template v-slot:item="{ item, props }">
+              <div
+                class="w-full tw-p-2 tw-cursor-pointer hover:tw-bg-gray-200/10 tw-duration-500 tw-ease-in-out"
+                @click="(props as any).onClick"
+              >
+                <p class="tw-max-w-96 tw-text-ellipsis tw-line-clamp-1">
+                  {{ item.title }}
+                </p>
+              </div>
+            </template>
+          </v-combobox>
           <v-text-field
             clearable
             label="备注"
@@ -124,6 +139,24 @@ const industryTypeOptions = ref<any[]>([]);
 // 支付类型
 const payTypeOptions = ref<any[]>([]);
 const flowEdit = ref<Flow | any>({});
+
+const nameList = ref<string[]>([]);
+const getNames = async () => {
+  const res = await doApi.post<string[]>("api/entry/flow/getNames", {
+    bookId: localStorage.getItem("bookId"),
+  });
+  nameList.value = res;
+};
+getNames();
+const attributionList = ref<string[]>([]);
+const getAttributions = async () => {
+  const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
+    bookId: localStorage.getItem("bookId"),
+  });
+  attributionList.value = res;
+};
+getAttributions();
+
 onMounted(() => {
   if (flow) {
     flowEdit.value = flow;
