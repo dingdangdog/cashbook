@@ -3,7 +3,7 @@ description: 提交 Bug 反馈
 title: "[BUG]: "
 labels: [bug]
 body:
-  - type: input
+  - type: textarea
     attributes:
       label: 问题概述
       description: 请简要描述您遇到的问题。
@@ -15,34 +15,27 @@ body:
       label: 环境信息
       description: 请提供以下环境信息：
       value: |
-        - 安装操作系统:
+        - 服务器操作系统:
+        - Cashbook部署方式:
+        - Cashbook版本:
         - 浏览器版本:
-        - 软件版本:
         - 其他相关信息:
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: 复现步骤
+      label: 截图/录屏/日志
+      description: 请附上截图、录屏或错误日志信息，以便我们更直观地了解问题。
+      value: |
+        **截图/录屏**:
+        **日志**:
+
+  - type: textarea
+    attributes:
+      label: 复现步骤/预期结果/实际结果
       description: 请详细描述如何复现问题，包括操作步骤、截图或录屏等。
-
-  - type: textarea
-    attributes:
-      label: 预期结果
-      description: 请描述您期望的正确行为。
-
-  - type: textarea
-    attributes:
-      label: 实际结果
-      description: 请描述您实际遇到的错误行为。
-
-  - type: textarea
-    attributes:
-      label: 截图/录屏
-      description: 请附上截图或录屏的链接或描述，以便我们更直观地了解问题。
-
-  - type: textarea
-    attributes:
-      label: 日志信息
-      description: 请附上错误日志信息，帮助我们定位问题。
+      value: |
+        **复现步骤**:
+        **预期结果**:
+        **实际结果**:

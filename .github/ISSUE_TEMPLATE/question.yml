@@ -3,11 +3,6 @@ description: 有不懂的问题，向大家提问
 title: "[提问]: "
 labels: [question]
 body:
-  - type: input
-    attributes:
-      label: 问题概述
-      description: 请简要描述您的问题。
-
   - type: textarea
     attributes:
       label: 问题描述
