@@ -6,9 +6,10 @@ export default defineEventHandler(async (event) => {
   if (!body.bookId) {
     return error("Not Find BookId");
   }
+  // 条件查询
   const where: any = {
     bookId: body.bookId,
-  }; // 条件查询
+  };
 
   // 添加条件：如果 `name` 存在，则根据 `name` 查询
   if (body.id) {
@@ -18,11 +19,7 @@ export default defineEventHandler(async (event) => {
       equals: Number(body.id),
     };
   }
-  if (body.name) {
-    where.name = {
-      contains: body.name,
-    };
-  }
+  // 类型条件
   if (body.flowType) {
     where.flowType = {
       equals: body.flowType,
@@ -38,6 +35,8 @@ export default defineEventHandler(async (event) => {
       equals: body.payType,
     };
   }
+
+  // 时间条件
   if (body.startDay && body.endDay) {
     where.day = {
       gte: body.startDay,
@@ -50,6 +49,23 @@ export default defineEventHandler(async (event) => {
   } else if (body.endDay) {
     where.day = {
       lte: body.endDay,
+    };
+  }
+
+  // 模糊条件
+  if (body.name) {
+    where.name = {
+      contains: body.name,
+    };
+  }
+  if (body.attribution) {
+    where.attribution = {
+      contains: body.attribution,
+    };
+  }
+  if (body.description) {
+    where.description = {
+      contains: body.description,
     };
   }
 

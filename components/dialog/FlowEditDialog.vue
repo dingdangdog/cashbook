@@ -56,6 +56,12 @@
           ></v-text-field>
           <v-text-field
             clearable
+            label="流水归属"
+            variant="outlined"
+            v-model="flowEdit.attribution"
+          ></v-text-field>
+          <v-text-field
+            clearable
             label="流水名称"
             variant="outlined"
             v-model="flowEdit.name"

@@ -21,11 +21,6 @@ export default defineEventHandler(async (event) => {
       equals: Number(body.id),
     };
   }
-  if (body.name) {
-    where.name = {
-      contains: body.name,
-    };
-  }
   if (body.flowType) {
     where.flowType = {
       equals: body.flowType,
@@ -54,7 +49,18 @@ export default defineEventHandler(async (event) => {
     where.day = {
       lte: body.endDay,
     };
-  } else if (body.description) {
+  }
+  if (body.name) {
+    where.name = {
+      contains: body.name,
+    };
+  }
+  if (body.attribution) {
+    where.attribution = {
+      contains: body.attribution,
+    };
+  }
+  if (body.description) {
     where.description = {
       contains: body.description,
     };

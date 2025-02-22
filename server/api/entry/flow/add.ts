@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
     name: String(body.name || ""),
     description: String(body.description || ""),
     invoice: String(body.invoice || ""),
+    attribution: String(body.attribution || ""),
   };
 
   // 在数据库中添加新数据

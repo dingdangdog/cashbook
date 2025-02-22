@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
     money: Number(body.money || ""),
     name: String(body.name || ""),
     description: String(body.description || ""),
+    attribution: String(body.attribution || ""),
     invoice: String(body.invoice || ""),
   };
   const updated = await prisma.flow.update({

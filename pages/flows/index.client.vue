@@ -353,6 +353,7 @@
         <h3>批量修改 {{ selectedFlows.length }} 条流水的类型</h3>
       </v-card-title>
       <v-card-text>
+        <p class="tw-text-sm tw-pb-2 tw-text-red-600">将你选中的流水全部改为下面选中的类型，不想修改字段可以不选</p>
         <div class="queryParam">
           <v-select
             label="流水类型"
@@ -529,6 +530,7 @@ const headers = ref<any[]>([
   { title: "支出类型/收入类型", key: "industryType", sortable: false },
   { title: "支付方式/收款方式", key: "payType", sortable: false },
   { title: "金额", key: "money", align: "end" },
+  { title: "流水归属", key: "attribution", sortable: false },
   { title: "名称", key: "name", sortable: false },
   { title: "小票", key: "invoice", sortable: false },
   { title: "备注", key: "description", sortable: false },
