@@ -266,6 +266,18 @@
           </v-tooltip>
         </template>
       </v-btn>
+      <div class="tw-flex tw-space-x-2">
+        <v-btn color="green-lighten-2" @click="downloadCsvTemplate()">
+          下载模板
+        </v-btn>
+        <v-btn
+          color="blue-lighten-2"
+          class="tw-flex-1"
+          @click="importCsvTemplate()"
+        >
+          模板导入
+        </v-btn>
+      </div>
 
       <v-file-input
         ref="csvFileInput"
@@ -353,7 +365,9 @@
         <h3>批量修改 {{ selectedFlows.length }} 条流水的类型</h3>
       </v-card-title>
       <v-card-text>
-        <p class="tw-text-sm tw-pb-2 tw-text-red-600">将你选中的流水全部改为下面选中的类型，不想修改字段可以不选</p>
+        <p class="tw-text-sm tw-pb-2 tw-text-red-600">
+          将你选中的流水全部改为下面选中的类型，不想修改字段可以不选
+        </p>
         <div class="queryParam">
           <v-select
             label="流水类型"
@@ -787,6 +801,26 @@ const exportFlows = () => {
       Alert.error("数据获取出错，无法导出！");
     });
 };
+
+const downloadCsvTemplate = () => {
+  // public/csvtemplate.csv
+  const fileName = "Cashbook模板.csv";
+  const url = "/csvtemplate.csv";
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+};
+
+const importCsvTemplate = () => {
+  if (!csvFileInput.value) {
+    return;
+  }
+  fileType.value = "template";
+  titleRowIndex.value = 0;
+  csvFileInput.value.click();
+};
+
 // 动态设置列表高度
 const getTableHeight = () => {
   return window.innerWidth < 1080
@@ -807,7 +841,6 @@ import {
   jdFinanceConvert,
   wxpayConvert,
 } from "@/utils/flowConvert";
-import type payType from "~/server/api/entry/analytics/payType";
 
 // 上传文件类型标识：none-未知文件；alipay-支付宝；wxpay-微信；jdFinance-京东
 const fileType = ref("none");
@@ -960,7 +993,7 @@ const readJsonInfo = () => {
           flow = jdFinanceConvert(row, csvHeaders.value);
         } else {
           // 其他数据，暂不处理
-          flow = {};
+          flow = templateConvert(row, csvHeaders.value);
         }
         csvFlows.value.push(flow);
       });

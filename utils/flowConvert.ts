@@ -21,6 +21,27 @@ import { typeRelationStore } from "./store";
 // |  其他    | 其他/商业服务/生活服务/借用借还 |      | 其他网购/其他/网购/收发快递/白条 | 一些少见或未知类型，通常需要人工分类 |
 
 /**
+ * 模板导入
+ * @param row
+ * @param indexMap
+ */
+export function templateConvert(
+  row: any[],
+  indexMap: Record<string, number>
+): Flow {
+  const flow: Flow | any = {};
+  flow.day = row[indexMap["交易时间"]];
+  flow.flowType = String(row[indexMap["收/支"]]);
+  flow.industryType = String(row[indexMap["交易分类"]]);
+  flow.payType = String(row[indexMap["收/付款方式"]]);
+  flow.money = row[indexMap["金额"]];
+  flow.attribution = String(row[indexMap["流水归属"]]);
+  flow.name = String(row[indexMap["交易对方"]]);
+  flow.description = String(row[indexMap["备注"]]);
+  return flow;
+}
+
+/**
  * 支付宝
  * @param row
  * @param indexMap

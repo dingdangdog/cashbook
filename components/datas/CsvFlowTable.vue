@@ -98,7 +98,7 @@ const submitUpload = () => {
     .then((res: any) => {
       // console.log(res)
       if (res && res.count > 0) {
-        Alert.success("导入成功, 共导入" + res + "条流水");
+        Alert.success("导入成功, 共导入" + res.count + "条流水");
         successCallback();
         showFlowExcelImportDialog.value = false;
       } else {
