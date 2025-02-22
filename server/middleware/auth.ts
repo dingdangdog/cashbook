@@ -9,17 +9,16 @@ export default defineEventHandler(async (event) => {
   if (url.pathname.startsWith("/api/entry")) {
     const session = await getServerSession(event);
 
-    if (!session?.user) {
+    if (!session) {
       // 如果没有会话，返回未授权
-      console.log("No Authorization");
+      console.error(new Date().toLocaleDateString() + " No Authorization");
       return noPermissions();
     }
-
+    const user = session.user;
     // 检查用户是否有足够权限访问前台接口
     // 可根据会话中的用户信息进行权限判断
-    const user = session.user;
     if (!user) {
-      console.log("No User Authorization");
+      console.error(new Date().toLocaleDateString() + " No User Authorization");
       return noPermissions();
     }
 
@@ -32,7 +31,7 @@ export default defineEventHandler(async (event) => {
     // 后台管理接口
     const Admin = getHeader(event, "Admin");
     if (!Admin) {
-      console.log("No Admin");
+      console.error(new Date().toLocaleDateString() + " No Admin");
       return noPermissions();
     }
     const runtimeConfig = useRuntimeConfig();
@@ -40,7 +39,7 @@ export default defineEventHandler(async (event) => {
       Admin !=
       encryptBySHA256(runtimeConfig.adminUsername, runtimeConfig.adminPassword)
     ) {
-      console.log("Admin is Wrong!");
+      console.error(new Date().toLocaleDateString() + " Admin is Wrong!");
       deleteCookie(event, "Admin");
       return noPermissions();
     }
