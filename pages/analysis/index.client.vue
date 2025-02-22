@@ -6,6 +6,7 @@
       <v-tab :value="2">支付方式统计</v-tab>
       <v-tab :value="3">每日流水统计</v-tab>
       <v-tab :value="4">每月流水统计</v-tab>
+      <v-tab :value="5">流水归属统计</v-tab>
     </v-tabs>
 
     <v-tabs-window v-model="chartTab">
@@ -71,6 +72,14 @@
           v-if="chartTab === 4"
         />
       </v-tabs-window-item>
+      <v-tabs-window-item :value="5">
+        <AttributionPie
+          :title="''"
+          :width="singleChartWidth"
+          :height="singleChartHeight"
+          v-if="chartTab === 5"
+        />
+      </v-tabs-window-item>
     </v-tabs-window>
   </div>
 </template>
@@ -84,6 +93,7 @@ definePageMeta({
 // 借用全屏标志，用于判断时不是小屏模式
 import { miniFullscreen } from "@/utils/common";
 import { defineAsyncComponent, ref } from "vue";
+import AttributionPie from "~/components/charts/AttributionPie.vue";
 // 异步组件引用
 const DailyLineChart = defineAsyncComponent(
   () => import("~/components/charts/DailyLineChart.vue")
