@@ -1,7 +1,7 @@
 ---
 name: 其他👽
 description: 提交其他类型 Issue 的模板
-title: "[其他] - {主题}"
+title: "[其他]: "
 labels: [other]
 ---
 

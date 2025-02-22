@@ -1,7 +1,7 @@
 ---
 name: 功能❤️建议
 description: 提交功能建议的模板
-title: "[功能建议] - {建议概述}"
+title: "[功能建议]: "
 labels: [enhancement]
 ---
 

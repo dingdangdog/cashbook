@@ -1,7 +1,7 @@
 ---
-name: Bug👻反馈
+name: "Bug👻反馈"
 description: 提交 Bug 反馈的模板
-title: "[BUG] - {问题概述}"
+title: "[BUG]: "
 labels: [bug]
 ---
 
