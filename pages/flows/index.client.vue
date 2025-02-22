@@ -85,14 +85,14 @@
           <div class="tw-flex tw-h-12" v-if="value">
             <div
               v-for="img in value.split(',')"
-              class="tw-relative tw-flex tw-cursor-pointer tw-h-12 tw-max-w-12"
+              class="tw-relative tw-flex tw-cursor-pointer tw-h-12 tw-w-12"
               @click="openFullscreen(InvoiceUrls[img])"
               @mouseover="isHovering = img"
               @mouseleave="isHovering = ''"
             >
               <img
                 v-show="img"
-                class="tw-object-contains"
+                class="tw-object-contain"
                 :src="InvoiceUrls[img]"
               />
 
