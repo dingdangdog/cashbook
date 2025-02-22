@@ -1,9 +1,7 @@
----
 name: "Bug👻反馈"
-about: 提交 Bug 反馈
+description: 提交 Bug 反馈
 title: "[BUG]: "
 labels: [bug]
----
 body:
   - type: input
     attributes:
