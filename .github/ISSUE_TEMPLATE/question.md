@@ -1,6 +1,7 @@
 ---
 name: 萌新🤗提问
 description: 提交萌新提问的模板
+about: 提交萌新提问的模板
 title: "[提问]: "
 labels: [question]
 ---
