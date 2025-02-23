@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" style="display:flex;align-items:center;justify-content:center;">
 <img src="/public/logo.png" width="80px" alt="cashbook" />
 <h1>Cashbook</h1>
 </div>
@@ -16,7 +16,7 @@
 <!--   <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook/total.svg" /> -->
 </p>
 
-- Github：[https://github.com/dingdangdog/cashbook](https://github.com/dingdangdog/cashbook)
+- 官方文档站：[https://doc.cashbook.oldmoon.top](https://doc.cashbook.oldmoon.top)
 - 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号: `cashbook`/`cashbook`)
 - 在线体验后台：[cashbook.oldmoon.top/admin](https://cashbook.oldmoon.top/admin) (体验账号: `admin`/`admin123456`)
 - QQ交流群：`564081656`
