@@ -143,7 +143,7 @@ const openChangePasswordDialog = () => {
       >
         <div class="tw-hidden md:tw-flex tw-items-center">
           <v-btn icon>
-            <img src="/favicon.png" height="40" alt="logo" />
+            <img src="/logo.png" height="40" alt="logo" />
           </v-btn>
           <div class="tw-ml-2 tw-mt-2 tw-text-lg tw-font-bold">Cashbook</div>
         </div>

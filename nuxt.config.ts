@@ -17,11 +17,11 @@ export default defineNuxtConfig({
         },
         {
           rel: "shortcut icon",
-          href: "/favicon.png",
+          href: "/logo.png",
         },
         {
           rel: "icon",
-          href: "/favicon.png",
+          href: "/logo.png",
         },
       ],
     },

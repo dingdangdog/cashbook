@@ -68,7 +68,7 @@ const toPath = (menu: Menu) => {
 <template>
   <Head>
     <Title>{{ SystemConfig?.title }} - 管理</Title>
-    <!-- <Link rel="icon" type="image/x-icon" href="/favicon.png" /> -->
+    <!-- <Link rel="icon" type="image/x-icon" href="/logo.png" /> -->
   </Head>
   <v-layout class="" id="admin-container">
     <v-app-bar>
@@ -80,7 +80,7 @@ const toPath = (menu: Menu) => {
       </template>
       <v-btn icon @click="toIndex">
         <img
-          src="/favicon.png"
+          src="/logo.png"
           height="40"
           class="tw-rounded-full tw-overflow-hidden"
           alt="logo"
@@ -92,7 +92,7 @@ const toPath = (menu: Menu) => {
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" icon>
             <img
-              src="/favicon.png"
+              src="/logo.png"
               height="40"
               class="tw-rounded-full tw-overflow-hidden"
               alt="logo"

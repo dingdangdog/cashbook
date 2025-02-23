@@ -629,7 +629,7 @@ const isHovering = ref("");
 // 获取小票图片url的一些逻辑
 const InvoiceUrls = ref<Record<string, string>>({});
 const getInvoiceUrl = async (invoice: string) => {
-  const defalutImage = "/cashbook-mini.jpg";
+  const defalutImage = "/logo.png";
   if (!invoice) {
     InvoiceUrls.value[invoice] = defalutImage;
     return;
