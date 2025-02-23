@@ -272,7 +272,7 @@ onMounted(() => {
   attributionDiv = document.getElementById("payTypeDiv");
   attributionChart = echarts.init(attributionDiv);
   attributionChart.on("click", function (param) {
-    query.value = { ...chartParam.value, payType: param.name };
+    query.value = { ...chartParam.value, attribution: param.name };
     showFlowTable.value = true;
   });
   doQuery(chartParam.value);

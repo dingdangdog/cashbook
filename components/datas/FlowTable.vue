@@ -17,6 +17,9 @@
         <span class="tw-mx-1" v-show="flowQuery.payType">{{
           flowQuery.payType
         }}</span>
+        <span class="tw-mx-1" v-show="flowQuery.attribution">{{
+          flowQuery.attribution
+        }}</span>
       </div>
     </v-card-title>
     <v-card-text>
