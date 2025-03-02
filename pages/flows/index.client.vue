@@ -667,6 +667,8 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 // 执行分页数据查询
 const doQuery = () => {
+  // 清空选中状态
+  selectedFlows.value = [];
   loading.value = true;
   searchDrawer.value = false;
   doApi
