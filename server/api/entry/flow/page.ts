@@ -82,14 +82,20 @@ export default defineEventHandler(async (event) => {
     // 将金额排序设置到第一个
     orderBy.unshift({ money: String(body.moneySort) });
   }
-
-  // 【条件、排序、分页】 组合查询
-  const flows = await prisma.flow.findMany({
-    where,
-    orderBy,
-    skip,
-    take: pageSize,
-  });
+  let flows;
+  if (pageSize == -1) {
+    // 查询全部
+    flows = await prisma.flow.findMany({ where, orderBy });
+    // return success(books);
+  } else {
+    // 【条件、排序、分页】 组合查询
+    flows = await prisma.flow.findMany({
+      where,
+      orderBy,
+      skip,
+      take: pageSize,
+    });
+  }
   // 计算总页数
   const totalFlows = await prisma.flow.count({ where });
   const sumMoney = await prisma.flow.groupBy({

@@ -49,7 +49,11 @@ export default defineEventHandler(async (event) => {
       target: "desc",
     },
   ];
-
+  if (pageSize == -1) {
+    // 查询全部
+    const datas = await prisma.typeRelation.findMany({ where, orderBy });
+    return success({ total: datas.length, data: datas, pages: 1 });
+  }
   // 【条件、排序、分页】 组合查询
   const users = await prisma.typeRelation.findMany({
     where,
