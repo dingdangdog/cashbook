@@ -42,7 +42,9 @@ const loading = ref(false);
 const fetchCandidates = () => {
   loading.value = true;
   doApi
-    .get<CandidatePair[]>("api/entry/flow/condidate/autos")
+    .post<CandidatePair[]>("api/entry/flow/condidate/autos", {
+      bookId: localStorage.getItem("bookId"),
+    })
     .then((res) => {
       candidatePairs.value = res;
     })
