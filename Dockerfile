@@ -38,19 +38,16 @@ RUN npm install -g prisma@6.2.1
 
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
-ENV NUXT_APP_URL="http://localhost:9090"
 ENV NUXT_APP_VERSION="4.0.6"
 ENV NUXT_DATA_PATH="/app/data"
 
 ENV NUXT_AUTH_SECRET="auth123"
-ENV NUXT_AUTH_ORIGIN="http://localhost:9090/api/auth"
 
 ENV NUXT_ADMIN_USERNAME="admin"
 # 密码是加密后的，加密方法见 server/utils 中的 test.js 或 common.ts
 ENV NUXT_ADMIN_PASSWORD="fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb6ed05f4cc"
 
 ENV PORT="9090"
-
 
 VOLUME /app/data/
 

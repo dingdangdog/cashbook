@@ -5,7 +5,7 @@ export const miniFullscreen = () => {
 
 export const checkSignIn = () => {
   // console.log(useAuth().status.value);
-  return useAuth().status.value === "authenticated";
+  return useCookie("Authorization").value ? true : false;
 };
 
 export const getUUID = (num: number) => {

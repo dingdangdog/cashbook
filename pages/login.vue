@@ -16,8 +16,6 @@ const toggleTheme = () => {
   localStorage.setItem("theme", to);
 };
 
-const auth = useAuth();
-
 const tab = ref("login");
 
 const usernameRules = [
@@ -49,22 +47,11 @@ const login = async () => {
   const { valid } = await loginForm.value.validate();
   if (valid) {
     // 框架密码登录
-    auth.signIn("credentials", {
-      ...loginParam.value,
-      callbackUrl: fromUrl.value ? fromUrl.value : "",
+    doApi.post("api/login", loginParam.value).then((res) => {
+      Alert.success("登录成功");
+      navigateTo(fromUrl.value || "/");
     });
   }
-};
-
-const githublogin = () => {
-  // 框架Github登录
-  auth
-    .signIn("github", {
-      callbackUrl: fromUrl.value ? fromUrl.value : "",
-    })
-    .then((res) => {
-      console.log(res);
-    });
 };
 
 const registerForm = ref();
@@ -147,10 +134,7 @@ onMounted(async () => {
     <div
       class="tw-flex tw-items-center tw-max-w-[28rem] tw-w-full tw-justify-start tw-space-x-4 tw-py-4 tw-mt-8"
     >
-      <img
-        src="/logo.png"
-        class="tw-w-16 tw-h-16 tw-object-contain tw-rounded-full"
-      />
+      <img src="/logo.png" class="tw-w-16 tw-h-16 tw-object-contain" />
       <h1 class="tw-text-2xl">欢迎使用{{ SystemConfig?.title }}</h1>
     </div>
 

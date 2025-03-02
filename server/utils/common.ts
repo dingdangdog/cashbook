@@ -23,18 +23,39 @@ export const error = (m: any, d?: any): Result<any> => {
   };
 };
 
-export const noPermissions = (): Result<any> => {
+export const noPermissions = (message?: string): Result<any> => {
   return {
     c: 400,
-    m: "NO Permissions",
+    m: message || "NO Permissions",
     d: "",
   };
 };
 
-import { getToken } from "#auth";
-// @ts-ignore
-export const getUserId = async (event: H3Event<EventHandlerRequest>) => {
-  const token = await getToken({ event });
-  // console.log("getUserId", token);
-  return Number(token?.id || 0);
+import jwt from "jsonwebtoken";
+
+export const getUserId = async (
+  // @ts-ignore
+  event: H3Event<EventHandlerRequest>
+): Promise<number> => {
+  const token = getHeader(event, "Authorization");
+  const secretKey = useRuntimeConfig().authSecret;
+
+  if (!token) {
+    return 0; //  Token 不存在，返回 null 表示未认证
+  }
+
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secretKey, (err, decoded: any) => {
+      if (err) {
+        //  Token 验证失败
+        console.error("JWT verification failed:", err.message); // 记录错误信息 (可选)
+        return resolve(0); // 返回 null 表示验证失败，获取不到 userId
+        // 或者，你也可以 reject(err)  并让调用者处理错误，取决于你的错误处理策略
+      }
+
+      // Token 验证成功
+      const userId = Number(decoded?.id || 0); // 提取 userId，并确保是数字类型
+      resolve(userId);
+    });
+  });
 };

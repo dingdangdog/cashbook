@@ -37,10 +37,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {},
     appVersion: "",
-    appUrl: "",
     dataPath: "",
     authSecret: "",
-    authOrigin: "", // 即 NUXT_AUTH_ORIGIN，权限框架使用
     adminUsername: "",
     adminPassword: "",
   },
@@ -50,24 +48,9 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     "@nuxtjs/tailwindcss",
     "nuxt-echarts",
-    "@sidebase/nuxt-auth",
     "@prisma/nuxt",
   ],
 
-  auth: {
-    // baseURL: process.env.NUXT_AUTH_ORIGIN,
-    // globalAppMiddleware: false,
-    originEnvKey: "NUXT_AUTH_ORIGIN",
-    provider: {
-      type: "authjs",
-      trustHost: false,
-      addDefaultCallbackUrl: false,
-    },
-    sessionRefresh: {
-      enablePeriodically: false,
-      enableOnWindowFocus: true,
-    },
-  },
   i18n: {
     strategy: "prefix_except_default",
     defaultLocale: "zh",

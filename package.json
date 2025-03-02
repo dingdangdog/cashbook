@@ -19,11 +19,15 @@
     "@prisma/nuxt": "^0.2.0",
     "@sidebase/nuxt-auth": "^0.10.0",
     "echarts": "^5.6.0",
+    "jsonwebtoken": "^9.0.2",
     "next-auth": "~4.21.1",
     "nuxt": "^3.12.4",
     "nuxt-echarts": "^0.2.4",
     "vue": "latest",
     "vuetify-nuxt-module": "^0.18.3",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9"
   }
 }

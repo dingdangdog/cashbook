@@ -6,8 +6,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     "/api/entry/user/info",
     {
       method: "get",
+      headers: {
+        Authorization: useCookie("Authorization").value || "",
+      },
     }
   );
+  // console.log("res", res, "error", error);
   if (error.value) {
     return navigateTo({ path: "/500", query: { e: String(error.value) } });
   }
@@ -20,7 +24,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // console.log(400);
     // 跳转登录
     return navigateTo({
-      path: "/auth/login",
+      path: "/login",
       query: { callbackUrl: to.fullPath },
     });
   } else {

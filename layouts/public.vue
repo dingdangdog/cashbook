@@ -17,7 +17,12 @@ const toggleTheme = () => {
 const logout = () => {
   localStorage.removeItem("bookId");
   localStorage.removeItem("bookName");
-  useAuth().signOut();
+  doApi.get("api/logout").then((res) => {
+    Alert.success("退出登录");
+    setTimeout(() => {
+      navigateTo("/login");
+    }, 100);
+  });
 };
 const miniWindow = ref(false);
 const menuer = ref(false);
@@ -34,10 +39,6 @@ onMounted(() => {
     themeValue.value = true;
   }
 });
-
-const toHome = () => {
-  navigateTo("/admin/home");
-};
 
 type Menu = {
   title: string;
@@ -98,9 +99,6 @@ const toPath = (menu: Menu) => {
 };
 
 const showMenuTitle = ref(true);
-const tiggleShowMenu = () => {
-  showMenuTitle.value = !showMenuTitle.value;
-};
 
 const bookName = ref("");
 onMounted(() => {
