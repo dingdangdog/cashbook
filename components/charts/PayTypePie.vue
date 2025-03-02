@@ -138,9 +138,28 @@ const optionRef = ref({
     trigger: "item",
   },
   legend: {
-    // top: '5%',
-    // left: '0',
-    // orient: 'vertical',
+    tooltip: {
+      // trigger: "item",
+      formatter: function (legend: any) {
+        // {componentType: 'legend', name: '其他网购', $vars: Array(1), legendIndex: 0}
+        // 找到对应的类型，显示数值
+        for (let d of dataList) {
+          if (legend.name == d.name) {
+            // console.log(d);
+            return `${legend.name}: ${d.value}`;
+          }
+        }
+        // console.log(legend);
+        return `未找到${legend.name}`;
+        // return echarts.format.truncateText(
+        //   name,
+        //   40,
+        //   "14px Microsoft Yahei",
+        //   "…"
+        // );
+      },
+      show: true,
+    },
     textStyle: {
       color: "#fff",
     },
