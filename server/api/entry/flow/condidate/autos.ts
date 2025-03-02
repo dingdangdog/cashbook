@@ -2,9 +2,14 @@ import prisma from "~/lib/prisma";
 
 // 此处的相似性判断示例：金额完全相等（你可根据业务需要添加金额误差、日期范围等条件）
 export default defineEventHandler(async (event) => {
+  const body = await readBody(event); // 获取请求体
+  if (!body.bookId) {
+    return error("No Find bookid");
+  }
+  // const userId = await getUserId(event);
   // 获取所有未平账的支出数据
   const expenditures = await prisma.flow.findMany({
-    where: { flowType: "支出", eliminate: 0 },
+    where: { flowType: "支出", eliminate: 0, bookId: String(body.bookId) },
     orderBy: [
       {
         day: "desc",
@@ -21,6 +26,7 @@ export default defineEventHandler(async (event) => {
         flowType: { in: ["收入", "不计收支"] },
         // 例如这里以金额完全相等为条件，实际可修改为近似匹配：
         money: expense.money,
+        bookId: String(body.bookId),
         // 如有需要，可增加日期、描述等其它条件
       },
     });
