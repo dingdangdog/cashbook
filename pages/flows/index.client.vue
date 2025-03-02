@@ -427,6 +427,18 @@
           >
           </v-combobox>
         </div>
+        <div class="queryParam">
+          <v-combobox
+            label="流水归属"
+            hide-details="auto"
+            variant="outlined"
+            allow-new
+            clearable
+            v-model="newTypes.attribution"
+            :items="attributionList"
+          >
+          </v-combobox>
+        </div>
       </v-card-text>
       <v-card-actions>
         <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
@@ -785,6 +797,9 @@ const changeItemsType = () => {
   if (newTypes.value.payType) {
     changeInfo += `  支付方式/收款方式改为: "${newTypes.value.payType}"`;
   }
+  if (newTypes.value.attribution) {
+    changeInfo += `  流水归属改为: "${newTypes.value.attribution}"`;
+  }
   if (!changeInfo) {
     Alert.error("未发现任何变更信息");
     return;
@@ -801,6 +816,7 @@ const changeItemsType = () => {
         })
         .then((res) => {
           Alert.success("修改成功");
+          showChangeBatchTypeDialog.value = false;
           doQuery();
         })
         .catch((res) => {
