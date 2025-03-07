@@ -5,8 +5,9 @@ definePageMeta({
   layout: "public",
   auth: ["auth"],
 });
-
-navigateTo("/calendar");
+onMounted(() => {
+  navigateTo("/calendar");
+});
 </script>
 
 <style scoped></style>

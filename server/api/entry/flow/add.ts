@@ -8,16 +8,16 @@ export default defineEventHandler(async (event) => {
   }
   const userId = await getUserId(event);
   const flow = {
-    bookId: String(body.bookId),
     userId: userId,
+    bookId: String(body.bookId),
     day: String(body.day || ""),
     flowType: String(body.flowType || ""), // 流水类型：收入、支出
     industryType: String(body.industryType || ""), // 行业分类 原 type（收入类型、支出类型）
     payType: String(body.payType || ""), // 支付方式
-    money: Number(body.money || ""),
     name: String(body.name || ""),
+    money: Number(body.money || ""),
     description: String(body.description || ""),
-    invoice: String(body.invoice || ""),
+    // invoice: String(body.invoice || ""),
     attribution: String(body.attribution || ""),
   };
 
