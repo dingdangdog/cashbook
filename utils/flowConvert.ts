@@ -118,13 +118,17 @@ export function jdFinanceConvert(
 
   // 京东的金额有特殊处理
   const jdMoney = String(row[indexMap["金额"]]);
+  // console.log(jdMoney);
   const indexOfKuoHao = jdMoney.indexOf("(");
   let desc = "";
-  if (indexOfKuoHao < 0) {
-    flow.money = parseFloat(jdMoney);
+  if (jdMoney.indexOf("(") >= 0) {
+    // console.log(jdMoney);
+    flow.money = jdMoney.split("(")[0];
+    // console.log(flow.money);
+    desc = jdMoney.substring(indexOfKuoHao, jdMoney.length);
+    // console.log(desc);
   } else {
-    flow.money = parseFloat(jdMoney.substring(1, indexOfKuoHao));
-    desc = jdMoney.substring(indexOfKuoHao, jdMoney.length - 1);
+    flow.money = parseFloat(jdMoney);
   }
   flow.name = String(row[indexMap["交易说明"]]);
   flow.description =

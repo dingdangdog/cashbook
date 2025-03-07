@@ -957,7 +957,7 @@ const readJsonInfo = () => {
         const context = new TextDecoder("gb2312").decode(buffer);
         workbook = XLSX.read(context, { type: "string", codepage: 936 });
       } else {
-        workbook = XLSX.read(buffer);
+        workbook = XLSX.read(buffer, { raw: true });
       }
       // 至此，初步说明文件没有什么问题，清理一下历史数据，准备解析组装新数据
       removeFile();
@@ -998,13 +998,12 @@ const readJsonInfo = () => {
       sheetData.splice(0, titleRowIndex.value + 1);
 
       /**************************************/
-      // 数据主题回显
+      // 数据主体（table-body）回显
       /**************************************/
       // 时间列的索引
       const timeIndex = csvHeaders.value["交易时间"];
       sheetData.forEach((row) => {
-        // 创建行元素
-        // const data: Record<number, any> = {};
+        // console.log(row);
         // 部分数据字段格式化，并回显
         for (let i = 0; i < row.length; i++) {
           let cellValue = row[i];
