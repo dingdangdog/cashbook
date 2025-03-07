@@ -4,7 +4,7 @@ services:
     container_name: cashbook4
     depends_on: 
       - "db"
-    image: dingdangdog/cashbook:4.0.7
+    image: dingdangdog/cashbook:4.0.8
     restart: always
     # network_mode: "host"
     volumes:
@@ -12,8 +12,6 @@ services:
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@cashbook_db:5432/cashbook?schema=public" # 数据库链接，【请自行修改！与你的数据库一致】
       NUXT_DATA_PATH: "/app/data" # 数据存储未知，现在只有小票图片了，不建议修改
-      #NUXT_APP_URL: "https://cashbook.oldmoon.top" # 【v4.0.7之后不再使用】
-      #NUXT_AUTH_ORIGIN: "https://cashbook.oldmoon.top/api/auth" # 【v4.0.7之后不再使用】
       NUXT_AUTH_SECRET: "auth_secret" # 前台登录加密使用的密钥 【自行修改！】
       NUXT_ADMIN_USERNAME: "admin" # 后台登录用户名
       # 【自行修改】后台登录密码，密码是加密后的，生成密码可前往 https://cashbook.oldmoon.top/admin/GetPassword 或独立部署后访问 `你的url/admin/GetPassword`
