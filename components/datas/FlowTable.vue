@@ -211,16 +211,16 @@ const getTableHeight = () => {
     : window.innerHeight - 64 * 6;
 };
 
-watch(flowQuery.value, () => {
-  if (searching.value) {
-    return;
-  }
-  searching.value = true;
-  setTimeout(() => {
-    searching.value = false;
-    doQuery();
-  }, 1000);
-});
+// watch(flowQuery.value, () => {
+//   if (searching.value) {
+//     return;
+//   }
+//   searching.value = true;
+//   setTimeout(() => {
+//     searching.value = false;
+//     doQuery();
+//   }, 1000);
+// });
 </script>
 
 <style scoped>
