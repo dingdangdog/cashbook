@@ -231,14 +231,15 @@ const confirmForm = async (again: boolean) => {
 const createOne = (again: boolean) => {
   doApi
     .post<Flow>("api/entry/flow/add", {
-      day: dateFormater("YYYY-MM-dd", flowEdit.value.day || new Date()),
       bookId: localStorage.getItem("bookId") || "",
+      day: dateFormater("YYYY-MM-dd", flowEdit.value.day || new Date()),
       flowType: flowEdit.value.flowType,
       industryType: flowEdit.value.industryType,
-      money: Number(flowEdit.value.money),
       payType: flowEdit.value.payType,
       name: flowEdit.value.name,
+      money: Number(flowEdit.value.money),
       description: flowEdit.value.description,
+      attribution: flowEdit.value.attribution,
     })
     .then((res) => {
       if (res.id) {
