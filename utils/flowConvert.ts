@@ -118,18 +118,11 @@ export function jdFinanceConvert(
 
   // 京东的金额有特殊处理
   const jdMoney = String(row[indexMap["金额"]]);
-  // console.log(jdMoney);
-  const indexOfKuoHao = jdMoney.indexOf("(");
-  let desc = "";
-  if (jdMoney.indexOf("(") >= 0) {
-    // console.log(jdMoney);
-    flow.money = jdMoney.split("(")[0];
-    // console.log(flow.money);
-    desc = jdMoney.substring(indexOfKuoHao, jdMoney.length);
-    // console.log(desc);
-  } else {
-    flow.money = parseFloat(jdMoney);
-  }
+  const match = jdMoney.match(/^(\d*\.?\d+)(.*)/);
+  flow.money = match ? match[1] : jdMoney;
+  const desc = match ? match[2] : "";
+  // console.log(money); // "980.27"
+  // console.log(desc); // "(已全额退款)"
   flow.name = String(row[indexMap["交易说明"]]);
   flow.description =
     desc +
