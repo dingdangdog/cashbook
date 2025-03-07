@@ -20,7 +20,7 @@ services:
       - 9090:9090 # 账本开放端口 【自行修改！】
   db:
     container_name: cashbook_db
-    image: postgres
+    image: postgres:17.4-alpine3.21
     restart: always
     #network_mode: "host"
     # set shared memory limit when using docker-compose
