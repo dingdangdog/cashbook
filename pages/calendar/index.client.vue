@@ -7,6 +7,7 @@
         :year="nowYear"
         :events="events"
       >
+        <!-- 日历头部插槽，自定义日历头部显示内容 -->
         <template v-slot:header="{ title }">
           <div
             style="
@@ -61,23 +62,39 @@
             </div>
           </div>
         </template>
+        <!-- 日历事件插槽，用于显示自定义事件，时间可以跨天，利用该功能间接实现每天流水显示 -->
         <template v-slot:event="{ day, allDay, event }">
-          <p style="text-align: center; padding: 0.3rem 0.2rem">
-            <v-chip
-              class="cursor-pointer"
-              :class="
-                event.out
-                  ? outMoneyClass(event.money)
-                  : inMoneyClass(event.money)
-              "
-              @click="clickDay(event.day, String(event.title))"
+          <div class="tw-relative">
+            <div
+              class="tw-absolute tw-right-2 -tw-top-4 tw-z-50"
+              v-if="event.type == 'button'"
             >
-              {{ event.title }}: {{ event.money }}
-            </v-chip>
-          </p>
+              <v-btn
+                size="small"
+                color="rgba(3, 150, 200, 0.5)"
+                icon="mdi-plus"
+                @click="addFlow(day)"
+              ></v-btn>
+            </div>
+            <p class="tw-text-center" v-if="event.type == 'data'">
+              <!-- {{ day }} -->
+              <v-chip
+                class="cursor-pointer tw-m-1"
+                :class="
+                  event.out
+                    ? outMoneyClass(event.money)
+                    : inMoneyClass(event.money)
+                "
+                @click="clickDay(event.day, String(event.title))"
+              >
+                {{ event.title }}: {{ Number(event.money).toFixed(2) }}
+              </v-chip>
+            </p>
+          </div>
         </template>
       </v-calendar>
     </div>
+    <!-- 月度交易分析弹窗 -->
     <v-dialog :width="'40rem'" v-model="monthAnalysisDialog">
       <v-card>
         <v-card-title>{{ monthTitle + " 流水分析" }}</v-card-title>
@@ -111,6 +128,13 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <FlowEditDialog
+      v-if="showFlowEditDialog"
+      title="添加流水"
+      :flow="addFlowItem"
+      :success-callback="addFlowSuccess"
+    />
   </div>
 </template>
 
@@ -119,9 +143,10 @@ definePageMeta({
   layout: "public",
   middleware: ["auth"],
 });
+import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 
 import { VCalendar } from "vuetify/labs/VCalendar";
-
+import { showFlowEditDialog } from "~/utils/flag";
 import { daily } from "~/utils/apis";
 import { dateFormater } from "~/utils/common";
 import type { CommonChartQuery } from "~/utils/model";
@@ -197,6 +222,33 @@ const changeDate = (value: any) => {
   }
   nowMonth.value = nowDate.value.getMonth();
   nowYear.value = nowDate.value.getFullYear();
+  initDailyButton();
+};
+
+const initDailyButton = () => {
+  const daysInMonth = new Date(nowYear.value, nowMonth.value, 0).getDate();
+  // console.log(nowYear.value, nowMonth.value, daysInMonth);
+  // Add event for the full month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const buttonTitle = `button-${nowYear.value}-${nowMonth.value}-${day}`;
+    const existingEvent = events.find((e) => e.title === buttonTitle);
+    if (existingEvent) {
+      console.log(buttonTitle);
+      return;
+    } else {
+      events.unshift({
+        type: "button",
+        title: buttonTitle,
+        day: `${nowYear.value}-${nowMonth.value + 1}-${day}`,
+        start: new Date(`${nowYear.value}-${nowMonth.value + 1}-${day}`),
+        end: new Date(`${nowYear.value}-${nowMonth.value + 1}-${day}`),
+        color: "",
+        allDay: true,
+        out: false,
+        money: 0,
+      });
+    }
+  }
 };
 
 // 根据日期获取月份
@@ -229,6 +281,7 @@ const inMoneyClass = (money: any) => {
 const events = reactive<CalendarDate[]>([]);
 interface CalendarDate {
   title: string;
+  type: string; // data表示流水数据，button表示按钮
   day: string;
   start: Date;
   end: Date;
@@ -245,6 +298,7 @@ const initQuery = () => {
   outDayCount.value = {};
   // 支出数据查询
   doQuery({}).then((res) => {
+    initDailyButton();
     if (res.length === 0) {
       Alert.error("暂无数据");
     }
@@ -257,11 +311,12 @@ const initQuery = () => {
       outMonthCount.value[month] = count + Number(data.outSum);
 
       events.push({
+        type: "data",
         title: `支出`,
         day: data.type,
         start: new Date(data.type),
         end: new Date(data.type),
-        color: "red",
+        color: "",
         allDay: true,
         out: true,
         money: data.outSum,
@@ -273,11 +328,12 @@ const initQuery = () => {
       inMonthCount.value[month] = inCount + Number(data.inSum);
 
       events.push({
+        type: "data",
         title: `收入`,
         day: data.type,
         start: new Date(data.type),
         end: new Date(data.type),
-        color: "green",
+        color: "",
         allDay: true,
         out: false,
         money: data.inSum,
@@ -303,7 +359,7 @@ const showMonthAnalysis = (month: string) => {
   if (monthParam.split("-")[1] && monthParam.split("-")[1].length === 1) {
     monthParam = monthParam.split("-")[0] + "-0" + monthParam.split("-")[1];
   }
-  console.log(monthParam);
+  // console.log(monthParam);
   doApi
     .post<MonthAnalysis>("api/entry/analytics/monthAnalysis", {
       month: monthParam,
@@ -317,6 +373,47 @@ const showMonthAnalysis = (month: string) => {
       // Alert.error("查询出错");
       console.log(err);
     });
+};
+
+const addFlowItem = ref<Flow | any>({});
+const addFlow = (day: any) => {
+  addFlowItem.value.day = day.isoDate;
+  showFlowEditDialog.value = true;
+  // console.log(day);
+};
+const addFlowSuccess = (flow: Flow) => {
+  // console.log(flow);
+  // Find events for the flow's day
+  const dayEvents = events.filter((e) => e.day === flow.day);
+
+  // Skip processing for non-counting flows
+  if (flow.flowType === "不计收支") {
+    return;
+  }
+  // Find matching event by flow type (out/in)
+  const isOutFlow = flow.flowType === "支出";
+  const matchingEvent = dayEvents.find((e) => e.out === isOutFlow);
+
+  if (matchingEvent) {
+    // Update existing event's money
+    matchingEvent.money = Number(
+      (Number(matchingEvent.money) + Number(flow.money)).toFixed(2)
+    );
+    matchingEvent.title = isOutFlow ? "支出" : "收入";
+  } else {
+    // Add new event
+    events.push({
+      start: new Date(flow.day),
+      end: new Date(flow.day),
+      allDay: true,
+      out: isOutFlow,
+      money: Number(flow.money),
+      title: isOutFlow ? "支出" : "收入",
+      type: "data",
+      color: "",
+      day: flow.day,
+    });
+  }
 };
 </script>
 

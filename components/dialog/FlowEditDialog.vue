@@ -242,7 +242,7 @@ const createOne = (again: boolean) => {
     })
     .then((res) => {
       if (res.id) {
-        successCallback();
+        successCallback(res);
         Alert.success("新增成功!");
         showFlowEditDialog.value = again;
         // 清空名称、备注和金额
