@@ -25,7 +25,9 @@ export default defineEventHandler(async (event) => {
   });
 
   // 提取 attribution 属性并返回集合
-  const names = flows.map((flow) => flow.attribution);
+  const names = flows
+    .map((flow) => flow.attribution)
+    .filter((attribution) => attribution && attribution.trim() !== "");
 
   return success(names);
 });
