@@ -65,6 +65,9 @@
     <v-card>
       <v-card-title>添加共享账本</v-card-title>
       <v-card-text>
+        <p class="tw-text-gray-500 tw-text-sm">
+          使用他人分享的共享Key添加共享账本。
+        </p>
         <v-text-field
           label="共享Key"
           v-model="shareKey"
