@@ -2,15 +2,15 @@ import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const userId = await getUserId(event);
-  const { id, bookName } = body;
-  if (!id) {
-    return error("Not Find ID");
+  const { bookName, budget, bookId } = body;
+  if (!bookId) {
+    return error("Not Find bookID");
   }
-  const updated = await prisma.book.update({
-    where: { id, userId },
+  const updated = await prisma.book.updateMany({
+    where: { bookId },
     data: {
       bookName,
+      budget: Number(budget || 0),
     },
   });
   return success(updated);

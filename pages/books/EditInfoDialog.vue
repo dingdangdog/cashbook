@@ -61,6 +61,11 @@ const close = () => {
             label="账本名称"
             v-model="editItem.bookName"
           ></v-text-field>
+          <v-text-field
+            variant="outlined"
+            label="预算（每月）"
+            v-model="editItem.budget"
+          ></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>

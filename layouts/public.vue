@@ -64,6 +64,12 @@ const items = ref<Menu[]>([
     color: "rgb(149,117,205)",
   },
   {
+    title: "预算管理",
+    path: "budget",
+    icon: "mdi-hazard-lights",
+    color: "#BF360C",
+  },
+  {
     title: "流水管理",
     path: "flows",
     icon: "mdi-hand-water",

@@ -17,6 +17,7 @@ const loading = ref(false);
 const headers = ref([
   { title: "账本ID", key: "id", sortable: false },
   { title: "账本名称", key: "bookName", sortable: false },
+  { title: "预算（每月）", key: "budget", sortable: false },
   {
     title: "创建时间",
     key: "createDate",
