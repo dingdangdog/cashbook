@@ -34,16 +34,16 @@ export default defineEventHandler(async (event) => {
       // 2. 遍历所有表，清空数据并导入数据
       for (const tableName in allData) {
         try {
-          // 清空表数据并重置序列（自动更新索引）
-          await prisma.$queryRawUnsafe(
-            `TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`
-          );
-
           const tableData = allData[tableName];
           importStats[tableName] = { total: tableData.length, imported: 0 };
 
           // 批量导入数据
           if (tableData.length > 0) {
+            // 清空表数据并重置序列（自动更新索引）
+            await prisma.$queryRawUnsafe(
+              `TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`
+            );
+
             // 获取所有列名
             const columns = Object.keys(tableData[0]);
             const columnsWithQuotes = columns.map((column) => `"${column}"`);
@@ -78,6 +78,10 @@ export default defineEventHandler(async (event) => {
                 hasErrors = true;
               }
             }
+          } else {
+            console.info(`表 ${tableName} 没有数据`);
+            // 跳过
+            continue;
           }
 
           // 检查是否有自增ID序列需要更新
