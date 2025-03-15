@@ -109,6 +109,49 @@ onMounted(() => {
   getUserInfo();
 });
 
+// 获取最新发布的版本（如果想动态获取版本）
+// latest_version=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep -o '"tag_name": "[^"]*' | sed 's/"tag_name": "//')
+
+const checkVersion = () => {
+  fetch("https://api.github.com/repos/dingdangdog/cashbook/releases/latest")
+    .then((res) => res.json())
+    .then((data) => {
+      const latestVersion = data.tag_name.replace("v", "");
+      const currentVersion = SystemConfig.value?.version; // Assuming SystemConfig has the current version
+      const newVersionNotify = localStorage.getItem(latestVersion);
+      if (newVersionNotify) {
+        return;
+      }
+      if (currentVersion && latestVersion && currentVersion !== latestVersion) {
+        console.log(`New version available: ${latestVersion}`);
+        Confirm.open({
+          title: "提示",
+          content: `当前版本：${currentVersion}，最新版本：${latestVersion}，可前往Github查看更新内容！`,
+          confirmText: "前往Github",
+          cancelText: "不再提示",
+          closeText: "知道了",
+          confirm: () => {
+            window.open(
+              `https://github.com/dingdangdog/cashbook/releases`,
+              "_blank"
+            );
+          },
+          cancel: () => {
+            // 设置本地缓存
+            localStorage.setItem(latestVersion, "true");
+          },
+          close: () => {},
+        });
+      } else {
+        console.log("You are using the latest version.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching version data:", error);
+    });
+};
+checkVersion();
+
 const openAdmin = () => {
   window.open(`/admin`, "_blank");
 };
