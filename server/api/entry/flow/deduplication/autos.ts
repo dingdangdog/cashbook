@@ -7,6 +7,15 @@ export default defineEventHandler(async (event) => {
     return error("No Find bookid");
   }
 
+  // 获取检测条件，如果未提供则使用默认值（全部条件）
+  const criteria = body.criteria || {
+    name: true,
+    description: true,
+    industryType: true,
+    flowType: true,
+    payType: true,
+  };
+
   // 获取所有流水数据
   const allFlows = await prisma.flow.findMany({
     where: {
@@ -35,16 +44,39 @@ export default defineEventHandler(async (event) => {
 
     // 查找与当前记录相似的记录
     const similarRecords = allFlows.filter((flow, index) => {
-      return (
-        index !== i && // 不是同一条记录
-        !processedIds.has(flow.id) && // 未被处理过
-        flow.day === current.day && // 同一天
-        flow.money === current.money && // 金额相同
-        flow.industryType === current.industryType && // 金额相同
-        flow.name === current.name && // 金额相同
-        flow.description === current.description && // 金额相同
-        flow.flowType === current.flowType // 流水类型相同
-      );
+      // 基础条件：不是同一条记录、未被处理过、同一天、金额相同（这些是必选条件）
+      let isSimilar =
+        index !== i &&
+        !processedIds.has(flow.id) &&
+        flow.day === current.day &&
+        flow.money === current.money;
+
+      // 如果基础条件不满足，直接返回false
+      if (!isSimilar) return false;
+
+      // 根据用户选择的条件进行动态判断
+      if (criteria.name && flow.name !== current.name) {
+        return false;
+      }
+
+      if (criteria.description && flow.description !== current.description) {
+        return false;
+      }
+
+      if (criteria.industryType && flow.industryType !== current.industryType) {
+        return false;
+      }
+
+      if (criteria.flowType && flow.flowType !== current.flowType) {
+        return false;
+      }
+
+      if (criteria.payType && flow.payType !== current.payType) {
+        return false;
+      }
+
+      // 所有选中的条件都匹配，则认为是相似记录
+      return true;
     });
 
     // 如果找到相似记录，则创建一个组

@@ -15,12 +15,22 @@ const duplicateData = ref<DuplicateData>({
 
 const loading = ref(false);
 
+// 定义去重检测条件
+const deduplicationCriteria = ref({
+  name: true,
+  description: true,
+  industryType: true,
+  flowType: true,
+  payType: true,
+});
+
 // 获取疑似重复数据
 const fetchDuplicates = () => {
   loading.value = true;
   doApi
     .post<DuplicateData>("api/entry/flow/deduplication/autos", {
       bookId: localStorage.getItem("bookId"),
+      criteria: deduplicationCriteria.value, // 传递检测条件
     })
     .then((res) => {
       duplicateData.value = res;
@@ -98,6 +108,62 @@ const getFlowTypeColor = (type: string) => {
         </div>
       </v-card-title>
 
+      <!-- 添加检测条件选择器 -->
+      <v-card-subtitle>
+        <div
+          class="tw-flex tw-flex-col md:tw-flex-row tw-items-center md:tw-space-x-4"
+        >
+          <div class="tw-font-medium">
+            检测条件选择（日期和金额为默认条件）：
+          </div>
+          <div class="tw-flex tw-flex-wrap tw-gap-2">
+            <v-checkbox
+              color="success"
+              v-model="deduplicationCriteria.name"
+              label="名称"
+              hide-details
+              density="compact"
+            ></v-checkbox>
+            <v-checkbox
+              color="success"
+              v-model="deduplicationCriteria.description"
+              label="备注"
+              hide-details
+              density="compact"
+            ></v-checkbox>
+            <v-checkbox
+              color="success"
+              v-model="deduplicationCriteria.flowType"
+              label="流水类型"
+              hide-details
+              density="compact"
+            ></v-checkbox>
+            <v-checkbox
+              color="success"
+              v-model="deduplicationCriteria.industryType"
+              label="支出/收入类型"
+              hide-details
+              density="compact"
+            ></v-checkbox>
+            <v-checkbox
+              color="success"
+              v-model="deduplicationCriteria.payType"
+              label="支付/收款方式"
+              hide-details
+              density="compact"
+            ></v-checkbox>
+          </div>
+          <v-btn
+            size="small"
+            color="primary"
+            variant="elevated"
+            @click="fetchDuplicates"
+          >
+            应用筛选条件
+          </v-btn>
+        </div>
+      </v-card-subtitle>
+
       <v-card-text>
         <div
           v-if="loading"
@@ -118,7 +184,7 @@ const getFlowTypeColor = (type: string) => {
           <p class="tw-mt-4 tw-text-lg">未发现疑似重复数据</p>
         </div>
 
-        <div v-else class="tw-space-y-6 tw-overflow-y-auto tw-max-h-[80vh]">
+        <div v-else class="tw-space-y-6 tw-overflow-y-auto tw-max-h-[75vh]">
           <!-- 每一组重复数据 -->
           <v-card
             v-for="(group, groupIndex) in duplicateData.duplicateGroups"
@@ -126,7 +192,7 @@ const getFlowTypeColor = (type: string) => {
             variant="outlined"
             class="tw-mb-6"
           >
-            <v-card-title class="tw-bg-gray-400/50">
+            <v-card-title class="tw-bg-gray-400/40">
               <span class="tw-text-lg">疑似重复组 #{{ groupIndex + 1 }}</span>
               <div class="tw-text-sm">
                 {{ formatDate(group[0]?.day) }} | {{ group[0]?.flowType }} |
@@ -152,7 +218,7 @@ const getFlowTypeColor = (type: string) => {
                   <tr
                     v-for="(item, itemIndex) in group"
                     :key="item.id"
-                    :class="{ 'tw-bg-gray-500/50': itemIndex % 2 === 0 }"
+                    :class="{ 'tw-bg-gray-300/50': itemIndex % 2 === 0 }"
                   >
                     <td>
                       <v-chip
