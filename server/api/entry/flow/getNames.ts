@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const { bookId } = await readBody(event);
 
   if (!bookId) {
-    return error("Not Find BookId");
+    return error("请先选择账本");
   }
 
   const where: any = {

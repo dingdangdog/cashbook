@@ -2,10 +2,10 @@ import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const userId = await getUserId(event);
   if (!body.bookId) {
-    return error("Not Find BookID");
+    return error("请先选择账本");
   }
+  const userId = await getUserId(event);
   const types: any[] = body.types;
   const updates: any[] = [];
   const creates: any[] = [];

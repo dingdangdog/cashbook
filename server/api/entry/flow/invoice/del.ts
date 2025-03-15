@@ -4,12 +4,12 @@ import prisma from "~/lib/prisma";
 export default defineEventHandler(async (event) => {
   const { id, bookId, invoice } = await readBody(event);
 
-  if (!id) {
-    return error("Not Find ID");
+  if (!bookId) {
+    return error("请先选择账本");
   }
 
-  if (!bookId) {
-    return error("Not Find BookID");
+  if (!id) {
+    return error("Not Find ID");
   }
 
   if (!invoice) {

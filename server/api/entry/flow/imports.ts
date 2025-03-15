@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
 
   if (!body.bookId) {
-    return error("Not Find BookId");
+    return error("请先选择账本");
   }
 
   // add/overwrite

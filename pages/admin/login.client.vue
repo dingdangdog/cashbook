@@ -21,7 +21,7 @@
           class="tw-mb-2"
           clearable
           required
-          label="Accnout *"
+          label="账号 *"
           autocomplete="admin-account"
         ></v-text-field>
 
@@ -31,7 +31,7 @@
           :rules="[required]"
           clearable
           required
-          label="Password *"
+          label="密码 *"
           autocomplete="admin-password"
           placeholder="Enter your password"
           :type="lookPs ? 'text' : 'password'"
@@ -49,7 +49,7 @@
           type="submit"
           variant="elevated"
         >
-          Sign In
+          登入
         </v-btn>
       </v-form>
     </v-card>
@@ -76,7 +76,7 @@ const onSubmit = () => {
     .post("api/admin/login", loginParam.value)
     .then((res) => {
       // console.log(res)
-      Alert.success("Login success");
+      Alert.success("后台登录成功");
       navigateTo({ path: "/admin/" });
     })
     .catch((e) => error(e.message))
@@ -86,7 +86,7 @@ const onSubmit = () => {
 };
 
 const required = (v: any) => {
-  return !!v || "Field is required";
+  return !!v || "必填";
 };
 
 if (useCookie("Admin").value) {

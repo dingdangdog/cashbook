@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const { bookId, flowType } = await readBody(event); // 获取查询参数
 
   if (!bookId) {
-    return error("Not Find BookId");
+    return error("请先选择账本");
   }
   const where: any = {
     bookId,

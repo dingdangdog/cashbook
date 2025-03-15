@@ -5,6 +5,10 @@ import prisma from "~/lib/prisma";
 export default defineEventHandler(async (event) => {
   const formdata = await readFormData(event);
   try {
+    const bookId = String(formdata.get("bookId"));
+    if (!bookId) {
+      return error("请先选择账本");
+    }
     const files: File[] = formdata.getAll("invoice") as File[];
     if (!files || files.length < 1) {
       return error("Not Find File");
@@ -13,10 +17,6 @@ export default defineEventHandler(async (event) => {
     const flowId = Number(formdata.get("id"));
     if (!flowId) {
       return error("Not Find ID");
-    }
-    const bookId = String(formdata.get("bookId"));
-    if (!bookId) {
-      return error("Not Find BookID");
     }
     const runtimeConfig = useRuntimeConfig();
     let dataPath = String(runtimeConfig.dataPath);
