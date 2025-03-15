@@ -225,6 +225,7 @@ const changeDate = (value: any) => {
   initDailyButton();
 };
 
+// 初始化日历按钮(新增流水按钮)
 const initDailyButton = () => {
   const daysInMonth = new Date(nowYear.value, nowMonth.value, 0).getDate();
   // console.log(nowYear.value, nowMonth.value, daysInMonth);
@@ -259,6 +260,7 @@ const dayToMonth = (day: string | Date) => {
   return year + " 年 " + month + " 月";
 };
 
+// 支出金额样式
 const outMoneyClass = (money: any) => {
   if (!money || money == 0) {
     return "no-flow";
@@ -270,6 +272,8 @@ const outMoneyClass = (money: any) => {
     return "have-flow";
   }
 };
+
+// 收入金额样式
 const inMoneyClass = (money: any) => {
   if (!money || money == 0) {
     return "no-in";
@@ -310,6 +314,17 @@ const initQuery = () => {
       let count = outMonthCount.value[month] ? outMonthCount.value[month] : 0;
       outMonthCount.value[month] = count + Number(data.outSum);
 
+      // 收入
+      inDayCount.value[data.type] = data.inSum;
+      let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0;
+      inMonthCount.value[month] = inCount + Number(data.inSum);
+
+      // 如果收入和支出都是0，则不显示
+      if (Number(data.outSum) == 0 && Number(data.inSum) == 0) {
+        return;
+      }
+
+      // 支出 chip
       events.push({
         type: "data",
         title: `支出`,
@@ -322,11 +337,7 @@ const initQuery = () => {
         money: data.outSum,
       });
 
-      // 收入
-      inDayCount.value[data.type] = data.inSum;
-      let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0;
-      inMonthCount.value[month] = inCount + Number(data.inSum);
-
+      // 收入 chip
       events.push({
         type: "data",
         title: `收入`,
@@ -381,19 +392,27 @@ const addFlow = (day: any) => {
   showFlowEditDialog.value = true;
   // console.log(day);
 };
+// 新增流水成功回调
 const addFlowSuccess = (flow: Flow) => {
-  // console.log(flow);
-  // Find events for the flow's day
   const dayEvents = events.filter((e) => e.day === flow.day);
 
-  // Skip processing for non-counting flows
   if (flow.flowType === "不计收支") {
     return;
   }
-  // Find matching event by flow type (out/in)
   const isOutFlow = flow.flowType === "支出";
   const matchingEvent = dayEvents.find((e) => e.out === isOutFlow);
 
+  // 更新月数据统计
+  const month = dayToMonth(flow.day);
+  if (isOutFlow) {
+    outMonthCount.value[month] =
+      Number(outMonthCount.value[month]) + Number(flow.money);
+  } else {
+    inMonthCount.value[month] =
+      Number(inMonthCount.value[month]) + Number(flow.money);
+  }
+
+  // 更新日历 chip
   if (matchingEvent) {
     // Update existing event's money
     matchingEvent.money = Number(
