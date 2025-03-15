@@ -70,8 +70,8 @@
               v-if="event.type == 'button'"
             >
               <v-btn
-                size="small"
-                color="rgba(3, 150, 200, 0.5)"
+                size="x-small"
+                color="rgba(3, 150, 200, 0.4)"
                 icon="mdi-plus"
                 @click="addFlow(day)"
               ></v-btn>
@@ -403,7 +403,7 @@ const addFlowSuccess = (flow: Flow) => {
   const matchingEvent = dayEvents.find((e) => e.out === isOutFlow);
 
   // 更新月数据统计
-  const month = dayToMonth(flow.day);
+  const month = dayToMonth(flow.day || "");
   if (isOutFlow) {
     outMonthCount.value[month] =
       Number(outMonthCount.value[month]) + Number(flow.money);
@@ -422,15 +422,15 @@ const addFlowSuccess = (flow: Flow) => {
   } else {
     // Add new event
     events.push({
-      start: new Date(flow.day),
-      end: new Date(flow.day),
+      start: new Date(flow.day || ""),
+      end: new Date(flow.day || ""),
       allDay: true,
       out: isOutFlow,
       money: Number(flow.money),
       title: isOutFlow ? "支出" : "收入",
       type: "data",
       color: "",
-      day: flow.day,
+      day: flow.day || "",
     });
   }
 };
