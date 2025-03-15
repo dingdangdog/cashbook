@@ -129,6 +129,10 @@ const ignoreAllBalance = () => {
 const closeDialog = () => {
   showAutoMergeFlowsDialog.value = false;
 };
+
+const getItemClass = (item: any, index: number) => {
+  return index % 2 === 0 ? "even-row" : "odd-row";
+};
 </script>
 
 <template>
@@ -143,7 +147,8 @@ const closeDialog = () => {
           :items="candidatePairs"
           :headers="headers"
           :loading="loading"
-          height="calc(100vh - 300px)"
+          height="70vh"
+          :item-class="getItemClass"
         >
           <template v-slot:header.out="{ column }">
             <div class="tw-text-lg tw-font-bold">{{ column.title }}</div>
@@ -210,4 +215,11 @@ const closeDialog = () => {
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+.even-row {
+  background-color: #f5f5f5; /* Light gray for even rows */
+}
+.odd-row {
+  background-color: #ffffff; /* White for odd rows */
+}
+</style>

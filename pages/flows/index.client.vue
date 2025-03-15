@@ -8,7 +8,10 @@
         </v-btn>
         <!-- <v-btn color="error" @click="toDeleteBatch">删除</v-btn> -->
         <v-btn color="deep-orange-darken-4" @click="toAutoMergeFlows()"
-          >自动平账
+          >自助平账
+        </v-btn>
+        <v-btn color="deep-orange-darken-4" @click="toAutoDeduplicationFlows()"
+          >自助去重
         </v-btn>
         <v-btn color="success" @click="openCreateDialog(formTitle[0])"
           >新增
@@ -356,6 +359,10 @@
     :success-callback="doQuery"
     :item="editInvoiceItem"
   />
+  <FlowAutoDeduplicationDialog
+    v-if="showAutoDeduplicationFlowsDialog"
+    :success-callback="doQuery"
+  />
 
   <v-dialog v-model="showFlowExcelImportDialog" :fullscreen="true">
     <v-card>
@@ -485,11 +492,13 @@ import {
   showFlowEditDialog,
   showFlowJsonImportDialog,
   showFlowEditInvoiceDialog,
+  showAutoDeduplicationFlowsDialog,
 } from "~/utils/flag";
 import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 import FlowJsonImportDialog from "~/components/dialog/FlowJsonImportDialog.vue";
 import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import FlowAutoMergeDialog from "~/components/dialog/FlowAutoMergeDialog.vue";
+import FlowAutoDeduplicationDialog from "~/components/dialog/FlowAutoDeduplicationDialog.vue";
 import FlowCustomImportDialog from "~/components/dialog/FlowCustomImport.vue";
 import { dateFormater } from "@/utils/common";
 
@@ -715,6 +724,10 @@ const doQuery = () => {
 
 const toAutoMergeFlows = () => {
   showAutoMergeFlowsDialog.value = true;
+};
+
+const toAutoDeduplicationFlows = () => {
+  showAutoDeduplicationFlowsDialog.value = true;
 };
 
 // 确认删除的一些逻辑
