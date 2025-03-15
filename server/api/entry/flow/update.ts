@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
     name: String(body.name || ""),
     description: String(body.description || ""),
     attribution: String(body.attribution || ""),
-    invoice: String(body.invoice || ""),
   };
   const updated = await prisma.flow.update({
     where: { id: Number(body.id), bookId: body.bookId },
