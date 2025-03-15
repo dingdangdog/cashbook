@@ -48,10 +48,12 @@ const closeConfirm = () => {
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="info" variant="elevated" @click="cancel()">取消 </v-btn>
-        <v-btn color="error" variant="elevated" @click="confirm()"
-          >确定
+        <v-btn color="info" variant="elevated" @click="cancel()"
+          >{{ ThisConfirmModel.cancelText || "取消" }}
         </v-btn>
+        <v-btn color="error" variant="elevated" @click="confirm()">
+          {{ ThisConfirmModel.confirmText || "确定 " }}</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>

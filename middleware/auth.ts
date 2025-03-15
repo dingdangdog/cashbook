@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // 需要登陆的地址，校验登陆状态
   // const token = useCookie("Authorization").value;
   const { data: res, error } = await useFetch<Result<UserInfo>>(
-    "/api/entry/user/info",
+    "/api/checkuser",
     {
       method: "get",
       headers: {
@@ -14,6 +14,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // console.log("res", res, "error", error);
   if (error.value) {
     return navigateTo({ path: "/500", query: { e: String(error.value) } });
+  }
+  if (!res.value?.d) {
+    localStorage.removeItem("Authorization");
+    localStorage.removeItem("bookName");
+    localStorage.removeItem("bookId");
+    Alert.error("用户异常，请重新登录！");
+    return navigateTo({ path: "/login", query: { callbackUrl: to.fullPath } });
   }
   // console.log(res);
   // 用户信息获取成功，正常跳转

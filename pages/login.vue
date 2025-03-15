@@ -82,6 +82,13 @@ const lookRegisterAPS = ref(false);
 
 const fromUrl = ref();
 onMounted(async () => {
+  const route = useRoute();
+  const loginUrl = route.path;
+  const callbackUrl = route.query.callbackUrl;
+  if (loginUrl != callbackUrl) {
+    fromUrl.value = callbackUrl;
+  }
+
   const nowTheme = localStorage.getItem("theme");
   if (nowTheme) {
     theme.global.name.value = nowTheme;
@@ -91,20 +98,6 @@ onMounted(async () => {
     themeValue.value = true;
   }
 
-  const route = useRoute();
-  const loginUrl = route.fullPath.split("?")[0];
-  const callbackUrl = route.query.callbackUrl;
-  const error = route.query.error;
-  if (loginUrl != callbackUrl) {
-    fromUrl.value = callbackUrl;
-  }
-  // 更多错误信息见：https://next-auth.js.org/configuration/pages#sign-in-page
-  if (error == "CredentialsSignin") {
-    Alert.error("用户名或密码错误");
-  }
-  if (error == "OAuthSignin" || error == "OAuthCallback") {
-    Alert.error("三方登录异常，请检查网络连接");
-  }
   // 校验登录
   if (checkSignIn()) {
     Alert.success("登录成功");
@@ -112,10 +105,25 @@ onMounted(async () => {
       if (fromUrl.value) {
         window.location.href = fromUrl.value;
       } else {
-        navigateTo("/user/info");
+        navigateTo("/");
       }
-    }, 300);
+    }, 200);
   }
+
+  doApi.get("api/check").then((res) => {
+    console.log("res", res);
+    if (!res) {
+      Confirm.open({
+        title: "提示",
+        content: "当前系统没有普通用户，请前往【后台】“添加用户”或“开放注册”！",
+        confirmText: "前往后台",
+        cancelText: "知道了",
+        confirm: () => {
+          navigateTo("/admin");
+        },
+      });
+    }
+  });
 });
 </script>
 
@@ -154,6 +162,7 @@ onMounted(async () => {
             v-model="loginParam.password"
             :rules="passwordRules"
             name="password"
+            auto-complate="current-password"
             :counter="36"
             label="密码"
             required
@@ -256,6 +265,7 @@ onMounted(async () => {
         </v-card>
       </template>
     </v-dialog>
+    <GlobalConfirm />
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 import { transformAssetUrls } from "vite-plugin-vuetify";
 
 export default defineNuxtConfig({
-  ssr: true,
+  ssr: false,
   compatibilityDate: "2025-01-10",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],

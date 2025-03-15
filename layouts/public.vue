@@ -106,6 +106,7 @@ onMounted(() => {
   if (!bookName.value) {
     showBookDialogFlag.value.visible = true;
   }
+  getUserInfo();
 });
 
 const openAdmin = () => {

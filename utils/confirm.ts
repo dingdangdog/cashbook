@@ -1,6 +1,9 @@
 export interface ConfirmModel {
   title: string;
   content: string;
+  confirmText?: string;
+  cancelText?: string;
+  closeText?: string;
   confirm: Function;
   cancel?: Function;
   close?: Function;
