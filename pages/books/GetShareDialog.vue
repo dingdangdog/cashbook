@@ -41,6 +41,9 @@ const close = () => {
         <span class="tw-text-lg">添加共享账本</span>
       </v-card-title>
       <v-card-text>
+        <p class="tw-text-gray-500 tw-text-sm">
+          使用他人分享的共享Key添加共享账本。
+        </p>
         <v-form ref="formRef">
           <v-text-field
             variant="outlined"
