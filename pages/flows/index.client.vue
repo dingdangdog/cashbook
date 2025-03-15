@@ -275,6 +275,9 @@
       <v-btn color="error" @click="openCsvImport('jdFinance')">
         京东金融账单导入(CSV)
       </v-btn>
+      <v-btn color="purple-darken-2" @click="showFlowCustomImport()">
+        自定义导入
+      </v-btn>
       <v-btn color="orange-darken-2" @click="openJsonImport()">
         JSON导入
       </v-btn>
@@ -310,7 +313,7 @@
         hide-details="auto"
         show-size
         v-model="csvFile"
-        @update:model-value="readJsonInfo()"
+        @update:model-value="readCsvInfo()"
         v-show="false"
       ></v-file-input>
     </v-card-text>
@@ -379,6 +382,12 @@
     </v-card>
   </v-dialog>
 
+  <v-dialog v-model="showFlowCustomImportDialog" max-width="40rem">
+    <FlowCustomImportDialog
+      @success-callback="doQuery"
+      @close="closeCustomImport"
+    />
+  </v-dialog>
   <v-dialog v-model="showChangeBatchTypeDialog" max-width="30rem">
     <v-card>
       <v-card-title
@@ -481,6 +490,7 @@ import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 import FlowJsonImportDialog from "~/components/dialog/FlowJsonImportDialog.vue";
 import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import FlowAutoMergeDialog from "~/components/dialog/FlowAutoMergeDialog.vue";
+import FlowCustomImportDialog from "~/components/dialog/FlowCustomImport.vue";
 import { dateFormater } from "@/utils/common";
 
 import { getIndustryType, getPayType } from "~/utils/apis";
@@ -929,8 +939,7 @@ const csvDatas = ref<Record<number, any>[]>([]);
 // 表头行索引
 const titleRowIndex = ref(0);
 
-// 读取json文件并导入
-const readJsonInfo = () => {
+const readCsvInfo = () => {
   // console.log(csvFile.value)
   const file = csvFile.value;
   if (!file) {
@@ -1081,6 +1090,16 @@ const removeFile = () => {
 const closeCsvTableDialog = () => {
   showFlowExcelImportDialog.value = false;
   removeFile();
+};
+
+const showFlowCustomImportDialog = ref(false);
+
+const showFlowCustomImport = () => {
+  showFlowCustomImportDialog.value = true;
+};
+
+const closeCustomImport = () => {
+  showFlowCustomImportDialog.value = false;
 };
 </script>
 

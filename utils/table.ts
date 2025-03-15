@@ -29,10 +29,10 @@ export interface Book {
 }
 
 export interface Flow {
-  id: number;
-  userId: number;
-  bookId: string;
-  day: string;
+  id?: number;
+  userId?: number;
+  bookId?: string;
+  day?: string;
   flowType?: string; // 流水类型：收入、支出、不计收支
   industryType?: string; // 行业分类（支出类型/收入类型）
   payType?: string; // 支付方式/收款方式
