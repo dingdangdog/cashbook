@@ -3,14 +3,14 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background-color: rgb(179, 179, 179);
+  background-color: rgb(179, 179, 179, 0.5);
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(3 7 18);
+  background-color: rgba(0, 144, 254, 0.5);
 }
 
 .top-index {
