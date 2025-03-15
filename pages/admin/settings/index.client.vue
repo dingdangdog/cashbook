@@ -72,13 +72,72 @@ const importAll = () => {
   };
   input.click();
 };
+
+const exportImging = ref(false);
+const exportImgAll = () => {
+  exportImging.value = true;
+  // 使用download方法直接下载ZIP文件
+  doApi
+    .download("api/admin/entry/settings/exportImg")
+    .then((blob) => {
+      Alert.success("导出成功，正在下载...");
+      const fileName = "Cashbook-images-" + new Date().getTime() + ".zip";
+      // 创建下载链接
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+    .catch((err) => {
+      Alert.error("导出失败: " + err);
+    })
+    .finally(() => {
+      exportImging.value = false;
+    });
+};
+
+const importImging = ref(false);
+const importImgAll = () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".zip"; // 只接受ZIP文件
+  input.onchange = (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    // 检查文件类型
+    if (!file.name.toLowerCase().endsWith(".zip")) {
+      Alert.error("请上传ZIP格式的文件");
+      return;
+    }
+
+    const formdata = new FormData();
+    formdata.append("file", file);
+    importImging.value = true;
+    doApi
+      .postform("api/admin/entry/settings/importImg", formdata)
+      .then((res: any) => {
+        Alert.success(res.message || "导入成功");
+        getConfig();
+      })
+      .catch((err) => {
+        Alert.error("导入失败: " + err);
+      })
+      .finally(() => {
+        importImging.value = false;
+      });
+  };
+  input.click();
+};
 </script>
 
 <template>
   <div class="admin-page-container">
     <v-tabs v-model="settingTab" align-tabs="center" color="green-accent-2">
       <v-tab :value="1">基本设置</v-tab>
-      <v-tab :value="2">数据备份</v-tab>
+      <v-tab :value="2">备份与恢复</v-tab>
     </v-tabs>
 
     <v-tabs-window v-model="settingTab">
@@ -146,26 +205,57 @@ const importAll = () => {
 
       <v-tabs-window-item :value="2">
         <div class="tw-max-w-3xl tw-mx-auto tw-p-4">
-          <div class="tw-flex tw-space-x-4 tw-justify-center">
-            <v-btn
-              class="tw-w-40"
-              variant="flat"
-              color="primary"
-              @click="exportAll()"
-              :loading="exporting"
-            >
-              备份
-            </v-btn>
+          <div class="tw-p-4 tw-m-2 tw-bg-blue-100/20 tw-rounded-lg">
+            <h3 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">
+              系统数据备份与恢复
+            </h3>
+            <div class="tw-flex tw-space-x-4 tw-justify-center">
+              <v-btn
+                class="tw-w-40"
+                variant="flat"
+                color="primary"
+                @click="exportAll()"
+                :loading="exporting"
+              >
+                备份
+              </v-btn>
 
-            <v-btn
-              class="tw-w-40"
-              variant="flat"
-              color="success"
-              @click="importAll()"
-              :loading="importing"
-            >
-              恢复
-            </v-btn>
+              <v-btn
+                class="tw-w-40"
+                variant="flat"
+                color="success"
+                @click="importAll()"
+                :loading="importing"
+              >
+                恢复
+              </v-btn>
+            </div>
+          </div>
+          <div class="tw-p-4 tw-m-2 tw-bg-green-100/20 tw-rounded-lg">
+            <h3 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">
+              小票图片备份与恢复
+            </h3>
+            <div class="tw-flex tw-space-x-4 tw-justify-center">
+              <v-btn
+                class="tw-w-40"
+                variant="flat"
+                color="primary"
+                @click="exportImgAll()"
+                :loading="exportImging"
+              >
+                备份
+              </v-btn>
+
+              <v-btn
+                class="tw-w-40"
+                variant="flat"
+                color="success"
+                @click="importImgAll()"
+                :loading="importImging"
+              >
+                恢复
+              </v-btn>
+            </div>
           </div>
         </div>
       </v-tabs-window-item>
