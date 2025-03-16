@@ -432,11 +432,7 @@ const reloadUsedAmount = () => {
     })
     .then((res) => {
       Alert.success("已用额度刷新成功");
-      if (res) {
-        budgetSummary.value = res;
-      } else {
-        budgetSummary.value = { budget: 0, used: 0 };
-      }
+      loadData();
     });
 };
 function saveBudget() {

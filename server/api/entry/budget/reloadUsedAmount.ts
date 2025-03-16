@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   });
 
   // 更新预算表的used字段
-  const updated = await prisma.budget.update({
+  const updated = await prisma.budget.updateMany({
     where: {
       bookId,
       month,
