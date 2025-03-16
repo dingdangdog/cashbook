@@ -18,7 +18,7 @@ FROM node:20-alpine3.21 AS runner
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook"
-LABEL project.version="4.1.1"
+LABEL project.version="4.1.2"
 
 WORKDIR /app
 
