@@ -88,6 +88,12 @@ const items = ref<Menu[]>([
     color: "#E57373",
   },
   {
+    title: "文档站",
+    path: "documentation",
+    icon: "mdi-book-open-variant",
+    color: "green",
+  },
+  {
     title: "Github",
     path: "github",
     icon: "mdi-github",
@@ -97,7 +103,10 @@ const items = ref<Menu[]>([
 
 const toPath = (menu: Menu) => {
   if (menu.path == "github") {
-    window.open(`https://github.com/dingdangdog/cashbook`, "_blank");
+    toGithub();
+    return;
+  } else if (menu.path == "documentation") {
+    toDocumentation();
     return;
   }
   openMenu.value = menu.path || "calendar";

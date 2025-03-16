@@ -45,6 +45,11 @@ const items = ref<Menu[]>([
     icon: "mdi-cog",
   },
   {
+    title: "文档站",
+    path: "documentation",
+    icon: "mdi-book-open-variant",
+  },
+  {
     title: "Github",
     path: "github",
     icon: "mdi-github",
@@ -57,6 +62,9 @@ const toPath = (menu: Menu) => {
     return;
   } else if (menu.path == "github") {
     window.open(`https://github.com/dingdangdog/cashbook`, "_blank");
+    return;
+  } else if (menu.path == "documentation") {
+    toDocumentation();
     return;
   }
 

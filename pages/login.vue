@@ -115,7 +115,7 @@ onMounted(async () => {
     if (!res) {
       Confirm.open({
         title: "提示",
-        content: "当前系统没有普通用户，请前往【后台】“添加用户”或“开放注册”！",
+        content: '当前系统没有普通用户，请前往【后台】"添加用户"或"开放注册"！',
         confirmText: "前往后台",
         cancelText: "知道了",
         confirm: () => {
@@ -136,6 +136,38 @@ onMounted(async () => {
       :content="`Cashbook,记账本,私人记账,开源账本,dingdangdog,月上老狗,${SystemConfig?.keywords}`"
     />
   </Head>
+
+  <!-- 添加固定在右上角的导航栏 -->
+  <div class="top-right-nav">
+    <v-btn
+      icon="mdi-book-open-variant"
+      title="文档站"
+      class="nav-btn"
+      @click="toDocumentation()"
+    ></v-btn>
+    <v-btn
+      icon="mdi-github"
+      title="前往Github"
+      class="nav-btn"
+      @click="toGithub()"
+    ></v-btn>
+    <v-switch
+      color="warning"
+      v-model="themeValue"
+      @update:modelValue="toggleTheme()"
+      hide-details
+      inset
+      class="theme-switch"
+    >
+      <template v-slot:label>
+        <v-icon
+          :icon="themeValue ? 'mdi-emoticon-cool-outline' : 'mdi-weather-night'"
+          :color="themeValue ? 'warning' : 'white'"
+        ></v-icon>
+      </template>
+    </v-switch>
+  </div>
+
   <div
     class="tw-tw-w-full tw-h-full tw-flex tw-flex-col tw-items-center tw-justify-center md:tw-pt-36"
   >
@@ -185,27 +217,6 @@ onMounted(async () => {
           <v-btn v-show="openRegister" @click="registerDialog = true"
             >注册账号</v-btn
           >
-          <v-btn
-            icon="mdi-github"
-            title="前往Github"
-            @click="toGithub()"
-          ></v-btn>
-          <v-switch
-            color="warning"
-            v-model="themeValue"
-            @update:modelValue="toggleTheme()"
-            hide-details
-            inset
-          >
-            <template v-slot:label>
-              <v-icon
-                :icon="
-                  themeValue ? 'mdi-emoticon-cool-outline' : 'mdi-weather-night'
-                "
-                :color="themeValue ? 'warning' : 'white'"
-              ></v-icon>
-            </template>
-          </v-switch>
         </div>
       </v-card-text>
     </v-card>
@@ -283,5 +294,24 @@ onMounted(async () => {
   padding: 1rem;
   max-width: 30rem;
   width: 100%;
+}
+
+/* 添加右上角导航栏样式 */
+.top-right-nav {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 100;
+}
+
+.nav-btn {
+  margin-right: 0.5rem;
+}
+
+.theme-switch {
+  margin-left: 0.5rem;
 }
 </style>

@@ -84,3 +84,7 @@ export const dateFormater = (format: string, date: string | Date) => {
 export const toGithub = () => {
   window.open(`https://github.com/dingdangdog/cashbook`, "_blank");
 };
+
+export const toDocumentation = () => {
+  window.open("https://doc.cashbook.oldmoon.top", "_blank");
+};
