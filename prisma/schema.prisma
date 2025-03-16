@@ -64,7 +64,7 @@ model Budget {
   id     Int    @id @default(autoincrement())
   bookId String
   userId Int
-  month  String @unique
+  month  String
   budget Float?
   used   Float?
 }
