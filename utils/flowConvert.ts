@@ -65,14 +65,8 @@ export function alipayConvert(
 export function typeConvert(type: any): string {
   // 20240922 类型转换，如果没有匹配的类型则保留原类型
   // 20250116 新转换实现
-  const ts = typeRelationStore.value.filter((t) => {
-    t.source == type;
-  });
-  if (ts && ts.length >= 1) {
-    return ts[0].target;
-  } else {
-    return type;
-  }
+  const ts = typeRelationStore.value.filter((t) => t.source == type);
+  return ts.length > 0 ? ts[0].target : type;
 }
 
 /**

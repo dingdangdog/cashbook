@@ -122,8 +122,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-import { onMounted, ref, watch } from "vue";
-
 import type { Typer } from "~/utils/model";
 import { typeConvert } from "~/utils/flowConvert";
 import { showSetConvertDialog } from "~/utils/flag";
@@ -230,29 +228,44 @@ watch(typeQueryRef.value, () => {
 
 const hisFlowTypeConvert = async () => {
   let doConvert: string = "";
+  let hasConversion = false; // Track if any conversion has occurred
+  console.log(types.value);
+  console.log(typeRelationStore.value);
   for (let i = 0; i < types.value.length; i++) {
     let t = types.value[i];
     if (t.type === "支出类型/收入类型") {
-      if (t.value !== typeConvert(t.value?.replace("-WX", ""))) {
-        t.oldValue = t.value;
-        t.value = typeConvert(t.value?.replace("-WX", ""));
-        doConvert += t.oldValue + "-->" + t.value;
-        const res = await doApi.post<any>("api/entry/flow/type/update", t);
+      t.oldValue = t.value;
+      console.log(t.value);
+      const newValue = typeConvert(t.value);
+      console.log(newValue);
+      if (t.value !== newValue) {
+        // Only proceed if the value has changed
+        t.value = newValue;
+        doConvert += `【${t.oldValue}】-->【${t.value}】`;
+        const res = await doApi.post<any>("api/entry/flow/type/update", {
+          ...t,
+          bookId: localStorage.getItem("bookId"),
+        });
 
         if (res && res.count > 0) {
-          doConvert += " success<br/>";
+          doConvert += " success\n";
         } else {
-          doConvert += " fail<br/>";
+          doConvert += " fail\n";
         }
+        hasConversion = true; // Mark that a conversion has occurred
       }
     }
   }
-  if (doConvert.length === 0) {
+  if (!hasConversion) {
     Alert.info("没有类型需要转换");
   } else {
-    Alert.success("转换结果如下：" + doConvert);
+    Confirm.open({
+      title: "转换结果如下",
+      content: doConvert,
+      confirmText: "确定",
+      confirm: () => {},
+    });
   }
-  // loading.close()
   doQuery();
 };
 
