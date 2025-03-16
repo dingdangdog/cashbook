@@ -35,7 +35,7 @@ const items = ref<Menu[]>([
     icon: "mdi-order-numeric-ascending",
   },
   {
-    title: "类型数据",
+    title: "映射管理",
     path: "typeRelations",
     icon: "mdi-shape-plus",
   },
