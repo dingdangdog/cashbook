@@ -29,12 +29,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t dingdangdog/cashbook:${VERSION} -t dingdangdog/cashbook:latest .
+        run: docker build -t dingdangdog/cashbook:${VERSION}-sqlite -t dingdangdog/cashbook:latest-sqlite .
 
       - name: Push Docker image
         run: |
-          docker push dingdangdog/cashbook:${VERSION}
-          docker push dingdangdog/cashbook:latest
+          docker push dingdangdog/cashbook:${VERSION}-sqlite
+          docker push dingdangdog/cashbook:latest-sqlite
 
       # 设置 Docker Buildx
       - name: Set up Docker Buildx
@@ -45,8 +45,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/arm64 \
-            --tag dingdangdog/cashbook:${VERSION}-arm64 \
-            --tag dingdangdog/cashbook:latest-arm64 \
+            --tag dingdangdog/cashbook:${VERSION}-arm64-sqlite \
+            --tag dingdangdog/cashbook:latest-arm64-sqlite \
             --push .
 
       - name: Clean up Docker images
