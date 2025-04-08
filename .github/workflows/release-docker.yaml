@@ -1,4 +1,4 @@
-name: Release Docker
+name: Release-Mysql-Docker
 
 on:
   push:
