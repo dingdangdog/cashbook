@@ -557,6 +557,7 @@ function confirmDelete() {
   doApi
     .post("api/entry/fixedFlow/del", {
       id: itemToDelete.value.id,
+      bookId: bookId,
     })
     .then(() => {
       Alert.success("固定支出删除成功");

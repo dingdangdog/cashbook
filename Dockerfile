@@ -18,7 +18,7 @@ FROM node:20-alpine3.21 AS runner
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook"
-LABEL project.version="4.1.2"
+LABEL project.version="3"
 
 WORKDIR /app
 
@@ -37,7 +37,7 @@ RUN npm install -g prisma@6.2.1
 
 ENV DATABASE_URL="mysql://root:123456@localhost:3306/cashbook"
 
-ENV NUXT_APP_VERSION="4.1.2"
+ENV NUXT_APP_VERSION="4.1.3"
 ENV NUXT_DATA_PATH="/app/data"
 
 ENV NUXT_AUTH_SECRET="auth123"
