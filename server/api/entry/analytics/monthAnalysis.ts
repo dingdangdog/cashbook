@@ -85,8 +85,10 @@ export default defineEventHandler(async (event) => {
     },
     take: 1, // 只取第一个结果
   });
-  res.maxInType = maxInType[0].industryType || "";
-  res.maxInTypeSum = (maxInType[0]._sum.money || 0).toFixed(2);
+  if (maxInType[0]) {
+    res.maxInType = maxInType[0].industryType || "";
+    res.maxInTypeSum = (maxInType[0]._sum.money || 0).toFixed(2);
+  }
 
   // 3. 查询当月最高支出类型
   const maxOutType = await prisma.flow.groupBy({
@@ -105,8 +107,10 @@ export default defineEventHandler(async (event) => {
     },
     take: 1, // 只取第一个结果
   });
-  res.maxOutType = maxOutType[0].industryType || "";
-  res.maxOutTypeSum = (maxOutType[0]._sum.money || 0).toFixed(2);
+  if (maxOutType[0]) {
+    res.maxOutType = maxOutType[0].industryType || "";
+    res.maxOutTypeSum = (maxOutType[0]._sum.money || 0).toFixed(2);
+  }
 
   // 4. 查询当月最高单笔收入
   const maxIn = await prisma.flow.findFirst({
