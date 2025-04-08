@@ -1,4 +1,4 @@
-name: Release-Mysql-Docker
+name: Release-Docker
 
 on:
   push:
@@ -14,7 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
       - name: Get version
         id: get_version
         run: |
@@ -28,12 +27,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t dingdangdog/cashbook:${VERSION}-mysql -t dingdangdog/cashbook:latest-mysql .
+        run: docker build -t dingdangdog/cashbook:${VERSION} -t dingdangdog/cashbook:latest .
 
       - name: Push Docker image
         run: |
-          docker push dingdangdog/cashbook:${VERSION}-mysql
-          docker push dingdangdog/cashbook:latest-mysql
+          docker push dingdangdog/cashbook:${VERSION}
+          docker push dingdangdog/cashbook:latest
 
       # 设置 Docker Buildx
       - name: Set up Docker Buildx
@@ -44,8 +43,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/arm64 \
-            --tag dingdangdog/cashbook:${VERSION}-arm64-mysql \
-            --tag dingdangdog/cashbook:latest-arm64-mysql \
+            --tag dingdangdog/cashbook:${VERSION}-arm64 \
+            --tag dingdangdog/cashbook:latest-arm64 \
             --push .
 
       - name: Clean up Docker images
