@@ -359,7 +359,19 @@ onMounted(() => {
 
 const monthAnalysisDialog = ref(false);
 const monthTitle = ref("");
-const monthAnalysisData = ref<MonthAnalysis>();
+const monthAnalysisData = ref<MonthAnalysis>({
+  month: "",
+  outSum: "0",
+  inSum: "0",
+  zeroSum: "0",
+  maxInType: "",
+  maxInTypeSum: "0",
+  maxOutType: "",
+  maxOutTypeSum: "0",
+  maxOut: {} as Flow,
+  maxIn: {} as Flow,
+  maxZero: {} as Flow
+});
 const showMonthAnalysis = (month: string) => {
   let monthParam = month
     .replace("年", "-")
@@ -381,7 +393,7 @@ const showMonthAnalysis = (month: string) => {
       monthAnalysisDialog.value = true;
     })
     .catch((err) => {
-      // Alert.error("查询出错");
+      Alert.error("查询出错");
       console.log(err);
     });
 };
