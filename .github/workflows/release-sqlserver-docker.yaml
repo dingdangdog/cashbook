@@ -1,0 +1,54 @@
+name: Release-MySQL-Docker
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  docker_build:
+    environment: docker_hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main-sqlserver
+
+      - name: Get version
+        id: get_version
+        run: |
+          # Get the tag name from the GitHub context (without the 'v' prefix)
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV  # Store version as an environment variable
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t dingdangdog/cashbook:${VERSION}-sqlserver -t dingdangdog/cashbook:latest-sqlserver .
+
+      - name: Push Docker image
+        run: |
+          docker push dingdangdog/cashbook:${VERSION}-sqlserver
+          docker push dingdangdog/cashbook:latest-sqlserver
+
+      # 设置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 构建 arm64 镜像并推送
+      - name: Build and push arm64 image
+        run: |
+          docker buildx build \
+            --platform linux/arm64 \
+            --tag dingdangdog/cashbook:${VERSION}-arm64-sqlserver \
+            --tag dingdangdog/cashbook:latest-arm64-sqlserver \
+            --push .
+
+      - name: Clean up Docker images
+        run: docker system prune -af
