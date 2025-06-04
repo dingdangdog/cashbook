@@ -26,25 +26,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
-        run: docker build -t dingdangdog/cashbook:${VERSION} -t dingdangdog/cashbook:latest .
-
-      - name: Push Docker image
-        run: |
-          docker push dingdangdog/cashbook:${VERSION}
-          docker push dingdangdog/cashbook:latest
-
-      # 设置 Docker Buildx
+      # 设置 Docker Buildx (支持多平台构建)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 构建 arm64 镜像并推送
-      - name: Build and push arm64 image
+      # 单次构建多平台镜像并推送
+      - name: Build and push multi-platform image
         run: |
           docker buildx build \
-            --platform linux/arm64 \
-            --tag dingdangdog/cashbook:${VERSION}-arm64 \
-            --tag dingdangdog/cashbook:latest-arm64 \
+            --platform linux/amd64,linux/arm64 \
+            --tag dingdangdog/cashbook:${VERSION} \
+            --tag dingdangdog/cashbook:latest \
             --push .
 
       - name: Clean up Docker images
