@@ -7,7 +7,7 @@
   >
     <v-card>
       <v-card-title>打开账本</v-card-title>
-      <v-card-text>
+      <v-card-text class="tw-max-h-[60vh] tw-overflow-y-auto">
         <v-chip
           v-for="book in books"
           :key="book.id"
@@ -16,7 +16,9 @@
           @click="openBook(book)"
           :title="book.bookName"
         >
-          {{ book.bookName }}
+          <p class="book-name">
+            {{ book.bookName }}
+          </p>
         </v-chip>
       </v-card-text>
       <hr />
@@ -28,7 +30,7 @@
           <v-btn color="success" variant="outlined" @click="getShare"
             >添加共享账本</v-btn
           >
-          <v-btn color="success" variant="outlined" @click="addBook"
+          <v-btn color="success" variant="elevated" @click="addBook"
             >新建账本</v-btn
           >
         </div>
@@ -54,7 +56,13 @@
           <v-btn variant="elevated" @click="addBookDialog.visible = false">
             取消
           </v-btn>
-          <v-btn variant="elevated" color="primary" @click="confirmBookForm()">
+          <v-btn
+            variant="elevated"
+            color="primary"
+            @click="confirmBookForm()"
+            :loading="isAddingBook"
+            :disabled="isAddingBook"
+          >
             确定
           </v-btn>
         </div>
@@ -83,7 +91,13 @@
           <v-btn variant="elevated" @click="showGetShareDialog = false">
             取消
           </v-btn>
-          <v-btn variant="elevated" color="primary" @click="confirmGetShare()">
+          <v-btn
+            variant="elevated"
+            color="primary"
+            @click="confirmGetShare()"
+            :loading="isAddingShareBook"
+            :disabled="isAddingShareBook"
+          >
             确定
           </v-btn>
         </div>
@@ -154,11 +168,14 @@ const required = (v: any) => {
 };
 
 const newBook = ref<Book | any>({});
+const isAddingBook = ref(false);
 
 const confirmBookForm = () => {
-  if (!newBook.value.bookName) {
+  if (!newBook.value.bookName || isAddingBook.value) {
     return;
   }
+
+  isAddingBook.value = true;
   doApi
     .post("api/entry/book/add", { bookName: newBook.value.bookName })
     .then((_res) => {
@@ -169,6 +186,9 @@ const confirmBookForm = () => {
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      isAddingBook.value = false;
     });
 };
 
@@ -181,21 +201,31 @@ const getShare = () => {
 };
 const showGetShareDialog = ref(false);
 const shareKey = ref("");
+const isAddingShareBook = ref(false);
+
 const confirmGetShare = () => {
-  if (!shareKey.value) {
-    Alert.error("请输入共享KEY");
+  if (!shareKey.value || isAddingShareBook.value) {
+    if (!shareKey.value) {
+      Alert.error("请输入共享KEY");
+    }
     return;
   }
+
+  isAddingShareBook.value = true;
   doApi
     .post("api/entry/book/inshare", { key: shareKey.value })
-    .then((res) => {
+    .then((_res) => {
       Alert.success("添加成功");
       shareKey.value = "";
       showGetShareDialog.value = false;
       initBooks();
     })
-    .catch((err) => {
-      // Alert.error(err);
+    .catch((error) => {
+      console.error(error);
+      // Alert.error(error);
+    })
+    .finally(() => {
+      isAddingShareBook.value = false;
     });
 };
 </script>
@@ -208,8 +238,12 @@ const confirmGetShare = () => {
 .book-card {
   max-width: 10rem;
   margin: 0.5rem;
-  padding: 1rem 2rem !important;
+}
+.book-name {
+  max-width: 9rem;
   text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .book-card:hover {
