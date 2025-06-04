@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+# 添加必要的权限
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   sync-branches:
     runs-on: ubuntu-latest
@@ -15,7 +20,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0 # 获取完整历史记录
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MERGE_TOKEN }}
 
       - name: Configure Git
         run: |
