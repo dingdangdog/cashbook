@@ -45,9 +45,9 @@ export default defineEventHandler(async (event) => {
     maxInTypeSum: 0,
     maxOutType: "",
     maxOutTypeSum: 0,
-    maxIn: undefined,
-    maxOut: undefined,
-    maxZero: undefined,
+    maxIn: {},
+    maxOut: {},
+    maxZero: {},
   };
 
   // 1. 按月查询当月总收入、总支出、总不计收支
@@ -122,7 +122,7 @@ export default defineEventHandler(async (event) => {
       money: "desc",
     },
   });
-  res.maxIn = maxIn;
+  res.maxIn = maxIn || {};
   // 5. 查询当月最高单笔支出
   const maxOut = await prisma.flow.findFirst({
     where: {
@@ -133,7 +133,7 @@ export default defineEventHandler(async (event) => {
       money: "desc",
     },
   });
-  res.maxOut = maxOut;
+  res.maxOut = maxOut || {};
   // 6. 查询当月最高单笔支出
   const maxZero = await prisma.flow.findFirst({
     where: {
@@ -144,6 +144,6 @@ export default defineEventHandler(async (event) => {
       money: "desc",
     },
   });
-  res.maxZero = maxZero;
+  res.maxZero = maxZero || {};
   return success(res);
 });

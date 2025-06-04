@@ -1,4 +1,4 @@
-name: Release-SQLite-Docker
+name: Release-SqlServer-Docker
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: main-sqlite
+          ref: main-sqlserver
 
       - name: Get version
         id: get_version
@@ -30,12 +30,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t dingdangdog/cashbook:${VERSION}-sqlite -t dingdangdog/cashbook:latest-sqlite .
+        run: docker build -t dingdangdog/cashbook:${VERSION}-sqlserver -t dingdangdog/cashbook:latest-sqlserver .
 
       - name: Push Docker image
         run: |
-          docker push dingdangdog/cashbook:${VERSION}-sqlite
-          docker push dingdangdog/cashbook:latest-sqlite
+          docker push dingdangdog/cashbook:${VERSION}-sqlserver
+          docker push dingdangdog/cashbook:latest-sqlserver
 
       # 设置 Docker Buildx
       - name: Set up Docker Buildx
@@ -46,8 +46,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/arm64 \
-            --tag dingdangdog/cashbook:${VERSION}-arm64-sqlite \
-            --tag dingdangdog/cashbook:latest-arm64-sqlite \
+            --tag dingdangdog/cashbook:${VERSION}-arm64-sqlserver \
+            --tag dingdangdog/cashbook:latest-arm64-sqlserver \
             --push .
 
       - name: Clean up Docker images

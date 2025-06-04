@@ -26,13 +26,16 @@ export default defineEventHandler(async (event) => {
   });
 
   // 更新预算表的used字段
+  // 如果没有找到匹配的流水数据，则将used设置为0
+  const totalUsed = usedAmount.length > 0 ? usedAmount[0]._sum.money || 0 : 0;
+
   const updated = await prisma.budget.updateMany({
     where: {
       bookId,
       month,
     },
     data: {
-      used: usedAmount[0]._sum.money || 0,
+      used: totalUsed,
     },
   });
 

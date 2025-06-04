@@ -25,6 +25,12 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    // 获取当前系统版本号
+    const currentSystemSetting = await prisma.systemSetting.findFirst({
+      where: { id: 1 }
+    });
+    const currentVersion = currentSystemSetting?.version;
+
     // 记录导入的表和行数
     const importStats: Record<string, { total: number; imported: number }> = {};
     let hasErrors = false;
@@ -52,6 +58,11 @@ export default defineEventHandler(async (event) => {
             // 构建批量插入语句
             for (const item of tableData) {
               try {
+                // 如果是SystemSetting表且是version字段，则保留当前版本
+                if (tableName === "SystemSetting" && currentVersion && item.id === 1) {
+                  item.version = currentVersion;
+                }
+                
                 const values = Object.values(item)
                   .map((value) => {
                     if (value === null) {
@@ -112,6 +123,14 @@ export default defineEventHandler(async (event) => {
         }
       }
     });
+
+    // 确保系统版本号是最新的
+    if (currentVersion) {
+      await prisma.systemSetting.update({
+        where: { id: 1 },
+        data: { version: currentVersion }
+      });
+    }
 
     // 检查是否所有数据都成功导入
     let totalRecords = 0;

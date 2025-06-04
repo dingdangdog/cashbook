@@ -33,10 +33,24 @@ Cashbook记账本。
 
 ## 开始使用（Get Started）
 
-- [使用说明](https://doc.cashbook.oldmoon.top/deploy/)
-- [部署手册](https://doc.cashbook.oldmoon.top/guide/)
+- [使用说明](https://doc.cashbook.oldmoon.top/guide/)
+- [部署手册](https://doc.cashbook.oldmoon.top/deploy/)
 - [开发指南](https://doc.cashbook.oldmoon.top/development/)
 - [常见问题](https://doc.cashbook.oldmoon.top/question/)
+
+## 版本对照表
+
+请阅读下面的版本对照表，选择适合你的版本进行部署！
+
+|数据库差异|latest(x86_64)|latest(arm64)|指定版本(x86_64)|指定版本(arm64)|
+|---|---|---|---|---|
+|pgsql(latest)|latest|latest-arm64|4.1.7|4.1.7-arm64|
+|pgsql|latest-pgsql|latest-arm64-pgsql|4.1.7-pgsql|4.1.7-arm64-pgsql|
+|mysql|latest-mysql|latest-arm64-mysql|4.1.7-mysql|4.1.7-arm64-mysql|
+|sqlite|latest-sqlite|latest-arm64-sqlite|4.1.7-sqlite|4.1.7-arm64-sqlite|
+|sqlserver|latest-sqlserver|latest-arm64-sqlserver|4.1.7-sqlserver|4.1.7-arm64-sqlserver|
+
+详情请查看 [DockerHub](https://hub.docker.com/repository/docker/dingdangdog/cashbook/tags)
 
 ## 主要功能
 
