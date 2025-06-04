@@ -244,13 +244,14 @@
           :items="[]"
           :hide-no-data="false"
           ref="filterIndustryTypeSelect"
+          @update:search="industryTypeSearchText = $event"
         >
           <template v-slot:no-data>
             <div class="tw-p-4 tw-max-w-md">
               <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
               <div class="tw-flex tw-flex-wrap tw-gap-2">
                 <v-chip
-                  v-for="item in industryTypeOptions"
+                  v-for="item in filteredIndustryTypeOptions"
                   :key="item"
                   variant="outlined"
                   color="green"
@@ -284,13 +285,14 @@
           :items="[]"
           :hide-no-data="false"
           ref="filterPayTypeSelect"
+          @update:search="payTypeSearchText = $event"
         >
           <template v-slot:no-data>
             <div class="tw-p-4 tw-max-w-md">
               <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
               <div class="tw-flex tw-flex-wrap tw-gap-2">
                 <v-chip
-                  v-for="item in payTypeOptions"
+                  v-for="item in filteredPayTypeOptions"
                   :key="item"
                   variant="outlined"
                   color="blue"
@@ -488,13 +490,14 @@
             :items="[]"
             :hide-no-data="false"
             ref="batchIndustryTypeSelect"
+            @update:search="batchIndustryTypeSearchText = $event"
           >
             <template v-slot:no-data>
               <div class="tw-p-4 tw-max-w-md">
                 <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
                 <div class="tw-flex tw-flex-wrap tw-gap-2">
                   <v-chip
-                    v-for="item in industryTypeOptions"
+                    v-for="item in filteredBatchIndustryTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="green"
@@ -529,13 +532,14 @@
             :items="[]"
             :hide-no-data="false"
             ref="batchPayTypeSelect"
+            @update:search="batchPayTypeSearchText = $event"
           >
             <template v-slot:no-data>
               <div class="tw-p-4 tw-max-w-md">
                 <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
                 <div class="tw-flex tw-flex-wrap tw-gap-2">
                   <v-chip
-                    v-for="item in payTypeOptions"
+                    v-for="item in filteredBatchPayTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="blue"
@@ -619,6 +623,7 @@ import FlowCustomImportDialog from "~/components/dialog/FlowCustomImport.vue";
 import { dateFormater } from "@/utils/common";
 
 import { getIndustryType, getPayType } from "~/utils/apis";
+import { computed } from "vue";
 
 const flowQuery = ref<FlowQuery>({
   pageNum: 1,
@@ -1463,6 +1468,49 @@ const selectBatchPayType = (item: string) => {
     batchPayTypeSelect.value.blur();
   }
 };
+
+// 添加筛选相关的响应式变量
+const industryTypeSearchText = ref("");
+const payTypeSearchText = ref("");
+const batchIndustryTypeSearchText = ref("");
+const batchPayTypeSearchText = ref("");
+
+// 计算属性：筛选后的选项
+const filteredIndustryTypeOptions = computed(() => {
+  if (!industryTypeSearchText.value) {
+    return industryTypeOptions.value;
+  }
+  return industryTypeOptions.value.filter(item =>
+    item.toLowerCase().includes(industryTypeSearchText.value.toLowerCase())
+  );
+});
+
+const filteredPayTypeOptions = computed(() => {
+  if (!payTypeSearchText.value) {
+    return payTypeOptions.value;
+  }
+  return payTypeOptions.value.filter(item =>
+    item.toLowerCase().includes(payTypeSearchText.value.toLowerCase())
+  );
+});
+
+const filteredBatchIndustryTypeOptions = computed(() => {
+  if (!batchIndustryTypeSearchText.value) {
+    return industryTypeOptions.value;
+  }
+  return industryTypeOptions.value.filter(item =>
+    item.toLowerCase().includes(batchIndustryTypeSearchText.value.toLowerCase())
+  );
+});
+
+const filteredBatchPayTypeOptions = computed(() => {
+  if (!batchPayTypeSearchText.value) {
+    return payTypeOptions.value;
+  }
+  return payTypeOptions.value.filter(item =>
+    item.toLowerCase().includes(batchPayTypeSearchText.value.toLowerCase())
+  );
+});
 </script>
 
 <style scoped>
