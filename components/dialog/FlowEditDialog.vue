@@ -51,7 +51,7 @@
                     class="tw-cursor-pointer"
                     @click="selectIndustryType(item)"
                   >
-                    <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                    <v-icon size="x-small" class="tw-mr-1">mdi-sack</v-icon>
                     {{ item }}
                   </v-chip>
                 </div>
@@ -60,7 +60,7 @@
             <template v-slot:selection="{ item }">
               <div class="tw-flex tw-items-center">
                 <v-icon color="green" size="small" class="tw-mr-1">
-                  mdi-tag
+                  mdi-sack
                 </v-icon>
                 <span>{{ item.title }}</span>
               </div>
@@ -90,7 +90,7 @@
                     class="tw-cursor-pointer"
                     @click="selectPayType(item)"
                   >
-                    <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                    <v-icon size="x-small" class="tw-mr-1">mdi-credit-card</v-icon>
                     {{ item }}
                   </v-chip>
                 </div>
@@ -99,7 +99,7 @@
             <template v-slot:selection="{ item }">
               <div class="tw-flex tw-items-center">
                 <v-icon color="blue" size="small" class="tw-mr-2">
-                  mdi-tag
+                  mdi-credit-card
                 </v-icon>
                 <span>{{ item.title }}</span>
               </div>
