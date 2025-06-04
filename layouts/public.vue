@@ -17,7 +17,7 @@ const toggleTheme = () => {
 const logout = () => {
   localStorage.removeItem("bookId");
   localStorage.removeItem("bookName");
-  doApi.get("api/logout").then((res) => {
+  doApi.get("api/logout").then(() => {
     Alert.success("退出登录");
     setTimeout(() => {
       navigateTo("/login");
@@ -55,49 +55,49 @@ const items = ref<Menu[]>([
     title: "账本日历",
     path: "calendar",
     icon: "mdi-calendar-month",
-    color: "rgb(8,155,229)",
+    color: "rgba(8,155,229,0.8)",
   },
   {
     title: "数据分析",
     path: "analysis",
     icon: "mdi-poll",
-    color: "rgb(149,117,205)",
+    color: "rgba(149,117,205,0.8)",
   },
   {
     title: "预算管理",
     path: "budget",
     icon: "mdi-hazard-lights",
-    color: "#BF360C",
+    color: "rgba(191,54,12,0.8)",
   },
   {
     title: "流水管理",
     path: "flows",
     icon: "mdi-hand-water",
-    color: "rgb(76,175,80)",
+    color: "rgba(76,175,80,0.8)",
   },
   {
     title: "账本管理",
     path: "books",
     icon: "mdi-notebook-edit",
-    color: "rgb(77,182,172)",
+    color: "rgba(77,182,172,0.8)",
   },
   {
     title: "类型管理",
     path: "types",
     icon: "mdi-shape-plus",
-    color: "#E57373",
+    color: "rgba(229,115,115,0.8)",
   },
   {
     title: "文档站",
     path: "documentation",
     icon: "mdi-book-open-variant",
-    color: "green",
+    color: "rgba(0,128,0,0.8)",
   },
   {
     title: "Github",
     path: "github",
     icon: "mdi-github",
-    color: "black",
+    color: "rgba(0,0,0,0.8)",
   },
 ]);
 
@@ -202,7 +202,7 @@ const openChangePasswordDialog = () => {
           <v-btn icon>
             <img src="/logo.png" height="40" alt="logo" />
           </v-btn>
-          <div class="tw-ml-2 tw-mt-2 tw-text-lg tw-font-bold">Cashbook</div>
+          <div class="tw-ml-2 tw-mt-2 tw-text-lg tw-font-bold tw-text-green-500">Cashbook</div>
         </div>
 
         <div class="tw-flex tw-items-center tw-space-x-4 md:tw-pr-8">
@@ -260,6 +260,7 @@ const openChangePasswordDialog = () => {
         </div>
       </div>
     </v-app-bar>
+
     <v-navigation-drawer v-model="menuer" location="left" width="200">
       <v-list>
         <v-list-item
@@ -274,13 +275,15 @@ const openChangePasswordDialog = () => {
             <div class="tw-flex tw-items-center">
               <v-icon
                 class="menu-icon"
-                :color="item.color"
+                :color="openMenu == item.path ? 'primary' : item.color"
                 :icon="item.icon"
               ></v-icon>
               <span
                 class="tw-pl-4"
                 :class="showMenuTitle ? 'tw-flex' : 'tw-hidden'"
-                :style="`color:${item.color}`"
+                :style="`color:${
+                  openMenu == item.path ? 'var(--v-theme-primary)' : item.color
+                }`"
               >
                 {{ item.title }}
               </span>
@@ -333,22 +336,18 @@ const openChangePasswordDialog = () => {
           </v-switch>
         </ClientOnly>
       </div>
-      <!-- <v-btn
-        style="position: absolute; bottom: 0; width: 100%"
-        @click="tiggleShowMenu()"
-      >
-        <v-icon icon="mdi-code-tags"></v-icon>
-      </v-btn> -->
     </v-navigation-drawer>
 
     <v-main>
       <slot></slot>
     </v-main>
+
+    <!-- Global Components -->
     <GlobalAlert />
     <GlobalConfirm />
 
+    <!-- Dialogs -->
     <DialogBookDialog v-if="showBookDialogFlag.visible" />
-    <!-- 弹出框表单：类型转换配置 -->
     <DialogSetConvertDialog v-if="showSetConvertDialog" />
     <DialogChangePasswordDialog v-if="showChangePasswordDialog" />
   </v-layout>
@@ -364,6 +363,10 @@ const openChangePasswordDialog = () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.menu-icon {
+  margin: 0 0.5rem;
 }
 
 .selected-menu {

@@ -19,7 +19,8 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          VERSION=$(git describe --tags --always --match 'v*' | sed -n 's|^v\([0-9]*\.[0-9]*\.[0-9]*\)\(-.*\)\{0,1\}|\1|p')
+          # Get the tag name from the GitHub context (without the 'v' prefix)
+          VERSION="${GITHUB_REF#refs/tags/v}"
           echo "VERSION=$VERSION" >> $GITHUB_ENV  # Store version as an environment variable
 
       - name: Log in to Docker Hub

@@ -2,7 +2,9 @@
   <div style="flex-direction: column" v-show="haveData">
     <div
       class="tw-border tw-rounded-md tw-m-2 tw-bg-green-200/10 tw-border-green-500"
-      v-show="monthData?.maxIn.money && monthData.maxIn.money > 0"
+      v-show="
+        monthData?.maxIn && monthData.maxIn?.money && monthData.maxIn.money > 0
+      "
     >
       <div class="text-block">
         <p style="margin: 0.5rem 0">
@@ -22,7 +24,7 @@
 
       <div class="text-block">
         <b>最大单笔收入：</b>
-        <div class="text-block">
+        <div class="text-block" v-if="monthData?.maxIn">
           <p>日期：{{ monthData?.maxIn.day }}</p>
           <p>收入类型：{{ monthData?.maxIn.industryType }}</p>
           <p>收款方式：{{ monthData?.maxIn.payType }}</p>
@@ -41,7 +43,7 @@
     >
       <div
         class="text-block"
-        v-show="monthData?.maxOut.money && monthData?.maxOut.money > 0"
+        v-show="monthData?.outSum && Number(monthData.outSum) > 0"
       >
         <p style="margin: 0.5rem 0">
           <b>总支出：</b
@@ -60,7 +62,7 @@
 
       <div class="text-block">
         <b>最大单笔支出：</b>
-        <div class="text-block">
+        <div class="text-block" v-if="monthData?.maxOut">
           <p v-show="monthData?.maxOut.money && monthData.maxOut.money > 0">
             日期：{{ monthData?.maxOut.day }}
           </p>
@@ -71,8 +73,8 @@
             支付方式：{{ monthData?.maxOut.payType }}
           </p>
           <p>
-            名称：{{ monthData?.maxOut.name }}，{{
-              monthData?.maxOut.description
+            名称：{{ monthData?.maxOut.name || "" }}，{{
+              monthData?.maxOut.description || ""
             }}
           </p>
           <p v-show="monthData?.maxOut.money && monthData.maxOut.money > 0">

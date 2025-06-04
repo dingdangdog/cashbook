@@ -14,30 +14,53 @@ if (item) {
 }
 
 const form = ref(false);
+const isSaving = ref(false);
+
 // 保存编辑数据
 const save = () => {
-  if (!form.value) {
-    // formRef.validate()
-    Alert.error("UnSubmit, Please Check Form!");
+  if (!form.value || isSaving.value) {
+    if (!form.value) {
+      // formRef.validate()
+      Alert.error("UnSubmit, Please Check Form!");
+    }
     return;
   }
 
+  isSaving.value = true;
+
   if (editItem.value?.id) {
-    update(editItem.value).then((res) => {
-      Alert.success("保存成功");
-      editInfoFlag.value = false;
-      emits("success");
-    });
-  } else {
-    if (editItem.value) {
-      add(editItem.value).then((res) => {
+    update(editItem.value)
+      .then((_res) => {
         Alert.success("保存成功");
         editInfoFlag.value = false;
         emits("success");
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        isSaving.value = false;
       });
+  } else {
+    if (editItem.value) {
+      add(editItem.value)
+        .then((_res) => {
+          Alert.success("保存成功");
+          editInfoFlag.value = false;
+          emits("success");
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          isSaving.value = false;
+        });
+    } else {
+      isSaving.value = false;
     }
   }
 };
+
 const close = () => {
   editInfoFlag.value = false;
   emits("cancel");
@@ -79,6 +102,8 @@ const close = () => {
           @click="save()"
           color="primary"
           variant="elevated"
+          :loading="isSaving"
+          :disabled="isSaving"
         >
           保存
         </v-btn>

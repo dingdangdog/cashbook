@@ -6,109 +6,197 @@
         :month="nowMonth"
         :year="nowYear"
         :events="events"
+        class="calendar-grid"
       >
         <!-- 日历头部插槽，自定义日历头部显示内容 -->
-        <template v-slot:header="{ title }">
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 0.5rem;
-            "
-          >
-            <div style="flex: 1; display: flex; align-items: center">
-              <v-chip
-                class="cursor-pointer"
-                :color="getInMonth() > 0 ? 'success' : ''"
-                @click="clickDay('', '收入')"
-              >
-                总收入：<b>{{ getInMonth() }} </b> </v-chip
-              >&nbsp;
-              <v-chip
-                class="cursor-pointer"
-                :color="getOutMonth() > 0 ? 'error' : ''"
-                @click="clickDay('', '支出')"
-              >
-                总支出：<b> {{ getOutMonth() }} </b> </v-chip
-              >&nbsp;
-              <!-- <v-chip :style="outPlan()" class="cursor-pointer">
-                支出限额：<b>{{ plan.limitMoney }} </b>
-              </v-chip> -->
+        <template v-slot:header>
+          <div class="calendar-header">
+            <!-- Summary Section -->
+            <div class="calendar-summary">
+              <v-card class="summary-card" variant="flat">
+                <v-card-text class="summary-content">
+                  <div
+                    class="summary-item income"
+                    @click="clickDay('', '收入')"
+                  >
+                    <div class="summary-icon">
+                      <v-icon
+                        icon="mdi-cash-plus"
+                        color="success"
+                        size="large"
+                      ></v-icon>
+                    </div>
+                    <div class="summary-data">
+                      <div class="summary-label">总收入</div>
+                      <div class="summary-value success--text">
+                        {{ getInMonth() }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <v-divider vertical></v-divider>
+
+                  <div
+                    class="summary-item expense"
+                    @click="clickDay('', '支出')"
+                  >
+                    <div class="summary-icon">
+                      <v-icon
+                        icon="mdi-cash-minus"
+                        color="error"
+                        size="large"
+                      ></v-icon>
+                    </div>
+                    <div class="summary-data">
+                      <div class="summary-label">总支出</div>
+                      <div class="summary-value error--text">
+                        {{ getOutMonth() }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <v-divider vertical></v-divider>
+
+                  <div class="summary-item balance">
+                    <div class="summary-icon">
+                      <v-icon
+                        icon="mdi-scale-balance"
+                        :color="
+                          getInMonth() - getOutMonth() >= 0 ? 'info' : 'warning'
+                        "
+                        size="large"
+                      ></v-icon>
+                    </div>
+                    <div class="summary-data">
+                      <div class="summary-label">结余</div>
+                      <div
+                        class="summary-value"
+                        :class="
+                          getInMonth() - getOutMonth() >= 0
+                            ? 'info--text'
+                            : 'warning--text'
+                        "
+                      >
+                        {{ (getInMonth() - getOutMonth()).toFixed(2) }}
+                      </div>
+                    </div>
+                  </div>
+                </v-card-text>
+              </v-card>
             </div>
-            <div
-              style="
-                flex: 1;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-              "
-            >
-              <!-- 上一月按钮 -->
-              <v-btn icon @click="changeDate('prev-month')">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-              <h3>{{ dayToMonth(nowDate) }}</h3>
-              <v-btn icon @click="changeDate('next-month')">
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-            </div>
-            <div style="flex: 1; text-align: right">
+
+            <!-- Actions Section -->
+            <div class="calendar-actions">
               <v-btn
                 color="primary"
+                variant="elevated"
+                prepend-icon="mdi-chart-box"
                 @click="showMonthAnalysis(dayToMonth(nowDate))"
+                class="analysis-button"
+                rounded="pill"
+                elevation="2"
               >
                 当月分析
               </v-btn>
             </div>
+
+            <!-- Navigation Section -->
+            <div class="calendar-navigation">
+              <v-btn
+                icon="mdi-chevron-left"
+                variant="text"
+                @click="changeDate('prev-month')"
+                class="nav-button"
+                size="small"
+              ></v-btn>
+
+              <div class="calendar-month-title">
+                {{ dayToMonth(nowDate) }}
+              </div>
+
+              <v-btn
+                icon="mdi-chevron-right"
+                variant="text"
+                @click="changeDate('next-month')"
+                class="nav-button"
+                size="small"
+              ></v-btn>
+            </div>
           </div>
         </template>
+
         <!-- 日历事件插槽，用于显示自定义事件，时间可以跨天，利用该功能间接实现每天流水显示 -->
-        <template v-slot:event="{ day, allDay, event }">
-          <div class="tw-relative">
-            <div
-              class="tw-absolute tw-right-2 -tw-top-4 tw-z-50"
-              v-if="event.type == 'button'"
-            >
+        <template v-slot:event="{ day, event }">
+          <div class="calendar-event">
+            <!-- Add Flow Button -->
+            <div class="add-flow-button" v-if="event.type == 'button'">
               <v-btn
                 size="x-small"
-                color="rgba(3, 150, 200, 0.4)"
+                color="primary"
                 icon="mdi-plus"
+                variant="flat"
+                elevation="2"
                 @click="addFlow(day)"
               ></v-btn>
             </div>
-            <p class="tw-text-center" v-if="event.type == 'data'">
-              <!-- {{ day }} -->
+
+            <!-- Flow Data Display -->
+            <div class="calendar-event-content" v-if="event.type == 'data'">
               <v-chip
-                class="cursor-pointer tw-m-1"
+                class="calendar-event-chip cursor-pointer"
                 :class="
                   event.out
                     ? outMoneyClass(event.money)
                     : inMoneyClass(event.money)
                 "
+                variant="flat"
                 @click="clickDay(event.day, String(event.title))"
+                :prepend-icon="
+                  event.out ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold'
+                "
               >
                 {{ event.title }}: {{ Number(event.money).toFixed(2) }}
               </v-chip>
-            </p>
+            </div>
           </div>
         </template>
       </v-calendar>
     </div>
     <!-- 月度交易分析弹窗 -->
-    <v-dialog :width="'40rem'" v-model="monthAnalysisDialog">
+    <v-dialog
+      :width="'40rem'"
+      v-model="monthAnalysisDialog"
+      transition="dialog-bottom-transition"
+      class="analysis-dialog"
+    >
       <v-card>
-        <v-card-title>{{ monthTitle + " 流水分析" }}</v-card-title>
+        <v-card-title class="analysis-title">
+          <v-icon icon="mdi-chart-box" class="mr-2"></v-icon>
+          {{ monthTitle + " 流水分析" }}
+        </v-card-title>
         <v-card-text>
           <DatasMonthAnalysis :data="monthAnalysisData" />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="monthAnalysisDialog = false">
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            variant="tonal"
+            prepend-icon="mdi-close-circle"
+            @click="monthAnalysisDialog = false"
+          >
             关闭
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog :width="'80vw'" v-model="showFlowTable">
+
+    <!-- 流水表格弹窗 -->
+    <v-dialog
+      :width="'80vw'"
+      v-model="showFlowTable"
+      transition="dialog-bottom-transition"
+    >
       <v-card>
         <v-card-title>
           <div class="tw-flex tw-justify-end">
@@ -129,6 +217,7 @@
       </v-card>
     </v-dialog>
 
+    <!-- 添加流水弹窗 -->
     <FlowEditDialog
       v-if="showFlowEditDialog"
       title="添加流水"
@@ -359,7 +448,19 @@ onMounted(() => {
 
 const monthAnalysisDialog = ref(false);
 const monthTitle = ref("");
-const monthAnalysisData = ref<MonthAnalysis>();
+const monthAnalysisData = ref<MonthAnalysis>({
+  month: "",
+  outSum: "0",
+  inSum: "0",
+  zeroSum: "0",
+  maxInType: "",
+  maxInTypeSum: "0",
+  maxOutType: "",
+  maxOutTypeSum: "0",
+  maxOut: {} as Flow,
+  maxIn: {} as Flow,
+  maxZero: {} as Flow,
+});
 const showMonthAnalysis = (month: string) => {
   let monthParam = month
     .replace("年", "-")
@@ -437,30 +538,151 @@ const addFlowSuccess = (flow: Flow) => {
 </script>
 
 <style>
-.calendar-main {
-  min-width: 55rem;
-  padding: 1rem;
-  border-radius: 10px;
-  border: solid 1px var(--el-menu-border-color);
+@import "~/assets/css/calendar.css";
+
+/* Additional Calendar Styles */
+.summary-card {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden;
 }
 
-.thousand-flow {
-  color: #d50000;
-  font-weight: bold;
-}
-.five-hundred-flow {
-  color: #6a1b9a;
-  font-weight: bolder;
-}
-.have-flow {
-  color: #f57c00;
+.summary-content {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem !important;
 }
 
-.have-in {
-  color: #2e7d32;
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
-.no-flow,
-.no-in {
-  color: #d7ccc8;
+
+.summary-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.summary-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label {
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.success--text {
+  color: #66bb6a !important;
+}
+
+.error--text {
+  color: #ff5252 !important;
+}
+
+.info--text {
+  color: #42a5f5 !important;
+}
+
+.warning--text {
+  color: #ffa726 !important;
+}
+
+.nav-button {
+  transition: transform 0.2s ease;
+}
+
+.nav-button:hover {
+  transform: scale(1.2);
+}
+
+.analysis-button {
+  transition: all 0.2s ease;
+}
+
+.analysis-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-event {
+  position: relative;
+}
+
+.calendar-event-content {
+  display: flex;
+  justify-content: center;
+  padding: 2px 0;
+}
+
+/* Dialog Enhancements */
+.v-dialog > .v-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.v-card-title {
+  font-size: 1.25rem;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(var(--v-border-color), 0.12);
+  display: flex;
+  align-items: center;
+}
+
+.v-card-text {
+  padding: 20px;
+}
+
+.v-card-actions {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(var(--v-border-color), 0.12);
+}
+
+/* Analysis Dialog */
+.analysis-dialog .v-card {
+  background-color: rgba(var(--v-theme-surface), 0.95);
+}
+
+.analysis-title {
+  color: var(--v-theme-primary);
+  font-weight: 600;
+}
+
+/* Flow Table Dialog */
+.flow-table-dialog .v-card {
+  max-height: 80vh;
+}
+
+.flow-table-title {
+  background-color: rgba(var(--v-theme-primary), 0.05);
+}
+
+.flow-table-heading {
+  font-weight: 600;
+  color: var(--v-theme-primary);
 }
 </style>
