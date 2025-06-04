@@ -187,7 +187,7 @@
           label="流水归属"
           hide-details="auto"
           variant="outlined"
-          v-model="flowQuery.attribution"
+          v-model="flowQuery.attribution as any"
           :items="attributionList"
           clearable
         ></v-combobox>
@@ -240,20 +240,29 @@
           variant="outlined"
           :label="industryTypeLabel"
           clearable
-          v-model="flowQuery.industryType"
-          :items="industryTypeOptions"
+          v-model="flowQuery.industryType as any"
+          :items="[]"
+          :hide-no-data="false"
+          ref="filterIndustryTypeSelect"
         >
-          <template v-slot:item="{ item, props }">
-            <v-list-item @click="(props as any).onClick" class="tw-py-2">
-              <template v-slot:prepend>
-                <v-icon color="green" size="small" class="tw-mr-1">
-                  mdi-tag
-                </v-icon>
-              </template>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item>
+          <template v-slot:no-data>
+            <div class="tw-p-4 tw-max-w-md">
+              <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
+              <div class="tw-flex tw-flex-wrap tw-gap-2">
+                <v-chip
+                  v-for="item in industryTypeOptions"
+                  :key="item"
+                  variant="outlined"
+                  color="green"
+                  size="small"
+                  class="tw-cursor-pointer"
+                  @click="selectFilterIndustryType(item)"
+                >
+                  <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                  {{ item }}
+                </v-chip>
+              </div>
+            </div>
           </template>
           <template v-slot:selection="{ item }">
             <div class="tw-flex tw-items-center">
@@ -271,20 +280,29 @@
           variant="outlined"
           :label="payTypeLabel"
           clearable
-          v-model="flowQuery.payType"
-          :items="payTypeOptions"
+          v-model="flowQuery.payType as any"
+          :items="[]"
+          :hide-no-data="false"
+          ref="filterPayTypeSelect"
         >
-          <template v-slot:item="{ item, props }">
-            <v-list-item @click="(props as any).onClick" class="tw-py-2">
-              <template v-slot:prepend>
-                <v-icon color="blue" size="small" class="tw-mr-3">
-                  mdi-tag
-                </v-icon>
-              </template>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item>
+          <template v-slot:no-data>
+            <div class="tw-p-4 tw-max-w-md">
+              <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
+              <div class="tw-flex tw-flex-wrap tw-gap-2">
+                <v-chip
+                  v-for="item in payTypeOptions"
+                  :key="item"
+                  variant="outlined"
+                  color="blue"
+                  size="small"
+                  class="tw-cursor-pointer"
+                  @click="selectFilterPayType(item)"
+                >
+                  <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                  {{ item }}
+                </v-chip>
+              </div>
+            </div>
           </template>
           <template v-slot:selection="{ item }">
             <div class="tw-flex tw-items-center">
@@ -467,19 +485,28 @@
             allow-new
             clearable
             v-model="newTypes.industryType"
-            :items="industryTypeOptions"
+            :items="[]"
+            :hide-no-data="false"
+            ref="batchIndustryTypeSelect"
           >
-            <template v-slot:item="{ item, props }">
-              <v-list-item @click="(props as any).onClick" class="tw-py-2">
-                <template v-slot:prepend>
-                  <v-icon color="green" size="small" class="tw-mr-3">
-                    mdi-tag
-                  </v-icon>
-                </template>
-                <v-list-item-title>
-                  {{ item.title }}
-                </v-list-item-title>
-              </v-list-item>
+            <template v-slot:no-data>
+              <div class="tw-p-4 tw-max-w-md">
+                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
+                <div class="tw-flex tw-flex-wrap tw-gap-2">
+                  <v-chip
+                    v-for="item in industryTypeOptions"
+                    :key="item"
+                    variant="outlined"
+                    color="green"
+                    size="small"
+                    class="tw-cursor-pointer"
+                    @click="selectBatchIndustryType(item)"
+                  >
+                    <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                    {{ item }}
+                  </v-chip>
+                </div>
+              </div>
             </template>
             <template v-slot:selection="{ item }">
               <div class="tw-flex tw-items-center">
@@ -499,19 +526,28 @@
             allow-new
             clearable
             v-model="newTypes.payType"
-            :items="payTypeOptions"
+            :items="[]"
+            :hide-no-data="false"
+            ref="batchPayTypeSelect"
           >
-            <template v-slot:item="{ item, props }">
-              <v-list-item @click="(props as any).onClick" class="tw-py-2">
-                <template v-slot:prepend>
-                  <v-icon color="blue" size="small" class="tw-mr-3">
-                    mdi-tag
-                  </v-icon>
-                </template>
-                <v-list-item-title>
-                  {{ item.title }}
-                </v-list-item-title>
-              </v-list-item>
+            <template v-slot:no-data>
+              <div class="tw-p-4 tw-max-w-md">
+                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
+                <div class="tw-flex tw-flex-wrap tw-gap-2">
+                  <v-chip
+                    v-for="item in payTypeOptions"
+                    :key="item"
+                    variant="outlined"
+                    color="blue"
+                    size="small"
+                    class="tw-cursor-pointer"
+                    @click="selectBatchPayType(item)"
+                  >
+                    <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                    {{ item }}
+                  </v-chip>
+                </div>
+              </div>
             </template>
             <template v-slot:selection="{ item }">
               <div class="tw-flex tw-items-center">
@@ -1392,6 +1428,40 @@ const getPayTypeCategory = (title: string) => {
   };
 
   return categoryMap[title] || "其他";
+};
+
+const filterIndustryTypeSelect = ref();
+const filterPayTypeSelect = ref();
+
+const selectFilterIndustryType = (item: string) => {
+  (flowQuery.value.industryType as any) = item;
+  if (filterIndustryTypeSelect.value) {
+    filterIndustryTypeSelect.value.blur();
+  }
+};
+
+const selectFilterPayType = (item: string) => {
+  (flowQuery.value.payType as any) = item;
+  if (filterPayTypeSelect.value) {
+    filterPayTypeSelect.value.blur();
+  }
+};
+
+const batchIndustryTypeSelect = ref();
+const batchPayTypeSelect = ref();
+
+const selectBatchIndustryType = (item: string) => {
+  newTypes.value.industryType = item;
+  if (batchIndustryTypeSelect.value) {
+    batchIndustryTypeSelect.value.blur();
+  }
+};
+
+const selectBatchPayType = (item: string) => {
+  newTypes.value.payType = item;
+  if (batchPayTypeSelect.value) {
+    batchPayTypeSelect.value.blur();
+  }
 };
 </script>
 

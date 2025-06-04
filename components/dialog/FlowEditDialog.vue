@@ -33,21 +33,29 @@
             :label="industryTypeLabel"
             allow-new
             clearable
-            no-data-text="暂无数据，请输入"
             v-model="flowEdit.industryType"
-            :items="industryTypeOptions"
+            :items="[]"
+            :hide-no-data="false"
+            ref="industryTypeCombobox"
           >
-            <template v-slot:item="{ item, props }">
-              <v-list-item @click="(props as any).onClick" class="tw-py-2">
-                <template v-slot:prepend>
-                  <v-icon color="green" size="small" class="tw-mr-1">
-                    mdi-tag
-                  </v-icon>
-                </template>
-                <v-list-item-title>
-                  {{ item.title }}
-                </v-list-item-title>
-              </v-list-item>
+            <template v-slot:no-data>
+              <div class="tw-p-4 tw-max-w-md">
+                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
+                <div class="tw-flex tw-flex-wrap tw-gap-2">
+                  <v-chip
+                    v-for="item in industryTypeOptions"
+                    :key="item"
+                    variant="outlined"
+                    color="green"
+                    size="small"
+                    class="tw-cursor-pointer"
+                    @click="selectIndustryType(item)"
+                  >
+                    <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                    {{ item }}
+                  </v-chip>
+                </div>
+              </div>
             </template>
             <template v-slot:selection="{ item }">
               <div class="tw-flex tw-items-center">
@@ -64,21 +72,29 @@
             :label="payTypeLabel"
             allow-new
             clearable
-            no-data-text="暂无数据，请输入"
             v-model="flowEdit.payType"
-            :items="payTypeOptions"
+            :items="[]"
+            :hide-no-data="false"
+            ref="payTypeCombobox"
           >
-            <template v-slot:item="{ item, props }">
-              <v-list-item @click="(props as any).onClick" class="tw-py-2">
-                <template v-slot:prepend>
-                  <v-icon color="blue" size="small" class="tw-mr-3">
-                    mdi-tag
-                  </v-icon>
-                </template>
-                <v-list-item-title>
-                  {{ item.title }}
-                </v-list-item-title>
-              </v-list-item>
+            <template v-slot:no-data>
+              <div class="tw-p-4 tw-max-w-md">
+                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
+                <div class="tw-flex tw-flex-wrap tw-gap-2">
+                  <v-chip
+                    v-for="item in payTypeOptions"
+                    :key="item"
+                    variant="outlined"
+                    color="blue"
+                    size="small"
+                    class="tw-cursor-pointer"
+                    @click="selectPayType(item)"
+                  >
+                    <v-icon size="x-small" class="tw-mr-1">mdi-tag</v-icon>
+                    {{ item }}
+                  </v-chip>
+                </div>
+              </div>
             </template>
             <template v-slot:selection="{ item }">
               <div class="tw-flex tw-items-center">
@@ -335,6 +351,23 @@ const updateOne = () => {
 
 const closeDialog = () => {
   showFlowEditDialog.value = false;
+};
+
+const industryTypeCombobox = ref();
+const payTypeCombobox = ref();
+
+const selectIndustryType = (item: string) => {
+  flowEdit.value.industryType = item;
+  if (industryTypeCombobox.value) {
+    industryTypeCombobox.value.blur();
+  }
+};
+
+const selectPayType = (item: string) => {
+  flowEdit.value.payType = item;
+  if (payTypeCombobox.value) {
+    payTypeCombobox.value.blur();
+  }
 };
 
 const getTypeIcon = (title: string) => {
