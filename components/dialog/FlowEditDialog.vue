@@ -37,13 +37,14 @@
             :items="[]"
             :hide-no-data="false"
             ref="industryTypeCombobox"
+            @update:search="industryTypeSearchText = $event"
           >
             <template v-slot:no-data>
               <div class="tw-p-4 tw-max-w-md">
                 <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
                 <div class="tw-flex tw-flex-wrap tw-gap-2">
                   <v-chip
-                    v-for="item in industryTypeOptions"
+                    v-for="item in filteredIndustryTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="green"
@@ -76,13 +77,14 @@
             :items="[]"
             :hide-no-data="false"
             ref="payTypeCombobox"
+            @update:search="payTypeSearchText = $event"
           >
             <template v-slot:no-data>
               <div class="tw-p-4 tw-max-w-md">
                 <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
                 <div class="tw-flex tw-flex-wrap tw-gap-2">
                   <v-chip
-                    v-for="item in payTypeOptions"
+                    v-for="item in filteredPayTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="blue"
@@ -176,7 +178,7 @@
 import { VDateInput } from "vuetify/labs/VDateInput";
 import { showFlowEditDialog } from "~/utils/flag";
 import { dateFormater, miniFullscreen } from "@/utils/common";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 
 const { title, flow, successCallback } = defineProps([
@@ -254,19 +256,27 @@ const changeFlowTypes = () => {
 };
 changeFlowTypes();
 
-const searchPayType = ref("");
-const searchType = ref("");
-watch(searchPayType, (val) => {
-  // console.log(val)
-  if (val && !industryTypeOptions.value.includes(val)) {
-    industryTypeOptions.value.push(val);
+// 添加筛选相关的响应式变量
+const industryTypeSearchText = ref("");
+const payTypeSearchText = ref("");
+
+// 计算属性：筛选后的选项
+const filteredIndustryTypeOptions = computed(() => {
+  if (!industryTypeSearchText.value) {
+    return industryTypeOptions.value;
   }
+  return industryTypeOptions.value.filter(item =>
+    item.toLowerCase().includes(industryTypeSearchText.value.toLowerCase())
+  );
 });
-watch(searchType, (val) => {
-  // console.log(val)
-  if (val && !payTypeOptions.value.includes(val)) {
-    payTypeOptions.value.push(val);
+
+const filteredPayTypeOptions = computed(() => {
+  if (!payTypeSearchText.value) {
+    return payTypeOptions.value;
   }
+  return payTypeOptions.value.filter(item =>
+    item.toLowerCase().includes(payTypeSearchText.value.toLowerCase())
+  );
 });
 
 // 提交表单（新增或修改）
