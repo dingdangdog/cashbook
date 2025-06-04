@@ -1,0 +1,71 @@
+name: Auto Sync Branches
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0 # 获取完整历史记录
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync to main-mysql branch
+        run: |
+          echo "Syncing to main-mysql branch..."
+          git checkout main-mysql || git checkout -b main-mysql
+          git merge main --no-edit || {
+            echo "Merge conflict detected for main-mysql, manual intervention required"
+            exit 1
+          }
+          git push origin main-mysql
+
+      - name: Sync to main-pgsql branch
+        run: |
+          echo "Syncing to main-pgsql branch..."
+          git checkout main-pgsql || git checkout -b main-pgsql
+          git merge main --no-edit || {
+            echo "Merge conflict detected for main-pgsql, manual intervention required"
+            exit 1
+          }
+          git push origin main-pgsql
+
+      - name: Sync to main-sqlite branch
+        run: |
+          echo "Syncing to main-sqlite branch..."
+          git checkout main-sqlite || git checkout -b main-sqlite
+          git merge main --no-edit || {
+            echo "Merge conflict detected for main-sqlite, manual intervention required"
+            exit 1
+          }
+          git push origin main-sqlite
+
+      - name: Sync to main-sqlserver branch
+        run: |
+          echo "Syncing to main-sqlserver branch..."
+          git checkout main-sqlserver || git checkout -b main-sqlserver
+          git merge main --no-edit || {
+            echo "Merge conflict detected for main-sqlserver, manual intervention required"
+            exit 1
+          }
+          git push origin main-sqlserver
+
+      - name: Summary
+        run: |
+          echo "✅ Successfully synced main branch to all database branches:"
+          echo "   - main-mysql"
+          echo "   - main-pgsql" 
+          echo "   - main-sqlite"
+          echo "   - main-sqlserver"
