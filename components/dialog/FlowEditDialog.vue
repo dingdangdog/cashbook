@@ -36,7 +36,28 @@
             no-data-text="暂无数据，请输入"
             v-model="flowEdit.industryType"
             :items="industryTypeOptions"
-          ></v-combobox>
+          >
+            <template v-slot:item="{ item, props }">
+              <v-list-item @click="(props as any).onClick" class="tw-py-2">
+                <template v-slot:prepend>
+                  <v-icon color="green" size="small" class="tw-mr-1">
+                    mdi-tag
+                  </v-icon>
+                </template>
+                <v-list-item-title>
+                  {{ item.title }}
+                </v-list-item-title>
+              </v-list-item>
+            </template>
+            <template v-slot:selection="{ item }">
+              <div class="tw-flex tw-items-center">
+                <v-icon color="green" size="small" class="tw-mr-1">
+                  mdi-tag
+                </v-icon>
+                <span>{{ item.title }}</span>
+              </div>
+            </template>
+          </v-combobox>
           <!-- 支付方式/收款方式 -->
           <v-combobox
             variant="outlined"
@@ -46,7 +67,28 @@
             no-data-text="暂无数据，请输入"
             v-model="flowEdit.payType"
             :items="payTypeOptions"
-          ></v-combobox>
+          >
+            <template v-slot:item="{ item, props }">
+              <v-list-item @click="(props as any).onClick" class="tw-py-2">
+                <template v-slot:prepend>
+                  <v-icon color="blue" size="small" class="tw-mr-3">
+                    mdi-tag
+                  </v-icon>
+                </template>
+                <v-list-item-title>
+                  {{ item.title }}
+                </v-list-item-title>
+              </v-list-item>
+            </template>
+            <template v-slot:selection="{ item }">
+              <div class="tw-flex tw-items-center">
+                <v-icon color="blue" size="small" class="tw-mr-2">
+                  mdi-tag
+                </v-icon>
+                <span>{{ item.title }}</span>
+              </div>
+            </template>
+          </v-combobox>
           <v-text-field
             clearable
             label="金额"
@@ -293,6 +335,205 @@ const updateOne = () => {
 
 const closeDialog = () => {
   showFlowEditDialog.value = false;
+};
+
+const getTypeIcon = (title: string) => {
+  // 支出类型图标映射
+  const expenseIcons: Record<string, string> = {
+    餐饮: "mdi-food",
+    购物: "mdi-shopping",
+    超市: "mdi-cart",
+    生活用品: "mdi-home",
+    服装: "mdi-tshirt-crew",
+    交通: "mdi-bus",
+    打车: "mdi-taxi",
+    加油: "mdi-gas-station",
+    停车: "mdi-parking",
+    地铁: "mdi-subway",
+    娱乐: "mdi-gamepad-variant",
+    电影: "mdi-movie",
+    旅游: "mdi-airplane",
+    运动: "mdi-run",
+    医疗: "mdi-hospital",
+    药品: "mdi-pill",
+    教育: "mdi-school",
+    培训: "mdi-book-open",
+    保险: "mdi-shield",
+    理财: "mdi-chart-line",
+    房租: "mdi-home-city",
+    水电费: "mdi-lightning-bolt",
+    通讯费: "mdi-phone",
+    网费: "mdi-wifi",
+  };
+
+  // 收入类型图标映射
+  const incomeIcons: Record<string, string> = {
+    工资: "mdi-cash",
+    奖金: "mdi-gift",
+    兼职: "mdi-briefcase",
+    理财收益: "mdi-trending-up",
+    股票: "mdi-chart-line",
+    基金: "mdi-bank",
+    红包: "mdi-gift-outline",
+    退款: "mdi-undo",
+    借入: "mdi-hand-extended",
+  };
+
+  return expenseIcons[title] || incomeIcons[title] || "mdi-tag-outline";
+};
+
+const getTypeColor = (title: string) => {
+  // 根据类型返回颜色
+  const colorMap: Record<string, string> = {
+    餐饮: "orange",
+    购物: "pink",
+    超市: "green",
+    生活用品: "blue",
+    服装: "purple",
+    交通: "blue",
+    打车: "yellow",
+    加油: "red",
+    停车: "grey",
+    地铁: "blue",
+    娱乐: "purple",
+    电影: "red",
+    旅游: "blue",
+    运动: "green",
+    医疗: "red",
+    药品: "green",
+    教育: "blue",
+    培训: "orange",
+    保险: "blue",
+    理财: "green",
+    房租: "brown",
+    水电费: "yellow",
+    通讯费: "blue",
+    网费: "blue",
+    工资: "green",
+    奖金: "orange",
+    兼职: "blue",
+    理财收益: "green",
+    股票: "red",
+    基金: "blue",
+    红包: "red",
+    退款: "blue",
+    借入: "orange",
+  };
+
+  return colorMap[title] || "grey";
+};
+
+const getTypeCategory = (title: string) => {
+  // 根据类型返回分类标签
+  const categoryMap: Record<string, string> = {
+    餐饮: "生活",
+    购物: "生活",
+    超市: "生活",
+    生活用品: "生活",
+    服装: "生活",
+    交通: "出行",
+    打车: "出行",
+    加油: "出行",
+    停车: "出行",
+    地铁: "出行",
+    娱乐: "休闲",
+    电影: "休闲",
+    旅游: "休闲",
+    运动: "休闲",
+    医疗: "健康",
+    药品: "健康",
+    教育: "学习",
+    培训: "学习",
+    保险: "金融",
+    理财: "金融",
+    房租: "居住",
+    水电费: "居住",
+    通讯费: "居住",
+    网费: "居住",
+    工资: "收入",
+    奖金: "收入",
+    兼职: "收入",
+    理财收益: "投资",
+    股票: "投资",
+    基金: "投资",
+    红包: "其他",
+    退款: "其他",
+    借入: "其他",
+  };
+
+  return categoryMap[title] || "其他";
+};
+
+const getPayTypeIcon = (title: string) => {
+  // 支付方式图标映射
+  const payTypeIcons: Record<string, string> = {
+    支付宝: "mdi-wallet",
+    微信支付: "mdi-wechat",
+    银行卡: "mdi-credit-card",
+    现金: "mdi-cash",
+    信用卡: "mdi-credit-card-outline",
+    花呗: "mdi-flower",
+    借呗: "mdi-hand-coin",
+    白条: "mdi-receipt",
+    余额宝: "mdi-piggy-bank",
+    储蓄卡: "mdi-bank",
+    转账: "mdi-bank-transfer",
+    网银: "mdi-web",
+    PayPal: "mdi-paypal",
+    "Apple Pay": "mdi-apple",
+    零钱: "mdi-coin",
+    其他: "mdi-dots-horizontal",
+  };
+
+  return payTypeIcons[title] || "mdi-credit-card-outline";
+};
+
+const getPayTypeColor = (title: string) => {
+  // 支付方式颜色映射
+  const colorMap: Record<string, string> = {
+    支付宝: "blue",
+    微信支付: "green",
+    银行卡: "indigo",
+    现金: "orange",
+    信用卡: "red",
+    花呗: "blue",
+    借呗: "purple",
+    白条: "red",
+    余额宝: "amber",
+    储蓄卡: "teal",
+    转账: "blue-grey",
+    网银: "deep-purple",
+    PayPal: "blue",
+    "Apple Pay": "grey",
+    零钱: "yellow",
+    其他: "grey",
+  };
+
+  return colorMap[title] || "grey";
+};
+
+const getPayTypeCategory = (title: string) => {
+  // 支付方式分类映射
+  const categoryMap: Record<string, string> = {
+    支付宝: "第三方",
+    微信支付: "第三方",
+    银行卡: "银行",
+    现金: "现金",
+    信用卡: "银行",
+    花呗: "信贷",
+    借呗: "信贷",
+    白条: "信贷",
+    余额宝: "理财",
+    储蓄卡: "银行",
+    转账: "银行",
+    网银: "银行",
+    PayPal: "第三方",
+    "Apple Pay": "第三方",
+    零钱: "现金",
+    其他: "其他",
+  };
+
+  return categoryMap[title] || "其他";
 };
 </script>
 
