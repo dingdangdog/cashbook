@@ -6,10 +6,11 @@ export default defineEventHandler(async (event) => {
     "_prisma_migrations",
     "SystemSetting",
     "User",
-    "Plan",
-    "TypeRelation",
     "Book",
     "Flow",
+    "Budget",
+    "FixedFlow",
+    "TypeRelation",
   ];
   // const tableNames: any[] = await prisma.$queryRaw`
   //   SELECT table_name

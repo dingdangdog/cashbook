@@ -10,11 +10,22 @@
       </table>
     </div>
     <hr />
-    <div class="csv-dialog-header" style="margin-top: 1rem">
-      <div>
+    <div class="csv-dialog-header tw-space-x-4" style="margin-top: 1rem">
+      <div class="tw-flex tw-items-center">
         <span style="color: gray" class="tw-mx-2"
           >解析到的流水数量:{{ flows.length }}</span
         >
+      </div>
+      <div class="tw-flex tw-items-center">
+        <!-- <span class="tw-mr-2">流水归属:</span> -->
+        <v-text-field
+          v-model="attribution"
+          placeholder="流水归属(可选)"
+          variant="outlined"
+          density="compact"
+          hide-details="auto"
+          class="tw-w-36"
+        ></v-text-field>
       </div>
       <v-btn
         variant="elevated"
@@ -43,6 +54,9 @@ const uploading = ref(false);
 // 待上传的流水数据
 const flows = ref<Flow[]>([]);
 flows.value.push(...items);
+
+// 流水归属
+const attribution = ref("");
 
 const excelTable = ref();
 const excelTableHead = ref();
@@ -89,6 +103,14 @@ const submitUpload = () => {
     Alert.error("数据为空！");
     return;
   }
+
+  // 如果设置了流水归属，应用到所有流水
+  if (attribution.value.trim()) {
+    flows.value.forEach((flow) => {
+      flow.attribution = attribution.value.trim();
+    });
+  }
+
   uploading.value = true;
   doApi
     .post("api/entry/flow/imports", {
@@ -119,7 +141,7 @@ const submitUpload = () => {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
 }
 
 .upload-tip {
