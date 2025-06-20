@@ -121,9 +121,10 @@ const toPath = (menu: Menu) => {
           :key="i"
           class="tw-cursor-pointer hover:tw-bg-gray-500/20"
           :class="openMenu == item.path ? 'selected-menu' : ''"
+          @click="!item.children ? toPath(item) : undefined"
         >
           <!-- 一级菜单 -->
-          <v-list-item-title @click="toPath(item)" v-if="!item.children">
+          <v-list-item-title v-if="!item.children">
             <v-icon class="menu-icon" :icon="item.icon"></v-icon>
             <span>{{ item.title }}</span>
           </v-list-item-title>
@@ -138,9 +139,10 @@ const toPath = (menu: Menu) => {
               v-for="(child, i2) in item.children"
               :key="i2"
               class="tw-cursor-pointer hover:tw-bg-gray-500/20"
-              :class="openMenu == item.path ? 'selected-menu' : ''"
+              :class="openMenu == child.path ? 'selected-menu' : ''"
+              @click="toPath(child)"
             >
-              <v-list-item-title @click="toPath(child)">
+              <v-list-item-title>
                 <v-icon class="menu-icon" :icon="child.icon"></v-icon>
                 <span>{{ child.title }}</span>
               </v-list-item-title>
