@@ -33,9 +33,10 @@ RUN chmod +x entrypoint.sh
 # RUN ls
 
 # 预装prisma，可以提升容器启动速度，但镜像体积会大很多
-RUN npm install -g prisma@6.2.1
+RUN npm install -g prisma@6.10.1
 
 ENV DATABASE_URL="file:/app/data/db/cashbook.db"
+
 
 ENV NUXT_APP_VERSION="4.2.0"
 ENV NUXT_DATA_PATH="/app/data"
