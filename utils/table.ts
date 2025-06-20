@@ -78,4 +78,6 @@ export interface TypeRelation {
   bookId: string;
   source: string;
   target: string;
+  bookName?: string; // 账本名称，用于显示
+  bookDbId?: number; // 数据库内部ID，用于显示
 }
