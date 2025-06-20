@@ -42,13 +42,13 @@ Cashbook记账本。
 
 请阅读下面的版本对照表，选择适合你的版本进行部署！
 
-|数据库差异|latest(x86_64)|latest(arm64)|指定版本(x86_64)|指定版本(arm64)|
-|---|---|---|---|---|
-|pgsql(latest)|latest|latest-arm64|4.2.0|4.2.0-arm64|
-|pgsql|latest-pgsql|latest-arm64-pgsql|4.2.0-pgsql|4.2.0-arm64-pgsql|
-|mysql|latest-mysql|latest-arm64-mysql|4.2.0-mysql|4.2.0-arm64-mysql|
-|sqlite|latest-sqlite|latest-arm64-sqlite|4.2.0-sqlite|4.2.0-arm64-sqlite|
-|sqlserver|latest-sqlserver|latest-arm64-sqlserver|4.2.0-sqlserver|4.2.0-arm64-sqlserver|
+|latest|指定版本|数据库|系统自适应|
+|---|---|---|---|
+|latest|4.2.1|默认（pgsql）|x86/arm64|
+|latest-pgsql|4.2.1-pgsql|pgsql|x86/arm64|
+|latest-mysql|4.2.1-mysql|mysql|x86/arm64|
+|latest-sqlite|4.2.1-sqlite|sqlite|x86/arm64|
+|latest-sqlserver|4.2.1-sqlserver|sqlserver|x86/arm64|
 
 详情请查看 [DockerHub](https://hub.docker.com/repository/docker/dingdangdog/cashbook/tags)
 
