@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { add, update } from "./api";
 import { editInfoFlag } from "./flag";
 
@@ -9,8 +9,26 @@ let emits = defineEmits(["success", "cancel"]);
 // 编辑数据实体
 const editItem = ref<TypeRelation | any>();
 
+// 账本列表
+const bookOptions = ref<{ text: string; value: string }[]>([]);
+
+// 获取账本列表
+const getBookList = async () => {
+  try {
+    const books = await doApi.post("api/admin/entry/books/list", {}) as Book[];
+    bookOptions.value = books.map((book: Book) => ({
+      text: `${book.bookName} (${book.bookId})`,
+      value: book.bookId
+    }));
+  } catch (error) {
+    console.error("获取账本列表失败:", error);
+  }
+};
+
 if (item) {
   editItem.value = { ...item };
+} else {
+  editItem.value = {};
 }
 
 const form = ref(false);
@@ -42,6 +60,10 @@ const close = () => {
   editInfoFlag.value = false;
   emits("cancel");
 };
+
+onMounted(() => {
+  getBookList();
+});
 </script>
 
 <template>
@@ -58,18 +80,38 @@ const close = () => {
         <v-form v-model="form" ref="formRef">
           <!-- <v-text-field
             variant="outlined"
-            label="账本名称"
+            label="用户ID"
+            type="number"
+            v-model="editItem.userId"
+            :rules="[v => !!v || '用户ID不能为空']"
+            required
+          ></v-text-field>
+          
+          <v-select
+            variant="outlined"
+            label="选择账本"
             v-model="editItem.bookId"
-          ></v-text-field> -->
+            :items="bookOptions"
+            item-title="text"
+            item-value="value"
+            :rules="[v => !!v || '请选择账本']"
+            required
+          ></v-select> -->
+          
           <v-text-field
             variant="outlined"
             label="原类型"
             v-model="editItem.source"
+            :rules="[v => !!v || '原类型不能为空']"
+            required
           ></v-text-field>
+          
           <v-text-field
             variant="outlined"
             label="目标类型"
             v-model="editItem.target"
+            :rules="[v => !!v || '目标类型不能为空']"
+            required
           ></v-text-field>
         </v-form>
       </v-card-text>

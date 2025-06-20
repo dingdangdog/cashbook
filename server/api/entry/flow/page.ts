@@ -76,6 +76,9 @@ export default defineEventHandler(async (event) => {
     {
       day: "desc",
     },
+    {
+      id: "desc", // 添加ID排序确保排序稳定性
+    },
   ];
   if (body.moneySort) {
     // console.log(body.moneySort)
@@ -111,7 +114,7 @@ export default defineEventHandler(async (event) => {
   let totalIn = 0;
   let totalOut = 0;
   let notInOut = 0;
-  sumMoney.forEach((t) => {
+  sumMoney.forEach((t: any) => {
     if (t.flowType == "收入") {
       totalIn = Number(t._sum.money);
     } else if (t.flowType == "支出") {

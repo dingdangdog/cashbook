@@ -5,6 +5,13 @@ export default defineEventHandler(async (event) => {
 
   const where: any = {}; // 条件查询
 
+  // 排除模板数据的逻辑
+  if (body.excludeTemplate) {
+    where.bookId = {
+      not: "0"
+    };
+  }
+
   // 普通查询条件
   if (body.id) {
     // equals 等于查询
@@ -15,13 +22,12 @@ export default defineEventHandler(async (event) => {
   }
   if (body.bookId) {
     where.bookId = {
-      equals: "0",
+      contains: body.bookId,
     };
   }
   if (body.userId) {
     where.userId = {
-      // equals: Number(body.userId),
-      equals: 0,
+      equals: Number(body.userId),
     };
   }
   if (body.source) {
@@ -49,21 +55,68 @@ export default defineEventHandler(async (event) => {
       target: "desc",
     },
   ];
+
   if (pageSize == -1) {
-    // 查询全部
-    const datas = await prisma.typeRelation.findMany({ where, orderBy });
-    return success({ total: datas.length, data: datas, pages: 1 });
+    // 查询全部，包含账本信息
+    const datas = await prisma.typeRelation.findMany({ 
+      where, 
+      orderBy,
+    });
+    
+    // 获取所有相关的账本信息
+    const bookIds = [...new Set(datas.map(item => item.bookId))];
+    const books = await prisma.book.findMany({
+      where: { bookId: { in: bookIds } },
+      select: { id: true, bookId: true, bookName: true }
+    });
+    
+    // 创建账本映射
+    const bookMap = new Map(books.map(book => [book.bookId, book]));
+    
+    // 添加账本信息到结果中
+    const datasWithBookInfo = datas.map(item => {
+      const bookInfo = bookMap.get(item.bookId);
+      return {
+        ...item,
+        bookName: bookInfo?.bookName || '未知账本',
+        bookDbId: bookInfo?.id || null, // 数据库内部ID
+      };
+    });
+    
+    return success({ total: datas.length, data: datasWithBookInfo, pages: 1 });
   }
+  
   // 【条件、排序、分页】 组合查询
-  const users = await prisma.typeRelation.findMany({
+  const typeRelations = await prisma.typeRelation.findMany({
     where,
     orderBy,
     skip,
     take: pageSize,
   });
+  
+  // 获取相关的账本信息
+  const bookIds = [...new Set(typeRelations.map(item => item.bookId))];
+  const books = await prisma.book.findMany({
+    where: { bookId: { in: bookIds } },
+    select: { id: true, bookId: true, bookName: true }
+  });
+  
+  // 创建账本映射
+  const bookMap = new Map(books.map(book => [book.bookId, book]));
+  
+  // 添加账本信息到结果中
+  const typeRelationsWithBookInfo = typeRelations.map(item => {
+    const bookInfo = bookMap.get(item.bookId);
+    return {
+      ...item,
+      bookName: bookInfo?.bookName || '未知账本',
+      bookDbId: bookInfo?.id || null, // 数据库内部ID
+    };
+  });
+  
   // 计算总页数
-  const totalUsers = await prisma.typeRelation.count({ where });
-  const totalPages = Math.ceil(totalUsers / pageSize);
+  const totalTypeRelations = await prisma.typeRelation.count({ where });
+  const totalPages = Math.ceil(totalTypeRelations / pageSize);
 
-  return success({ total: totalUsers, data: users, pages: totalPages });
+  return success({ total: totalTypeRelations, data: typeRelationsWithBookInfo, pages: totalPages });
 });
