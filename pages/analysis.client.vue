@@ -129,7 +129,7 @@
       </div>
 
       <!-- Mobile: Chart Cards (Always Show) -->
-      <div class="block md:hidden">
+      <div class="block md:hidden px-2">
         <div
           class="flex overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory px-2"
         >
@@ -261,7 +261,7 @@ const carouselCharts = [
 
 // Mobile charts (horizontal scroll)
 const mobileChartWidth = computed(() => "100%");
-const mobileChartHeight = computed(() => "58vh");
+const mobileChartHeight = computed(() => "62vh");
 
 // Carousel charts (larger size for better viewing)
 const carouselChartWidth = computed(() => "100%");

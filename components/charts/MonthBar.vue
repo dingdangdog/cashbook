@@ -2,7 +2,7 @@
   <div class="chart-common-container">
     <div
       v-if="title || years.length > 0"
-      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 h-16 mb-4"
+      class="flex flex-col pb-2 md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 mb-2 md:mb-4"
     >
       <div>
         <h4
@@ -17,7 +17,7 @@
         <select
           v-model="filterYear"
           @change="filterYearChange"
-          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          class="w-full px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">全部年份</option>
           <option v-for="year in years" :key="year.value" :value="year.value">
@@ -49,9 +49,7 @@
       <div
         class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
       >
-        <h3
-          class="text-lg font-semibold text-green-950 dark:text-white"
-        >
+        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
           流水详情
         </h3>
         <button
@@ -61,7 +59,7 @@
           关闭
         </button>
       </div>
-      <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+      <div class="p-2 md:p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
       </div>
     </div>

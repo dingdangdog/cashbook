@@ -4,7 +4,7 @@
   >
     <!-- 查询条件显示 -->
     <div
-      class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+      class="px-2 py-1 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
     >
       <div class="flex flex-wrap gap-2 text-sm">
         <span
@@ -237,9 +237,9 @@
       <div class="border-t border-gray-200 dark:border-gray-700"></div>
 
       <!-- 统计信息和分页 -->
-      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700">
+      <div class="px-2 py-1 bg-gray-50 dark:bg-gray-700">
         <!-- 统计信息 -->
-        <div class="flex flex-wrap gap-2 mb-3">
+        <div class="flex flex-wrap gap-1 mb-2">
           <span
             class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
           >
@@ -260,7 +260,7 @@
         <!-- 分页控件 -->
         <div
           v-if="flowPageRef.total > (flowQuery.pageSize || 20)"
-          class="flex flex-col gap-3"
+          class="flex flex-col gap-2"
         >
           <!-- 分页信息 -->
           <div class="text-sm text-gray-700 dark:text-gray-300 text-center">
@@ -275,7 +275,7 @@
           </div>
 
           <!-- 分页操作 -->
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div class="flex items-center justify-center gap-4">
             <!-- 每页显示数量 -->
             <select
               v-model="flowQuery.pageSize"
@@ -299,7 +299,10 @@
               </button>
 
               <!-- 移动端友好的页码按钮 -->
-              <template v-for="(page, index) in mobileFriendlyPageNumbers" :key="index">
+              <template
+                v-for="(page, index) in mobileFriendlyPageNumbers"
+                :key="index"
+              >
                 <button
                   v-if="page !== '...'"
                   @click="changePage(Number(page))"
@@ -427,7 +430,11 @@ const hasFilters = computed(() => {
 
 // 生成移动端友好的页码
 const mobileFriendlyPageNumbers = computed(() => {
-  return generateMobileFriendlyPageNumbers(currentPage.value, totalPages.value, 3);
+  return generateMobileFriendlyPageNumbers(
+    currentPage.value,
+    totalPages.value,
+    3
+  );
 });
 
 // 排序切换
@@ -471,7 +478,6 @@ const doQuery = () => {
 };
 
 changeTypes();
-const searching = ref(false);
 
 const getTableHeight = () => {
   return window.innerWidth < 1080
@@ -480,9 +486,8 @@ const getTableHeight = () => {
 };
 
 // 组件挂载时初始化数据
-onMounted(() => {
-  doQuery();
-});
+doQuery();
+onMounted(() => {});
 
 // 暴露方法给父组件调用
 defineExpose({

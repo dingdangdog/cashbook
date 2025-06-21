@@ -7,7 +7,7 @@
       @click="searchPanelVisible = false"
     >
       <div
-        class="fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 p-4 overflow-y-auto"
+        class="fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 p-2 md:p-4 overflow-y-auto"
         @click.stop
       >
         <div class="flex justify-between items-center mb-6">

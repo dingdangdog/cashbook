@@ -7,13 +7,11 @@
       @click="searchDrawer = false"
     >
       <div
-        class="w-80 h-full bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 p-4 overflow-y-auto"
+        class="w-80 h-full bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 p-2 md:p-4 overflow-y-auto"
         @click.stop
       >
         <div class="flex justify-between items-center mb-4">
-          <h3
-            class="text-lg font-semibold text-green-950 dark:text-white"
-          >
+          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
             时间筛选
           </h3>
           <button
@@ -65,17 +63,17 @@
         </h4>
       </div>
 
-      <div class="flex space-x-2 items-center">
+      <div class="flex space-x-2 pb-2 items-center">
         <button
           @click="searchDrawer = true"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          class="px-2 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
         >
           时间筛选
         </button>
         <div class="min-w-32">
           <select
             v-model="chartParam.flowType"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="w-full px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option
               v-for="type in FlowTypes"
@@ -98,7 +96,7 @@
     </div>
     <div
       v-show="!noData"
-      id="payTypeDiv"
+      id="attributionPieDiv"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
@@ -116,9 +114,7 @@
       <div
         class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
       >
-        <h3
-          class="text-lg font-semibold text-green-950 dark:text-white"
-        >
+        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
           流水详情
         </h3>
         <button
@@ -128,7 +124,7 @@
           关闭
         </button>
       </div>
-      <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+      <div class="p-2 md:p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
       </div>
     </div>
@@ -326,7 +322,7 @@ onMounted(() => {
     optionRef.value.legend.orient = "vertical";
   }
 
-  attributionDiv = document.getElementById("payTypeDiv");
+  attributionDiv = document.getElementById("attributionPieDiv");
   attributionChart = echarts.init(attributionDiv);
   attributionChart.on("click", function (param) {
     query.value = { ...chartParam.value, attribution: param.name };
@@ -336,8 +332,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-#payTypeDiv {
-  padding: 0.5rem;
-}
-</style>
+<style scoped></style>

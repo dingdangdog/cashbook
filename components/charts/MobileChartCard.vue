@@ -1,7 +1,7 @@
 <template>
   <div class="mobile-chart-card">
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-200 dark:border-gray-700 h-full"
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-2 border border-gray-200 dark:border-gray-700 h-full"
     >
       <!-- Card Header -->
       <div class="flex items-center justify-between mb-4">
@@ -21,26 +21,31 @@
         <!-- 根据图表类型显示对应组件 -->
         <IndustryTypePie
           v-if="chartType === 'industry'"
+          :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <PayTypePie
           v-else-if="chartType === 'paytype'"
+          :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <AttributionPie
           v-else-if="chartType === 'attribution'"
+          :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <DailyLineChart
           v-else-if="chartType === 'daily'"
+          :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <MonthBar
           v-else-if="chartType === 'month'"
+          :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
