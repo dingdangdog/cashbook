@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 确保深色模式生效 */
+.dark {
+  color-scheme: dark;
+}
+
 html {
   overflow-y: auto;
 }
