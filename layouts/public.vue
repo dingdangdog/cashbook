@@ -6,6 +6,7 @@ import {
 } from "~/utils/flag";
 import { SystemConfig, GlobalUserInfo } from "~/utils/store";
 import { getUserInfo, doApi } from "~/utils/api";
+import { globalToggleTheme } from "~/utils/common";
 
 // Theme and responsive state
 const isDark = ref(false);
@@ -21,15 +22,7 @@ const openMenu = computed(() => route.path.slice(1) || "calendar");
 
 // Theme functions
 const toggleTheme = () => {
-  isDark.value = !isDark.value;
-
-  if (typeof window !== "undefined") {
-    // Apply dark mode class to html element (needed for Tailwind dark: variant)
-    document.documentElement.classList.toggle("dark", isDark.value);
-
-    // Save preference
-    localStorage.setItem("theme", isDark.value ? "dark" : "light");
-  }
+  isDark.value = globalToggleTheme(isDark.value);
 };
 
 // Responsive functions
@@ -159,7 +152,7 @@ const checkVersion = () => {
   </Head>
 
   <div
-    class="tw-min-h-screen tw-p-0 tw-m-0 tw-bg-gray-50 dark:tw-bg-gray-950 tw-transition-colors tw-duration-200"
+    class="tw-h-screen tw-p-0 tw-m-0 tw-overflow-hidden tw-bg-gray-50 dark:tw-bg-gray-950 tw-transition-colors tw-duration-200"
   >
     <!-- Header -->
     <LayoutAppHeader
