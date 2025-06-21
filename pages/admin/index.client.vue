@@ -7,7 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="tw-text-xl tw-p-4">
+  <div class="text-xl p-4">
     欢迎使用 {{ SystemConfig?.title }} 管理后台
   </div>
 </template>

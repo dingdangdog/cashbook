@@ -6,10 +6,8 @@ import {
 } from "~/utils/flag";
 import { SystemConfig, GlobalUserInfo } from "~/utils/store";
 import { getUserInfo, doApi } from "~/utils/api";
-import { globalToggleTheme } from "~/utils/common";
 
-// Theme and responsive state
-const isDark = ref(false);
+// Responsive state
 const isMobile = ref(false);
 
 // Sidebar state
@@ -19,11 +17,6 @@ const sidebarOpen = ref(false);
 const bookName = ref("");
 const route = useRoute();
 const openMenu = computed(() => route.path.slice(1) || "calendar");
-
-// Theme functions
-const toggleTheme = () => {
-  isDark.value = globalToggleTheme(isDark.value);
-};
 
 // Responsive functions
 const updateResponsive = () => {
@@ -36,22 +29,8 @@ const updateResponsive = () => {
 };
 
 onMounted(() => {
-  // Initialize theme
+  // Initialize responsive
   if (typeof window !== "undefined") {
-    // Check for saved preference first
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      isDark.value = savedTheme === "dark";
-    } else {
-      // If no saved preference, use system preference
-      isDark.value = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-
-    // Apply dark mode class
-    document.documentElement.classList.toggle("dark", isDark.value);
-
-    // Initialize responsive
     updateResponsive();
     window.addEventListener("resize", updateResponsive);
   }
@@ -152,7 +131,7 @@ const checkVersion = () => {
   </Head>
 
   <div
-    class="tw-h-screen tw-p-0 tw-m-0 tw-overflow-hidden tw-bg-gray-50 dark:tw-bg-gray-950 tw-transition-colors tw-duration-200"
+    class="h-screen p-0 m-0 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors duration-200"
   >
     <!-- Header -->
     <LayoutAppHeader
@@ -166,19 +145,17 @@ const checkVersion = () => {
       @show-book-dialog="showBookDialogFlag.visible = true"
     />
 
-    <div class="tw-flex tw-relative" style="height: calc(100vh - 64px)">
+    <div class="flex relative" style="height: calc(100vh - 64px)">
       <!-- Sidebar - Desktop -->
       <div
         v-if="!isMobile"
-        class="tw-w-64 tw-flex-shrink-0 tw-h-full tw-overflow-y-auto"
+        class="w-64 flex-shrink-0 h-full overflow-y-auto"
       >
         <LayoutAppSidebar
           :is-open="true"
           :is-mobile="false"
           :current-path="openMenu"
-          :is-dark="isDark"
           @navigate="navigateToPath"
-          @toggle-theme="toggleTheme"
         />
       </div>
 
@@ -188,17 +165,15 @@ const checkVersion = () => {
         :is-open="sidebarOpen"
         :is-mobile="true"
         :current-path="openMenu"
-        :is-dark="isDark"
         @close="sidebarOpen = false"
         @navigate="navigateToPath"
-        @toggle-theme="toggleTheme"
       />
 
       <!-- Main Content -->
       <main
         :class="[
-          'tw-flex-1 tw-h-full tw-overflow-y-auto',
-          isMobile ? 'tw-pb-16' : '', // Add bottom padding for mobile bottom nav
+          'flex-1 h-full overflow-y-auto',
+          isMobile ? 'pb-16' : '', // Add bottom padding for mobile bottom nav
         ]"
       >
         <div class="">
@@ -227,25 +202,25 @@ const checkVersion = () => {
 
 <style scoped>
 /* Custom scrollbar for dark mode */
-:deep(.tw-overflow-y-auto) {
+:deep(.overflow-y-auto) {
   scrollbar-width: thin;
   scrollbar-color: theme("colors.gray.400") transparent;
 }
 
-:deep(.tw-overflow-y-auto::-webkit-scrollbar) {
+:deep(.overflow-y-auto::-webkit-scrollbar) {
   width: 6px;
 }
 
-:deep(.tw-overflow-y-auto::-webkit-scrollbar-track) {
+:deep(.overflow-y-auto::-webkit-scrollbar-track) {
   background: transparent;
 }
 
-:deep(.tw-overflow-y-auto::-webkit-scrollbar-thumb) {
+:deep(.overflow-y-auto::-webkit-scrollbar-thumb) {
   background-color: theme("colors.gray.400");
   border-radius: 3px;
 }
 
-:deep(.dark .tw-overflow-y-auto::-webkit-scrollbar-thumb) {
+:deep(.dark .overflow-y-auto::-webkit-scrollbar-thumb) {
   background-color: theme("colors.gray.600");
 }
 

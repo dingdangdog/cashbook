@@ -2,11 +2,11 @@
   <div class="date-picker-container">
     <label
       v-if="label"
-      class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300 tw-mb-2"
+      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
     >
       {{ label }}
     </label>
-    <div class="tw-relative">
+    <div class="relative">
       <input
         ref="inputRef"
         type="text"
@@ -14,13 +14,13 @@
         :placeholder="placeholder"
         readonly
         @click="togglePicker"
-        class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-shadow-sm tw-bg-white dark:tw-bg-gray-700 tw-text-gray-900 dark:tw-text-white tw-cursor-pointer focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-green-950 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       />
       <div
-        class="tw-absolute tw-inset-y-0 tw-right-0 tw-flex tw-items-center tw-pr-3 tw-pointer-events-none"
+        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
       >
         <svg
-          class="tw-w-5 tw-h-5 tw-text-gray-400"
+          class="w-5 h-5 text-gray-400"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -35,9 +35,9 @@
       <button
         v-if="clearable && modelValue"
         @click.stop="clearDate"
-        class="tw-absolute tw-inset-y-0 tw-right-8 tw-flex tw-items-center tw-pr-1 tw-text-gray-400 hover:tw-text-gray-600 dark:hover:tw-text-gray-300"
+        class="absolute inset-y-0 right-8 flex items-center pr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
       >
-        <svg class="tw-w-4 tw-h-4" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path
             fill-rule="evenodd"
             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -50,21 +50,21 @@
     <!-- Date Picker Popup -->
     <div
       v-if="showPicker"
-      class="tw-absolute tw-z-50 tw-mt-1 tw-bg-white dark:tw-bg-gray-800 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-shadow-lg"
+      class="absolute z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"
       @click.stop
     >
       <VCalendar
         :locale="'zh'"
         :theme="isDark ? 'dark' : 'light'"
         @dayclick="onDateSelect"
-        class="tw-border-0"
+        class="border-0"
       />
     </div>
 
     <!-- Backdrop -->
     <div
       v-if="showPicker"
-      class="tw-fixed tw-inset-0 tw-z-40"
+      class="fixed inset-0 z-40"
       @click="closePicker"
     ></div>
   </div>

@@ -2,22 +2,22 @@
   <div class="chart-common-container">
     <div
       v-if="title || years.length > 0"
-      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b tw-border-gray-200 dark:tw-border-gray-700 tw-h-16 tw-mb-4"
+      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 h-16 mb-4"
     >
       <div>
         <h4
           v-if="title"
-          class="tw-hidden md:tw-flex tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white tw-my-2"
+          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
         >
           {{ title }}
         </h4>
       </div>
 
-      <div v-if="years.length > 0" class="tw-min-w-32">
+      <div v-if="years.length > 0" class="min-w-32">
         <select
           v-model="filterYear"
           @change="filterYearChange"
-          class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-shadow-md tw-bg-white dark:tw-bg-gray-700 tw-text-gray-900 dark:tw-text-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">全部年份</option>
           <option v-for="year in years" :key="year.value" :value="year.value">
@@ -39,29 +39,29 @@
   <!-- 流水表格对话框 -->
   <div
     v-if="showFlowTable"
-    class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     @click="showFlowTable = false"
   >
     <div
-      class="tw-w-full tw-max-w-6xl tw-max-h-[90vh] tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-overflow-hidden"
+      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
       @click.stop
     >
       <div
-        class="tw-flex tw-justify-between tw-items-center tw-p-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
       >
         <h3
-          class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+          class="text-lg font-semibold text-green-950 dark:text-white"
         >
           流水详情
         </h3>
         <button
           @click="showFlowTable = false"
-          class="tw-px-4 tw-py-2 tw-bg-red-600 tw-text-white tw-rounded-md tw-shadow-sm hover:tw-bg-red-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-red-500 focus:tw-ring-offset-2 tw-transition-colors"
+          class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
         >
           关闭
         </button>
       </div>
-      <div class="tw-p-4 tw-overflow-y-auto tw-max-h-[calc(90vh-80px)]">
+      <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
       </div>
     </div>

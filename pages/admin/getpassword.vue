@@ -24,13 +24,13 @@ const getPassword = () => {
     />
   </Head>
   <div
-    class="tw-w-scerrn tw-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center"
+    class="w-scerrn h-screen flex flex-col justify-center items-center"
   >
-    <v-card class="tw-w-80">
+    <v-card class="w-80">
       <v-card-text>
         <v-text-field
           v-model="entry.username"
-          class="tw-mb-2"
+          class="mb-2"
           clearable
           required
           label="Account *"

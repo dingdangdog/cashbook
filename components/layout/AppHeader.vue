@@ -30,44 +30,42 @@ const showUserMenu = ref(false);
 
 <template>
   <header
-    class="tw-bg-white dark:tw-bg-gray-900 tw-shadow-sm tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+    class="bg-white dark:bg-green-950/40 shadow-sm border-b border-gray-200 dark:border-gray-700"
   >
-    <div class="tw-px-4 tw-sm:px-6 tw-lg:px-8">
-      <div class="tw-flex tw-justify-between tw-h-16">
+    <div class="px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
         <!-- Left side -->
-        <div class="tw-flex tw-items-center">
+        <div class="flex items-center">
           <!-- Mobile menu button -->
           <button
             v-if="isMobile"
             @click="emit('toggleSidebar')"
-            class="tw-p-2 tw-rounded-md tw-text-gray-600 dark:tw-text-gray-400 hover:tw-text-gray-900 dark:hover:tw-text-gray-100 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800 tw-transition-colors"
+            class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-green-950 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
-            <Bars3Icon class="tw-h-6 tw-w-6" />
+            <Bars3Icon class="h-6 w-6" />
           </button>
 
           <!-- Logo and brand -->
-          <div class="tw-items-center tw-ml-2 md:tw-ml-0 tw-hidden sm:tw-flex">
-            <img src="/logo.png" alt="Cashbook" class="tw-h-8 tw-w-8" />
-            <span class="tw-ml-2 tw-text-xl tw-font-bold tw-text-green-500">
+          <div class="items-center ml-2 md:ml-0 hidden sm:flex">
+            <img src="/logo.png" alt="Cashbook" class="h-8 w-8" />
+            <span class="ml-2 text-xl font-bold text-green-500">
               Cashbook
             </span>
           </div>
         </div>
 
         <!-- Center - Book info (desktop only) -->
-        <div
-          class="tw-hidden md:tw-flex tw-items-center tw-flex-1 tw-justify-center"
-        >
-          <div class="tw-flex tw-items-center tw-space-x-4">
+        <div class="hidden md:flex items-center flex-1 justify-center">
+          <div class="flex items-center space-x-4">
             <span
               v-if="bookName"
-              class="tw-text-gray-700 dark:tw-text-gray-200 tw-font-medium"
+              class="text-gray-700 dark:text-gray-200 font-medium"
             >
               当前账本：{{ bookName }}
             </span>
             <button
               @click="emit('showBookDialog')"
-              class="tw-px-4 tw-py-2 tw-bg-teal-600 hover:tw-bg-teal-700 tw-text-white tw-rounded-md tw-transition-colors tw-text-sm tw-font-medium"
+              class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-sm font-medium"
             >
               切换账本
             </button>
@@ -75,27 +73,27 @@ const showUserMenu = ref(false);
         </div>
 
         <!-- Right side -->
-        <div class="tw-flex tw-items-center tw-space-x-4">
+        <div class="flex items-center space-x-4">
           <!-- Book switch button (mobile) -->
           <button
             v-if="isMobile"
             @click="emit('showBookDialog')"
-            class="tw-px-3 tw-py-1.5 tw-bg-teal-600 hover:tw-bg-teal-700 tw-text-white tw-rounded-md tw-transition-colors tw-text-sm"
+            class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-sm"
           >
             切换账本
           </button>
 
           <!-- User menu -->
-          <div class="tw-relative">
+          <div class="relative">
             <button
               @click="showUserMenu = !showUserMenu"
-              class="tw-flex tw-items-center tw-space-x-2 tw-px-3 tw-py-2 tw-rounded-md tw-text-gray-700 dark:tw-text-gray-200 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-700 tw-transition-colors"
+              class="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              <UserCircleIcon class="tw-h-5 tw-w-5" />
-              <span v-if="GlobalUserInfo && !isMobile" class="tw-text-sm">
+              <UserCircleIcon class="h-5 w-5" />
+              <span v-if="GlobalUserInfo && !isMobile" class="text-sm">
                 {{ GlobalUserInfo.name }}
               </span>
-              <ChevronDownIcon class="tw-h-4 tw-w-4" />
+              <ChevronDownIcon class="h-4 w-4" />
             </button>
 
             <!-- User dropdown menu -->
@@ -103,37 +101,35 @@ const showUserMenu = ref(false);
               <div
                 v-if="showUserMenu"
                 @click="showUserMenu = false"
-                class="tw-fixed tw-inset-0 tw-z-40"
+                class="fixed inset-0 z-40"
               >
                 <div
                   @click.stop
-                  class="tw-absolute tw-right-4 tw-top-16 tw-mt-2 tw-w-48 tw-bg-white dark:tw-bg-gray-800 tw-rounded-md tw-shadow-lg tw-border tw-border-gray-200 dark:tw-border-gray-700 tw-z-50"
+                  class="absolute right-4 top-16 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
                 >
-                  <div class="tw-py-1">
+                  <div class="py-1">
                     <button
                       @click="emit('openAdmin')"
-                      class="tw-w-full tw-px-4 tw-py-2 tw-text-left tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-700 tw-transition-colors"
+                      class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       后台管理
                     </button>
                     <button
                       @click="emit('openConvertDialog')"
-                      class="tw-w-full tw-px-4 tw-py-2 tw-text-left tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-700 tw-transition-colors"
+                      class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       CSV导入映射配置
                     </button>
                     <button
                       @click="emit('openChangePasswordDialog')"
-                      class="tw-w-full tw-px-4 tw-py-2 tw-text-left tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-200 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-700 tw-transition-colors"
+                      class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       修改密码
                     </button>
-                    <hr
-                      class="tw-my-1 tw-border-gray-200 dark:tw-border-gray-600"
-                    />
+                    <hr class="my-1 border-gray-200 dark:border-gray-600" />
                     <button
                       @click="emit('logout')"
-                      class="tw-w-full tw-px-4 tw-py-2 tw-text-left tw-text-sm tw-text-red-600 dark:tw-text-red-400 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-700 tw-transition-colors"
+                      class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       退出登录
                     </button>

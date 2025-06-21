@@ -1,5 +1,3 @@
-import { transformAssetUrls } from "vite-plugin-vuetify";
-
 export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: "2025-01-10",
@@ -45,7 +43,6 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxtjs/i18n",
-    "vuetify-nuxt-module",
     "@nuxtjs/tailwindcss",
     "nuxt-echarts",
     "@prisma/nuxt",
@@ -85,23 +82,9 @@ export default defineNuxtConfig({
     ],
   },
   tailwindcss: {
-    config: {
-      prefix: "tw-",
-      darkMode: "class",
-    },
-  },
-  vuetify: {
-    moduleOptions: {
-      ssrClientHints: {},
-    },
-    vuetifyOptions: {},
+    // 使用根目录的 tailwind.config.js 文件
   },
   vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
     resolve: {
       alias: {
         ".prisma/client/index-browser":

@@ -12,14 +12,9 @@ import {
 } from "@heroicons/vue/24/outline";
 
 import { SystemConfig } from "~/utils/store";
-import { checkSignIn, globalToggleTheme } from "~/utils/common";
+import { checkSignIn } from "~/utils/common";
 
-const theme = useTheme();
-const isDark = ref(false);
-
-const toggleTheme = () => {
-  isDark.value = globalToggleTheme(isDark.value);
-};
+const { isDark, toggleTheme } = useAppTheme();
 
 const openRegister = ref(false);
 const registerDialog = ref(false);
@@ -119,32 +114,6 @@ onMounted(async () => {
     fromUrl.value = callbackUrl;
   }
 
-  const nowTheme = localStorage.getItem("theme");
-  if (nowTheme) {
-    theme.global.name.value = nowTheme;
-    isDark.value = nowTheme === "dark";
-  } else {
-    // 如果没有保存的主题，使用当前 Vuetify 主题
-    isDark.value = theme.global.name.value === "dark";
-  }
-
-  // 确保正确设置暗黑模式 class
-  nextTick(() => {
-    if (isDark.value) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    console.log(
-      "Initial theme:",
-      theme.global.name.value,
-      "isDark:",
-      isDark.value,
-      "HTML has dark class:",
-      document.documentElement.classList.contains("dark")
-    );
-  });
-
   // 校验登录
   if (checkSignIn()) {
     Alert.success("登录成功");
@@ -198,55 +167,55 @@ const toAdmin = () => {
 
   <div
     :class="[
-      'tw-min-h-screen tw-transition-colors tw-duration-300',
+      'h-screen p-2 transition-colors duration-300',
       isDark
-        ? 'tw-bg-gradient-to-br tw-from-gray-900 tw-to-gray-800'
-        : 'tw-bg-gradient-to-br tw-from-green-50 tw-to-emerald-100',
+        ? 'bg-gradient-to-br from-green-950 to-gray-800'
+        : 'bg-gradient-to-br from-green-50 to-emerald-100',
     ]"
   >
     <!-- 右上角导航栏 -->
     <div
-      class="tw-fixed tw-top-2 tw-right-2 tw-flex tw-items-center tw-gap-2 tw-z-50"
+      class="fixed top-2 right-2 flex items-center gap-2 z-50"
     >
       <!-- 主题切换按钮 - 移到最左侧 -->
       <button
         @click="toggleTheme()"
         :class="[
-          'tw-p-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-shadow-md tw-hover:tw-shadow-lg',
+          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
           isDark
-            ? 'tw-bg-gray-800/80 tw-text-green-400 tw-hover:tw-bg-gray-800'
-            : 'tw-bg-white/80 tw-text-green-600 tw-hover:tw-bg-white',
+            ? 'bg-gray-800/80 text-green-400 hover:bg-gray-800'
+            : 'bg-white/80 text-green-600 hover:bg-white',
         ]"
         title="切换主题"
       >
-        <SunIcon v-if="isDark" class="tw-w-5 tw-h-5" />
-        <MoonIcon v-else class="tw-w-5 tw-h-5" />
+        <SunIcon v-if="isDark" class="w-5 h-5" />
+        <MoonIcon v-else class="w-5 h-5" />
       </button>
 
       <button
         @click="toDocumentation()"
         :class="[
-          'tw-p-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-shadow-md tw-hover:tw-shadow-lg',
+          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
           isDark
-            ? 'tw-bg-gray-800/80 tw-text-gray-300 tw-hover:tw-bg-gray-800'
-            : 'tw-bg-white/80 tw-text-gray-600 tw-hover:tw-bg-white',
+            ? 'bg-gray-800/80 text-gray-300 hover:bg-gray-800'
+            : 'bg-white/80 text-gray-600 hover:bg-white',
         ]"
         title="文档站"
       >
-        <BookOpenIcon class="tw-w-5 tw-h-5" />
+        <BookOpenIcon class="w-5 h-5" />
       </button>
 
       <button
         @click="toGithub()"
         :class="[
-          'tw-p-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-shadow-md tw-hover:tw-shadow-lg',
+          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
           isDark
-            ? 'tw-bg-gray-800/80 tw-text-gray-300 tw-hover:tw-bg-gray-800'
-            : 'tw-bg-white/80 tw-text-gray-600 tw-hover:tw-bg-white',
+            ? 'bg-gray-800/80 text-gray-300 hover:bg-gray-800'
+            : 'bg-white/80 text-gray-600 hover:bg-white',
         ]"
         title="前往Github"
       >
-        <svg class="tw-w-5 tw-h-5" fill="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path
             d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
           />
@@ -257,15 +226,15 @@ const toAdmin = () => {
       <button
         @click="toAdmin()"
         :class="[
-          'tw-p-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-shadow-md tw-hover:tw-shadow-lg',
+          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
           isDark
-            ? 'tw-bg-gray-800/80 tw-text-orange-400 tw-hover:tw-bg-gray-800'
-            : 'tw-bg-white/80 tw-text-orange-600 tw-hover:tw-bg-white',
+            ? 'bg-gray-800/80 text-orange-400 hover:bg-gray-800'
+            : 'bg-white/80 text-orange-600 hover:bg-white',
         ]"
         title="管理后台"
       >
         <svg
-          class="tw-w-5 tw-h-5"
+          class="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -287,20 +256,20 @@ const toAdmin = () => {
     </div>
 
     <div
-      class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-min-h-screen tw-px-2 sm:tw-px-4"
+      class="flex flex-col items-center justify-center h-full p-4 sm:px-4 -mt-12"
     >
       <!-- Logo 和标题 - 响应式调整 -->
       <div
-        class="tw-flex tw-flex-col sm:tw-flex-row tw-items-center tw-mb-4 sm:tw-mb-6 tw-text-center sm:tw-text-left"
+        class="flex flex-col sm:flex-row items-center mb-4 text-center sm:text-left"
       >
         <img
           src="/logo.png"
-          class="tw-w-12 tw-h-12 sm:tw-w-16 sm:tw-h-16 tw-object-contain tw-mb-2 sm:tw-mb-0 sm:tw-mr-4"
+          class="w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2 sm:mb-0 sm:mr-4"
         />
         <h1
           :class="[
-            'tw-text-xl sm:tw-text-2xl lg:tw-text-3xl tw-font-bold',
-            isDark ? 'tw-text-white' : 'tw-text-gray-800',
+            'text-xl sm:text-2xl lg:text-3xl font-bold',
+            isDark ? 'text-white' : 'text-gray-800',
           ]"
         >
           欢迎使用{{ SystemConfig?.title }}
@@ -308,27 +277,18 @@ const toAdmin = () => {
       </div>
 
       <!-- 登录表单 - 响应式调整 -->
-      <div class="tw-w-full tw-max-w-xs sm:tw-max-w-sm md:tw-max-w-md">
+      <div class="w-full max-w-[26rem]">
         <div
           :class="[
-            'tw-rounded-xl tw-shadow-xl tw-p-4 sm:tw-p-2 tw-border',
+            'rounded-xl shadow-xl p-4 md:p-6 border',
             isDark
-              ? 'tw-bg-gray-800 tw-border-gray-700'
-              : 'tw-bg-white tw-border-gray-200',
+              ? 'bg-gray-800 border-gray-700'
+              : 'bg-white border-gray-200',
           ]"
         >
-          <form @submit.prevent="login" class="tw-space-y-4">
+          <form @submit.prevent="login" class="space-y-4">
             <!-- 用户名输入 -->
             <div>
-              <label
-                for="username"
-                :class="[
-                  'tw-block tw-text-sm tw-font-medium tw-mb-1',
-                  isDark ? 'tw-text-gray-300' : 'tw-text-gray-700',
-                ]"
-              >
-                账号
-              </label>
               <input
                 id="username"
                 v-model="loginParam.username"
@@ -336,22 +296,22 @@ const toAdmin = () => {
                 name="username"
                 autocomplete="username"
                 :class="[
-                  'tw-w-full tw-px-3 tw-py-2 tw-border tw-rounded-lg tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-border-green-500 tw-transition-colors tw-duration-200',
+                  'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
                   loginFormErrors.username
                     ? isDark
-                      ? 'tw-border-red-500 tw-bg-red-900/20'
-                      : 'tw-border-red-500 tw-bg-red-50'
+                      ? 'border-red-500 bg-red-900/20'
+                      : 'border-red-500 bg-red-50'
                     : isDark
-                    ? 'tw-border-gray-600 tw-bg-gray-700 tw-text-white tw-placeholder-gray-400'
-                    : 'tw-border-gray-300 tw-bg-white tw-text-gray-900 tw-placeholder-gray-500',
+                    ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'
+                    : 'border-gray-300 bg-white text-green-950 placeholder-gray-500',
                 ]"
                 placeholder="请输入账号"
               />
               <p
                 v-if="loginFormErrors.username"
                 :class="[
-                  'tw-mt-1 tw-text-sm',
-                  isDark ? 'tw-text-red-400' : 'tw-text-red-600',
+                  'mt-1 text-sm',
+                  isDark ? 'text-red-400' : 'text-red-600',
                 ]"
               >
                 {{ loginFormErrors.username }}
@@ -360,16 +320,7 @@ const toAdmin = () => {
 
             <!-- 密码输入 -->
             <div>
-              <label
-                for="password"
-                :class="[
-                  'tw-block tw-text-sm tw-font-medium tw-mb-1',
-                  isDark ? 'tw-text-gray-300' : 'tw-text-gray-700',
-                ]"
-              >
-                密码
-              </label>
-              <div class="tw-relative">
+              <div class="relative">
                 <input
                   id="password"
                   v-model="loginParam.password"
@@ -377,14 +328,14 @@ const toAdmin = () => {
                   name="password"
                   autocomplete="current-password"
                   :class="[
-                    'tw-w-full tw-px-3 tw-py-2 tw-pr-10 tw-border tw-rounded-lg tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-border-green-500 tw-transition-colors tw-duration-200',
+                    'w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
                     loginFormErrors.password
                       ? isDark
-                        ? 'tw-border-red-500 tw-bg-red-900/20'
-                        : 'tw-border-red-500 tw-bg-red-50'
+                        ? 'border-red-500 bg-red-900/20'
+                        : 'border-red-500 bg-red-50'
                       : isDark
-                      ? 'tw-border-gray-600 tw-bg-gray-700 tw-text-white tw-placeholder-gray-400'
-                      : 'tw-border-gray-300 tw-bg-white tw-text-gray-900 tw-placeholder-gray-500',
+                      ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'
+                      : 'border-gray-300 bg-white text-green-950 placeholder-gray-500',
                   ]"
                   placeholder="请输入密码"
                   @keyup.enter="login()"
@@ -393,21 +344,21 @@ const toAdmin = () => {
                   type="button"
                   @click="lookLoginPS = !lookLoginPS"
                   :class="[
-                    'tw-absolute tw-right-2 tw-top-1/2 tw--tw-translate-y-1/2 tw-transition-colors',
+                    'absolute right-2 top-1/2 -translate-y-1/2 transition-colors',
                     isDark
-                      ? 'tw-text-gray-400 tw-hover:tw-text-gray-300'
-                      : 'tw-text-gray-400 tw-hover:tw-text-gray-600',
+                      ? 'text-gray-400 hover:text-gray-300'
+                      : 'text-gray-400 hover:text-gray-600',
                   ]"
                 >
-                  <EyeIcon v-if="!lookLoginPS" class="tw-w-4 tw-h-4" />
-                  <EyeSlashIcon v-else class="tw-w-4 tw-h-4" />
+                  <EyeIcon v-if="!lookLoginPS" class="w-4 h-4" />
+                  <EyeSlashIcon v-else class="w-4 h-4" />
                 </button>
               </div>
               <p
                 v-if="loginFormErrors.password"
                 :class="[
-                  'tw-mt-1 tw-text-sm',
-                  isDark ? 'tw-text-red-400' : 'tw-text-red-600',
+                  'mt-1 text-sm',
+                  isDark ? 'text-red-400' : 'text-red-600',
                 ]"
               >
                 {{ loginFormErrors.password }}
@@ -415,23 +366,25 @@ const toAdmin = () => {
             </div>
 
             <!-- 登录按钮 -->
-            <button
-              type="submit"
-              class="tw-w-full tw-bg-green-600 tw-hover:tw-bg-green-700 tw-text-white tw-font-medium tw-py-2 sm:tw-py-3 tw-px-4 tw-rounded-lg tw-transition-colors tw-duration-200 tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-ring-offset-2 tw-focus:tw-outline-none"
-            >
-              登录
-            </button>
+            <div>
+              <button
+                type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold mt-4 py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none"
+              >
+                登录
+              </button>
+            </div>
 
             <!-- 注册按钮 -->
-            <div v-if="openRegister" class="tw-text-center tw-pt-2">
+            <div v-if="openRegister" class="text-center pt-2">
               <button
                 type="button"
                 @click="registerDialog = true"
                 :class="[
-                  'tw-font-medium tw-transition-colors tw-duration-200',
+                  'font-medium transition-colors duration-200',
                   isDark
-                    ? 'tw-text-green-400 tw-hover:tw-text-green-300'
-                    : 'tw-text-green-600 tw-hover:tw-text-green-700',
+                    ? 'text-green-400 hover:text-green-300'
+                    : 'text-green-600 hover:text-green-700',
                 ]"
               >
                 注册账号
@@ -445,20 +398,20 @@ const toAdmin = () => {
     <!-- 注册对话框 -->
     <div
       v-if="registerDialog"
-      class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50 tw-p-4"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <div
         :class="[
-          'tw-rounded-2xl tw-shadow-2xl tw-w-full tw-max-w-md tw-max-h-[90vh] tw-overflow-y-auto',
-          isDark ? 'tw-bg-gray-800' : 'tw-bg-white',
+          'rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto',
+          isDark ? 'bg-gray-800' : 'bg-white',
         ]"
       >
-        <div class="tw-p-2">
-          <div class="tw-flex tw-justify-between tw-items-center tw-mb-6">
+        <div class="p-2">
+          <div class="flex justify-between items-center mb-6">
             <h3
               :class="[
-                'tw-text-xl tw-font-semibold',
-                isDark ? 'tw-text-white' : 'tw-text-gray-900',
+                'text-xl font-semibold',
+                isDark ? 'text-white' : 'text-green-950',
               ]"
             >
               注册用户
@@ -466,14 +419,14 @@ const toAdmin = () => {
             <button
               @click="registerDialog = false"
               :class="[
-                'tw-transition-colors',
+                'transition-colors',
                 isDark
-                  ? 'tw-text-gray-400 tw-hover:tw-text-gray-300'
-                  : 'tw-text-gray-400 tw-hover:tw-text-gray-600',
+                  ? 'text-gray-400 hover:text-gray-300'
+                  : 'text-gray-400 hover:text-gray-600',
               ]"
             >
               <svg
-                class="tw-w-6 tw-h-6"
+                class="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -488,12 +441,12 @@ const toAdmin = () => {
             </button>
           </div>
 
-          <form @submit.prevent="register" class="tw-space-y-4">
+          <form @submit.prevent="register" class="space-y-4">
             <!-- 昵称 -->
             <div>
               <label
                 for="name"
-                class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300 tw-mb-2"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 昵称
               </label>
@@ -502,7 +455,7 @@ const toAdmin = () => {
                 v-model="registerParam.name"
                 type="text"
                 name="name"
-                class="tw-w-full tw-px-4 tw-py-3 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-border-green-500 tw-bg-white dark:tw-bg-gray-700 tw-text-gray-900 dark:tw-text-white tw-placeholder-gray-500 dark:tw-placeholder-gray-400 tw-transition-colors tw-duration-200"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
                 placeholder="请输入昵称"
               />
             </div>
@@ -511,7 +464,7 @@ const toAdmin = () => {
             <div>
               <label
                 for="register-username"
-                class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300 tw-mb-2"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 账号 *
               </label>
@@ -521,17 +474,17 @@ const toAdmin = () => {
                 type="text"
                 name="username"
                 :class="[
-                  'tw-w-full tw-px-4 tw-py-3 tw-border tw-rounded-lg tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-border-green-500 tw-transition-colors tw-duration-200',
+                  'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
                   registerFormErrors.username
-                    ? 'tw-border-red-500 tw-bg-red-50 dark:tw-bg-red-900/20'
-                    : 'tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-700',
+                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700',
                 ]"
-                class="tw-text-gray-900 dark:tw-text-white tw-placeholder-gray-500 dark:tw-placeholder-gray-400"
+                class="text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 placeholder="请输入账号"
               />
               <p
                 v-if="registerFormErrors.username"
-                class="tw-mt-1 tw-text-sm tw-text-red-600 dark:tw-text-red-400"
+                class="mt-1 text-sm text-red-600 dark:text-red-400"
               >
                 {{ registerFormErrors.username }}
               </p>
@@ -541,37 +494,37 @@ const toAdmin = () => {
             <div>
               <label
                 for="register-password"
-                class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300 tw-mb-2"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 密码 *
               </label>
-              <div class="tw-relative">
+              <div class="relative">
                 <input
                   id="register-password"
                   v-model="registerParam.password"
                   :type="lookRegisterPS ? 'text' : 'password'"
                   name="password"
                   :class="[
-                    'tw-w-full tw-px-4 tw-py-3 tw-pr-12 tw-border tw-rounded-lg tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-border-green-500 tw-transition-colors tw-duration-200',
+                    'w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
                     registerFormErrors.password
-                      ? 'tw-border-red-500 tw-bg-red-50 dark:tw-bg-red-900/20'
-                      : 'tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-700',
+                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700',
                   ]"
-                  class="tw-text-gray-900 dark:tw-text-white tw-placeholder-gray-500 dark:tw-placeholder-gray-400"
+                  class="text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="请输入密码"
                 />
                 <button
                   type="button"
                   @click="lookRegisterPS = !lookRegisterPS"
-                  class="tw-absolute tw-right-3 tw-top-1/2 tw--tw-translate-y-1/2 tw-text-gray-400 tw-hover:tw-text-gray-600 dark:tw-hover:tw-text-gray-300 tw-transition-colors"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
-                  <EyeIcon v-if="!lookRegisterPS" class="tw-w-5 tw-h-5" />
-                  <EyeSlashIcon v-else class="tw-w-5 tw-h-5" />
+                  <EyeIcon v-if="!lookRegisterPS" class="w-5 h-5" />
+                  <EyeSlashIcon v-else class="w-5 h-5" />
                 </button>
               </div>
               <p
                 v-if="registerFormErrors.password"
-                class="tw-mt-1 tw-text-sm tw-text-red-600 dark:tw-text-red-400"
+                class="mt-1 text-sm text-red-600 dark:text-red-400"
               >
                 {{ registerFormErrors.password }}
               </p>
@@ -581,53 +534,53 @@ const toAdmin = () => {
             <div>
               <label
                 for="confirm-password"
-                class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300 tw-mb-2"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 确认密码 *
               </label>
-              <div class="tw-relative">
+              <div class="relative">
                 <input
                   id="confirm-password"
                   v-model="registerParam.againPassword"
                   :type="lookRegisterAPS ? 'text' : 'password'"
                   name="confirmPassword"
                   :class="[
-                    'tw-w-full tw-px-4 tw-py-3 tw-pr-12 tw-border tw-rounded-lg tw-focus:tw-ring-2 tw-focus:tw-ring-green-500 tw-focus:tw-border-green-500 tw-transition-colors tw-duration-200',
+                    'w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
                     registerFormErrors.againPassword
-                      ? 'tw-border-red-500 tw-bg-red-50 dark:tw-bg-red-900/20'
-                      : 'tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-700',
+                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700',
                   ]"
-                  class="tw-text-gray-900 dark:tw-text-white tw-placeholder-gray-500 dark:tw-placeholder-gray-400"
+                  class="text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="请确认密码"
                 />
                 <button
                   type="button"
                   @click="lookRegisterAPS = !lookRegisterAPS"
-                  class="tw-absolute tw-right-3 tw-top-1/2 tw--tw-translate-y-1/2 tw-text-gray-400 tw-hover:tw-text-gray-600 dark:tw-hover:tw-text-gray-300 tw-transition-colors"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
-                  <EyeIcon v-if="!lookRegisterAPS" class="tw-w-5 tw-h-5" />
-                  <EyeSlashIcon v-else class="tw-w-5 tw-h-5" />
+                  <EyeIcon v-if="!lookRegisterAPS" class="w-5 h-5" />
+                  <EyeSlashIcon v-else class="w-5 h-5" />
                 </button>
               </div>
               <p
                 v-if="registerFormErrors.againPassword"
-                class="tw-mt-1 tw-text-sm tw-text-red-600 dark:tw-text-red-400"
+                class="mt-1 text-sm text-red-600 dark:text-red-400"
               >
                 {{ registerFormErrors.againPassword }}
               </p>
             </div>
 
-            <div class="tw-flex tw-space-x-3 tw-pt-4">
+            <div class="flex space-x-3 pt-4">
               <button
                 type="button"
                 @click="registerDialog = false"
-                class="tw-flex-1 tw-px-4 tw-py-3 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-lg tw-text-gray-700 dark:tw-text-gray-300 tw-hover:tw-bg-gray-50 dark:tw-hover:tw-bg-gray-700 tw-transition-colors tw-duration-200"
+                class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
               >
                 取消
               </button>
               <button
                 type="submit"
-                class="tw-flex-1 tw-bg-green-600 tw-hover:tw-bg-green-700 tw-text-white tw-font-medium tw-py-3 tw-px-4 tw-rounded-lg tw-transition-colors tw-duration-200"
+                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
               >
                 注册
               </button>
@@ -642,7 +595,7 @@ const toAdmin = () => {
 </template>
 
 <style scoped>
-.tw--tw-translate-y-1\/2 {
+.-translate-y-1\/2 {
   transform: translateY(-50%);
 }
 </style>

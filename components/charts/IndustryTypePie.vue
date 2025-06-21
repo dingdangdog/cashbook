@@ -3,25 +3,25 @@
     <!-- 时间筛选侧边栏 -->
     <div
       v-if="searchDrawer"
-      class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-justify-end"
+      class="fixed inset-0 z-50 flex justify-end"
       @click="searchDrawer = false"
     >
       <div
-        class="tw-w-80 tw-h-full tw-bg-white dark:tw-bg-gray-800 tw-shadow-xl tw-border-l tw-border-gray-200 dark:tw-border-gray-700 tw-p-4 tw-overflow-y-auto"
+        class="w-80 h-full bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 p-4 overflow-y-auto"
         @click.stop
       >
-        <div class="tw-flex tw-justify-between tw-items-center tw-mb-4">
+        <div class="flex justify-between items-center mb-4">
           <h3
-            class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+            class="text-lg font-semibold text-green-950 dark:text-white"
           >
             时间筛选
           </h3>
           <button
             @click="searchDrawer = false"
-            class="tw-p-2 tw-text-gray-500 hover:tw-text-gray-700 dark:tw-text-gray-400 dark:hover:tw-text-gray-200 tw-transition-colors"
+            class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
           >
             <svg
-              class="tw-w-5 tw-h-5"
+              class="w-5 h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -36,7 +36,7 @@
           </button>
         </div>
 
-        <div class="tw-space-y-4">
+        <div class="space-y-4">
           <UiDatePicker
             v-model="startDay"
             label="开始日期"
@@ -55,27 +55,27 @@
     </div>
 
     <div
-      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b tw-border-gray-200 dark:tw-border-gray-700 md:tw-h-16 tw-mb-4"
+      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 md:h-16 mb-4"
     >
       <div>
         <h4
-          class="tw-hidden md:tw-flex tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white tw-my-2"
+          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
         >
           {{ title }}【{{ chartParam.flowType }}】
         </h4>
       </div>
 
-      <div class="tw-flex tw-space-x-2 tw-items-center">
+      <div class="flex space-x-2 items-center">
         <button
           @click="searchDrawer = true"
-          class="tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-md tw-shadow-sm hover:tw-bg-blue-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-transition-colors"
+          class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
         >
           时间筛选
         </button>
-        <div class="tw-min-w-32">
+        <div class="min-w-32">
           <select
             v-model="chartParam.flowType"
-            class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-shadow-md tw-bg-white dark:tw-bg-gray-700 tw-text-gray-900 dark:tw-text-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option
               v-for="type in FlowTypes"
@@ -92,9 +92,9 @@
     <div
       v-show="noData"
       :style="`width: ${width}; height: ${height};`"
-      class="tw-flex tw-items-center tw-justify-center"
+      class="flex items-center justify-center"
     >
-      <h3 class="tw-text-lg tw-text-red-500 tw-font-medium">暂无数据</h3>
+      <h3 class="text-lg text-red-500 font-medium">暂无数据</h3>
     </div>
     <div
       v-show="!noData"
@@ -106,29 +106,29 @@
   <!-- 流水表格对话框 -->
   <div
     v-if="showFlowTable"
-    class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     @click="showFlowTable = false"
   >
     <div
-      class="tw-w-full tw-max-w-6xl tw-max-h-[90vh] tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-overflow-hidden"
+      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
       @click.stop
     >
       <div
-        class="tw-flex tw-justify-between tw-items-center tw-p-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
       >
         <h3
-          class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+          class="text-lg font-semibold text-green-950 dark:text-white"
         >
           流水详情
         </h3>
         <button
           @click="showFlowTable = false"
-          class="tw-px-4 tw-py-2 tw-bg-red-600 tw-text-white tw-rounded-md tw-shadow-sm hover:tw-bg-red-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-red-500 focus:tw-ring-offset-2 tw-transition-colors"
+          class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
         >
           关闭
         </button>
       </div>
-      <div class="tw-p-4 tw-overflow-y-auto tw-max-h-[calc(90vh-80px)]">
+      <div class="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
       </div>
     </div>
@@ -138,14 +138,13 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import { onMounted, ref, watch } from "vue";
-import { useTheme } from "vuetify";
 import { dateFormater, miniFullscreen } from "@/utils/common";
 import { FlowTypes } from "@/utils/constant";
 import { doApi } from "@/utils/api";
 import type { CommonChartData, CommonChartQuery } from "~/utils/model";
 import DatasFlowTable from "@/components/datas/FlowTable.vue";
 
-const theme = useTheme();
+const { isDark } = useAppTheme();
 
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
@@ -295,10 +294,10 @@ const doQuery = (query: CommonChartQuery) => {
           });
         }
         optionRef.value.series[0].data = dataList;
-        optionRef.value.legend.textStyle.color =
-          theme.global.name.value == "dark" ? "#fff" : "#000";
-        optionRef.value.series[0].itemStyle.borderColor =
-          theme.global.name.value == "dark" ? "#fff" : "#000";
+        optionRef.value.legend.textStyle.color = isDark.value ? "#fff" : "#000";
+        optionRef.value.series[0].itemStyle.borderColor = isDark.value
+          ? "#fff"
+          : "#000";
         typePieChart.setOption(optionRef.value);
       }
     });

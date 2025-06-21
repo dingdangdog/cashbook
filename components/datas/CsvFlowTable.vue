@@ -1,30 +1,30 @@
 <template>
   <div class="dialog-container">
-    <div class="excel-table tw-flex tw-justify-center">
-      <table ref="excelTable" class="tw-flex tw-flex-col">
+    <div class="excel-table flex justify-center">
+      <table ref="excelTable" class="flex flex-col">
         <thead ref="excelTableHead"></thead>
         <tbody
           ref="excelTableBody"
-          class="tw-flex-1 tw-overflow-y-auto"
+          class="flex-1 overflow-y-auto"
         ></tbody>
       </table>
     </div>
     <hr />
-    <div class="csv-dialog-header tw-space-x-4" style="margin-top: 1rem">
-      <div class="tw-flex tw-items-center">
-        <span style="color: gray" class="tw-mx-2"
+    <div class="csv-dialog-header space-x-4" style="margin-top: 1rem">
+      <div class="flex items-center">
+        <span style="color: gray" class="mx-2"
           >解析到的流水数量:{{ flows.length }}</span
         >
       </div>
-      <div class="tw-flex tw-items-center">
-        <!-- <span class="tw-mr-2">流水归属:</span> -->
+      <div class="flex items-center">
+        <!-- <span class="mr-2">流水归属:</span> -->
         <v-text-field
           v-model="attribution"
           placeholder="流水归属(可选)"
           variant="outlined"
           density="compact"
           hide-details="auto"
-          class="tw-w-36"
+          class="w-36"
         ></v-text-field>
       </div>
       <v-btn

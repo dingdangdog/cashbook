@@ -7,10 +7,10 @@
     <v-card>
       <v-card-title>CSV导入映射配置</v-card-title>
       <v-card-text
-        class="form-inputs tw-border tw-border-gray-400 tw-m-2 tw-bg-gray-100/20"
+        class="form-inputs border border-gray-400 m-2 bg-gray-100/20"
       >
         <v-row
-          class="form-row tw-border tw-rounded-md tw-border-gray-500 my-2 tw-bg-gray-500/10"
+          class="form-row border rounded-md border-gray-500 my-2 bg-gray-500/10"
           v-for="(r, index) in editRelations"
         >
           <v-col cols="5">
@@ -50,7 +50,7 @@
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <div class="tw-flex tw-w-full tw-justify-center tw-space-x-4">
+        <div class="flex w-full justify-center space-x-4">
           <v-btn
             variant="elevated"
             color="error"

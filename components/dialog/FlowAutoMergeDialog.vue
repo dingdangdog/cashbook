@@ -140,7 +140,7 @@ const getItemClass = (item: any, index: number) => {
     <v-card>
       <v-card-title>自动平账候选数据</v-card-title>
       <v-card-text>
-        <div class="tw-flex tw-justify-center">
+        <div class="flex justify-center">
           <v-btn color="warning" @click="ignoreAllBalance">忽略全部</v-btn>
         </div>
         <v-data-table
@@ -151,17 +151,17 @@ const getItemClass = (item: any, index: number) => {
           :item-class="getItemClass"
         >
           <template v-slot:header.out="{ column }">
-            <div class="tw-text-lg tw-font-bold">{{ column.title }}</div>
+            <div class="text-lg font-bold">{{ column.title }}</div>
           </template>
           <template v-slot:header.in="{ column }">
-            <div class="tw-text-lg tw-font-bold">{{ column.title }}</div>
+            <div class="text-lg font-bold">{{ column.title }}</div>
           </template>
           <template v-slot:item.out.money="{ value }">
             <v-chip color="error">{{ Number(value).toFixed(2) }}</v-chip>
           </template>
           <template v-slot:item.out.name="{ value }">
             <p
-              class="tw-max-w-40 tw-text-ellipsis tw-line-clamp-2"
+              class="max-w-40 text-ellipsis line-clamp-2"
               :title="value"
             >
               {{ value }}
@@ -169,7 +169,7 @@ const getItemClass = (item: any, index: number) => {
           </template>
           <template v-slot:item.out.description="{ value }">
             <p
-              class="tw-max-w-40 tw-text-ellipsis tw-line-clamp-2"
+              class="max-w-40 text-ellipsis line-clamp-2"
               :title="value"
             >
               {{ value }}
@@ -180,7 +180,7 @@ const getItemClass = (item: any, index: number) => {
           </template>
           <template v-slot:item.in.name="{ value }">
             <p
-              class="tw-max-w-40 tw-text-ellipsis tw-line-clamp-2"
+              class="max-w-40 text-ellipsis line-clamp-2"
               :title="value"
             >
               {{ value }}
@@ -188,7 +188,7 @@ const getItemClass = (item: any, index: number) => {
           </template>
           <template v-slot:item.in.description="{ value }">
             <p
-              class="tw-max-w-40 tw-text-ellipsis tw-line-clamp-2"
+              class="max-w-40 text-ellipsis line-clamp-2"
               :title="value"
             >
               {{ value }}
@@ -204,7 +204,7 @@ const getItemClass = (item: any, index: number) => {
       </v-card-text>
       <v-card-actions>
         <div
-          class="tw-flex tw-items-center tw-w-full tw-justify-center tw-space-x-4 tw-pb-4"
+          class="flex items-center w-full justify-center space-x-4 pb-4"
         >
           <v-btn variant="elevated" color="info" @click="closeDialog()">
             关闭

@@ -3,40 +3,40 @@
   <Teleport to="body">
     <div
       v-if="showBookDialogFlag.visible"
-      class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50 tw-p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       @click="cancelChange"
     >
       <div
         @click.stop
-        class="tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-2xl tw-max-h-[80vh] tw-flex tw-flex-col"
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col"
       >
         <!-- Header -->
         <div
-          class="tw-px-6 tw-py-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
         >
           <h2
-            class="tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+            class="text-xl font-semibold text-green-950 dark:text-white"
           >
             打开账本
           </h2>
         </div>
 
         <!-- Content -->
-        <div class="tw-px-6 tw-py-4 tw-flex-1 tw-overflow-y-auto">
-          <div class="tw-flex tw-flex-wrap tw-gap-3">
+        <div class="px-6 py-4 flex-1 overflow-y-auto">
+          <div class="flex flex-wrap gap-3">
                          <button
               v-for="book in books"
               :key="book.id"
-              class="tw-px-4 tw-py-2 tw-rounded-lg tw-border tw-transition-all tw-duration-200 tw-max-w-40 tw-group"
+              class="px-4 py-2 rounded-lg border transition-all duration-200 max-w-40 group"
               :class="[
                 checkSelectBook(book.bookId || '') 
-                  ? 'tw-bg-green-50 tw-border-green-500 tw-text-green-700 dark:tw-bg-green-900/20 dark:tw-border-green-400 dark:tw-text-green-300' 
-                  : 'tw-bg-gray-50 tw-border-gray-200 tw-text-gray-700 hover:tw-bg-blue-50 hover:tw-border-blue-300 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-gray-200 dark:hover:tw-bg-gray-600',
+                  ? 'bg-green-50 border-green-500 text-green-700 dark:bg-green-900/20 dark:border-green-400 dark:text-green-300' 
+                  : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600',
               ]"
               @click="openBook(book)"
               :title="book.bookName"
             >
-              <p class="tw-truncate tw-text-sm tw-font-medium">
+              <p class="truncate text-sm font-medium">
                 {{ book.bookName }}
               </p>
             </button>
@@ -45,24 +45,24 @@
 
         <!-- Footer -->
         <div
-          class="tw-px-6 tw-py-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-6 py-4 border-t border-gray-200 dark:border-gray-700"
         >
-          <div class="tw-flex tw-flex-wrap tw-gap-3 tw-justify-center">
+          <div class="flex flex-wrap gap-3 justify-center">
             <button
               @click="cancelChange"
-              class="tw-px-4 tw-py-2 tw-border tw-border-orange-300 tw-text-orange-600 tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-orange-50 dark:tw-border-orange-500 dark:tw-text-orange-400 dark:hover:tw-bg-orange-900/20"
+              class="px-4 py-2 border border-orange-300 text-orange-600 rounded-md font-medium transition-colors hover:bg-orange-50 dark:border-orange-500 dark:text-orange-400 dark:hover:bg-orange-900/20"
             >
               取消
             </button>
             <button
               @click="getShare"
-              class="tw-px-4 tw-py-2 tw-border tw-border-green-300 tw-text-green-600 tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-green-50 dark:tw-border-green-500 dark:tw-text-green-400 dark:hover:tw-bg-green-900/20"
+              class="px-4 py-2 border border-green-300 text-green-600 rounded-md font-medium transition-colors hover:bg-green-50 dark:border-green-500 dark:text-green-400 dark:hover:bg-green-900/20"
             >
               添加共享账本
             </button>
             <button
               @click="addBook"
-              class="tw-px-4 tw-py-2 tw-bg-green-600 tw-text-white tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-green-700 dark:tw-bg-green-500 dark:hover:tw-bg-green-600"
+              class="px-4 py-2 bg-green-600 text-white rounded-md font-medium transition-colors hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
             >
               新建账本
             </button>
@@ -76,45 +76,45 @@
   <Teleport to="body">
     <div
       v-if="addBookDialog.visible"
-      class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50 tw-p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       @click="addBookDialog.visible = false"
     >
       <div
         @click.stop
-        class="tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md"
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md"
       >
         <!-- Header -->
         <div
-          class="tw-px-6 tw-py-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
         >
           <h2
-            class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+            class="text-lg font-semibold text-green-950 dark:text-white"
           >
             {{ addBookDialog.title }}
           </h2>
         </div>
 
         <!-- Content -->
-        <div class="tw-px-6 tw-py-4">
-          <div class="tw-space-y-2">
+        <div class="px-6 py-4">
+          <div class="space-y-2">
             <label
-              class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               账本名称
             </label>
             <input
               v-model="newBook.bookName"
               type="text"
-              class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-focus:outline-none tw-focus:ring-2 tw-focus:ring-blue-500 tw-focus:border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-white dark:tw-focus:ring-blue-400"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
               placeholder="请输入账本名称"
               :class="{
-                'tw-border-red-500':
+                'border-red-500':
                   !newBook.bookName && newBook.bookName !== undefined,
               }"
             />
             <p
               v-if="!newBook.bookName && newBook.bookName !== undefined"
-              class="tw-text-red-500 tw-text-xs"
+              class="text-red-500 text-xs"
             >
               必填
             </p>
@@ -123,29 +123,29 @@
 
         <!-- Footer -->
         <div
-          class="tw-px-6 tw-py-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-6 py-4 border-t border-gray-200 dark:border-gray-700"
         >
-          <div class="tw-flex tw-gap-3 tw-justify-center">
+          <div class="flex gap-3 justify-center">
             <button
               @click="addBookDialog.visible = false"
-              class="tw-px-4 tw-py-2 tw-border tw-border-gray-300 tw-text-gray-700 tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-gray-50 dark:tw-border-gray-600 dark:tw-text-gray-300 dark:hover:tw-bg-gray-700"
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md font-medium transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               取消
             </button>
             <button
               @click="confirmBookForm()"
               :disabled="isAddingBook"
-              class="tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-blue-700 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed dark:tw-bg-blue-500 dark:hover:tw-bg-blue-600"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md font-medium transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-500 dark:hover:bg-blue-600"
             >
-              <span v-if="isAddingBook" class="tw-flex tw-items-center">
+              <span v-if="isAddingBook" class="flex items-center">
                 <svg
-                  class="tw-animate-spin tw--ml-1 tw-mr-2 tw-h-4 tw-w-4 tw-text-white"
+                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
                   <circle
-                    class="tw-opacity-25"
+                    class="opacity-25"
                     cx="12"
                     cy="12"
                     r="10"
@@ -153,7 +153,7 @@
                     stroke-width="4"
                   ></circle>
                   <path
-                    class="tw-opacity-75"
+                    class="opacity-75"
                     fill="currentColor"
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
@@ -172,47 +172,47 @@
   <Teleport to="body">
     <div
       v-if="showGetShareDialog"
-      class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50 tw-p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       @click="showGetShareDialog = false"
     >
       <div
         @click.stop
-        class="tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md"
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md"
       >
         <!-- Header -->
         <div
-          class="tw-px-6 tw-py-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
         >
           <h2
-            class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+            class="text-lg font-semibold text-green-950 dark:text-white"
           >
             添加共享账本
           </h2>
         </div>
 
         <!-- Content -->
-        <div class="tw-px-6 tw-py-4">
-          <p class="tw-text-gray-500 dark:tw-text-gray-400 tw-text-sm tw-mb-4">
+        <div class="px-6 py-4">
+          <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
             使用他人分享的共享Key添加共享账本。
           </p>
-          <div class="tw-space-y-2">
+          <div class="space-y-2">
             <label
-              class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               共享Key
             </label>
             <input
               v-model="shareKey"
               type="text"
-              class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-focus:outline-none tw-focus:ring-2 tw-focus:ring-blue-500 tw-focus:border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-text-white dark:tw-focus:ring-blue-400"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
               placeholder="请输入共享Key"
               :class="{
-                'tw-border-red-500': !shareKey && shareKey !== undefined,
+                'border-red-500': !shareKey && shareKey !== undefined,
               }"
             />
             <p
               v-if="!shareKey && shareKey !== undefined"
-              class="tw-text-red-500 tw-text-xs"
+              class="text-red-500 text-xs"
             >
               必填
             </p>
@@ -221,29 +221,29 @@
 
         <!-- Footer -->
         <div
-          class="tw-px-6 tw-py-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-6 py-4 border-t border-gray-200 dark:border-gray-700"
         >
-          <div class="tw-flex tw-gap-3 tw-justify-center">
+          <div class="flex gap-3 justify-center">
             <button
               @click="showGetShareDialog = false"
-              class="tw-px-4 tw-py-2 tw-border tw-border-gray-300 tw-text-gray-700 tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-gray-50 dark:tw-border-gray-600 dark:tw-text-gray-300 dark:hover:tw-bg-gray-700"
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md font-medium transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               取消
             </button>
             <button
               @click="confirmGetShare()"
               :disabled="isAddingShareBook"
-              class="tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-md tw-font-medium tw-transition-colors hover:tw-bg-blue-700 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed dark:tw-bg-blue-500 dark:hover:tw-bg-blue-600"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md font-medium transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-500 dark:hover:bg-blue-600"
             >
-              <span v-if="isAddingShareBook" class="tw-flex tw-items-center">
+              <span v-if="isAddingShareBook" class="flex items-center">
                 <svg
-                  class="tw-animate-spin tw--ml-1 tw-mr-2 tw-h-4 tw-w-4 tw-text-white"
+                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
                   <circle
-                    class="tw-opacity-25"
+                    class="opacity-25"
                     cx="12"
                     cy="12"
                     r="10"
@@ -251,7 +251,7 @@
                     stroke-width="4"
                   ></circle>
                   <path
-                    class="tw-opacity-75"
+                    class="opacity-75"
                     fill="currentColor"
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>

@@ -1,24 +1,24 @@
 <template>
   <div
-    class="tw-w-full tw-bg-gray-50 dark:tw-bg-gray-900 tw-transition-colors tw-duration-200"
+    class="w-full bg-gray-50 dark:bg-green-950/80 transition-colors duration-200"
   >
     <!-- Content Area -->
-    <div class="md:tw-max-w-[80vw] tw-mx-auto tw-mt-2">
+    <div class="md:max-w-[80vw] mx-auto mt-2">
       <!-- Desktop & Tablet: Chart Carousel -->
-      <div class="tw-hidden md:tw-block">
+      <div class="hidden md:block">
         <div
-          class="tw-relative tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-lg tw-border tw-border-gray-200 dark:tw-border-gray-700"
+          class="px-2 relative bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
         >
           <!-- Chart Container -->
-          <div class="tw-relative tw-overflow-hidden tw-rounded-lg">
+          <div class="relative overflow-hidden rounded-lg">
             <div
-              class="tw-flex tw-transition-transform tw-duration-300 tw-ease-in-out"
+              class="flex transition-transform duration-300 ease-in-out"
               :style="{
                 transform: `translateX(-${currentCarouselIndex * 100}%)`,
               }"
             >
               <!-- Chart 1: Industry Type -->
-              <div class="tw-w-full tw-flex-shrink-0">
+              <div class="w-full flex-shrink-0">
                 <IndustryTypePie
                   :title="'支出类型统计'"
                   :width="carouselChartWidth"
@@ -27,7 +27,7 @@
               </div>
 
               <!-- Chart 2: Pay Type -->
-              <div class="tw-w-full tw-flex-shrink-0">
+              <div class="w-full flex-shrink-0">
                 <PayTypePie
                   :title="'支付方式统计'"
                   :width="carouselChartWidth"
@@ -36,7 +36,7 @@
               </div>
 
               <!-- Chart 3: Attribution -->
-              <div class="tw-w-full tw-flex-shrink-0">
+              <div class="w-full flex-shrink-0">
                 <AttributionPie
                   :title="'流水归属统计'"
                   :width="carouselChartWidth"
@@ -45,7 +45,7 @@
               </div>
 
               <!-- Chart 4: Daily Line -->
-              <div class="tw-w-full tw-flex-shrink-0">
+              <div class="w-full flex-shrink-0">
                 <DailyLineChart
                   :title="'每日流水统计'"
                   :width="carouselChartWidth"
@@ -54,7 +54,7 @@
               </div>
 
               <!-- Chart 5: Month Bar -->
-              <div class="tw-w-full tw-flex-shrink-0">
+              <div class="w-full flex-shrink-0">
                 <MonthBar
                   :title="'每月流水统计'"
                   :width="carouselChartWidth"
@@ -67,10 +67,10 @@
           <!-- Navigation Buttons -->
           <button
             @click="prevChart"
-            class="tw-absolute tw-left-4 tw-top-1/2 tw-transform tw--translate-y-1/2 tw-bg-white/50 dark:tw-bg-gray-700/50 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-full tw-p-2 tw-shadow-lg hover:tw-bg-gray-50/50 dark:hover:tw-bg-gray-600/50 tw-transition-colors tw-z-10"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/60 dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600 rounded-full p-2 shadow-lg hover:bg-gray-50/50 dark:hover:bg-gray-600/50 transition-colors z-10"
           >
             <svg
-              class="tw-w-5 tw-h-5 tw-text-gray-600 dark:tw-text-gray-300"
+              class="w-5 h-5 text-gray-600 dark:text-gray-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -86,10 +86,10 @@
 
           <button
             @click="nextChart"
-            class="tw-absolute tw-right-4 tw-top-1/2 tw-transform tw--translate-y-1/2 tw-bg-white dark:tw-bg-gray-700 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-full tw-p-2 tw-shadow-lg hover:tw-bg-gray-50 dark:hover:tw-bg-gray-600 tw-transition-colors tw-z-10"
+            class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/60 dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600 rounded-full p-2 shadow-lg hover:bg-gray-50/50 dark:hover:bg-gray-600/50 transition-colors z-10"
           >
             <svg
-              class="tw-w-5 tw-h-5 tw-text-gray-600 dark:tw-text-gray-300"
+              class="w-5 h-5 text-gray-600 dark:text-gray-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -105,24 +105,24 @@
 
           <!-- Indicators -->
           <div
-            class="tw-absolute tw-bottom-4 tw-left-1/2 tw-transform tw--translate-x-1/2 tw-flex tw-space-x-2"
+            class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
           >
             <button
               v-for="(chart, index) in carouselCharts"
               :key="index"
               @click="goToChart(index)"
-              class="tw-w-3 tw-h-3 tw-rounded-full tw-transition-colors"
+              class="w-3 h-3 rounded-full transition-colors"
               :class="[
                 currentCarouselIndex === index
-                  ? 'tw-bg-green-500'
-                  : 'tw-bg-gray-300 dark:tw-bg-gray-600 hover:tw-bg-gray-400 dark:hover:tw-bg-gray-500',
+                  ? 'bg-green-500'
+                  : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500',
               ]"
             ></button>
           </div>
 
           <!-- Chart Info -->
           <div
-            class="tw-absolute tw-top-4 tw-left-1/2 tw-transform tw--translate-x-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-px-3 tw-py-1 tw-rounded-full tw-text-sm tw-font-medium"
+            class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium"
           >
             {{ currentCarouselIndex + 1 }} / {{ carouselCharts.length }} -
             {{ carouselCharts[currentCarouselIndex].name }}
@@ -131,9 +131,9 @@
       </div>
 
       <!-- Mobile: Chart Cards (Always Show) -->
-      <div class="tw-block md:tw-hidden">
+      <div class="block md:hidden">
         <div
-          class="tw-flex tw-overflow-x-auto tw-space-x-4 tw-pb-4 tw-snap-x tw-snap-mandatory tw-px-4"
+          class="flex overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory px-2"
         >
           <MobileChartCard
             title="支出类型"
@@ -197,9 +197,9 @@
         </div>
 
         <!-- Enhanced Mobile Navigation -->
-        <div class="tw-flex tw-justify-center tw-items-center tw-mt-2">
-          <div class="tw-text-xs tw-text-gray-500 dark:tw-text-gray-400">
-            左右滑动查看更多
+        <div class="flex justify-center items-center mt-2">
+          <div class="text-xs text-gray-500 dark:text-gray-400">
+            左右滑动切换图表
           </div>
         </div>
       </div>
@@ -341,7 +341,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* 自定义样式 */
-.tw-max-w-7xl {
+.max-w-7xl {
   max-width: 1280px;
 }
 
@@ -351,25 +351,25 @@ onUnmounted(() => {
 }
 
 /* 移动端水平滚动样式 */
-.tw-overflow-x-auto {
+.overflow-x-auto {
   scrollbar-width: thin;
   scrollbar-color: theme("colors.gray.300") transparent;
 }
 
-.tw-overflow-x-auto::-webkit-scrollbar {
+.overflow-x-auto::-webkit-scrollbar {
   height: 6px;
 }
 
-.tw-overflow-x-auto::-webkit-scrollbar-track {
+.overflow-x-auto::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.tw-overflow-x-auto::-webkit-scrollbar-thumb {
+.overflow-x-auto::-webkit-scrollbar-thumb {
   background-color: theme("colors.gray.300");
   border-radius: 3px;
 }
 
-.dark .tw-overflow-x-auto::-webkit-scrollbar-thumb {
+.dark .overflow-x-auto::-webkit-scrollbar-thumb {
   background-color: theme("colors.gray.600");
 }
 
@@ -380,20 +380,20 @@ onUnmounted(() => {
 }
 
 ::-webkit-scrollbar-track {
-  @apply tw-bg-gray-100 dark:tw-bg-gray-800;
+  @apply bg-gray-100 dark:bg-gray-800;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply tw-bg-gray-300 dark:tw-bg-gray-600 tw-rounded-full;
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply tw-bg-gray-400 dark:tw-bg-gray-500;
+  @apply bg-gray-400 dark:bg-gray-500;
 }
 
 /* 移动端卡片滚动动画 */
 @media (max-width: 768px) {
-  .tw-snap-x {
+  .snap-x {
     scroll-behavior: smooth;
   }
 }

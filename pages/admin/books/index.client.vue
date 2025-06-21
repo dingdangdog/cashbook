@@ -81,8 +81,8 @@ const changePage = (param: {
 
 <template>
   <div class="admin-page-container">
-    <div class="tw-flex tw-items-center tw-space-x-4 tw-pb-2">
-      <div class="tw-w-80">
+    <div class="flex items-center space-x-4 pb-2">
+      <div class="w-80">
         <v-text-field
           clearable
           label="用户ID"
@@ -91,7 +91,7 @@ const changePage = (param: {
           hide-details="auto"
         ></v-text-field>
       </div>
-      <div class="tw-w-80">
+      <div class="w-80">
         <v-text-field
           clearable
           label="账本ID"
@@ -100,7 +100,7 @@ const changePage = (param: {
           hide-details="auto"
         ></v-text-field>
       </div>
-      <div class="tw-w-80">
+      <div class="w-80">
         <v-text-field
           clearable
           label="账本名称"

@@ -89,19 +89,4 @@ export const toDocumentation = () => {
   window.open("https://doc.cashbook.oldmoon.top", "_blank");
 };
 
-// Toggle theme function
-export const globalToggleTheme = (isDarkMode: boolean) => {
-  isDarkMode = !isDarkMode;
-  // Save preference to localStorage
-  if (typeof window !== "undefined") {
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
-
-    // 同步更新 document.documentElement 上的 dark 类
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }
-  return isDarkMode;
-};
+// 主题切换功能已移至 useAppTheme composable

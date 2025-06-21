@@ -2,22 +2,22 @@
   <v-card>
     <v-card-title>
       <div>
-        <span class="tw-mx-1" v-show="flowQuery.startDay">{{
+        <span class="mx-1" v-show="flowQuery.startDay">{{
           flowQuery.startDay
         }}</span>
-        <span class="tw-mx-1" v-show="flowQuery.endDay">{{
+        <span class="mx-1" v-show="flowQuery.endDay">{{
           flowQuery.endDay
         }}</span>
-        <span class="tw-mx-1" v-show="flowQuery.flowType">{{
+        <span class="mx-1" v-show="flowQuery.flowType">{{
           flowQuery.flowType
         }}</span>
-        <span class="tw-mx-1" v-show="flowQuery.industryType">{{
+        <span class="mx-1" v-show="flowQuery.industryType">{{
           flowQuery.industryType
         }}</span>
-        <span class="tw-mx-1" v-show="flowQuery.payType">{{
+        <span class="mx-1" v-show="flowQuery.payType">{{
           flowQuery.payType
         }}</span>
-        <span class="tw-mx-1" v-show="flowQuery.attribution">{{
+        <span class="mx-1" v-show="flowQuery.attribution">{{
           flowQuery.attribution
         }}</span>
       </div>

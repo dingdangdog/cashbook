@@ -1,11 +1,11 @@
 <template>
   <div class="chart-common-container">
     <div
-      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b tw-border-gray-200 dark:tw-border-gray-700 md:tw-h-16 tw-mb-4"
+      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 md:h-16 mb-4"
     >
       <div v-if="title">
         <h4
-          class="tw-hidden md:tw-flex tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white tw-my-2"
+          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
         >
           {{ title }}
         </h4>

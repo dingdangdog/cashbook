@@ -1,26 +1,26 @@
 <template>
   <div class="mobile-chart-card">
     <div
-      class="tw-bg-white dark:tw-bg-gray-800 tw-rounded-xl tw-shadow-lg tw-p-3 tw-border tw-border-gray-200 dark:tw-border-gray-700 tw-h-full"
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 border border-gray-200 dark:border-gray-700 h-full"
     >
       <!-- Card Header -->
-      <div class="tw-flex tw-items-center tw-justify-between tw-mb-4">
-        <div class="tw-flex tw-items-center tw-space-x-2">
-          <component :is="icon" class="tw-w-5 tw-h-5 tw-text-blue-500" />
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-2">
+          <component :is="icon" class="w-5 h-5 text-blue-500" />
           <h3
-            class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+            class="text-lg font-semibold text-green-950 dark:text-white"
           >
             {{ title }}
           </h3>
         </div>
-        <div class="tw-text-xs tw-text-gray-500 dark:tw-text-gray-400">
+        <div class="text-xs text-gray-500 dark:text-gray-400">
           {{ currentIndex + 1 }} / {{ totalCount }}
         </div>
       </div>
 
       <!-- Chart Container -->
       <div
-        class="tw-relative tw-bg-gray-50 dark:tw-bg-gray-900 tw-rounded-lg tw-p-1"
+        class="relative bg-gray-50 dark:bg-green-950/80 rounded-lg p-1"
       >
         <!-- 根据图表类型显示对应组件 -->
         <IndustryTypePie

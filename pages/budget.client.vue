@@ -3,12 +3,12 @@
     <!-- Header with summary cards -->
 
     <!-- Budget progress bar -->
-    <div class="tw-p-4">
+    <div class="p-4">
       <div
-        class="tw-flex tw-flex-col md:tw-flex-row md:tw-items-center tw-space-y-2 md:tw-space-x-4"
+        class="flex flex-col md:flex-row md:items-center space-y-2 md:space-x-4"
       >
-        <div class="tw-flex tw-items-center tw-space-x-2">
-          <span class="tw-text-xl">预算使用情况</span>
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">预算使用情况</span>
           <v-select
             v-model="selectedMonth"
             :items="monthOptions"
@@ -16,11 +16,11 @@
             variant="outlined"
             density="compact"
             hide-details
-            class="tw-w-40"
+            class="w-40"
             @update:model-value="loadData"
           ></v-select>
         </div>
-        <div class="tw-flex tw-items-center tw-space-x-2">
+        <div class="flex items-center space-x-2">
           <v-btn color="primary" size="small" @click="openBudgetDialog">
             设置预算
           </v-btn>
@@ -31,68 +31,68 @@
       </div>
 
       <div
-        class="mt-2 tw-grid tw-grid-cols-2 md:tw-grid-cols-5 tw-gap-2 tw-p-2 md:tw-gap-4 md:tw-p-4"
+        class="mt-2 grid grid-cols-2 md:grid-cols-5 gap-2 p-2 md:gap-4 md:p-4"
       >
-        <v-card class="tw-h-24 md:tw-h-32" color="blue-darken-4" theme="dark">
-          <v-card-title class="tw-text-lg">月度预算总额</v-card-title>
-          <v-card-text class="tw-text-center">
-            <span class="tw-text-xl md:tw-text-3xl tw-font-bold">{{
+        <v-card class="h-24 md:h-32" color="blue-darken-4" theme="dark">
+          <v-card-title class="text-lg">月度预算总额</v-card-title>
+          <v-card-text class="text-center">
+            <span class="text-xl md:text-3xl font-bold">{{
               formatCurrency(totalBudget)
             }}</span>
           </v-card-text>
         </v-card>
         <v-card
-          class="tw-h-24 md:tw-h-32"
+          class="h-24 md:h-32"
           color="deep-orange-darken-4"
           theme="dark"
         >
-          <v-card-title class="tw-text-lg">固定支出</v-card-title>
-          <v-card-text class="tw-text-center">
-            <span class="tw-text-xl md:tw-text-3xl tw-font-bold">{{
+          <v-card-title class="text-lg">固定支出</v-card-title>
+          <v-card-text class="text-center">
+            <span class="text-xl md:text-3xl font-bold">{{
               formatCurrency(fixedFlowTotal)
             }}</span>
           </v-card-text>
         </v-card>
 
-        <v-card class="tw-h-28 md:tw-h-32" color="primary" theme="dark">
-          <v-card-title class="tw-text-lg">可用额度</v-card-title>
-          <v-card-text class="tw-text-center">
+        <v-card class="h-28 md:h-32" color="primary" theme="dark">
+          <v-card-title class="text-lg">可用额度</v-card-title>
+          <v-card-text class="text-center">
             <div
-              class="tw-flex tw-flex-col md:tw-flex-row tw-items-center tw-justify-center"
+              class="flex flex-col md:flex-row items-center justify-center"
             >
-              <span class="tw-text-xl md:tw-text-3xl tw-font-bold">{{
+              <span class="text-xl md:text-3xl font-bold">{{
                 formatCurrency(availableAmount)
               }}</span>
-              <span class="tw-text-sm tw-ml-2"
+              <span class="text-sm ml-2"
                 >({{ availablePercentage }}%)</span
               >
             </div>
           </v-card-text>
         </v-card>
 
-        <v-card class="tw-h-28 md:tw-h-32" color="error" theme="dark">
-          <v-card-title class="tw-text-lg">已用额度</v-card-title>
-          <v-card-text class="tw-text-center">
+        <v-card class="h-28 md:h-32" color="error" theme="dark">
+          <v-card-title class="text-lg">已用额度</v-card-title>
+          <v-card-text class="text-center">
             <div
-              class="tw-flex tw-flex-col md:tw-flex-row tw-items-center tw-justify-center"
+              class="flex flex-col md:flex-row items-center justify-center"
             >
-              <span class="tw-text-xl md:tw-text-3xl tw-font-bold">{{
+              <span class="text-xl md:text-3xl font-bold">{{
                 formatCurrency(usedAmount)
               }}</span>
-              <span class="tw-text-sm tw-ml-2">({{ usedPercentage }}%)</span>
+              <span class="text-sm ml-2">({{ usedPercentage }}%)</span>
             </div>
           </v-card-text>
         </v-card>
-        <v-card class="tw-h-28 md:tw-h-32" color="success" theme="dark">
-          <v-card-title class="tw-text-lg">剩余额度</v-card-title>
-          <v-card-text class="tw-text-center">
+        <v-card class="h-28 md:h-32" color="success" theme="dark">
+          <v-card-title class="text-lg">剩余额度</v-card-title>
+          <v-card-text class="text-center">
             <div
-              class="tw-flex tw-flex-col md:tw-flex-row tw-items-center tw-justify-center"
+              class="flex flex-col md:flex-row items-center justify-center"
             >
-              <span class="tw-text-xl md:tw-text-3xl tw-font-bold">{{
+              <span class="text-xl md:text-3xl font-bold">{{
                 formatCurrency(remainingAmount)
               }}</span>
-              <span class="tw-text-sm tw-ml-2"
+              <span class="text-sm ml-2"
                 >({{ remainingPercentage }}%)</span
               >
             </div>
@@ -102,9 +102,9 @@
     </div>
 
     <!-- Fixed expenses section -->
-    <div class="tw-p-4">
-      <div class="tw-flex tw-items-center tw-space-x-4 tw-mb-4">
-        <span class="tw-text-xl">固定支出管理</span>
+    <div class="p-4">
+      <div class="flex items-center space-x-4 mb-4">
+        <span class="text-xl">固定支出管理</span>
         <v-btn color="success" size="small" @click="openFixedFlowDialog()">
           添加固定支出
         </v-btn>
@@ -119,7 +119,7 @@
           {{ formatCurrency(item.money || 0) }}
         </template>
         <template v-slot:item.actions="{ item }">
-          <div class="tw-flex tw-space-x-2">
+          <div class="flex space-x-2">
             <v-btn
               size="small"
               color="primary"

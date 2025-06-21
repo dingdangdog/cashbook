@@ -40,27 +40,27 @@
             @update:search="industryTypeSearchText = $event"
           >
             <template v-slot:no-data>
-              <div class="tw-p-4 tw-max-w-md">
-                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
-                <div class="tw-flex tw-flex-wrap tw-gap-2">
+              <div class="p-4 max-w-md">
+                <div class="text-sm text-gray-600 mb-2">点击选择类型：</div>
+                <div class="flex flex-wrap gap-2">
                   <v-chip
                     v-for="item in filteredIndustryTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="green"
                     size="small"
-                    class="tw-cursor-pointer"
+                    class="cursor-pointer"
                     @click="selectIndustryType(item)"
                   >
-                    <v-icon size="x-small" class="tw-mr-1">mdi-sack</v-icon>
+                    <v-icon size="x-small" class="mr-1">mdi-sack</v-icon>
                     {{ item }}
                   </v-chip>
                 </div>
               </div>
             </template>
             <template v-slot:selection="{ item }">
-              <div class="tw-flex tw-items-center">
-                <v-icon color="green" size="small" class="tw-mr-1">
+              <div class="flex items-center">
+                <v-icon color="green" size="small" class="mr-1">
                   mdi-sack
                 </v-icon>
                 <span>{{ item.title }}</span>
@@ -80,27 +80,27 @@
             @update:search="payTypeSearchText = $event"
           >
             <template v-slot:no-data>
-              <div class="tw-p-4 tw-max-w-md">
-                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
-                <div class="tw-flex tw-flex-wrap tw-gap-2">
+              <div class="p-4 max-w-md">
+                <div class="text-sm text-gray-600 mb-2">点击选择支付方式：</div>
+                <div class="flex flex-wrap gap-2">
                   <v-chip
                     v-for="item in filteredPayTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="blue"
                     size="small"
-                    class="tw-cursor-pointer"
+                    class="cursor-pointer"
                     @click="selectPayType(item)"
                   >
-                    <v-icon size="x-small" class="tw-mr-1">mdi-credit-card</v-icon>
+                    <v-icon size="x-small" class="mr-1">mdi-credit-card</v-icon>
                     {{ item }}
                   </v-chip>
                 </div>
               </div>
             </template>
             <template v-slot:selection="{ item }">
-              <div class="tw-flex tw-items-center">
-                <v-icon color="blue" size="small" class="tw-mr-2">
+              <div class="flex items-center">
+                <v-icon color="blue" size="small" class="mr-2">
                   mdi-credit-card
                 </v-icon>
                 <span>{{ item.title }}</span>
@@ -132,10 +132,10 @@
           >
             <template v-slot:item="{ item, props }">
               <div
-                class="w-full tw-p-2 tw-cursor-pointer hover:tw-bg-gray-200/10 tw-duration-500 tw-ease-in-out"
+                class="w-full p-2 cursor-pointer hover:bg-gray-200/10 duration-500 ease-in-out"
                 @click="(props as any).onClick"
               >
-                <p class="tw-max-w-96 tw-text-ellipsis tw-line-clamp-1">
+                <p class="max-w-96 text-ellipsis line-clamp-1">
                   {{ item.title }}
                 </p>
               </div>
@@ -152,7 +152,7 @@
       <!-- 表单确认按钮 -->
       <v-card-actions>
         <div
-          class="tw-flex tw-items-center tw-w-full tw-justify-center tw-space-x-4 tw-pb-4"
+          class="flex items-center w-full justify-center space-x-4 pb-4"
         >
           <v-btn variant="elevated" color="error" @click="closeDialog()">
             取消

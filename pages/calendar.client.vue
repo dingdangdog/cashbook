@@ -199,7 +199,7 @@
     >
       <v-card>
         <v-card-title>
-          <div class="tw-flex tw-justify-end">
+          <div class="flex justify-end">
             <div>
               <v-btn
                 color="error"

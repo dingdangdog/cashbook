@@ -32,7 +32,7 @@
       </v-card-text>
       <v-card-actions>
         <div
-          class="tw-flex tw-items-center tw-w-full tw-justify-center tw-space-x-4 tw-pb-4"
+          class="flex items-center w-full justify-center space-x-4 pb-4"
         >
           <v-btn variant="elevated" color="error" @click="closeDialog()">
             取消

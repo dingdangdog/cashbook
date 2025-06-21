@@ -143,7 +143,7 @@ const importImgAll = () => {
     <v-tabs-window v-model="settingTab">
       <v-tabs-window-item :value="1">
         <div
-          class="tw-flex tw-flex-col tw-p-2 tw-max-w-[760px]"
+          class="flex flex-col p-2 max-w-[760px]"
           style="margin: 0 auto"
         >
           <v-text-field
@@ -180,19 +180,19 @@ const importImgAll = () => {
             ]"
             variant="outlined"
           ></v-select>
-          <p class="tw-my-2 tw-text-sm tw-text-gray-500">
+          <p class="my-2 text-sm text-gray-500">
             最后修改时间: {{ formatDate(settings.updateBy || 0) }}
           </p>
-          <p class="tw-my-2 tw-text-sm tw-text-gray-500">
+          <p class="my-2 text-sm text-gray-500">
             系统版本: {{ settings.version }}
           </p>
 
-          <div class="tw-flex tw-space-x-4 tw-justify-center">
-            <!-- <v-btn class="tw-w-40" variant="flat" @click="getConfig()">
+          <div class="flex space-x-4 justify-center">
+            <!-- <v-btn class="w-40" variant="flat" @click="getConfig()">
           重置
         </v-btn> -->
             <v-btn
-              class="tw-w-40"
+              class="w-40"
               variant="flat"
               color="primary"
               @click="saveConfig()"
@@ -204,14 +204,14 @@ const importImgAll = () => {
       </v-tabs-window-item>
 
       <v-tabs-window-item :value="2">
-        <div class="tw-max-w-3xl tw-mx-auto tw-p-4">
-          <div class="tw-p-4 tw-m-2 tw-bg-blue-100/20 tw-rounded-lg">
-            <h3 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">
+        <div class="max-w-3xl mx-auto p-4">
+          <div class="p-4 m-2 bg-blue-100/20 rounded-lg">
+            <h3 class="text-lg font-bold text-center mb-4">
               系统数据备份与恢复
             </h3>
-            <div class="tw-flex tw-space-x-4 tw-justify-center">
+            <div class="flex space-x-4 justify-center">
               <v-btn
-                class="tw-w-40"
+                class="w-40"
                 variant="flat"
                 color="primary"
                 @click="exportAll()"
@@ -221,7 +221,7 @@ const importImgAll = () => {
               </v-btn>
 
               <v-btn
-                class="tw-w-40"
+                class="w-40"
                 variant="flat"
                 color="success"
                 @click="importAll()"
@@ -231,13 +231,13 @@ const importImgAll = () => {
               </v-btn>
             </div>
           </div>
-          <div class="tw-p-4 tw-m-2 tw-bg-green-100/20 tw-rounded-lg">
-            <h3 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">
+          <div class="p-4 m-2 bg-green-100/20 rounded-lg">
+            <h3 class="text-lg font-bold text-center mb-4">
               小票图片备份与恢复
             </h3>
-            <div class="tw-flex tw-space-x-4 tw-justify-center">
+            <div class="flex space-x-4 justify-center">
               <v-btn
-                class="tw-w-40"
+                class="w-40"
                 variant="flat"
                 color="primary"
                 @click="exportImgAll()"
@@ -247,7 +247,7 @@ const importImgAll = () => {
               </v-btn>
 
               <v-btn
-                class="tw-w-40"
+                class="w-40"
                 variant="flat"
                 color="success"
                 @click="importImgAll()"

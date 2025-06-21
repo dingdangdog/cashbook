@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-p-2">
+  <div class="p-2">
     <v-navigation-drawer v-model="searchDrawer" temporary location="right">
       <div style="padding: 0.5rem">
         <div class="queryParam">
@@ -26,8 +26,8 @@
       </div>
     </v-navigation-drawer>
     <!-- 表格查询框与操作按钮 -->
-    <div class="tw-flex tw-space-x-2 tw-justify-between tw-p-2">
-      <div class="tw-flex tw-space-x-2">
+    <div class="flex space-x-2 justify-between p-2">
+      <div class="flex space-x-2">
         <!-- 点击自动映射会发生什么？会将现有的流水数据中的`支出类型`按照`自动映射配置`的设置关系进行自动转换。 -->
         <v-btn color="success" @click="showConfig">CSV导入映射配置</v-btn>
         <v-btn color="error" @click="hisFlowTypeConvert()">历史数据映射 </v-btn>
@@ -98,7 +98,7 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <div class="tw-flex tw-justify-center tw-w-full tw-space-x-4">
+          <div class="flex justify-center w-full space-x-4">
             <v-btn color="warning" variant="elevated" @click="cancelEdit">
               取消
             </v-btn>

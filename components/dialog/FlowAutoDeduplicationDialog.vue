@@ -100,9 +100,9 @@ const getFlowTypeColor = (type: string) => {
 <template>
   <v-dialog v-model="showAutoDeduplicationFlowsDialog" :fullscreen="true">
     <v-card>
-      <v-card-title class="tw-flex tw-justify-between tw-items-center">
+      <v-card-title class="flex justify-between items-center">
         <span>疑似重复数据检测</span>
-        <div class="tw-text-sm tw-text-gray-500">
+        <div class="text-sm text-gray-500">
           共发现 {{ duplicateData.totalGroups }} 组疑似重复数据， 涉及
           {{ duplicateData.totalDuplicates }} 条记录
         </div>
@@ -111,12 +111,12 @@ const getFlowTypeColor = (type: string) => {
       <!-- 添加检测条件选择器 -->
       <v-card-subtitle>
         <div
-          class="tw-flex tw-flex-col md:tw-flex-row tw-items-center md:tw-space-x-4"
+          class="flex flex-col md:flex-row items-center md:space-x-4"
         >
-          <div class="tw-font-medium">
+          <div class="font-medium">
             检测条件选择（日期和金额为默认条件）：
           </div>
-          <div class="tw-flex tw-flex-wrap tw-gap-2">
+          <div class="flex flex-wrap gap-2">
             <v-checkbox
               color="success"
               v-model="deduplicationCriteria.name"
@@ -167,34 +167,34 @@ const getFlowTypeColor = (type: string) => {
       <v-card-text>
         <div
           v-if="loading"
-          class="tw-flex tw-justify-center tw-items-center tw-py-10"
+          class="flex justify-center items-center py-10"
         >
           <v-progress-circular
             indeterminate
             color="primary"
           ></v-progress-circular>
-          <span class="tw-ml-4">加载中...</span>
+          <span class="ml-4">加载中...</span>
         </div>
 
         <div
           v-else-if="duplicateData.duplicateGroups.length === 0"
-          class="tw-text-center tw-py-10"
+          class="text-center py-10"
         >
           <v-icon size="64" color="info">mdi-check-circle</v-icon>
-          <p class="tw-mt-4 tw-text-lg">未发现疑似重复数据</p>
+          <p class="mt-4 text-lg">未发现疑似重复数据</p>
         </div>
 
-        <div v-else class="tw-space-y-6 tw-overflow-y-auto tw-max-h-[75vh]">
+        <div v-else class="space-y-6 overflow-y-auto max-h-[75vh]">
           <!-- 每一组重复数据 -->
           <v-card
             v-for="(group, groupIndex) in duplicateData.duplicateGroups"
             :key="groupIndex"
             variant="outlined"
-            class="tw-mb-6"
+            class="mb-6"
           >
-            <v-card-title class="tw-bg-gray-400/40">
-              <span class="tw-text-lg">疑似重复组 #{{ groupIndex + 1 }}</span>
-              <div class="tw-text-sm">
+            <v-card-title class="bg-gray-400/40">
+              <span class="text-lg">疑似重复组 #{{ groupIndex + 1 }}</span>
+              <div class="text-sm">
                 {{ formatDate(group[0]?.day) }} | {{ group[0]?.flowType }} |
                 {{ group[0]?.money?.toFixed(2) }}元
               </div>
@@ -204,7 +204,7 @@ const getFlowTypeColor = (type: string) => {
               <v-table density="compact">
                 <thead>
                   <tr>
-                    <th class="tw-font-bold">类型</th>
+                    <th class="font-bold">类型</th>
                     <th>名称</th>
                     <th>金额</th>
                     <th>日期</th>
@@ -218,7 +218,7 @@ const getFlowTypeColor = (type: string) => {
                   <tr
                     v-for="(item, itemIndex) in group"
                     :key="item.id"
-                    :class="{ 'tw-bg-gray-300/50': itemIndex % 2 === 0 }"
+                    :class="{ 'bg-gray-300/50': itemIndex % 2 === 0 }"
                   >
                     <td>
                       <v-chip
@@ -229,7 +229,7 @@ const getFlowTypeColor = (type: string) => {
                       </v-chip>
                     </td>
                     <td>
-                      <div class="tw-max-w-40 tw-truncate" :title="item.name">
+                      <div class="max-w-40 truncate" :title="item.name">
                         {{ item.name }}
                       </div>
                     </td>
@@ -237,8 +237,8 @@ const getFlowTypeColor = (type: string) => {
                       <span
                         :class="
                           item.flowType === '支出'
-                            ? 'tw-text-red-500'
-                            : 'tw-text-green-500'
+                            ? 'text-red-500'
+                            : 'text-green-500'
                         "
                       >
                         {{ Number(item.money).toFixed(2) }}
@@ -249,7 +249,7 @@ const getFlowTypeColor = (type: string) => {
                     <td>{{ item.industryType }}</td>
                     <td>
                       <div
-                        class="tw-max-w-40 tw-truncate"
+                        class="max-w-40 truncate"
                         :title="item.description"
                       >
                         {{ item.description || "-" }}
@@ -277,7 +277,7 @@ const getFlowTypeColor = (type: string) => {
 
       <v-card-actions>
         <div
-          class="tw-flex tw-items-center tw-w-full tw-justify-center tw-space-x-4 tw-pb-4"
+          class="flex items-center w-full justify-center space-x-4 pb-4"
         >
           <v-btn variant="elevated" color="success" @click="fetchDuplicates">
             <v-icon left>mdi-refresh</v-icon>

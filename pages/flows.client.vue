@@ -1,8 +1,8 @@
 <template>
   <div class="flow-container">
     <!-- 表格查询框与操作按钮 -->
-    <div class="tw-flex tw-space-x-2 tw-justify-between tw-p-2">
-      <div class="tw-flex tw-space-x-2">
+    <div class="flex space-x-2 justify-between p-2">
+      <div class="flex space-x-2">
         <v-btn color="blue-grey-darken-1" @click="selectHeaderDialog = true"
           >导入导出
         </v-btn>
@@ -29,7 +29,7 @@
           >类型修改
         </v-btn>
       </div>
-      <div class="tw-flex tw-space-x-2">
+      <div class="flex space-x-2">
         <v-btn color="primary" @click="searchDrawer = true">筛选</v-btn>
         <v-btn color="success" @click="resetQuery()">重置</v-btn>
       </div>
@@ -85,22 +85,22 @@
           </p>
         </template>
         <template v-slot:item.invoice="{ value }">
-          <div class="tw-flex tw-h-12" v-if="value">
+          <div class="flex h-12" v-if="value">
             <div
               v-for="img in value.split(',')"
-              class="tw-relative tw-flex tw-cursor-pointer tw-h-12 tw-w-12"
+              class="relative flex cursor-pointer h-12 w-12"
               @click="openFullscreen(InvoiceUrls[img])"
               @mouseover="isHovering = img"
               @mouseleave="isHovering = ''"
             >
               <img
                 v-show="img"
-                class="tw-object-contain"
+                class="object-contain"
                 :src="InvoiceUrls[img]"
               />
 
               <div
-                class="tw-absolute tw-top-0 tw-w-full tw-h-full tw-flex tw-bg-gray-800/60 tw-justify-center tw-items-center"
+                class="absolute top-0 w-full h-full flex bg-gray-800/60 justify-center items-center"
                 v-if="isHovering == img"
               >
                 <v-icon color="white" size="large"> mdi-fullscreen</v-icon>
@@ -111,7 +111,7 @@
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
         <template v-slot:item.actions="{ item }">
-          <div class="tw-flex tw-space-x-2">
+          <div class="flex space-x-2">
             <v-icon color="success" @click="openUpdateDialog('编辑流水', item)">
               mdi-pencil
             </v-icon>
@@ -153,7 +153,7 @@
     temporary
     location="right"
   >
-    <div class="tw-m-4">
+    <div class="m-4">
       <div class="queryParam">
         <v-date-input
           label="开始日期"
@@ -203,10 +203,10 @@
         >
           <template v-slot:item="{ item, props }">
             <div
-              class="w-full tw-p-2 tw-cursor-pointer hover:tw-bg-gray-200/10 tw-duration-500 tw-ease-in-out"
+              class="w-full p-2 cursor-pointer hover:bg-gray-200/10 duration-500 ease-in-out"
               @click="(props as any).onClick"
             >
-              <p class="tw-max-w-64 tw-text-ellipsis tw-line-clamp-1">
+              <p class="max-w-64 text-ellipsis line-clamp-1">
                 {{ item.title }}
               </p>
             </div>
@@ -247,27 +247,27 @@
           @update:search="industryTypeSearchText = $event"
         >
           <template v-slot:no-data>
-            <div class="tw-p-4 tw-max-w-md">
-              <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
-              <div class="tw-flex tw-flex-wrap tw-gap-2">
+            <div class="p-4 max-w-md">
+              <div class="text-sm text-gray-600 mb-2">点击选择类型：</div>
+              <div class="flex flex-wrap gap-2">
                 <v-chip
                   v-for="item in filteredIndustryTypeOptions"
                   :key="item"
                   variant="outlined"
                   color="green"
                   size="small"
-                  class="tw-cursor-pointer"
+                  class="cursor-pointer"
                   @click="selectFilterIndustryType(item)"
                 >
-                  <v-icon size="x-small" class="tw-mr-1">mdi-sack</v-icon>
+                  <v-icon size="x-small" class="mr-1">mdi-sack</v-icon>
                   {{ item }}
                 </v-chip>
               </div>
             </div>
           </template>
           <template v-slot:selection="{ item }">
-            <div class="tw-flex tw-items-center">
-              <v-icon color="green" size="small" class="tw-mr-1">
+            <div class="flex items-center">
+              <v-icon color="green" size="small" class="mr-1">
                 mdi-sack
               </v-icon>
               <span>{{ item.title }}</span>
@@ -288,27 +288,27 @@
           @update:search="payTypeSearchText = $event"
         >
           <template v-slot:no-data>
-            <div class="tw-p-4 tw-max-w-md">
-              <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
-              <div class="tw-flex tw-flex-wrap tw-gap-2">
+            <div class="p-4 max-w-md">
+              <div class="text-sm text-gray-600 mb-2">点击选择支付方式：</div>
+              <div class="flex flex-wrap gap-2">
                 <v-chip
                   v-for="item in filteredPayTypeOptions"
                   :key="item"
                   variant="outlined"
                   color="blue"
                   size="small"
-                  class="tw-cursor-pointer"
+                  class="cursor-pointer"
                   @click="selectFilterPayType(item)"
                 >
-                  <v-icon size="x-small" class="tw-mr-1">mdi-credit-card</v-icon>
+                  <v-icon size="x-small" class="mr-1">mdi-credit-card</v-icon>
                   {{ item }}
                 </v-chip>
               </div>
             </div>
           </template>
           <template v-slot:selection="{ item }">
-            <div class="tw-flex tw-items-center">
-              <v-icon color="blue" size="small" class="tw-mr-2">
+            <div class="flex items-center">
+              <v-icon color="blue" size="small" class="mr-2">
                 mdi-credit-card
               </v-icon>
               <span>{{ item.title }}</span>
@@ -323,12 +323,12 @@
           @click="resetQuery()"
           >清除条件</v-btn
         > -->
-        <v-btn class="tw-w-full" color="primary" @click="doQuery()">查询</v-btn>
+        <v-btn class="w-full" color="primary" @click="doQuery()">查询</v-btn>
       </div>
     </div>
   </v-navigation-drawer>
   <v-navigation-drawer v-model="selectHeaderDialog" temporary location="left">
-    <v-card-text class="tw-flex tw-flex-col tw-space-y-4">
+    <v-card-text class="flex flex-col space-y-4">
       <v-btn color="primary" @click="openCsvImport('alipay')">
         支付宝账单导入(CSV)
       </v-btn>
@@ -354,13 +354,13 @@
           </v-tooltip>
         </template>
       </v-btn>
-      <div class="tw-flex tw-space-x-2">
+      <div class="flex space-x-2">
         <v-btn color="green-lighten-2" @click="downloadCsvTemplate()">
           下载模板
         </v-btn>
         <v-btn
           color="blue-lighten-2"
-          class="tw-flex-1"
+          class="flex-1"
           @click="importCsvTemplate()"
         >
           模板导入
@@ -384,15 +384,15 @@
 
   <!-- 图片蒙版 -->
   <div class="overlay" v-if="fullscrenn">
-    <div class="tw-flex tw-justify-center tw-items-center">
+    <div class="flex justify-center items-center">
       <img
         :src="fullscreenImage"
-        class="tw-max-h-[95vh] tw-max-w-[95vw] tw-object-contains"
+        class="max-h-[95vh] max-w-[95vw] object-contains"
         alt="Fullscreen Image"
       />
     </div>
     <span
-      class="close-button tw-bg-gray-500 hover:tw-bg-gray-400"
+      class="close-button bg-gray-500 hover:bg-gray-400"
       @click="closeFullscreen"
       >&times;</span
     >
@@ -463,7 +463,7 @@
         <h3>批量修改 {{ selectedFlows.length }} 条流水的类型</h3>
       </v-card-title>
       <v-card-text>
-        <p class="tw-text-sm tw-pb-2 tw-text-red-600">
+        <p class="text-sm pb-2 text-red-600">
           将你选中的流水全部改为下面选中的类型，不想修改字段可以不选
         </p>
         <div class="queryParam">
@@ -493,27 +493,27 @@
             @update:search="batchIndustryTypeSearchText = $event"
           >
             <template v-slot:no-data>
-              <div class="tw-p-4 tw-max-w-md">
-                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择类型：</div>
-                <div class="tw-flex tw-flex-wrap tw-gap-2">
+              <div class="p-4 max-w-md">
+                <div class="text-sm text-gray-600 mb-2">点击选择类型：</div>
+                <div class="flex flex-wrap gap-2">
                   <v-chip
                     v-for="item in filteredBatchIndustryTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="green"
                     size="small"
-                    class="tw-cursor-pointer"
+                    class="cursor-pointer"
                     @click="selectBatchIndustryType(item)"
                   >
-                    <v-icon size="x-small" class="tw-mr-1">mdi-sack</v-icon>
+                    <v-icon size="x-small" class="mr-1">mdi-sack</v-icon>
                     {{ item }}
                   </v-chip>
                 </div>
               </div>
             </template>
             <template v-slot:selection="{ item }">
-              <div class="tw-flex tw-items-center">
-                <v-icon color="green" size="small" class="tw-mr-2">
+              <div class="flex items-center">
+                <v-icon color="green" size="small" class="mr-2">
                   mdi-sack
                 </v-icon>
                 <span>{{ item.title }}</span>
@@ -535,27 +535,27 @@
             @update:search="batchPayTypeSearchText = $event"
           >
             <template v-slot:no-data>
-              <div class="tw-p-4 tw-max-w-md">
-                <div class="tw-text-sm tw-text-gray-600 tw-mb-2">点击选择支付方式：</div>
-                <div class="tw-flex tw-flex-wrap tw-gap-2">
+              <div class="p-4 max-w-md">
+                <div class="text-sm text-gray-600 mb-2">点击选择支付方式：</div>
+                <div class="flex flex-wrap gap-2">
                   <v-chip
                     v-for="item in filteredBatchPayTypeOptions"
                     :key="item"
                     variant="outlined"
                     color="blue"
                     size="small"
-                    class="tw-cursor-pointer"
+                    class="cursor-pointer"
                     @click="selectBatchPayType(item)"
                   >
-                    <v-icon size="x-small" class="tw-mr-1">mdi-credit-card</v-icon>
+                    <v-icon size="x-small" class="mr-1">mdi-credit-card</v-icon>
                     {{ item }}
                   </v-chip>
                 </div>
               </div>
             </template>
             <template v-slot:selection="{ item }">
-              <div class="tw-flex tw-items-center">
-                <v-icon color="blue" size="small" class="tw-mr-2">
+              <div class="flex items-center">
+                <v-icon color="blue" size="small" class="mr-2">
                   mdi-credit-card
                 </v-icon>
                 <span>{{ item.title }}</span>
@@ -577,7 +577,7 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
+        <div class="flex space-x-4 justify-center w-full">
           <v-btn
             color="warning"
             variant="outlined"

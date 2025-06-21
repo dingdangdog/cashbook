@@ -28,31 +28,31 @@ const bottomNavItems: NavItem[] = [
     title: "预算",
     path: "budget",
     icon: ExclamationTriangleIcon,
-    color: "tw-text-red-500",
+    color: "text-red-500",
   },
   {
     title: "分析",
     path: "analysis",
     icon: ChartBarIcon,
-    color: "tw-text-purple-500",
+    color: "text-purple-500",
   },
   {
     title: "日历",
     path: "calendar",
     icon: CalendarDaysIcon,
-    color: "tw-text-blue-500",
+    color: "text-blue-500",
   },
   {
     title: "流水",
     path: "flows",
     icon: CurrencyDollarIcon,
-    color: "tw-text-green-500",
+    color: "text-green-500",
   },
   {
     title: "账本",
     path: "books",
     icon: BookOpenIcon,
-    color: "tw-text-teal-500",
+    color: "text-teal-500",
   },
 ];
 
@@ -64,22 +64,22 @@ const handleNavigate = (path: string) => {
 
 <template>
   <nav
-    class="tw-fixed tw-bottom-0 tw-left-0 tw-right-0 tw-bg-white dark:tw-bg-gray-900 tw-border-t tw-border-gray-200 dark:tw-border-gray-700 tw-z-40 lg:tw-hidden"
+    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-green-950/80 border-t border-gray-200 dark:border-gray-700 z-40 lg:hidden"
   >
-    <div class="tw-grid tw-grid-cols-5 tw-h-16">
+    <div class="grid grid-cols-5 h-16">
       <button
         v-for="item in bottomNavItems"
         :key="item.path"
         @click="handleNavigate(item.path)"
         :class="[
-          'tw-flex tw-flex-col tw-items-center tw-justify-center tw-space-y-1 tw-transition-colors tw-duration-200',
+          'flex flex-col items-center justify-center space-y-1 transition-colors duration-200',
           currentPath === item.path
-            ? 'tw-text-blue-600 dark:tw-text-blue-400 tw-bg-blue-300/20'
-            : 'tw-text-gray-600 dark:tw-text-gray-400',
+            ? 'text-blue-600 dark:text-blue-400 bg-blue-300/20'
+            : 'text-gray-600 dark:text-gray-400',
         ]"
       >
-        <component :is="item.icon" :class="['tw-h-5 tw-w-5', item.color]" />
-        <span class="tw-text-xs tw-font-medium">{{ item.title }}</span>
+        <component :is="item.icon" :class="['h-5 w-5', item.color]" />
+        <span class="text-xs font-medium">{{ item.title }}</span>
       </button>
     </div>
   </nav>

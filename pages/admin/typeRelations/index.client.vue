@@ -122,8 +122,8 @@ onMounted(() => {
 
 <template>
   <div class="admin-page-container">
-    <div class="tw-flex tw-items-center tw-space-x-4 tw-pb-2">
-      <div class="tw-w-80">
+    <div class="flex items-center space-x-4 pb-2">
+      <div class="w-80">
         <v-select
           clearable
           label="选择账本"
@@ -135,7 +135,7 @@ onMounted(() => {
           hide-details="auto"
         ></v-select>
       </div>
-      <div class="tw-w-80">
+      <div class="w-80">
         <v-text-field
           clearable
           label="用户ID"
@@ -145,14 +145,14 @@ onMounted(() => {
           hide-details="auto"
         ></v-text-field>
       </div>
-      <div class="tw-flex tw-items-center tw-space-x-2">
+      <div class="flex items-center space-x-2">
         <v-switch
           v-model="showTemplateData"
           color="primary"
           hide-details
           @update:modelValue="getPages"
         ></v-switch>
-        <span class="tw-text-sm tw-text-gray-600">显示模板数据</span>
+        <span class="text-sm text-gray-600">显示模板数据</span>
       </div>
       <v-btn color="primary" @click="getPages"> 查询 </v-btn>
       <v-btn color="success" @click="addItem()"> 新增 </v-btn>
@@ -169,16 +169,16 @@ onMounted(() => {
     >
       <!-- 账本信息自定义插槽 -->
       <template v-slot:item.bookInfo="{ item }">
-        <div class="tw-flex tw-flex-col">
-          <div class="tw-flex tw-items-center tw-space-x-2">
-            <span v-if="item.bookId === '0'" class="tw-px-2 tw-py-1 tw-bg-orange-100 tw-text-orange-800 tw-text-xs tw-rounded">
+        <div class="flex flex-col">
+          <div class="flex items-center space-x-2">
+            <span v-if="item.bookId === '0'" class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded">
               模板数据
             </span>
-            <span class="tw-font-medium" :class="item.bookId === '0' ? 'tw-text-orange-600' : 'tw-text-blue-600'">
+            <span class="font-medium" :class="item.bookId === '0' ? 'text-orange-600' : 'text-blue-600'">
               {{ item.bookId === '0' ? '系统模板' : (item.bookName || '未知账本') }}
             </span>
           </div>
-          <div class="tw-flex tw-space-x-2 tw-text-xs tw-text-gray-500">
+          <div class="flex space-x-2 text-xs text-gray-500">
             <span>DB ID: {{ item.bookDbId || 'N/A' }}</span>
             <span>|</span>
             <span>业务ID: {{ item.bookId }}</span>

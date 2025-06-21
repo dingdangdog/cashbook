@@ -28,26 +28,26 @@
             hide-details="auto"
           ></v-text-field>
 
-          <div class="tw-text-center tw-my-4">
+          <div class="text-center my-4">
             <v-btn color="primary" @click="toSecondTab()"> 下一步 </v-btn>
           </div>
         </v-tabs-window-item>
         <v-tabs-window-item :value="2">
-          <div class="tw-text-center tw-my-4">
+          <div class="text-center my-4">
             <v-btn
               color="success"
-              class="tw-flex-1"
+              class="flex-1"
               @click="importCsvTemplate()"
             >
               选择文件
             </v-btn>
           </div>
           <div
-            class="tw-max-h-[50vh] tw-overflow-y-auto tw-bg-gray-800/20 tw-p-2 tw-border tw-rounded-md"
+            class="max-h-[50vh] overflow-y-auto bg-gray-800/20 p-2 border rounded-md"
           >
             <div
               v-if="csvHeaders.length === 0"
-              class="tw-text-center tw-my-4 tw-text-red-500"
+              class="text-center my-4 text-red-500"
             >
               请先选择文件
             </div>
@@ -55,9 +55,9 @@
               v-else
               v-for="field in csvHeaders"
               :key="field"
-              class="tw-my-2"
+              class="my-2"
             >
-              <h3 class="tw-my-1 tw-font-bold">{{ field }}</h3>
+              <h3 class="my-1 font-bold">{{ field }}</h3>
               <v-autocomplete
                 class="mx-4"
                 v-model="targetFieldMapping[field]"
@@ -68,14 +68,14 @@
             </div>
           </div>
           <div
-            class="tw-text-center tw-my-4 tw-flex tw-justify-center tw-space-x-4"
+            class="text-center my-4 flex justify-center space-x-4"
           >
             <v-btn color="secondary" @click="toFirstTab()"> 上一步 </v-btn>
             <v-btn color="primary" @click="toLastTab()"> 下一步 </v-btn>
           </div>
         </v-tabs-window-item>
         <v-tabs-window-item :value="3">
-          <div class="tw-text-center tw-my-4">
+          <div class="text-center my-4">
             <v-btn
               color="success"
               @click="readCsvInfo"
@@ -87,25 +87,25 @@
           </div>
           <div
             v-if="csvHeaders.length === 0"
-            class="tw-text-center tw-my-4 tw-text-red-500"
+            class="text-center my-4 text-red-500"
           >
             请先选择文件
           </div>
-          <div class="tw-max-h-[50vh] tw-overflow-auto table-container">
+          <div class="max-h-[50vh] overflow-auto table-container">
             <div
               v-show="showCsvTable"
-              class="excel-table tw-flex tw-justify-center"
+              class="excel-table flex justify-center"
             >
-              <table ref="excelTable" class="tw-flex tw-flex-col">
+              <table ref="excelTable" class="flex flex-col">
                 <thead ref="excelTableHead"></thead>
                 <tbody
                   ref="excelTableBody"
-                  class="tw-flex-1 tw-overflow-y-auto"
+                  class="flex-1 overflow-y-auto"
                 ></tbody>
               </table>
             </div>
           </div>
-          <div class="tw-text-center tw-my-4">
+          <div class="text-center my-4">
             <v-btn color="secondary" @click="toSecondTab()"> 上一步 </v-btn>
           </div>
         </v-tabs-window-item>

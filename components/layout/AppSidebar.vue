@@ -25,64 +25,65 @@ interface Props {
   isOpen: boolean;
   isMobile: boolean;
   currentPath: string;
-  isDark: boolean;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
   navigate: [path: string];
-  toggleTheme: [];
 }>();
+
+// 直接使用主题管理
+const { isDark, toggleTheme } = useAppTheme();
 
 const items: Menu[] = [
   {
     title: "账本日历",
     path: "calendar",
     icon: CalendarDaysIcon,
-    color: "tw-text-blue-500",
+    color: "text-blue-500",
   },
   {
     title: "数据分析",
     path: "analysis",
     icon: ChartBarIcon,
-    color: "tw-text-purple-500",
+    color: "text-purple-500",
   },
   {
     title: "预算管理",
     path: "budget",
     icon: ExclamationTriangleIcon,
-    color: "tw-text-red-500",
+    color: "text-red-500",
   },
   {
     title: "流水管理",
     path: "flows",
     icon: CurrencyDollarIcon,
-    color: "tw-text-green-500",
+    color: "text-green-500",
   },
   {
     title: "账本管理",
     path: "books",
     icon: BookOpenIcon,
-    color: "tw-text-teal-500",
+    color: "text-teal-500",
   },
   {
     title: "类型管理",
     path: "types",
     icon: Squares2X2Icon,
-    color: "tw-text-pink-500",
+    color: "text-pink-500",
   },
   {
     title: "文档站",
     path: "documentation",
     icon: DocumentTextIcon,
-    color: "tw-text-indigo-500",
+    color: "text-indigo-500",
   },
   {
     title: "Github",
     path: "github",
     icon: CodeBracketIcon,
-    color: "tw-text-gray-600 dark:tw-text-gray-400",
+    color: "text-gray-600 dark:text-gray-400",
   },
 ];
 
@@ -108,61 +109,59 @@ const handleNavigate = (menu: Menu) => {
   <div
     v-if="isMobile && isOpen"
     @click="emit('close')"
-    class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-40 lg:tw-hidden"
+    class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
   ></div>
 
   <!-- Sidebar -->
   <aside
     :class="[
-      'tw-fixed tw-inset-y-0 tw-left-0 tw-z-50 tw-w-64 tw-bg-white dark:tw-bg-gray-900 tw-border-r tw-border-gray-200 dark:tw-border-gray-700 tw-transform tw-transition-transform tw-duration-200 tw-ease-in-out',
+      'fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-green-950/50 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-200 ease-in-out',
       isMobile
         ? isOpen
-          ? 'tw-translate-x-0'
-          : '-tw-translate-x-full'
-        : 'tw-translate-x-0',
-      !isMobile && 'lg:tw-relative lg:tw-translate-x-0 tw-h-full',
+          ? 'translate-x-0'
+          : '-translate-x-full'
+        : 'translate-x-0',
+      !isMobile && 'lg:relative lg:translate-x-0 h-full',
     ]"
   >
-    <div class="tw-flex tw-flex-col tw-h-full">
+    <div class="flex flex-col h-full">
       <!-- Mobile header -->
       <div
         v-if="isMobile"
-        class="tw-flex tw-items-center tw-justify-between tw-p-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
       >
-        <div class="tw-flex tw-items-center">
-          <img src="/logo.png" alt="Cashbook" class="tw-h-8 tw-w-8" />
-          <span class="tw-ml-2 tw-text-lg tw-font-bold tw-text-green-500"
-            >Cashbook</span
-          >
+        <div class="flex items-center">
+          <img src="/logo.png" alt="Cashbook" class="h-8 w-8" />
+          <span class="ml-2 text-lg font-bold text-green-500">Cashbook</span>
         </div>
         <button
           @click="emit('close')"
-          class="tw-p-2 tw-rounded-md tw-text-gray-600 dark:tw-text-gray-400 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800"
+          class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          <XMarkIcon class="tw-h-6 tw-w-6" />
+          <XMarkIcon class="h-6 w-6" />
         </button>
       </div>
 
       <!-- Navigation -->
-      <nav class="tw-flex-1 tw-p-4 tw-space-y-2">
+      <nav class="flex-1 p-4 space-y-2">
         <button
           v-for="item in items"
           :key="item.path"
           @click="handleNavigate(item)"
           :class="[
-            'tw-w-full tw-flex tw-items-center tw-px-3 tw-py-2 tw-rounded-lg tw-text-left tw-transition-colors tw-duration-200',
+            'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200',
             currentPath === item.path
-              ? 'tw-bg-blue-50 dark:tw-bg-blue-900/20 tw-text-blue-600 dark:tw-text-blue-300 tw-border tw-border-blue-200 dark:tw-border-blue-700'
-              : 'tw-text-gray-700 dark:tw-text-gray-200 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800',
+              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800',
           ]"
         >
           <component
             v-if="item.icon !== 'string'"
             :is="item.icon"
             :class="[
-              'tw-h-5 tw-w-5 tw-mr-3',
+              'h-5 w-5 mr-3',
               currentPath === item.path
-                ? 'tw-text-blue-600 dark:tw-text-blue-400'
+                ? 'text-blue-600 dark:text-blue-400'
                 : item.color,
             ]"
           >
@@ -171,29 +170,24 @@ const handleNavigate = (menu: Menu) => {
             v-else
             :class="[
               item.icon,
-              'tw-text-base tw-mr-3',
+              'text-base mr-3',
               currentPath === item.path
-                ? 'tw-text-blue-600 dark:tw-text-blue-400'
+                ? 'text-blue-600 dark:text-blue-400'
                 : item.color,
             ]"
           ></i>
-          <span class="tw-font-medium">{{ item.title }}</span>
+          <span class="font-medium">{{ item.title }}</span>
         </button>
       </nav>
 
       <!-- Theme toggle -->
-      <div
-        class="tw-p-4 tw-border-t tw-border-gray-200 dark:tw-border-gray-700"
-      >
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700">
         <button
-          @click="emit('toggleTheme')"
-          class="tw-w-full tw-flex tw-items-center tw-justify-center tw-px-3 tw-py-2 tw-rounded-lg tw-text-gray-700 dark:tw-text-gray-200 hover:tw-bg-gray-100 dark:hover:tw-bg-gray-800 tw-transition-colors tw-font-medium"
+          @click="toggleTheme"
+          class="w-full flex items-center justify-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium"
         >
-          <SunIcon
-            v-if="!isDark"
-            class="tw-h-5 tw-w-5 tw-mr-2 tw-text-yellow-500"
-          />
-          <MoonIcon v-else class="tw-h-5 tw-w-5 tw-mr-2 tw-text-blue-300" />
+          <SunIcon v-if="!isDark" class="h-5 w-5 mr-2 text-yellow-500" />
+          <MoonIcon v-else class="h-5 w-5 mr-2 text-blue-300" />
           <span>{{ isDark ? "深色模式" : "浅色模式" }}</span>
         </button>
       </div>

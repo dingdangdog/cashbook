@@ -1,7 +1,7 @@
 <template>
   <div style="flex-direction: column" v-show="haveData">
     <div
-      class="tw-border tw-rounded-md tw-m-2 tw-bg-green-200/10 tw-border-green-500"
+      class="border rounded-md m-2 bg-green-200/10 border-green-500"
       v-show="
         monthData?.maxIn && monthData.maxIn?.money && monthData.maxIn.money > 0
       "
@@ -39,7 +39,7 @@
     </div>
 
     <div
-      class="tw-border tw-rounded-md tw-m-2 tw-bg-red-200/10 tw-border-red-400"
+      class="border rounded-md m-2 bg-red-200/10 border-red-400"
     >
       <div
         class="text-block"
@@ -85,7 +85,7 @@
     </div>
 
     <div
-      class="tw-border tw-rounded-md tw-m-2 tw-bg-gray-200/10 tw-border-gray-400"
+      class="border rounded-md m-2 bg-gray-200/10 border-gray-400"
     >
       <div class="text-block">
         <p style="margin: 0.5rem 0">

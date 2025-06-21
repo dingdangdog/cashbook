@@ -90,7 +90,7 @@ const toPath = (menu: Menu) => {
         <img
           src="/logo.png"
           height="40"
-          class="tw-rounded-full tw-overflow-hidden"
+          class="rounded-full overflow-hidden"
           alt="logo"
         />
       </v-btn>
@@ -102,13 +102,13 @@ const toPath = (menu: Menu) => {
             <img
               src="/logo.png"
               height="40"
-              class="tw-rounded-full tw-overflow-hidden"
+              class="rounded-full overflow-hidden"
               alt="logo"
             />
           </v-btn>
         </template>
         <v-list>
-          <v-list-item class="tw-cursor-pointer" @click="logout">
+          <v-list-item class="cursor-pointer" @click="logout">
             Logout
           </v-list-item>
         </v-list>
@@ -119,7 +119,7 @@ const toPath = (menu: Menu) => {
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
-          class="tw-cursor-pointer hover:tw-bg-gray-500/20"
+          class="cursor-pointer hover:bg-gray-500/20"
           :class="openMenu == item.path ? 'selected-menu' : ''"
           @click="!item.children ? toPath(item) : undefined"
         >
@@ -138,7 +138,7 @@ const toPath = (menu: Menu) => {
             <v-list-item
               v-for="(child, i2) in item.children"
               :key="i2"
-              class="tw-cursor-pointer hover:tw-bg-gray-500/20"
+              class="cursor-pointer hover:bg-gray-500/20"
               :class="openMenu == child.path ? 'selected-menu' : ''"
               @click="toPath(child)"
             >

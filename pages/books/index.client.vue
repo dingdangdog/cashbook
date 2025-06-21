@@ -113,9 +113,9 @@ const toShare = (item: Book) => {
 </script>
 
 <template>
-  <div class="tw-p-2">
-    <div class="tw-flex tw-items-center tw-space-x-2 tw-pb-2">
-      <div class="tw-w-80">
+  <div class="p-2">
+    <div class="flex items-center space-x-2 pb-2">
+      <div class="w-80">
         <v-text-field
           clearable
           label="账本名称"
@@ -140,7 +140,7 @@ const toShare = (item: Book) => {
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template v-slot:item.actions="{ item }">
-        <div class="tw-flex tw-space-x-2">
+        <div class="flex space-x-2">
           <v-icon color="success" @click="editItemInfo(item)">
             mdi-pencil
           </v-icon>

@@ -47,7 +47,7 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <div class="tw-w-full tw-flex tw-justify-center tw-space-x-4">
+          <div class="w-full flex justify-center space-x-4">
             <v-btn
               text="取消"
               variant="elevated"

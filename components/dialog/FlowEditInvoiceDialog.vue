@@ -105,9 +105,9 @@ const cancelDeleteInvoice = () => {
       <v-card-title>上传小票</v-card-title>
       <v-card-text>
         <!-- <v-text-field disabled label="流水ID" v-model="editInvoice.id" hide-details="auto"></v-text-field> -->
-        <div class="tw-flex tw-items-center">
-          <h4 class="tw-m-4">现有小票</h4>
-          <div class="tw-flex tw-space-x-2">
+        <div class="flex items-center">
+          <h4 class="m-4">现有小票</h4>
+          <div class="flex space-x-2">
             <div v-for="(img, index) in invoices" :key="index">
               <div
                 v-if="img"
@@ -121,7 +121,7 @@ const cancelDeleteInvoice = () => {
                   style="width: 100%; height: 100%"
                 >
                   <div
-                    class="tw-w-full tw-h-full tw-flex tw-bg-red-400/20 tw-justify-center tw-items-center"
+                    class="w-full h-full flex bg-red-400/20 justify-center items-center"
                     v-if="isHovering == img"
                   >
                     <v-icon color="error" size="large"> mdi-delete </v-icon>
@@ -132,9 +132,9 @@ const cancelDeleteInvoice = () => {
             <div v-if="invoices.length < 1">无</div>
           </div>
         </div>
-        <div class="tw-flex tw-items-center tw-mt-2">
-          <h4 class="tw-m-4 tw-w-16">新小票</h4>
-          <div class="tw-flex-1">
+        <div class="flex items-center mt-2">
+          <h4 class="m-4 w-16">新小票</h4>
+          <div class="flex-1">
             <v-file-input
               label="选择小票文件"
               variant="outlined"
@@ -150,7 +150,7 @@ const cancelDeleteInvoice = () => {
       </v-card-text>
       <hr />
       <v-card-actions>
-        <div class="tw-w-full tw-flex tw-justify-center tw-space-x-4">
+        <div class="w-full flex justify-center space-x-4">
           <v-btn color="error" variant="elevated" @click="closeDialog()"
             >取消
           </v-btn>
