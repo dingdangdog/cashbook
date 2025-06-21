@@ -158,7 +158,7 @@ const toPath = (menu: Menu) => {
     <v-main>
       <slot></slot>
     </v-main>
-    <GlobalAlert />
+
     <GlobalConfirm />
   </v-layout>
 </template>

@@ -173,9 +173,7 @@ const checkVersion = () => {
           isMobile ? 'pb-16' : '', // Add bottom padding for mobile bottom nav
         ]"
       >
-        <div class="">
-          <slot></slot>
-        </div>
+        <slot></slot>
       </main>
     </div>
 
@@ -187,7 +185,6 @@ const checkVersion = () => {
     />
 
     <!-- Global Components -->
-    <GlobalAlert />
     <GlobalConfirm />
 
     <!-- Dialogs -->
