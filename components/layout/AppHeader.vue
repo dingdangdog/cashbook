@@ -33,7 +33,7 @@ const showUserMenu = ref(false);
     class="bg-white dark:bg-green-950/40 shadow-sm border-b border-gray-200 dark:border-gray-700"
   >
     <div class="px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
+      <div class="flex justify-between h-12 md:h-16">
         <!-- Left side -->
         <div class="flex items-center">
           <!-- Mobile menu button -->
