@@ -159,7 +159,7 @@ const checkVersion = () => {
   </Head>
 
   <div
-    class="tw-min-h-screen tw-bg-gray-50 dark:tw-bg-gray-950 tw-transition-colors tw-duration-200"
+    class="tw-min-h-screen tw-p-0 tw-m-0 tw-bg-gray-50 dark:tw-bg-gray-950 tw-transition-colors tw-duration-200"
   >
     <!-- Header -->
     <LayoutAppHeader

@@ -46,9 +46,7 @@ const showUserMenu = ref(false);
           </button>
 
           <!-- Logo and brand -->
-          <div
-            class="tw-flex tw-items-center tw-ml-2 md:tw-ml-0 tw-hidden sm:tw-block"
-          >
+          <div class="tw-items-center tw-ml-2 md:tw-ml-0 tw-hidden sm:tw-flex">
             <img src="/logo.png" alt="Cashbook" class="tw-h-8 tw-w-8" />
             <span class="tw-ml-2 tw-text-xl tw-font-bold tw-text-green-500">
               Cashbook
