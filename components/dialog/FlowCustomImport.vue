@@ -1,172 +1,315 @@
 <template>
-  <v-card title="自定义流水导入">
-    <v-card-text>
-      <v-tabs v-model="tab" align-tabs="center">
-        <v-tab :value="1">1.文件信息</v-tab>
-        <v-tab :value="2">2.映射配置</v-tab>
-        <v-tab :value="3">3.数据预览</v-tab>
-      </v-tabs>
+  <!-- 自定义流水导入对话框 -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl mx-auto max-h-[90vh] overflow-y-auto"
+  >
+    <!-- 标题栏 -->
+    <div
+      class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        自定义流水导入
+      </h3>
+      <button
+        @click="closeDialog"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+      >
+        <XMarkIcon class="w-5 h-5" />
+      </button>
+    </div>
 
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item :value="1">
-          <v-select
-            v-model="fileType"
-            :items="fileTypes"
-            label="文件格式"
-            hide-details="auto"
-          ></v-select>
-          <v-select
-            v-model="fileEncoding"
-            :items="fileEncodings"
-            label="文件编码"
-            hide-details="auto"
-          ></v-select>
-          <v-text-field
-            v-model="titleRowLine"
-            label="标题行行数"
-            type="number"
-            hide-details="auto"
-          ></v-text-field>
+    <!-- 步骤导航 -->
+    <div class="border-b border-gray-200 dark:border-gray-700">
+      <nav class="flex justify-center space-x-8 px-4" aria-label="步骤">
+        <button
+          v-for="step in steps"
+          :key="step.id"
+          @click="tab = step.id"
+          :class="[
+            'py-4 px-2 border-b-2 font-medium text-sm transition-colors',
+            tab === step.id
+              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+          ]"
+        >
+          <span class="flex items-center gap-2">
+            <span
+              :class="[
+                'flex items-center justify-center w-6 h-6 rounded-full text-xs',
+                tab === step.id
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400',
+              ]"
+            >
+              {{ step.id }}
+            </span>
+            {{ step.title }}
+          </span>
+        </button>
+      </nav>
+    </div>
 
-          <div class="text-center my-4">
-            <v-btn color="primary" @click="toSecondTab()"> 下一步 </v-btn>
-          </div>
-        </v-tabs-window-item>
-        <v-tabs-window-item :value="2">
-          <div class="text-center my-4">
-            <v-btn
-              color="success"
-              class="flex-1"
-              @click="importCsvTemplate()"
+    <!-- 步骤内容 -->
+    <div class="p-6">
+      <!-- 步骤 1: 文件信息 -->
+      <div v-if="tab === 1" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 文件格式 -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
-              选择文件
-            </v-btn>
-          </div>
-          <div
-            class="max-h-[50vh] overflow-y-auto bg-gray-800/20 p-2 border rounded-md"
-          >
-            <div
-              v-if="csvHeaders.length === 0"
-              class="text-center my-4 text-red-500"
+              文件格式
+            </label>
+            <select
+              v-model="fileType"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              请先选择文件
-            </div>
-            <div
-              v-else
-              v-for="field in csvHeaders"
-              :key="field"
-              class="my-2"
+              <option v-for="type in fileTypes" :key="type" :value="type">
+                {{ type.toUpperCase() }}
+              </option>
+            </select>
+          </div>
+
+          <!-- 文件编码 -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
-              <h3 class="my-1 font-bold">{{ field }}</h3>
-              <v-autocomplete
-                class="mx-4"
-                v-model="targetFieldMapping[field]"
-                :items="targetFields"
-                label="选择系统目标字段"
-                hide-details="auto"
-              ></v-autocomplete>
-            </div>
+              文件编码
+            </label>
+            <select
+              v-model="fileEncoding"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option
+                v-for="encoding in fileEncodings"
+                :key="encoding"
+                :value="encoding"
+              >
+                {{ encoding }}
+              </option>
+            </select>
           </div>
-          <div
-            class="text-center my-4 flex justify-center space-x-4"
+
+          <!-- 标题行行数 -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              标题行行数
+            </label>
+            <input
+              v-model.number="titleRowLine"
+              type="number"
+              min="1"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        <div class="text-center pt-4">
+          <button
+            @click="toSecondTab"
+            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            <v-btn color="secondary" @click="toFirstTab()"> 上一步 </v-btn>
-            <v-btn color="primary" @click="toLastTab()"> 下一步 </v-btn>
-          </div>
-        </v-tabs-window-item>
-        <v-tabs-window-item :value="3">
-          <div class="text-center my-4">
-            <v-btn
-              color="success"
-              @click="readCsvInfo"
-              :disabled="
-                !csvFile || Object.keys(targetFieldMapping).length === 0
-              "
-              >解析数据
-            </v-btn>
-          </div>
-          <div
-            v-if="csvHeaders.length === 0"
-            class="text-center my-4 text-red-500"
+            下一步
+          </button>
+        </div>
+      </div>
+
+      <!-- 步骤 2: 映射配置 -->
+      <div v-if="tab === 2" class="space-y-4">
+        <!-- 文件选择 -->
+        <div class="text-center">
+          <input
+            ref="csvFileInput"
+            type="file"
+            :accept="`.${fileType}`"
+            @change="onFileChange"
+            class="hidden"
+          />
+          <button
+            @click="importCsvTemplate"
+            class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2 mx-auto"
           >
+            <DocumentArrowUpIcon class="h-5 w-5" />
+            选择文件
+          </button>
+        </div>
+
+        <!-- 字段映射配置 -->
+        <div v-if="csvHeaders.length === 0" class="text-center py-8">
+          <div class="text-red-500 dark:text-red-400">
+            <ExclamationTriangleIcon class="h-8 w-8 mx-auto mb-2" />
             请先选择文件
           </div>
-          <div class="max-h-[50vh] overflow-auto table-container">
-            <div
-              v-show="showCsvTable"
-              class="excel-table flex justify-center"
-            >
-              <table ref="excelTable" class="flex flex-col">
-                <thead ref="excelTableHead"></thead>
-                <tbody
-                  ref="excelTableBody"
-                  class="flex-1 overflow-y-auto"
-                ></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="text-center my-4">
-            <v-btn color="secondary" @click="toSecondTab()"> 上一步 </v-btn>
-          </div>
-        </v-tabs-window-item>
-      </v-tabs-window>
-
-      <v-file-input
-        ref="csvFileInput"
-        label="选择账单CSV文件"
-        variant="outlined"
-        :accept="`.${fileType}`"
-        small-chips
-        hide-details="auto"
-        show-size
-        v-model="csvFile"
-        @update:model-value="readCsvHeader()"
-        v-show="false"
-      ></v-file-input>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="error" variant="elevated" @click="closeDialog">关闭</v-btn>
-      <v-btn
-        variant="elevated"
-        :loading="uploading"
-        color="primary"
-        @click="submitUpload"
-        :disabled="csvFlows.length === 0"
-        >导入数据</v-btn
-      >
-    </v-card-actions>
-
-    <v-dialog v-model="showFlowExcelImportDialog" :fullscreen="true">
-      <v-card>
-        <v-card-title
-          style="width: 100%; display: flex; justify-content: space-between"
+        </div>
+        <div
+          v-else
+          class="max-h-96 overflow-y-auto bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border"
         >
-          <h3>CSV流水导入</h3>
-          <v-btn
-            variant="elevated"
-            icon="mdi-close"
-            color="error"
-            @click="closeCsvTableDialog()"
+          <div
+            v-for="field in csvHeaders"
+            :key="field"
+            class="mb-4 p-3 bg-white dark:bg-gray-800 rounded border"
           >
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <DatasCsvFlowTable
-            :items="csvFlows"
-            :table-head="csvHeaders"
-            :table-body="csvDatas"
-            :success-callback="importSuccess"
-          />
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </v-card>
+            <h4 class="font-medium text-gray-900 dark:text-white mb-2">
+              {{ field }}
+            </h4>
+            <select
+              v-model="targetFieldMapping[field]"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">请选择目标字段</option>
+              <option
+                v-for="targetField in targetFields"
+                :key="targetField.value"
+                :value="targetField.value"
+              >
+                {{ targetField.title }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex justify-center gap-4 pt-4">
+          <button
+            @click="toFirstTab"
+            class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            上一步
+          </button>
+          <button
+            @click="toLastTab"
+            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            下一步
+          </button>
+        </div>
+      </div>
+
+      <!-- 步骤 3: 数据预览 -->
+      <div v-if="tab === 3" class="space-y-4">
+        <div class="text-center">
+          <button
+            @click="readCsvInfo"
+            :disabled="!csvFile || Object.keys(targetFieldMapping).length === 0"
+            class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2 mx-auto"
+          >
+            <MagnifyingGlassIcon class="h-5 w-5" />
+            解析数据
+          </button>
+        </div>
+
+        <!-- 数据预览表格 -->
+        <div v-if="csvHeaders.length === 0" class="text-center py-8">
+          <div class="text-red-500 dark:text-red-400">
+            <ExclamationTriangleIcon class="h-8 w-8 mx-auto mb-2" />
+            请先选择文件
+          </div>
+        </div>
+        <div
+          v-else-if="showCsvTable"
+          class="max-h-96 overflow-auto border rounded-lg"
+        >
+          <div class="excel-table">
+            <table ref="excelTable" class="min-w-full">
+              <thead
+                ref="excelTableHead"
+                class="bg-gray-50 dark:bg-gray-700 sticky top-0"
+              ></thead>
+              <tbody
+                ref="excelTableBody"
+                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+              ></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="text-center pt-4">
+          <button
+            @click="toSecondTab"
+            class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            上一步
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部操作按钮 -->
+    <div
+      class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+    >
+      <button
+        @click="closeDialog"
+        class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+      >
+        关闭
+      </button>
+      <button
+        @click="submitUpload"
+        :disabled="csvFlows.length === 0 || uploading"
+        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+      >
+        <div
+          v-if="uploading"
+          class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+        ></div>
+        {{ uploading ? "导入中..." : "导入数据" }}
+      </button>
+    </div>
+  </div>
+
+  <!-- 全屏CSV表格对话框 -->
+  <div
+    v-if="showFlowExcelImportDialog"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    @click.self="closeCsvTableDialog"
+  >
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl mx-auto max-h-[90vh] overflow-y-auto"
+      @click.stop
+    >
+      <!-- 标题栏 -->
+      <div
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          CSV 流水导入
+        </h3>
+        <button
+          @click="closeCsvTableDialog"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        >
+          <XMarkIcon class="w-5 h-5" />
+        </button>
+      </div>
+
+      <!-- 表格内容 -->
+      <div class="p-4">
+        <DatasCsvFlowTable
+          :items="csvFlows"
+          :table-head="csvHeaders"
+          :table-body="csvDatas"
+          :success-callback="importSuccess"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import * as XLSX from "xlsx";
 import { showFlowExcelImportDialog } from "~/utils/flag";
+import { ref, onMounted } from "vue";
+import {
+  XMarkIcon,
+  DocumentArrowUpIcon,
+  ExclamationTriangleIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/vue/24/outline";
 
 // Define Flow interface
 interface Flow {
@@ -182,14 +325,21 @@ interface Flow {
 
 const emits = defineEmits(["success-callback", "close"]);
 
+// 步骤配置
+const steps = [
+  { id: 1, title: "文件信息" },
+  { id: 2, title: "映射配置" },
+  { id: 3, title: "数据预览" },
+];
+
 const fileType = ref("csv");
 const fileTypes = ["csv", "xlsx", "xls"];
 const fileEncoding = ref("UTF8");
 const fileEncodings = ["UTF8", "GB2312"];
 const titleRowLine = ref(1);
 const tab = ref(1);
-const csvFileInput = ref();
-const csvFile = ref();
+const csvFileInput = ref<HTMLInputElement>();
+const csvFile = ref<File | null>(null);
 
 const csvFlows = ref<Flow[]>([]);
 const csvHeaders = ref<string[]>([]);
@@ -210,10 +360,17 @@ const targetFieldMapping = ref<Record<string, string>>({});
 const headerIndexMap = ref<Record<string, number>>({});
 
 const importCsvTemplate = () => {
-  if (!csvFileInput.value) {
-    return;
+  csvFileInput.value?.click();
+};
+
+// 文件选择处理
+const onFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    csvFile.value = file;
+    readCsvHeader();
   }
-  csvFileInput.value.click();
 };
 
 const readCsvHeader = () => {
@@ -461,9 +618,6 @@ const showCsvTable = ref(false);
 
 /**
  * 根据映射配置转换数据
- * @param row 原始数据行
- * @param indexMap 列索引映射
- * @param fieldMapping 字段映射配置
  */
 const customConvert = (
   row: any[],
@@ -584,7 +738,6 @@ const submitUpload = () => {
       bookId: localStorage.getItem("bookId"),
     })
     .then((res: any) => {
-      // console.log(res)
       if (res && res.count > 0) {
         Alert.success("导入成功, 共导入" + res.count + "条流水");
         emits("success-callback");
@@ -623,9 +776,9 @@ const importSuccess = () => {
   emits("success-callback");
 };
 
-const excelTable = ref();
-const excelTableHead = ref();
-const excelTableBody = ref();
+const excelTable = ref<HTMLTableElement>();
+const excelTableHead = ref<HTMLTableSectionElement>();
+const excelTableBody = ref<HTMLTableSectionElement>();
 
 // 渲染表格
 const renderTable = () => {
@@ -641,22 +794,18 @@ const renderTable = () => {
     // 创建表头单元格元素
     const th = document.createElement("th");
     th.innerText = h;
-    th.className = "excel-th";
+    th.className =
+      "px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600";
     th.title = h; // 添加title属性，方便鼠标悬停查看完整内容
     head.appendChild(th);
   }
   excelTableHead.value.appendChild(head);
 
-  // 计算表格宽度
-  const tableWidth = csvHeaders.value.length * 8; // 每列8rem
-  if (excelTable.value) {
-    excelTable.value.style.width = `${tableWidth}rem`;
-  }
-
   // 渲染表体
   for (let row of csvDatas.value) {
     // 创建行元素
     const tr = document.createElement("tr");
+    tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700";
 
     // 部分数据字段格式化，并回显
     for (let i = 0; i < row.length; i++) {
@@ -665,7 +814,8 @@ const renderTable = () => {
       const td = document.createElement("td");
       const displayValue = cellValue !== undefined ? String(cellValue) : "";
       td.innerText = displayValue;
-      td.className = "excel-td";
+      td.className =
+        "px-4 py-2 text-sm text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600 max-w-32 truncate";
       td.title = displayValue; // 添加title属性，方便鼠标悬停查看完整内容
       tr.appendChild(td);
     }
@@ -703,71 +853,39 @@ const toLastTab = () => {
 };
 </script>
 
-<style>
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  position: relative;
-}
-
+<style scoped>
 .excel-table {
   border-collapse: collapse;
-  margin: 0 auto;
-  max-height: 80vh;
-  min-width: 100%;
-  table-layout: fixed;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.excel-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background-color: rgba(10, 10, 10, 0.3);
-}
-
-.excel-table tbody {
-  display: block;
-  overflow-y: auto;
-  overflow-x: visible;
-  max-height: 40vh;
-}
-
-.excel-table tr {
-  display: table;
   width: 100%;
-  table-layout: fixed;
 }
 
-.excel-table tbody tr:nth-child(odd) {
-  background-color: rgba(70, 70, 70, 0.3);
-}
-
-.excel-table tbody tr:nth-child(even) {
-  background-color: rgba(30, 30, 30, 0.3);
-}
-
-.excel-th {
-  min-width: 8rem;
-  padding: 0.5rem;
-  border-collapse: collapse;
-  border: 1px solid;
-  background-color: rgba(10, 10, 10, 0.3);
+.excel-table th,
+.excel-table td {
   text-align: left;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.excel-td {
-  min-width: 8rem;
-  max-width: 8rem;
-  padding: 0.2rem;
-  border-collapse: collapse;
-  border-bottom: 1px solid;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+/* 自定义滚动条样式 */
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
 }
 </style>

@@ -9,6 +9,7 @@ import { del, page } from "./api";
 import { editInfoFlag, showGetShareDialog } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
 import GetShareDialog from "./GetShareDialog.vue";
+import { generateMobileFriendlyPageNumbers } from "~/utils/common";
 import {
   PencilIcon,
   ShareIcon,
@@ -163,33 +164,9 @@ const totalPages = computed(() =>
   Math.ceil((tabledata.value?.total || 0) / pageQuery.value.pageSize)
 );
 
-const pageNumbers = computed(() => {
-  const total = totalPages.value;
-  const current = pageQuery.value.pageNum;
-  const delta = 2;
-  const range = [];
-
-  for (
-    let i = Math.max(2, current - delta);
-    i <= Math.min(total - 1, current + delta);
-    i++
-  ) {
-    range.push(i);
-  }
-
-  if (current - delta > 2) {
-    range.unshift("...");
-  }
-  if (current + delta < total - 1) {
-    range.push("...");
-  }
-
-  range.unshift(1);
-  if (total > 1) {
-    range.push(total);
-  }
-
-  return range;
+// 移动端友好的页码生成
+const mobileFriendlyPageNumbers = computed(() => {
+  return generateMobileFriendlyPageNumbers(pageQuery.value.pageNum, totalPages.value, 3);
 });
 
 // 在组件挂载时获取数据
@@ -562,19 +539,19 @@ onMounted(() => {
               <button
                 @click="changePage(pageQuery.pageNum - 1)"
                 :disabled="pageQuery.pageNum <= 1"
-                class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
                 title="上一页"
               >
-                <ChevronLeftIcon class="h-4 w-4" />
+                <ChevronLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
 
-              <!-- 页码按钮 -->
-              <template v-for="(page, index) in pageNumbers" :key="index">
+              <!-- 页码按钮 - 移动端限制显示数量 -->
+              <template v-for="(page, index) in mobileFriendlyPageNumbers" :key="index">
                 <button
                   v-if="page !== '...'"
                   @click="changePage(Number(page))"
                   :class="[
-                    'h-8 w-8 text-center text-sm border rounded transition-colors',
+                    'h-7 w-7 sm:h-8 sm:w-8 text-center text-xs sm:text-sm border rounded transition-colors',
                     page === pageQuery.pageNum
                       ? 'bg-blue-600 text-white border-blue-600'
                       : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 bg-white dark:bg-gray-800 text-green-950 dark:text-white',
@@ -582,17 +559,17 @@ onMounted(() => {
                 >
                   {{ page }}
                 </button>
-                <span v-else class="px-2 text-gray-500">...</span>
+                <span v-else class="px-1 text-gray-500 text-xs">...</span>
               </template>
 
               <!-- 下一页 -->
               <button
                 @click="changePage(pageQuery.pageNum + 1)"
                 :disabled="pageQuery.pageNum >= totalPages"
-                class="h-8 w-8 p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
                 title="下一页"
               >
-                <ChevronRightIcon class="h-4 w-4" />
+                <ChevronRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
             </div>
           </div>

@@ -1,27 +1,52 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg">
+  <div
+    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg"
+  >
     <!-- 查询条件显示 -->
-    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <div
+      class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+    >
       <div class="flex flex-wrap gap-2 text-sm">
-        <span v-if="flowQuery.startDay" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+        <span
+          v-if="flowQuery.startDay"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+        >
           开始: {{ flowQuery.startDay }}
         </span>
-        <span v-if="flowQuery.endDay" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+        <span
+          v-if="flowQuery.endDay"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+        >
           结束: {{ flowQuery.endDay }}
         </span>
-        <span v-if="flowQuery.flowType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400">
+        <span
+          v-if="flowQuery.flowType"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
+        >
           {{ flowQuery.flowType }}
         </span>
-        <span v-if="flowQuery.industryType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+        <span
+          v-if="flowQuery.industryType"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+        >
           {{ flowQuery.industryType }}
         </span>
-        <span v-if="flowQuery.payType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+        <span
+          v-if="flowQuery.payType"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+        >
           {{ flowQuery.payType }}
         </span>
-        <span v-if="flowQuery.attribution" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+        <span
+          v-if="flowQuery.attribution"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+        >
           {{ flowQuery.attribution }}
         </span>
-        <span v-if="!hasFilters" class="text-gray-500 dark:text-gray-400 text-xs">
+        <span
+          v-if="!hasFilters"
+          class="text-gray-500 dark:text-gray-400 text-xs"
+        >
           显示全部数据
         </span>
       </div>
@@ -29,14 +54,19 @@
 
     <!-- 加载状态 -->
     <div v-if="loading" class="flex justify-center items-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+      ></div>
       <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
     </div>
 
     <!-- 表格内容 -->
     <div v-else class="flow-container">
       <!-- 桌面端表格 -->
-      <div class="hidden lg:block overflow-x-auto" :style="{ height: getTableHeight() + 'px' }">
+      <div
+        class="hidden lg:block overflow-x-auto"
+        :style="{ height: getTableHeight() + 'px' }"
+      >
         <table class="w-full">
           <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
             <tr class="border-b border-gray-200 dark:border-gray-600">
@@ -44,28 +74,45 @@
                 v-for="header in headers"
                 :key="header.key"
                 class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                :class="header.key === 'money' ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600' : ''"
+                :class="
+                  header.key === 'money'
+                    ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600'
+                    : ''
+                "
                 @click="header.key === 'money' ? toggleSort() : null"
               >
                 <div class="flex items-center gap-1">
                   {{ header.title }}
                   <div v-if="header.key === 'money'" class="flex flex-col">
-                    <ChevronUpIcon 
-                      class="h-3 w-3" 
-                      :class="flowQuery.moneySort === 'asc' ? 'text-blue-600' : 'text-gray-400'"
+                    <ChevronUpIcon
+                      class="h-3 w-3"
+                      :class="
+                        flowQuery.moneySort === 'asc'
+                          ? 'text-blue-600'
+                          : 'text-gray-400'
+                      "
                     />
-                    <ChevronDownIcon 
-                      class="h-3 w-3 -mt-0.5" 
-                      :class="flowQuery.moneySort === 'desc' ? 'text-blue-600' : 'text-gray-400'"
+                    <ChevronDownIcon
+                      class="h-3 w-3 -mt-0.5"
+                      :class="
+                        flowQuery.moneySort === 'desc'
+                          ? 'text-blue-600'
+                          : 'text-gray-400'
+                      "
                     />
                   </div>
                 </div>
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-600 overflow-y-auto">
+          <tbody
+            class="divide-y divide-gray-200 dark:divide-gray-600 overflow-y-auto"
+          >
             <tr v-if="flowPageRef.data.length === 0">
-              <td :colspan="headers.length" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+              <td
+                :colspan="headers.length"
+                class="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
+              >
                 暂无数据
               </td>
             </tr>
@@ -75,16 +122,26 @@
               :key="item.id"
               class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">
+              <td
+                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap"
+              >
                 {{ item.day }}
               </td>
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">
+              <td
+                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap"
+              >
                 {{ item.flowType }}
               </td>
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.industryType">
+              <td
+                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                :title="item.industryType"
+              >
                 {{ item.industryType }}
               </td>
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.payType">
+              <td
+                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                :title="item.payType"
+              >
                 {{ item.payType }}
               </td>
               <td class="px-3 py-2 whitespace-nowrap">
@@ -99,10 +156,16 @@
                   {{ Number(item.money || 0).toFixed(2) }}
                 </span>
               </td>
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.name">
+              <td
+                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                :title="item.name"
+              >
                 {{ item.name }}
               </td>
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.description">
+              <td
+                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                :title="item.description"
+              >
                 {{ item.description }}
               </td>
             </tr>
@@ -111,8 +174,14 @@
       </div>
 
       <!-- 移动端卡片 -->
-      <div class="lg:hidden" :style="{ height: getTableHeight() + 'px' }" class="overflow-y-auto">
-        <div v-if="flowPageRef.data.length === 0" class="p-8 text-center text-gray-500 dark:text-gray-400">
+      <div
+        class="lg:hidden overflow-y-auto"
+        :style="{ height: getTableHeight() + 'px' }"
+      >
+        <div
+          v-if="flowPageRef.data.length === 0"
+          class="p-8 text-center text-gray-500 dark:text-gray-400"
+        >
           暂无数据
         </div>
         <div
@@ -123,8 +192,12 @@
         >
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1">
-              <h3 class="text-sm font-medium text-green-950 dark:text-white">{{ item.name }}</h3>
-              <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{ item.day }}</p>
+              <h3 class="text-sm font-medium text-green-950 dark:text-white">
+                {{ item.name }}
+              </h3>
+              <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                {{ item.day }}
+              </p>
             </div>
             <span
               :class="[
@@ -140,13 +213,19 @@
           <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
             <p v-if="item.description">{{ item.description }}</p>
             <div class="flex flex-wrap gap-1">
-              <span class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded">
+              <span
+                class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded"
+              >
                 {{ item.flowType }}
               </span>
-              <span class="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-1.5 py-0.5 rounded">
+              <span
+                class="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-1.5 py-0.5 rounded"
+              >
                 {{ item.industryType }}
               </span>
-              <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded">
+              <span
+                class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded"
+              >
                 {{ item.payType }}
               </span>
             </div>
@@ -161,28 +240,42 @@
       <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700">
         <!-- 统计信息 -->
         <div class="flex flex-wrap gap-2 mb-3">
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+          <span
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+          >
             总收入: ¥{{ Number(flowPageRef.totalIn || 0).toFixed(2) }}
           </span>
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+          <span
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+          >
             总支出: ¥{{ Number(flowPageRef.totalOut || 0).toFixed(2) }}
           </span>
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+          <span
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+          >
             不计收支: ¥{{ Number(flowPageRef.notInOut || 0).toFixed(2) }}
           </span>
         </div>
 
-                 <!-- 分页控件 -->
-         <div v-if="flowPageRef.total > (flowQuery.pageSize || 20)" class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-           <!-- 分页信息 -->
-           <div class="text-sm text-gray-700 dark:text-gray-300">
-             显示第 {{ (currentPage - 1) * (flowQuery.pageSize || 20) + 1 }} - 
-             {{ Math.min(currentPage * (flowQuery.pageSize || 20), flowPageRef.total) }} 条，
-             共 {{ flowPageRef.total }} 条记录
-           </div>
+        <!-- 分页控件 -->
+        <div
+          v-if="flowPageRef.total > (flowQuery.pageSize || 20)"
+          class="flex flex-col gap-3"
+        >
+          <!-- 分页信息 -->
+          <div class="text-sm text-gray-700 dark:text-gray-300 text-center">
+            显示第 {{ (currentPage - 1) * (flowQuery.pageSize || 20) + 1 }} -
+            {{
+              Math.min(
+                currentPage * (flowQuery.pageSize || 20),
+                flowPageRef.total
+              )
+            }}
+            条， 共 {{ flowPageRef.total }} 条记录
+          </div>
 
           <!-- 分页操作 -->
-          <div class="flex items-center gap-2">
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <!-- 每页显示数量 -->
             <select
               v-model="flowQuery.pageSize"
@@ -200,22 +293,34 @@
               <button
                 @click="changePage(currentPage - 1)"
                 :disabled="currentPage <= 1"
-                class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
               >
-                <ChevronLeftIcon class="h-4 w-4" />
+                <ChevronLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
 
-              <!-- 页码显示 -->
-              <span class="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-                {{ currentPage }} / {{ totalPages }}
-              </span>
+              <!-- 移动端友好的页码按钮 -->
+              <template v-for="(page, index) in mobileFriendlyPageNumbers" :key="index">
+                <button
+                  v-if="page !== '...'"
+                  @click="changePage(Number(page))"
+                  :class="[
+                    'h-7 w-7 sm:h-8 sm:w-8 text-center text-xs sm:text-sm border rounded transition-colors',
+                    page === currentPage
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 bg-white dark:bg-gray-800 text-green-950 dark:text-white',
+                  ]"
+                >
+                  {{ page }}
+                </button>
+                <span v-else class="px-1 text-gray-500 text-xs">...</span>
+              </template>
 
               <button
                 @click="changePage(currentPage + 1)"
                 :disabled="currentPage >= totalPages"
-                class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
               >
-                <ChevronRightIcon class="h-4 w-4" />
+                <ChevronRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
             </div>
           </div>
@@ -226,13 +331,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/vue/24/outline";
+import { generateMobileFriendlyPageNumbers } from "~/utils/common";
 
 const { query } = defineProps(["query"]);
 
@@ -304,7 +410,9 @@ const flowPageRef = ref<Page<Flow>>({
 
 // 计算属性
 const currentPage = computed(() => flowQuery.value.pageNum || 1);
-const totalPages = computed(() => Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20)));
+const totalPages = computed(() =>
+  Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20))
+);
 
 const hasFilters = computed(() => {
   return !!(
@@ -315,6 +423,11 @@ const hasFilters = computed(() => {
     flowQuery.value.payType ||
     flowQuery.value.attribution
   );
+});
+
+// 生成移动端友好的页码
+const mobileFriendlyPageNumbers = computed(() => {
+  return generateMobileFriendlyPageNumbers(currentPage.value, totalPages.value, 3);
 });
 
 // 排序切换
@@ -365,6 +478,11 @@ const getTableHeight = () => {
     ? window.innerHeight - 64 * 5.5
     : window.innerHeight - 64 * 6;
 };
+
+// 组件挂载时初始化数据
+onMounted(() => {
+  doQuery();
+});
 
 // 暴露方法给父组件调用
 defineExpose({

@@ -292,14 +292,13 @@
       class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
     >
       <div class="flex flex-col gap-4">
-        <!-- 分页控件 - 水平居中 -->
-        <div class="flex items-center justify-center gap-4">
-          <!-- 分页信息 -->
-          <div
-            class="hidden md:block text-sm text-gray-700 dark:text-gray-300 text-center"
-          >
-            共 {{ total }} 条记录
-          </div>
+        <!-- 分页信息 -->
+        <div class="text-sm text-gray-700 dark:text-gray-300 text-center">
+          共 {{ total }} 条记录
+        </div>
+
+        <!-- 分页控件 - 响应式布局 -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
           <!-- 每页显示数量选择 -->
           <select
             :value="pageSize"
@@ -322,19 +321,19 @@
             <button
               @click="$emit('changePage', currentPage - 1)"
               :disabled="currentPage <= 1"
-              class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+              class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
               title="上一页"
             >
-              <ChevronLeftIcon class="h-4 w-4" />
+              <ChevronLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
             </button>
 
-            <!-- 页码按钮 -->
-            <template v-for="(page, index) in pageNumbers" :key="index">
+            <!-- 页码按钮 - 移动端限制显示数量 -->
+            <template v-for="(page, index) in mobileFriendlyPageNumbers" :key="index">
               <button
                 v-if="page !== '...'"
                 @click="$emit('changePage', Number(page))"
                 :class="[
-                  'h-8 w-8 text-center text-sm border rounded transition-colors',
+                  'h-7 w-7 sm:h-8 sm:w-8 text-center text-xs sm:text-sm border rounded transition-colors',
                   page === currentPage
                     ? 'bg-blue-600 text-white border-blue-600'
                     : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 bg-white dark:bg-gray-800 text-green-950 dark:text-white',
@@ -342,17 +341,17 @@
               >
                 {{ page }}
               </button>
-              <span v-else class="px-2 text-gray-500">...</span>
+              <span v-else class="px-1 text-gray-500 text-xs">...</span>
             </template>
 
             <!-- 下一页 -->
             <button
               @click="$emit('changePage', currentPage + 1)"
               :disabled="currentPage >= totalPages"
-              class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+              class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
               title="下一页"
             >
-              <ChevronRightIcon class="h-4 w-4" />
+              <ChevronRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
             </button>
           </div>
         </div>
@@ -362,12 +361,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PencilIcon,
   TrashIcon,
 } from "@heroicons/vue/24/outline";
+import { generateMobileFriendlyPageNumbers } from "~/utils/common";
 
 interface FlowItem {
   id: string | number;
@@ -393,7 +394,12 @@ interface Props {
   loading?: boolean;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+// 生成移动端友好的页码
+const mobileFriendlyPageNumbers = computed(() => {
+  return generateMobileFriendlyPageNumbers(props.currentPage, props.totalPages, 3);
+});
 
 defineEmits<{
   toggleSelectAll: [];
