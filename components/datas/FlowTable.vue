@@ -1,102 +1,238 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <div>
-        <span class="mx-1" v-show="flowQuery.startDay">{{
-          flowQuery.startDay
-        }}</span>
-        <span class="mx-1" v-show="flowQuery.endDay">{{
-          flowQuery.endDay
-        }}</span>
-        <span class="mx-1" v-show="flowQuery.flowType">{{
-          flowQuery.flowType
-        }}</span>
-        <span class="mx-1" v-show="flowQuery.industryType">{{
-          flowQuery.industryType
-        }}</span>
-        <span class="mx-1" v-show="flowQuery.payType">{{
-          flowQuery.payType
-        }}</span>
-        <span class="mx-1" v-show="flowQuery.attribution">{{
-          flowQuery.attribution
-        }}</span>
+  <div class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg">
+    <!-- 查询条件显示 -->
+    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+      <div class="flex flex-wrap gap-2 text-sm">
+        <span v-if="flowQuery.startDay" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+          开始: {{ flowQuery.startDay }}
+        </span>
+        <span v-if="flowQuery.endDay" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+          结束: {{ flowQuery.endDay }}
+        </span>
+        <span v-if="flowQuery.flowType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400">
+          {{ flowQuery.flowType }}
+        </span>
+        <span v-if="flowQuery.industryType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+          {{ flowQuery.industryType }}
+        </span>
+        <span v-if="flowQuery.payType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+          {{ flowQuery.payType }}
+        </span>
+        <span v-if="flowQuery.attribution" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+          {{ flowQuery.attribution }}
+        </span>
+        <span v-if="!hasFilters" class="text-gray-500 dark:text-gray-400 text-xs">
+          显示全部数据
+        </span>
       </div>
-    </v-card-title>
-    <v-card-text>
-      <!-- 流水表格，用于其他页面引用，不是流水管理页面的表格 -->
-      <div class="flow-container">
-        <!-- 表格主体数据列表 -->
-        <div>
-          <v-data-table-server
-            :height="getTableHeight()"
-            noDataText="暂无数据"
-            :items-per-page="flowQuery.pageSize"
-            :items="flowPageRef.data"
-            :itemsLength="flowPageRef.total"
-            :headers="headers"
-            :loading="loading"
-            @update:options="changePage"
-          >
-            <template v-slot:item.day="{ value }">
-              <p class="common-text-column" :title="value">
-                {{ value }}
-              </p>
-            </template>
-            <template v-slot:item.flowType="{ value }">
-              <p class="common-text-column" :title="value">
-                {{ value }}
-              </p>
-            </template>
-            <template v-slot:item.type="{ value }">
-              <p class="common-text-column" :title="value">
-                {{ value }}
-              </p>
-            </template>
-            <template v-slot:item.payType="{ value }">
-              <p class="common-text-column" :title="value">
-                {{ value }}
-              </p>
-            </template>
-            <template v-slot:item.money="{ value }">
-              <v-chip :color="value > 100 ? 'error' : 'warning'">{{
-                value
-              }}</v-chip>
-            </template>
-            <template v-slot:item.name="{ value }">
-              <p class="common-text-column" :title="value">
-                {{ value }}
-              </p>
-            </template>
-            <template v-slot:item.description="{ value }">
-              <p class="common-text-column" :title="value">
-                {{ value }}
-              </p>
-            </template>
-          </v-data-table-server>
+    </div>
+
+    <!-- 加载状态 -->
+    <div v-if="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
+    </div>
+
+    <!-- 表格内容 -->
+    <div v-else class="flow-container">
+      <!-- 桌面端表格 -->
+      <div class="hidden lg:block overflow-x-auto" :style="{ height: getTableHeight() + 'px' }">
+        <table class="w-full">
+          <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
+            <tr class="border-b border-gray-200 dark:border-gray-600">
+              <th
+                v-for="header in headers"
+                :key="header.key"
+                class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                :class="header.key === 'money' ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600' : ''"
+                @click="header.key === 'money' ? toggleSort() : null"
+              >
+                <div class="flex items-center gap-1">
+                  {{ header.title }}
+                  <div v-if="header.key === 'money'" class="flex flex-col">
+                    <ChevronUpIcon 
+                      class="h-3 w-3" 
+                      :class="flowQuery.moneySort === 'asc' ? 'text-blue-600' : 'text-gray-400'"
+                    />
+                    <ChevronDownIcon 
+                      class="h-3 w-3 -mt-0.5" 
+                      :class="flowQuery.moneySort === 'desc' ? 'text-blue-600' : 'text-gray-400'"
+                    />
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-600 overflow-y-auto">
+            <tr v-if="flowPageRef.data.length === 0">
+              <td :colspan="headers.length" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                暂无数据
+              </td>
+            </tr>
+            <tr
+              v-else
+              v-for="item in flowPageRef.data"
+              :key="item.id"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                {{ item.day }}
+              </td>
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                {{ item.flowType }}
+              </td>
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.industryType">
+                {{ item.industryType }}
+              </td>
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.payType">
+                {{ item.payType }}
+              </td>
+              <td class="px-3 py-2 whitespace-nowrap">
+                <span
+                  :class="[
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                    Number(item.money) > 100
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+                  ]"
+                >
+                  {{ Number(item.money || 0).toFixed(2) }}
+                </span>
+              </td>
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.name">
+                {{ item.name }}
+              </td>
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate" :title="item.description">
+                {{ item.description }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 移动端卡片 -->
+      <div class="lg:hidden" :style="{ height: getTableHeight() + 'px' }" class="overflow-y-auto">
+        <div v-if="flowPageRef.data.length === 0" class="p-8 text-center text-gray-500 dark:text-gray-400">
+          暂无数据
         </div>
-        <hr />
-        <!-- 表格分页插件 -->
-        <div style="margin-top: 0.5rem">
-          <span class="pageSpan">
-            <v-chip color="rgb(76, 152, 112)">
-              总收入：<b>{{ Number(flowPageRef.totalIn.toFixed(2)) }}</b>
-            </v-chip>
-            <v-chip color="rgb(217, 159, 8)">
-              总支出：<b>{{ Number(flowPageRef.totalOut.toFixed(2)) }}</b>
-            </v-chip>
-            <v-chip color="rgb(120, 120, 120)">
-              不计收支：<b>{{ Number(flowPageRef.notInOut.toFixed(2)) }}</b>
-            </v-chip>
+        <div
+          v-else
+          v-for="item in flowPageRef.data"
+          :key="item.id"
+          class="p-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          <div class="flex justify-between items-start mb-2">
+            <div class="flex-1">
+              <h3 class="text-sm font-medium text-green-950 dark:text-white">{{ item.name }}</h3>
+              <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{ item.day }}</p>
+            </div>
+            <span
+              :class="[
+                'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                Number(item.money) > 100
+                  ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                  : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+              ]"
+            >
+              {{ Number(item.money || 0).toFixed(2) }}
+            </span>
+          </div>
+          <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+            <p v-if="item.description">{{ item.description }}</p>
+            <div class="flex flex-wrap gap-1">
+              <span class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded">
+                {{ item.flowType }}
+              </span>
+              <span class="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-1.5 py-0.5 rounded">
+                {{ item.industryType }}
+              </span>
+              <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded">
+                {{ item.payType }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分隔线 -->
+      <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+      <!-- 统计信息和分页 -->
+      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700">
+        <!-- 统计信息 -->
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+            总收入: ¥{{ Number(flowPageRef.totalIn || 0).toFixed(2) }}
+          </span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+            总支出: ¥{{ Number(flowPageRef.totalOut || 0).toFixed(2) }}
+          </span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+            不计收支: ¥{{ Number(flowPageRef.notInOut || 0).toFixed(2) }}
           </span>
         </div>
+
+                 <!-- 分页控件 -->
+         <div v-if="flowPageRef.total > (flowQuery.pageSize || 20)" class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+           <!-- 分页信息 -->
+           <div class="text-sm text-gray-700 dark:text-gray-300">
+             显示第 {{ (currentPage - 1) * (flowQuery.pageSize || 20) + 1 }} - 
+             {{ Math.min(currentPage * (flowQuery.pageSize || 20), flowPageRef.total) }} 条，
+             共 {{ flowPageRef.total }} 条记录
+           </div>
+
+          <!-- 分页操作 -->
+          <div class="flex items-center gap-2">
+            <!-- 每页显示数量 -->
+            <select
+              v-model="flowQuery.pageSize"
+              @change="changePageSize"
+              class="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-800 text-green-950 dark:text-white"
+            >
+              <option value="10">10条/页</option>
+              <option value="20">20条/页</option>
+              <option value="50">50条/页</option>
+              <option value="100">100条/页</option>
+            </select>
+
+            <!-- 分页按钮 -->
+            <div class="flex items-center gap-1">
+              <button
+                @click="changePage(currentPage - 1)"
+                :disabled="currentPage <= 1"
+                class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+              >
+                <ChevronLeftIcon class="h-4 w-4" />
+              </button>
+
+              <!-- 页码显示 -->
+              <span class="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                {{ currentPage }} / {{ totalPages }}
+              </span>
+
+              <button
+                @click="changePage(currentPage + 1)"
+                :disabled="currentPage >= totalPages"
+                class="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+              >
+                <ChevronRightIcon class="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </v-card-text>
-  </v-card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-// 第三方库引入
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/vue/24/outline";
 
 const { query } = defineProps(["query"]);
 
@@ -152,10 +288,7 @@ const headers = ref([
   { title: "备注", key: "description", sortable: false },
 ]);
 
-/**
- * 组件属性绑定
- */
-// 加载蒙版显示控制器
+// 组件属性绑定
 const loading = ref(true);
 // 分页数据绑定
 const flowPageRef = ref<Page<Flow>>({
@@ -169,19 +302,42 @@ const flowPageRef = ref<Page<Flow>>({
   data: [],
 });
 
-const changePage = (param: {
-  page: number;
-  itemsPerPage: number;
-  sortBy: { key: string; order: string }[];
-}) => {
-  // console.log(param);
-  flowQuery.value.pageNum = param.page;
-  flowQuery.value.pageSize = param.itemsPerPage;
-  if (param.sortBy[0] && param.sortBy[0].key === "money") {
-    flowQuery.value.moneySort = param.sortBy[0].order;
+// 计算属性
+const currentPage = computed(() => flowQuery.value.pageNum || 1);
+const totalPages = computed(() => Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20)));
+
+const hasFilters = computed(() => {
+  return !!(
+    flowQuery.value.startDay ||
+    flowQuery.value.endDay ||
+    flowQuery.value.flowType ||
+    flowQuery.value.industryType ||
+    flowQuery.value.payType ||
+    flowQuery.value.attribution
+  );
+});
+
+// 排序切换
+const toggleSort = () => {
+  if (!flowQuery.value.moneySort) {
+    flowQuery.value.moneySort = "asc";
+  } else if (flowQuery.value.moneySort === "asc") {
+    flowQuery.value.moneySort = "desc";
   } else {
     flowQuery.value.moneySort = "";
   }
+  doQuery();
+};
+
+// 分页操作
+const changePage = (page: number) => {
+  if (page < 1 || page > totalPages.value) return;
+  flowQuery.value.pageNum = page;
+  doQuery();
+};
+
+const changePageSize = () => {
+  flowQuery.value.pageNum = 1;
   doQuery();
 };
 
@@ -201,7 +357,6 @@ const doQuery = () => {
     });
 };
 
-// doQuery();
 changeTypes();
 const searching = ref(false);
 
@@ -211,28 +366,36 @@ const getTableHeight = () => {
     : window.innerHeight - 64 * 6;
 };
 
-// watch(flowQuery.value, () => {
-//   if (searching.value) {
-//     return;
-//   }
-//   searching.value = true;
-//   setTimeout(() => {
-//     searching.value = false;
-//     doQuery();
-//   }, 1000);
-// });
+// 暴露方法给父组件调用
+defineExpose({
+  doQuery,
+});
 </script>
 
 <style scoped>
 .flow-container {
-  padding: 0.5rem 1rem;
+  min-height: 300px;
 }
 
-.common-text-column {
-  min-width: 5rem;
-  max-width: 10rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+/* 自定义滚动条样式 */
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
 }
 </style>
