@@ -7,9 +7,7 @@
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center space-x-2">
           <component :is="icon" class="w-5 h-5 text-blue-500" />
-          <h3
-            class="text-lg font-semibold text-green-950 dark:text-white"
-          >
+          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
             {{ title }}
           </h3>
         </div>
@@ -19,9 +17,7 @@
       </div>
 
       <!-- Chart Container -->
-      <div
-        class="relative bg-gray-50 dark:bg-green-950/80 rounded-lg p-1"
-      >
+      <div class="relative rounded-lg p-1">
         <!-- 根据图表类型显示对应组件 -->
         <IndustryTypePie
           v-if="chartType === 'industry'"

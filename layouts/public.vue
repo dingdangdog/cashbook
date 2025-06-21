@@ -147,10 +147,7 @@ const checkVersion = () => {
 
     <div class="flex relative" style="height: calc(100vh - 64px)">
       <!-- Sidebar - Desktop -->
-      <div
-        v-if="!isMobile"
-        class="w-64 flex-shrink-0 h-full overflow-y-auto"
-      >
+      <div v-if="!isMobile" class="w-64 flex-shrink-0 h-full overflow-y-auto">
         <LayoutAppSidebar
           :is-open="true"
           :is-mobile="false"
@@ -172,7 +169,7 @@ const checkVersion = () => {
       <!-- Main Content -->
       <main
         :class="[
-          'flex-1 h-full overflow-y-auto',
+          'flex-1 h-full overflow-y-auto bg-gray-50 dark:bg-green-950/20 transition-colors duration-200',
           isMobile ? 'pb-16' : '', // Add bottom padding for mobile bottom nav
         ]"
       >

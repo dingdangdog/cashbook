@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full bg-gray-50 dark:bg-green-950/80 transition-colors duration-200"
-  >
+  <div class="w-full">
     <!-- Content Area -->
     <div class="md:max-w-[80vw] mx-auto mt-2">
       <!-- Desktop & Tablet: Chart Carousel -->
