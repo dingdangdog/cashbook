@@ -1,62 +1,100 @@
 <template>
   <div class="chart-common-container">
-    <v-navigation-drawer v-model="searchDrawer" temporary location="right">
-      <div class="tw-p-2">
-        <div class="queryParam">
-          <v-date-input
-            label="开始日期"
-            cancel-text="取消"
-            ok-text="确定"
-            clearable
-            variant="outlined"
-            hide-details="auto"
-            :hide-actions="true"
-            v-model="startDay"
-            @update:modelValue="changeStartDay"
-            @click:clear="clearStartDay"
-          ></v-date-input>
+    <!-- 时间筛选侧边栏 -->
+    <div
+      v-if="searchDrawer"
+      class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-justify-end"
+      @click="searchDrawer = false"
+    >
+      <div
+        class="tw-w-80 tw-h-full tw-bg-white dark:tw-bg-gray-800 tw-shadow-xl tw-border-l tw-border-gray-200 dark:tw-border-gray-700 tw-p-4 tw-overflow-y-auto"
+        @click.stop
+      >
+        <div class="tw-flex tw-justify-between tw-items-center tw-mb-4">
+          <h3
+            class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+          >
+            时间筛选
+          </h3>
+          <button
+            @click="searchDrawer = false"
+            class="tw-p-2 tw-text-gray-500 hover:tw-text-gray-700 dark:tw-text-gray-400 dark:hover:tw-text-gray-200 tw-transition-colors"
+          >
+            <svg
+              class="tw-w-5 tw-h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
-        <div class="queryParam">
-          <v-date-input
-            label="结束日期"
-            cancel-text="取消"
-            ok-text="确定"
-            variant="outlined"
-            hide-details="auto"
+
+        <div class="tw-space-y-4">
+          <UiDatePicker
+            v-model="startDay"
+            label="开始日期"
+            placeholder="请选择开始日期"
+            @change="changeStartDay"
+          />
+
+          <UiDatePicker
             v-model="endDay"
-            clearable
-            :hide-actions="true"
-            @update:modelValue="changeEndDay"
-            @click:clear="clearEndDay"
-          ></v-date-input>
+            label="结束日期"
+            placeholder="请选择结束日期"
+            @change="changeEndDay"
+          />
         </div>
       </div>
-    </v-navigation-drawer>
+    </div>
 
     <div
-      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b md:tw-h-16"
+      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b tw-border-gray-200 dark:tw-border-gray-700 md:tw-h-16 tw-mb-4"
     >
-      <div class="">
-        <h4 class="tw-text-lg my-2">
+      <div>
+        <h4
+          class="tw-hidden md:tw-flex tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white tw-my-2"
+        >
           {{ title }}【{{ chartParam.flowType }}】
         </h4>
       </div>
 
       <div class="tw-flex tw-space-x-2 tw-items-center">
-        <v-btn color="primary" @click="searchDrawer = true">时间筛选 </v-btn>
+        <button
+          @click="searchDrawer = true"
+          class="tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-md tw-shadow-sm hover:tw-bg-blue-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-transition-colors"
+        >
+          时间筛选
+        </button>
         <div class="tw-min-w-32">
-          <v-autocomplete
+          <select
             v-model="chartParam.flowType"
-            :items="FlowTypes"
-            hide-details="auto"
-            variant="outlined"
+            class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-shadow-md tw-bg-white dark:tw-bg-gray-700 tw-text-gray-900 dark:tw-text-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
           >
-          </v-autocomplete>
+            <option
+              v-for="type in FlowTypes"
+              :key="type.value"
+              :value="type.value"
+            >
+              {{ type.title }}
+            </option>
+          </select>
         </div>
       </div>
     </div>
-    <div v-show="noData" :style="`width: ${width}; height: ${height};`">
-      <h3 style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
+
+    <div
+      v-show="noData"
+      :style="`width: ${width}; height: ${height};`"
+      class="tw-flex tw-items-center tw-justify-center"
+    >
+      <h3 class="tw-text-lg tw-text-red-500 tw-font-medium">暂无数据</h3>
     </div>
     <div
       v-show="!noData"
@@ -65,35 +103,47 @@
     ></div>
   </div>
 
-  <v-dialog :width="'80vw'" v-model="showFlowTable">
-    <v-card>
-      <v-card-title>
-        <div class="tw-flex tw-justify-end">
-          <div>
-            <v-btn
-              color="error"
-              variant="elevated"
-              @click="showFlowTable = false"
-            >
-              关闭
-            </v-btn>
-          </div>
-        </div>
-      </v-card-title>
-      <v-card-text>
+  <!-- 流水表格对话框 -->
+  <div
+    v-if="showFlowTable"
+    class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50"
+    @click="showFlowTable = false"
+  >
+    <div
+      class="tw-w-full tw-max-w-6xl tw-max-h-[90vh] tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-overflow-hidden"
+      @click.stop
+    >
+      <div
+        class="tw-flex tw-justify-between tw-items-center tw-p-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+      >
+        <h3
+          class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+        >
+          流水详情
+        </h3>
+        <button
+          @click="showFlowTable = false"
+          class="tw-px-4 tw-py-2 tw-bg-red-600 tw-text-white tw-rounded-md tw-shadow-sm hover:tw-bg-red-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-red-500 focus:tw-ring-offset-2 tw-transition-colors"
+        >
+          关闭
+        </button>
+      </div>
+      <div class="tw-p-4 tw-overflow-y-auto tw-max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { VDateInput } from "vuetify/labs/VDateInput";
 import * as echarts from "echarts";
 import { onMounted, ref, watch } from "vue";
 import { useTheme } from "vuetify";
 import { dateFormater, miniFullscreen } from "@/utils/common";
+import { FlowTypes } from "@/utils/constant";
+import { doApi } from "@/utils/api";
 import type { CommonChartData, CommonChartQuery } from "~/utils/model";
+import DatasFlowTable from "@/components/datas/FlowTable.vue";
 
 const theme = useTheme();
 
@@ -108,29 +158,12 @@ const noData = ref(false);
 
 const startDay = ref();
 const endDay = ref();
-const changeStartDay = () => {
-  if (startDay.value) {
-    // console.log(startDay.value)
-    chartParam.value.startDay = dateFormater("YYYY-MM-dd", startDay.value);
-  } else {
-    chartParam.value.startDay = "";
-  }
+const changeStartDay = (value: string | null) => {
+  chartParam.value.startDay = value || "";
 };
-const clearStartDay = () => {
-  startDay.value = null;
-  chartParam.value.startDay = "";
-};
-const changeEndDay = () => {
-  if (endDay.value) {
-    // console.log(endDay.value)
-    chartParam.value.endDay = dateFormater("YYYY-MM-dd", endDay.value);
-  } else {
-    chartParam.value.endDay = "";
-  }
-};
-const clearEndDay = () => {
-  endDay.value = null;
-  chartParam.value.endDay = "";
+
+const changeEndDay = (value: string | null) => {
+  chartParam.value.endDay = value || "";
 };
 
 const optionRef = ref({
@@ -161,7 +194,7 @@ const optionRef = ref({
       show: true,
     },
     textStyle: {
-      color: "#fff",
+      color: "#000",
     },
   },
   toolbox: {
@@ -280,7 +313,13 @@ const showFlowTable = ref(false);
 onMounted(() => {
   if (miniFullscreen()) {
     // @ts-ignore
-    optionRef.value.legend.top = "0";
+    optionRef.value.legend.top = "bottom";
+    // @ts-ignore
+    optionRef.value.legend.left = "center";
+    // @ts-ignore
+    optionRef.value.legend.orient = "horizontal";
+    // @ts-ignore
+    optionRef.value.series[0].center = ["50%", "40%"];
   } else {
     // @ts-ignore
     optionRef.value.legend.left = "0";

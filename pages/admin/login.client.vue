@@ -41,7 +41,7 @@
 
     <!-- 登录表单 - 响应式调整 -->
     <div class="tw-w-full tw-max-w-xs sm:tw-max-w-sm md:tw-max-w-md">
-      <div class="tw-rounded-xl tw-shadow-xl tw-p-4 sm:tw-p-6 tw-border tw-bg-gray-800/90 tw-border-gray-700 tw-backdrop-blur-sm">
+      <div class="tw-rounded-xl tw-shadow-xl tw-p-4 sm:tw-p-2 tw-border tw-bg-gray-800/90 tw-border-gray-700 tw-backdrop-blur-sm">
         <form @submit.prevent="onSubmit" class="tw-space-y-4">
           <!-- 账号输入 -->
           <div>

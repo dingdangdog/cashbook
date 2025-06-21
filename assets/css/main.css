@@ -33,13 +33,10 @@ html {
 }
 
 .chart-common-container {
-  margin: 0.5rem;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 1rem;
-  border: 1px solid rgb(160, 160, 160);
 }
 
 .queryParam {
@@ -86,7 +83,7 @@ html {
   .Vue-Toastification__container {
     padding: 0 16px;
   }
-  
+
   .Vue-Toastification__toast {
     margin-bottom: 8px;
   }

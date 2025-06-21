@@ -175,7 +175,10 @@ const checkVersion = () => {
 
     <div class="tw-flex tw-relative" style="height: calc(100vh - 64px)">
       <!-- Sidebar - Desktop -->
-      <div v-if="!isMobile" class="tw-w-64 tw-flex-shrink-0 tw-h-full">
+      <div
+        v-if="!isMobile"
+        class="tw-w-64 tw-flex-shrink-0 tw-h-full tw-overflow-y-auto"
+      >
         <LayoutAppSidebar
           :is-open="true"
           :is-mobile="false"
@@ -201,11 +204,11 @@ const checkVersion = () => {
       <!-- Main Content -->
       <main
         :class="[
-          'tw-flex-1',
-          isMobile ? 'tw-pb-20' : '', // Add bottom padding for mobile bottom nav
+          'tw-flex-1 tw-h-full tw-overflow-y-auto',
+          isMobile ? 'tw-pb-16' : '', // Add bottom padding for mobile bottom nav
         ]"
       >
-        <div class="tw-p-4 tw-sm:tw-p-6 tw-lg:tw-p-8">
+        <div class="">
           <slot></slot>
         </div>
       </main>

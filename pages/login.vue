@@ -281,7 +281,7 @@ const toAdmin = () => {
       <!-- 登录表单 - 响应式调整 -->
       <div class="tw-w-full tw-max-w-xs sm:tw-max-w-sm md:tw-max-w-md">
         <div :class="[
-          'tw-rounded-xl tw-shadow-xl tw-p-4 sm:tw-p-6 tw-border',
+          'tw-rounded-xl tw-shadow-xl tw-p-4 sm:tw-p-2 tw-border',
           isDark ? 'tw-bg-gray-800 tw-border-gray-700' : 'tw-bg-white tw-border-gray-200'
         ]">
           <form @submit.prevent="login" class="tw-space-y-4">
@@ -370,7 +370,7 @@ const toAdmin = () => {
     <!-- 注册对话框 -->
     <div v-if="registerDialog" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50 tw-p-4">
       <div :class="['tw-rounded-2xl tw-shadow-2xl tw-w-full tw-max-w-md tw-max-h-[90vh] tw-overflow-y-auto', isDark ? 'tw-bg-gray-800' : 'tw-bg-white']">
-        <div class="tw-p-6">
+        <div class="tw-p-2">
           <div class="tw-flex tw-justify-between tw-items-center tw-mb-6">
             <h3 :class="['tw-text-xl tw-font-semibold', isDark ? 'tw-text-white' : 'tw-text-gray-900']">注册用户</h3>
             <button

@@ -1,22 +1,29 @@
 <template>
   <div class="chart-common-container">
     <div
-      class="tw-flex tw-justify-between tw-items-center tw-w-full tw-border-b tw-h-16"
+      v-if="title || years.length > 0"
+      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b tw-border-gray-200 dark:tw-border-gray-700 tw-h-16 tw-mb-4"
     >
       <div>
-        <h4 class="tw-text-lg my-2">{{ title }}</h4>
+        <h4
+          v-if="title"
+          class="tw-hidden md:tw-flex tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white tw-my-2"
+        >
+          {{ title }}
+        </h4>
       </div>
 
-      <div class="tw-min-w-32">
-        <v-select
+      <div v-if="years.length > 0" class="tw-min-w-32">
+        <select
           v-model="filterYear"
-          :items="years"
-          label="年份筛选"
-          hide-details="auto"
-          clearable
-          variant="outlined"
-          @update:model-value="filterYearChange"
-        ></v-select>
+          @change="filterYearChange"
+          class="tw-w-full tw-px-3 tw-py-2 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-md tw-shadow-md tw-bg-white dark:tw-bg-gray-700 tw-text-gray-900 dark:tw-text-white focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500"
+        >
+          <option value="">全部年份</option>
+          <option v-for="year in years" :key="year.value" :value="year.value">
+            {{ year.title }}
+          </option>
+        </select>
       </div>
     </div>
     <div v-show="noData" :style="`width: ${width}; height: ${height};`">
@@ -29,26 +36,36 @@
     ></div>
   </div>
 
-  <v-dialog :width="'80vw'" v-model="showFlowTable">
-    <v-card>
-      <v-card-title>
-        <div class="tw-flex tw-justify-end">
-          <div>
-            <v-btn
-              color="error"
-              variant="elevated"
-              @click="showFlowTable = false"
-            >
-              关闭
-            </v-btn>
-          </div>
-        </div>
-      </v-card-title>
-      <v-card-text>
+  <!-- 流水表格对话框 -->
+  <div
+    v-if="showFlowTable"
+    class="tw-fixed tw-inset-0 tw-z-50 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-50"
+    @click="showFlowTable = false"
+  >
+    <div
+      class="tw-w-full tw-max-w-6xl tw-max-h-[90vh] tw-bg-white dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-xl tw-overflow-hidden"
+      @click.stop
+    >
+      <div
+        class="tw-flex tw-justify-between tw-items-center tw-p-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-700"
+      >
+        <h3
+          class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white"
+        >
+          流水详情
+        </h3>
+        <button
+          @click="showFlowTable = false"
+          class="tw-px-4 tw-py-2 tw-bg-red-600 tw-text-white tw-rounded-md tw-shadow-sm hover:tw-bg-red-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-red-500 focus:tw-ring-offset-2 tw-transition-colors"
+        >
+          关闭
+        </button>
+      </div>
+      <div class="tw-p-4 tw-overflow-y-auto tw-max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -67,7 +84,7 @@ const noData = ref(false);
 
 const years = ref<CommonSelectOption[]>([]);
 const allData = ref<CommonChartData[]>([]);
-const filterYear = ref();
+const filterYear = ref("");
 const filterYearChange = () => {
   dataListOut.length = 0;
   dataListIn.length = 0;
