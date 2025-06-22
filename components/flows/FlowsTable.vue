@@ -289,7 +289,7 @@
     <!-- 分页 -->
     <div
       v-if="!loading && flows.length && totalPages > 1"
-      class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
+      class="p-2 md:px-4 md:py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
     >
       <div class="flex items-center justify-center gap-2">
         <!-- 分页信息 -->
@@ -300,9 +300,7 @@
         </div>
 
         <!-- 分页控件 - 响应式布局 -->
-        <div
-          class="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
+        <div class="flex flex-row items-center justify-center gap-4">
           <!-- 每页显示数量选择 -->
           <select
             :value="pageSize"
