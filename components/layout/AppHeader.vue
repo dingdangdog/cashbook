@@ -33,7 +33,7 @@ const showUserMenu = ref(false);
   <header
     class="bg-white dark:bg-green-950/40 shadow-sm border-b border-gray-200 dark:border-gray-700"
   >
-    <div class="px-4 sm:px-6 lg:px-8">
+    <div class="px-4 md:px-8">
       <div class="flex justify-between h-12 md:h-16">
         <!-- Left side -->
         <div class="flex items-center">
@@ -56,89 +56,77 @@ const showUserMenu = ref(false);
         </div>
 
         <!-- Center - Book info (desktop only) -->
-        <div class="hidden md:flex items-center flex-1 justify-center">
-          <div class="flex items-center space-x-4">
+        <div class="flex items-center flex-1 justify-center">
+          <div class="flex items-center space-x-2 md:space-x-4">
             <span
               v-if="bookName"
-              class="text-gray-700 dark:text-gray-200 font-medium"
+              class="flex text-gray-700 dark:text-gray-200 font-medium"
             >
-              当前账本：{{ bookName }}
+              <span class="hidden md:block">当前账本：</span>{{ bookName }}
             </span>
             <button
               @click="emit('showBookDialog')"
-              class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-sm font-medium"
+              class="px-3 py-1.5 md:px-4 md:py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-sm font-medium"
             >
               切换账本
             </button>
           </div>
         </div>
 
-        <!-- Right side -->
-        <div class="flex items-center space-x-4">
-          <!-- Book switch button (mobile) -->
+        <!-- User menu -->
+        <div class="relative flex items-center">
           <button
-            v-if="isMobile"
-            @click="emit('showBookDialog')"
-            class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-sm"
+            @click="showUserMenu = !showUserMenu"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
-            切换账本
+            <UserCircleIcon class="h-5 w-5" />
+            <span v-if="GlobalUserInfo && !isMobile" class="text-sm">
+              {{ GlobalUserInfo.name }}
+            </span>
+            <ChevronDownIcon class="h-4 w-4" />
           </button>
 
-          <!-- User menu -->
-          <div class="relative">
-            <button
-              @click="showUserMenu = !showUserMenu"
-              class="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          <!-- User dropdown menu -->
+          <Teleport to="body">
+            <div
+              v-if="showUserMenu"
+              @click="showUserMenu = false"
+              class="fixed inset-0 z-40"
             >
-              <UserCircleIcon class="h-5 w-5" />
-              <span v-if="GlobalUserInfo && !isMobile" class="text-sm">
-                {{ GlobalUserInfo.name }}
-              </span>
-              <ChevronDownIcon class="h-4 w-4" />
-            </button>
-
-            <!-- User dropdown menu -->
-            <Teleport to="body">
               <div
-                v-if="showUserMenu"
-                @click="showUserMenu = false"
-                class="fixed inset-0 z-40"
+                @click.stop
+                class="absolute right-4 top-16 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
               >
-                <div
-                  @click.stop
-                  class="absolute right-4 top-16 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
-                >
-                  <div class="py-1">
-                    <button
-                      @click="emit('openAdmin')"
-                      class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      后台管理
-                    </button>
-                    <button
-                      @click="emit('openConvertDialog')"
-                      class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      CSV导入映射配置
-                    </button>
-                    <button
-                      @click="emit('openChangePasswordDialog')"
-                      class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      修改密码
-                    </button>
-                    <hr class="my-1 border-gray-200 dark:border-gray-600" />
-                    <button
-                      @click="emit('logout')"
-                      class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      退出登录
-                    </button>
-                  </div>
+                <div class="py-1">
+                  <button
+                    @click="emit('openAdmin')"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    后台管理
+                  </button>
+                  <button
+                    @click="emit('openConvertDialog')"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    CSV导入映射配置
+                  </button>
+                  <button
+                    @click="emit('openChangePasswordDialog')"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    修改密码
+                  </button>
+                  <hr class="my-1 border-gray-200 dark:border-gray-600" />
+                  <button
+                    @click="emit('logout')"
+                    class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    退出登录
+                  </button>
                 </div>
               </div>
-            </Teleport>
-          </div>
+            </div>
+          </Teleport>
         </div>
       </div>
     </div>

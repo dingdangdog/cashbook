@@ -11,7 +11,7 @@
     >
       <!-- 紧凑的标题栏 -->
       <div
-        class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-3 py-2 md:px-4 md:py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
       >
         <h3 class="text-lg font-semibold text-green-950 dark:text-white">
           CSV导入映射配置
@@ -38,7 +38,7 @@
 
       <!-- 紧凑的说明 -->
       <div
-        class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border-b border-gray-200 dark:border-gray-600"
+        class="px-3 py-2 md:px-4 md:py-2 bg-blue-50 dark:bg-blue-900/20 border-b border-gray-200 dark:border-gray-600"
       >
         <p class="text-xs text-blue-700 dark:text-blue-300 flex items-center">
           <svg
@@ -58,33 +58,70 @@
         </p>
       </div>
 
-      <!-- 紧凑的映射列表 -->
-      <div class="flex-1 overflow-y-auto p-4">
-        <div class="space-y-3">
+      <!-- 表格形式的映射列表 -->
+      <div class="flex-1 overflow-y-auto p-2 md:p-4">
+        <div
+          v-if="editRelations.length > 0"
+          class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden"
+        >
+          <!-- 表头 -->
           <div
-            v-for="(relation, index) in editRelations"
-            :key="index"
-            class="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-md p-3"
+            class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
           >
-            <div class="flex gap-3 items-end">
-              <!-- 原类型 -->
-              <div class="flex-1">
-                <label
-                  class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+            <div class="flex items-center px-3 py-2">
+              <div
+                class="flex-1 text-sm font-medium text-gray-600 dark:text-gray-400"
+              >
+                原类型
+              </div>
+              <div class="w-8 flex justify-center">
+                <svg
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  原类型
-                </label>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="flex-1 text-sm font-medium text-gray-600 dark:text-gray-400"
+              >
+                导入类型
+              </div>
+              <div
+                class="w-10 text-sm font-medium text-gray-600 dark:text-gray-400 text-center"
+              >
+                操作
+              </div>
+            </div>
+          </div>
+
+          <!-- 表格内容 -->
+          <div class="divide-y divide-gray-200 dark:divide-gray-600">
+            <div
+              v-for="(relation, index) in editRelations"
+              :key="index"
+              class="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+            >
+              <!-- 原类型输入框 -->
+              <div class="flex-1 pr-2">
                 <input
                   v-model="relation.source"
                   type="text"
                   placeholder="CSV中的类型..."
-                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                  class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                   :style="{ color: getItemColor(relation.target) }"
                 />
               </div>
 
               <!-- 箭头 -->
-              <div class="flex items-center pb-2">
+              <div class="w-8 flex justify-center">
                 <svg
                   class="w-4 h-4 text-gray-400"
                   fill="none"
@@ -100,27 +137,22 @@
                 </svg>
               </div>
 
-              <!-- 映射后类型 -->
-              <div class="flex-1">
-                <label
-                  class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
-                >
-                  导入类型
-                </label>
+              <!-- 导入类型输入框 -->
+              <div class="flex-1 px-2">
                 <input
                   v-model="relation.target"
                   type="text"
                   placeholder="导入类型..."
-                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                  class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
                   :style="{ color: getItemColor(relation.target) }"
                 />
               </div>
 
               <!-- 删除按钮 -->
-              <div class="pb-2">
+              <div class="w-10 flex justify-center">
                 <button
                   @click="removePair(index)"
-                  class="px-2 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded text-xs font-medium transition-colors"
+                  class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                   title="删除"
                 >
                   <svg
@@ -140,34 +172,34 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- 紧凑的空状态 -->
-          <div v-if="editRelations.length === 0" class="text-center py-8">
-            <div class="text-gray-400 dark:text-gray-500 mb-2">
-              <svg
-                class="mx-auto h-8 w-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              暂无映射配置
-            </p>
-            <button
-              @click="addPair"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors"
+        <!-- 紧凑的空状态 -->
+        <div v-else class="text-center py-8">
+          <div class="text-gray-400 dark:text-gray-500 mb-2">
+            <svg
+              class="mx-auto h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              添加配置
-            </button>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
           </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            暂无映射配置
+          </p>
+          <button
+            @click="addPair"
+            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors"
+          >
+            添加配置
+          </button>
         </div>
       </div>
 
