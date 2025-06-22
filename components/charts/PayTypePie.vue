@@ -1,105 +1,153 @@
 <template>
   <div class="chart-common-container">
-    <v-navigation-drawer v-model="searchDrawer" temporary location="right">
-      <div class="tw-p-2">
-        <div class="queryParam">
-          <v-date-input
-            label="开始日期"
-            cancel-text="取消"
-            ok-text="确定"
-            clearable
-            variant="outlined"
-            hide-details="auto"
-            :hide-actions="true"
-            v-model="startDay"
-            @update:modelValue="changeStartDay"
-            @click:clear="clearStartDay"
-          ></v-date-input>
+    <!-- 时间筛选侧边栏 -->
+    <div
+      v-if="searchDrawer"
+      class="fixed inset-0 z-50 flex justify-end"
+      @click="searchDrawer = false"
+    >
+      <div
+        class="w-80 h-full bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 p-2 md:p-4 overflow-y-auto"
+        @click.stop
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+            时间筛选
+          </h3>
+          <button
+            @click="searchDrawer = false"
+            class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
-        <div class="queryParam">
-          <v-date-input
-            label="结束日期"
-            cancel-text="取消"
-            ok-text="确定"
-            variant="outlined"
-            hide-details="auto"
+
+        <div class="space-y-4">
+          <UiDatePicker
+            v-model="startDay"
+            label="开始日期"
+            placeholder="请选择开始日期"
+            @change="changeStartDay"
+          />
+
+          <UiDatePicker
             v-model="endDay"
-            clearable
-            :hide-actions="true"
-            @update:modelValue="changeEndDay"
-            @click:clear="clearEndDay"
-          ></v-date-input>
+            label="结束日期"
+            placeholder="请选择结束日期"
+            @change="changeEndDay"
+          />
         </div>
       </div>
-    </v-navigation-drawer>
+    </div>
 
     <div
-      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b md:tw-h-16"
+      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 md:h-16 mb-4"
     >
-      <div class="">
-        <h4 class="tw-text-lg my-2">
+      <div>
+        <h4
+          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
+        >
           {{ title }}【{{ chartParam.flowType }}】
         </h4>
       </div>
 
-      <div class="tw-flex tw-space-x-2 tw-items-center">
-        <v-btn color="primary" @click="searchDrawer = true">时间筛选 </v-btn>
-        <div class="tw-min-w-32">
-          <v-autocomplete
+      <div class="flex space-x-2 pb-2 items-center">
+        <button
+          @click="searchDrawer = true"
+          class="px-2 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        >
+          时间筛选
+        </button>
+        <div class="min-w-32">
+          <select
             v-model="chartParam.flowType"
-            :items="FlowTypes"
-            hide-details="auto"
-            variant="outlined"
+            class="w-full px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-          </v-autocomplete>
+            <option
+              v-for="type in FlowTypes"
+              :key="type.value"
+              :value="type.value"
+            >
+              {{ type.title }}
+            </option>
+          </select>
         </div>
       </div>
     </div>
-    <div v-show="noData" :style="`width: ${width}; height: ${height};`">
-      <h3 style="width: 100%; text-align: center; color: tomato">暂无数据</h3>
+
+    <div
+      v-show="noData"
+      :style="`width: ${width}; height: ${height};`"
+      class="flex items-center justify-center"
+    >
+      <h3 class="text-lg text-red-500 font-medium">暂无数据</h3>
     </div>
     <div
       v-show="!noData"
-      id="payTypeDiv"
+      :id="chartId"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
 
-  <v-dialog :width="'80vw'" v-model="showFlowTable">
-    <v-card>
-      <v-card-title>
-        <div class="tw-flex tw-justify-end">
-          <div>
-            <v-btn
-              color="error"
-              variant="elevated"
-              @click="showFlowTable = false"
-            >
-              关闭
-            </v-btn>
-          </div>
-        </div>
-      </v-card-title>
-      <v-card-text>
+  <!-- 流水表格对话框 -->
+  <div
+    v-if="showFlowTable"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    @click="showFlowTable = false"
+  >
+    <div
+      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
+      @click.stop
+    >
+      <div
+        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+      >
+        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+          流水详情
+        </h3>
+        <button
+          @click="showFlowTable = false"
+          class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+        >
+          关闭
+        </button>
+      </div>
+      <div class="p-2 md:p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { VDateInput } from "vuetify/labs/VDateInput";
 import * as echarts from "echarts";
 import { onMounted, ref, watch } from "vue";
-import { useTheme } from "vuetify";
 import { dateFormater, miniFullscreen } from "@/utils/common";
+import { FlowTypes } from "@/utils/constant";
+import { doApi } from "@/utils/api";
 import type { CommonChartData, CommonChartQuery } from "~/utils/model";
+import DatasFlowTable from "@/components/datas/FlowTable.vue";
 
-const theme = useTheme();
+const { isDark } = useAppTheme();
 
 const searchDrawer = ref(false);
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
+
+// 生成唯一ID避免冲突
+const chartId = ref(`payTypeDiv-${Math.random().toString(36).substr(2, 9)}`);
 
 const chartParam = ref<CommonChartQuery>({ flowType: "支出" });
 
@@ -108,29 +156,12 @@ const noData = ref(false);
 
 const startDay = ref();
 const endDay = ref();
-const changeStartDay = () => {
-  if (startDay.value) {
-    // console.log(startDay.value)
-    chartParam.value.startDay = dateFormater("YYYY-MM-dd", startDay.value);
-  } else {
-    chartParam.value.startDay = "";
-  }
+const changeStartDay = (value: string | null) => {
+  chartParam.value.startDay = value || "";
 };
-const clearStartDay = () => {
-  startDay.value = null;
-  chartParam.value.startDay = "";
-};
-const changeEndDay = () => {
-  if (endDay.value) {
-    // console.log(endDay.value)
-    chartParam.value.endDay = dateFormater("YYYY-MM-dd", endDay.value);
-  } else {
-    chartParam.value.endDay = "";
-  }
-};
-const clearEndDay = () => {
-  endDay.value = null;
-  chartParam.value.endDay = "";
+
+const changeEndDay = (value: string | null) => {
+  chartParam.value.endDay = value || "";
 };
 
 const optionRef = ref({
@@ -161,7 +192,7 @@ const optionRef = ref({
       show: true,
     },
     textStyle: {
-      color: "#fff",
+      color: "#374151",
     },
   },
   toolbox: {
@@ -179,7 +210,7 @@ const optionRef = ref({
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
-        borderColor: "#fff",
+        borderColor: "#d1d5db",
         borderWidth: 1,
       },
       // grid: {
@@ -260,10 +291,12 @@ const doQuery = (query: CommonChartQuery) => {
         }
 
         optionRef.value.series[0].data = dataList;
-        optionRef.value.legend.textStyle.color =
-          theme.global.name.value == "dark" ? "#fff" : "#000";
-        optionRef.value.series[0].itemStyle.borderColor =
-          theme.global.name.value == "dark" ? "#fff" : "#000";
+        optionRef.value.legend.textStyle.color = isDark.value
+          ? "#e5e7eb"
+          : "#374151";
+        optionRef.value.series[0].itemStyle.borderColor = isDark.value
+          ? "#4b5563"
+          : "#d1d5db";
 
         payTypeChart.setOption(optionRef.value);
       }
@@ -280,7 +313,13 @@ const showFlowTable = ref(false);
 onMounted(() => {
   if (miniFullscreen()) {
     // @ts-ignore
-    optionRef.value.legend.top = "0";
+    optionRef.value.legend.top = "bottom";
+    // @ts-ignore
+    optionRef.value.legend.left = "center";
+    // @ts-ignore
+    optionRef.value.legend.orient = "horizontal";
+    // @ts-ignore
+    optionRef.value.series[0].center = ["50%", "40%"];
   } else {
     // @ts-ignore
     optionRef.value.legend.left = "0";
@@ -288,7 +327,11 @@ onMounted(() => {
     optionRef.value.legend.orient = "vertical";
   }
 
-  payTypeDiv = document.getElementById("payTypeDiv");
+  payTypeDiv = document.getElementById(chartId.value);
+  const oldInstance = echarts.getInstanceByDom(payTypeDiv);
+  if (oldInstance) {
+    oldInstance.dispose();
+  }
   payTypeChart = echarts.init(payTypeDiv);
   payTypeChart.on("click", function (param) {
     query.value = { ...chartParam.value, payType: param.name };
@@ -298,8 +341,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-#payTypeDiv {
-  padding: 0.5rem;
-}
-</style>
+<style scoped></style>

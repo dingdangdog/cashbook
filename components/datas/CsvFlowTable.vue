@@ -1,45 +1,61 @@
 <template>
-  <div class="dialog-container">
-    <div class="excel-table tw-flex tw-justify-center">
-      <table ref="excelTable" class="tw-flex tw-flex-col">
-        <thead ref="excelTableHead"></thead>
-        <tbody
-          ref="excelTableBody"
-          class="tw-flex-1 tw-overflow-y-auto"
-        ></tbody>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <!-- 表格容器 -->
+    <div class="max-h-[60vh] overflow-auto">
+      <table ref="excelTable" class="w-full border-collapse">
+        <thead ref="excelTableHead" class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10"></thead>
+        <tbody ref="excelTableBody" class="divide-y divide-gray-200 dark:divide-gray-700"></tbody>
       </table>
     </div>
-    <hr />
-    <div class="csv-dialog-header tw-space-x-4" style="margin-top: 1rem">
-      <div class="tw-flex tw-items-center">
-        <span style="color: gray" class="tw-mx-2"
-          >解析到的流水数量:{{ flows.length }}</span
-        >
+
+    <!-- 分隔线 -->
+    <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+    <!-- 底部操作栏 -->
+    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700">
+      <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+        <!-- 左侧信息 -->
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-600 dark:text-gray-400">
+            解析到的流水数量: 
+            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ flows.length }}</span>
+          </span>
+        </div>
+
+        <!-- 右侧操作 -->
+        <div class="flex gap-3 items-center">
+          <!-- 流水归属输入 -->
+          <div class="flex items-center gap-2">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              流水归属:
+            </label>
+            <input
+              v-model="attribution"
+              type="text"
+              placeholder="可选"
+              class="w-32 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-green-950 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- 确定导入按钮 -->
+          <button
+            @click="submitUpload"
+            :disabled="uploading"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
+          >
+            <div v-if="uploading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            <CloudArrowUpIcon v-else class="h-4 w-4" />
+            {{ uploading ? '导入中...' : '确定导入' }}
+          </button>
+        </div>
       </div>
-      <div class="tw-flex tw-items-center">
-        <!-- <span class="tw-mr-2">流水归属:</span> -->
-        <v-text-field
-          v-model="attribution"
-          placeholder="流水归属(可选)"
-          variant="outlined"
-          density="compact"
-          hide-details="auto"
-          class="tw-w-36"
-        ></v-text-field>
-      </div>
-      <v-btn
-        variant="elevated"
-        color="primary"
-        @click="submitUpload"
-        :disabled="uploading"
-        >确定导入</v-btn
-      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { CloudArrowUpIcon } from "@heroicons/vue/24/outline";
 
 const { items, tableHead, tableBody, successCallback } = defineProps([
   "items",
@@ -67,28 +83,33 @@ onMounted(() => {
   if (excelTableHead.value) {
     // 表头行元素
     const head = document.createElement("tr");
+    head.className = "border-b border-gray-200 dark:border-gray-600";
+    
     for (let h in tableHead) {
       // 创建表头单元格元素
       const th = document.createElement("th");
       th.innerText = h;
-      th.className = "excel-th";
+      th.className = "px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-700";
       th.style.textAlign = "left";
       head.appendChild(th);
     }
     // 表头数据回显
     excelTableHead.value.appendChild(head);
   }
-  if (excelTableHead.value) {
+  
+  if (excelTableBody.value) {
     for (let row of tableBody) {
       // 创建行元素
       const tr = document.createElement("tr");
+      tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
+      
       // 部分数据字段格式化，并回显
       for (let c of row) {
         let cellValue = c;
         // 创建单元格元素
         const td = document.createElement("td");
         td.innerText = cellValue;
-        td.className = "excel-td";
+        td.className = "px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate border-b border-gray-200 dark:border-gray-700";
         td.title = cellValue;
         tr.appendChild(td);
       }
@@ -136,53 +157,22 @@ const submitUpload = () => {
 };
 </script>
 
-<style>
-.csv-dialog-header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: end;
+<style scoped>
+/* 自定义滚动条样式 */
+.overflow-auto::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.upload-tip {
-  margin-top: 0.5rem;
-  color: rgb(237, 137, 137);
+.overflow-auto::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-700;
 }
 
-.excel-table {
-  border-collapse: collapse;
-  margin: 0 auto;
-  max-height: 80vh;
-  max-width: 90vw;
-  overflow-y: auto;
+.overflow-auto::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
 }
 
-.excel-table tbody tr:nth-child(odd) {
-  background-color: rgba(70, 70, 70, 0.3);
-}
-
-.excel-table tbody tr:nth-child(even) {
-  background-color: rgba(30, 30, 30, 0.3);
-}
-
-.excel-th {
-  width: 8rem;
-  padding: 0.5rem;
-  border-collapse: collapse;
-  border: 1px solid;
-  /* color: rgb(198, 234, 205); */
-  background-color: rgba(10, 10, 10, 0.3);
-}
-
-.excel-td {
-  min-width: 8rem;
-  max-width: 8rem;
-  padding: 0.2rem;
-  border-collapse: collapse;
-  border-bottom: 1px solid;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  /* color: rgb(162, 183, 167); */
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
 }
 </style>

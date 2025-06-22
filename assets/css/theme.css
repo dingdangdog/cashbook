@@ -1,0 +1,111 @@
+/* 
+  Global Theme Styles
+  This file contains global theme-related styles and variables
+*/
+
+:root {
+  /* Light theme variables */
+  --color-primary: theme('colors.green.600');
+  --color-primary-hover: theme('colors.green.500');
+  --color-secondary: theme('colors.indigo.600');
+  --color-secondary-hover: theme('colors.indigo.500');
+  --color-accent: theme('colors.purple.500');
+  --color-accent-hover: theme('colors.purple.400');
+  
+  --color-bg-primary: theme('colors.slate.50');
+  --color-bg-secondary: theme('colors.white');
+  --color-bg-accent: theme('colors.slate.100');
+  
+  --color-text-primary: theme('colors.slate.800');
+  --color-text-secondary: theme('colors.slate.600');
+  --color-text-accent: theme('colors.slate.500');
+  
+  --color-border: theme('colors.slate.200');
+  --color-shadow: theme('colors.slate.200');
+}
+
+.dark {
+  /* Dark theme variables */
+  --color-primary: theme('colors.blue.500');
+  --color-primary-hover: theme('colors.blue.400');
+  --color-secondary: theme('colors.indigo.500');
+  --color-secondary-hover: theme('colors.indigo.400');
+  --color-accent: theme('colors.purple.400');
+  --color-accent-hover: theme('colors.purple.300');
+  
+  --color-bg-primary: theme('colors.slate.900');
+  --color-bg-secondary: theme('colors.slate.800');
+  --color-bg-accent: theme('colors.slate.700');
+  
+  --color-text-primary: theme('colors.slate.200');
+  --color-text-secondary: theme('colors.slate.300');
+  --color-text-accent: theme('colors.slate.400');
+  
+  --color-border: theme('colors.slate.700');
+  --color-shadow: theme('colors.slate.900');
+}
+
+/* Global transitions for theme changes */
+.transition-theme {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-accent);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent content shift when scrollbar appears */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Utility classes for theme colors */
+.text-theme-primary {
+  color: var(--color-primary);
+}
+
+.bg-theme-primary {
+  background-color: var(--color-primary);
+}
+
+.border-theme-primary {
+  border-color: var(--color-primary);
+}
+
+.hover\:text-theme-primary:hover {
+  color: var(--color-primary-hover);
+}
+
+.hover\:bg-theme-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Add more utility classes as needed */ 
