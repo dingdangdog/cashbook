@@ -13,10 +13,27 @@ const isMobile = ref(false);
 // Sidebar state
 const sidebarOpen = ref(false);
 
+// Loading state for page transitions
+const pageLoading = ref(false);
+
 // User and book state
 const bookName = ref("");
 const route = useRoute();
 const openMenu = computed(() => route.path.slice(1) || "calendar");
+
+// Watch route changes to show loading
+watch(
+  () => route.path,
+  (newPath, oldPath) => {
+    if (newPath !== oldPath) {
+      pageLoading.value = true;
+      // Hide loading after a short delay to allow page to render
+      setTimeout(() => {
+        pageLoading.value = false;
+      }, 500);
+    }
+  }
+);
 
 // Responsive functions
 const updateResponsive = () => {
@@ -40,7 +57,7 @@ onMounted(() => {
   if (!bookName.value) {
     showBookDialogFlag.value.visible = true;
   }
-  
+
   // 只有当 GlobalUserInfo 不存在时才调用 getUserInfo
   if (!GlobalUserInfo.value) {
     getUserInfo();
@@ -58,6 +75,7 @@ onUnmounted(() => {
 
 // Navigation methods
 const logout = () => {
+  pageLoading.value = true;
   localStorage.removeItem("bookId");
   localStorage.removeItem("bookName");
   doApi.get("api/logout").then(() => {
@@ -69,6 +87,7 @@ const logout = () => {
 };
 
 const navigateToPath = (path: string) => {
+  pageLoading.value = true;
   navigateTo({ path: `/${path}` });
 };
 
@@ -173,11 +192,36 @@ const checkVersion = () => {
       <!-- Main Content -->
       <main
         :class="[
-          'flex-1 h-full overflow-y-auto bg-gray-50 dark:bg-green-950/20 transition-colors duration-200',
+          'flex-1 h-full overflow-y-auto bg-gray-50 dark:bg-green-950/20 transition-colors duration-200 relative',
           isMobile ? 'pb-16' : '', // Add bottom padding for mobile bottom nav
         ]"
       >
-        <slot></slot>
+        <!-- Loading Overlay -->
+        <div
+          v-if="pageLoading"
+          class="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 flex items-center justify-center"
+        >
+          <div class="flex flex-col items-center space-y-4">
+            <!-- Spinner -->
+            <div class="relative">
+              <div
+                class="w-12 h-12 border-4 border-gray-300 dark:border-gray-600 rounded-full animate-spin"
+              ></div>
+              <div
+                class="w-12 h-12 border-4 border-transparent border-t-green-500 rounded-full animate-spin absolute top-0 left-0"
+              ></div>
+            </div>
+            <!-- Loading Text -->
+            <div class="text-sm text-gray-600 dark:text-gray-300 font-medium">
+              页面加载中...
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Content -->
+        <div :class="{ 'opacity-75': pageLoading }">
+          <slot></slot>
+        </div>
       </main>
     </div>
 
