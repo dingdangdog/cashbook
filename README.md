@@ -44,11 +44,11 @@ Cashbook记账本。
 
 |latest|指定版本|数据库|系统自适应|
 |---|---|---|---|
-|latest|4.2.1|默认（pgsql）|x86/arm64|
-|latest-pgsql|4.2.1-pgsql|pgsql|x86/arm64|
-|latest-mysql|4.2.1-mysql|mysql|x86/arm64|
-|latest-sqlite|4.2.1-sqlite|sqlite|x86/arm64|
-|latest-sqlserver|4.2.1-sqlserver|sqlserver|x86/arm64|
+|latest|4.3.0|默认（pgsql）|x86/arm64|
+|latest-pgsql|4.3.0-pgsql|pgsql|x86/arm64|
+|latest-mysql|4.3.0-mysql|mysql|x86/arm64|
+|latest-sqlite|4.3.0-sqlite|sqlite|x86/arm64|
+|latest-sqlserver|4.3.0-sqlserver|sqlserver|x86/arm64|
 
 详情请查看 [DockerHub](https://hub.docker.com/repository/docker/dingdangdog/cashbook/tags)
 
