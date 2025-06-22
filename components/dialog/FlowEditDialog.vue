@@ -6,7 +6,7 @@
     @click.self="closeDialog"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[90vh] overflow-y-auto"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto"
       @click.stop
     >
       <!-- 标题栏 -->
@@ -25,7 +25,7 @@
       </div>
 
       <!-- 表单内容 -->
-      <div class="p-4 space-y-2">
+      <div class="p-2 md:p-4 space-y-2 max-h-[80vh] overflow-y-auto">
         <!-- 日期选择 -->
         <div>
           <label
@@ -33,7 +33,7 @@
           >
             日期
           </label>
-          <DatePicker v-model="flowEdit.day" class="w-full" />
+          <UiDatePicker v-model="flowEdit.day" class="w-full" />
         </div>
 
         <!-- 流水类型 -->
@@ -254,11 +254,9 @@
 
 <script setup lang="ts">
 import { showFlowEditDialog } from "~/utils/flag";
-import { dateFormater } from "@/utils/common";
 import { onMounted, ref, computed } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-import DatePicker from "@/components/ui/DatePicker.vue";
 
 const { title, flow, successCallback } = defineProps([
   "title",

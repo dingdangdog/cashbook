@@ -177,7 +177,7 @@
       <!-- 桌面端表格 -->
       <div
         v-if="!loading && types.length"
-        class="hidden lg:block overflow-x-auto"
+        class="hidden lg:block max-h-[80vh] overflow-y-auto"
       >
         <table class="w-full">
           <thead>
@@ -201,9 +201,7 @@
               </th>
             </tr>
           </thead>
-          <tbody
-            class="divide-y divide-gray-200 dark:divide-gray-600 max-h-[70vh] overflow-y-auto"
-          >
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
             <tr
               v-for="item in types"
               :key="`${item.type}-${item.value}`"

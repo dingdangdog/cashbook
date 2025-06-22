@@ -9,7 +9,7 @@ import { del, page } from "./api";
 import { editInfoFlag } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
 
-const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
+const pageQuery = ref<PageParam>({ pageSize: 10, pageNum: 1 });
 const query = ref<User | any>({});
 const tabledata = ref<{ total?: number; data?: User[] }>({});
 const loading = ref(false);

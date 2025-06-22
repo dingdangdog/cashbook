@@ -1,223 +1,217 @@
 <template>
-  <div class="calendar-container">
-    <div class="calendar-main">
-      <v-calendar
-        ref="calendar"
-        :month="nowMonth"
-        :year="nowYear"
-        :events="events"
-        class="calendar-grid"
+  <div class="bg-gray-50 dark:bg-gray-900 p-0 md:p-4">
+    <!-- Header Section -->
+    <div class="max-w-7xl mx-auto">
+      <!-- Summary Cards -->
+      <div
+        class="grid grid-cols-3 gap-2 md:gap-4 mb-4 mx-2 md:mx-0 mt-4 md:mt-0"
       >
-        <!-- 日历头部插槽，自定义日历头部显示内容 -->
-        <template v-slot:header>
-          <div class="calendar-header">
-            <!-- Summary Section -->
-            <div class="calendar-summary">
-              <v-card class="summary-card" variant="flat">
-                <v-card-text class="summary-content">
-                  <div
-                    class="summary-item income"
-                    @click="clickDay('', '收入')"
-                  >
-                    <div class="summary-icon">
-                      <v-icon
-                        icon="mdi-cash-plus"
-                        color="success"
-                        size="large"
-                      ></v-icon>
-                    </div>
-                    <div class="summary-data">
-                      <div class="summary-label">总收入</div>
-                      <div class="summary-value success--text">
-                        {{ getInMonth() }}
-                      </div>
-                    </div>
-                  </div>
-
-                  <v-divider vertical></v-divider>
-
-                  <div
-                    class="summary-item expense"
-                    @click="clickDay('', '支出')"
-                  >
-                    <div class="summary-icon">
-                      <v-icon
-                        icon="mdi-cash-minus"
-                        color="error"
-                        size="large"
-                      ></v-icon>
-                    </div>
-                    <div class="summary-data">
-                      <div class="summary-label">总支出</div>
-                      <div class="summary-value error--text">
-                        {{ getOutMonth() }}
-                      </div>
-                    </div>
-                  </div>
-
-                  <v-divider vertical></v-divider>
-
-                  <div class="summary-item balance">
-                    <div class="summary-icon">
-                      <v-icon
-                        icon="mdi-scale-balance"
-                        :color="
-                          getInMonth() - getOutMonth() >= 0 ? 'info' : 'warning'
-                        "
-                        size="large"
-                      ></v-icon>
-                    </div>
-                    <div class="summary-data">
-                      <div class="summary-label">结余</div>
-                      <div
-                        class="summary-value"
-                        :class="
-                          getInMonth() - getOutMonth() >= 0
-                            ? 'info--text'
-                            : 'warning--text'
-                        "
-                      >
-                        {{ (getInMonth() - getOutMonth()).toFixed(2) }}
-                      </div>
-                    </div>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </div>
-
-            <!-- Actions Section -->
-            <div class="calendar-actions">
-              <v-btn
-                color="primary"
-                variant="elevated"
-                prepend-icon="mdi-chart-box"
-                @click="showMonthAnalysis(dayToMonth(nowDate))"
-                class="analysis-button"
-                rounded="pill"
-                elevation="2"
+        <!-- Income Card -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-gray-200 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
+          @click="clickDay('', '收入')"
+        >
+          <div class="flex items-center flex-row space-x-2">
+            <div class="flex-shrink-0 mb-0">
+              <div
+                class="w-8 h-8 md:w-12 md:h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center"
               >
-                当月分析
-              </v-btn>
-            </div>
-
-            <!-- Navigation Section -->
-            <div class="calendar-navigation">
-              <v-btn
-                icon="mdi-chevron-left"
-                variant="text"
-                @click="changeDate('prev-month')"
-                class="nav-button"
-                size="small"
-              ></v-btn>
-
-              <div class="calendar-month-title">
-                {{ dayToMonth(nowDate) }}
+                <ArrowTrendingUpIcon
+                  class="w-4 h-4 md:w-6 md:h-6 text-green-700 dark:text-green-300"
+                />
               </div>
-
-              <v-btn
-                icon="mdi-chevron-right"
-                variant="text"
-                @click="changeDate('next-month')"
-                class="nav-button"
-                size="small"
-              ></v-btn>
+            </div>
+            <div class="md:ml-4 text-center md:text-left">
+              <p
+                class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400"
+              >
+                总收入
+              </p>
+              <p
+                class="text-sm md:text-2xl font-bold text-green-700 dark:text-green-300"
+              >
+                {{ getInMonth().toFixed(0) }}
+              </p>
             </div>
           </div>
-        </template>
+        </div>
 
-        <!-- 日历事件插槽，用于显示自定义事件，时间可以跨天，利用该功能间接实现每天流水显示 -->
-        <template v-slot:event="{ day, event }">
-          <div class="calendar-event">
-            <!-- Add Flow Button -->
-            <div class="add-flow-button" v-if="event.type == 'button'">
-              <v-btn
-                size="x-small"
-                color="primary"
-                icon="mdi-plus"
-                variant="flat"
-                elevation="2"
-                @click="addFlow(day)"
-              ></v-btn>
+        <!-- Expense Card -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-gray-200 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
+          @click="clickDay('', '支出')"
+        >
+          <div class="flex items-center flex-row space-x-2">
+            <div class="flex-shrink-0 mb-0">
+              <div
+                class="w-8 h-8 md:w-12 md:h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center"
+              >
+                <ArrowTrendingDownIcon
+                  class="w-4 h-4 md:w-6 md:h-6 text-red-700 dark:text-red-300"
+                />
+              </div>
             </div>
+            <div class="md:ml-4 text-center md:text-left">
+              <p
+                class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400"
+              >
+                总支出
+              </p>
+              <p
+                class="text-sm md:text-2xl font-bold text-red-700 dark:text-red-300"
+              >
+                {{ getOutMonth().toFixed(0) }}
+              </p>
+            </div>
+          </div>
+        </div>
 
-            <!-- Flow Data Display -->
-            <div class="calendar-event-content" v-if="event.type == 'data'">
-              <v-chip
-                class="calendar-event-chip cursor-pointer"
+        <!-- Balance Card -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-gray-200 dark:border-gray-700"
+        >
+          <div class="flex items-center flex-row space-x-2">
+            <div class="flex-shrink-0 mb-0">
+              <div
+                class="w-8 h-8 md:w-12 md:h-12 rounded-lg flex items-center justify-center"
                 :class="
-                  event.out
-                    ? outMoneyClass(event.money)
-                    : inMoneyClass(event.money)
-                "
-                variant="flat"
-                @click="clickDay(event.day, String(event.title))"
-                :prepend-icon="
-                  event.out ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold'
+                  balance >= 0
+                    ? 'bg-blue-100 dark:bg-blue-900'
+                    : 'bg-orange-100 dark:bg-orange-900'
                 "
               >
-                {{ event.title }}: {{ Number(event.money).toFixed(2) }}
-              </v-chip>
+                <ScaleIcon
+                  class="w-4 h-4 md:w-6 md:h-6"
+                  :class="
+                    balance >= 0
+                      ? 'text-blue-700 dark:text-blue-300'
+                      : 'text-orange-700 dark:text-orange-300'
+                  "
+                />
+              </div>
+            </div>
+            <div class="md:ml-4 text-center md:text-left">
+              <p
+                class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400"
+              >
+                结余
+              </p>
+              <p
+                class="text-sm md:text-2xl font-bold"
+                :class="
+                  balance >= 0
+                    ? 'text-blue-700 dark:text-blue-300'
+                    : 'text-orange-700 dark:text-orange-300'
+                "
+              >
+                {{ balance.toFixed(0) }}
+              </p>
             </div>
           </div>
-        </template>
-      </v-calendar>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div
+        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 w-full"
+        :class="
+          isMobile
+            ? 'rounded-lg shadow-md'
+            : 'rounded-xl shadow-lg overflow-hidden'
+        "
+      >
+        <!-- Desktop Calendar -->
+        <div v-if="!isMobile" class="w-full">
+          <DesktopCalendar
+            :current-date="nowDate"
+            :income-data="inDayCount"
+            :expense-data="outDayCount"
+            @add-flow="handleDesktopAddFlow"
+            @click-day="clickDay"
+            @month-change="handleDesktopMonthChange"
+            @show-analysis="showMonthAnalysis"
+          />
+        </div>
+
+        <!-- Mobile Calendar -->
+        <div v-else class="p-0">
+          <MobileCalendar
+            :current-date="nowDate"
+            :income-data="inDayCount"
+            :expense-data="outDayCount"
+            @add-flow="handleMobileAddFlow"
+            @click-day="clickDay"
+            @month-change="handleMobileMonthChange"
+            @show-analysis="showMonthAnalysis"
+          />
+        </div>
+      </div>
     </div>
-    <!-- 月度交易分析弹窗 -->
-    <v-dialog
-      :width="'40rem'"
-      v-model="monthAnalysisDialog"
-      transition="dialog-bottom-transition"
-      class="analysis-dialog"
+
+    <!-- Month Analysis Dialog -->
+    <div
+      v-if="monthAnalysisDialog"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 md:p-4 z-50"
+      @click="monthAnalysisDialog = false"
     >
-      <v-card>
-        <v-card-title class="analysis-title">
-          <v-icon icon="mdi-chart-box" class="mr-2"></v-icon>
-          {{ monthTitle + " 流水分析" }}
-        </v-card-title>
-        <v-card-text>
-          <DatasMonthAnalysis :data="monthAnalysisData" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            variant="tonal"
-            prepend-icon="mdi-close-circle"
+      <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full"
+        @click.stop
+      >
+        <div
+          class="flex items-center justify-between p-2 md:p-6 border-b border-gray-200 dark:border-gray-700"
+        >
+          <div class="flex items-center gap-3">
+            <ChartBarIcon class="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {{ monthTitle }} 流水分析
+            </h3>
+          </div>
+          <button
             @click="monthAnalysisDialog = false"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+          >
+            <XMarkIcon class="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          </button>
+        </div>
+
+        <div class="p-2 md:p-6 max-h-[70vh] overflow-y-auto">
+          <DatasMonthAnalysis :data="monthAnalysisData" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow Table Dialog -->
+    <div
+      v-if="showFlowTable"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 md:p-4 z-50"
+      @click="showFlowTable = false"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-6xl max-h-[80vh] overflow-hidden"
+        @click.stop
+      >
+        <div
+          class="flex items-center justify-between p-2 md:p-4 border-b border-gray-200 dark:border-gray-700"
+        >
+          <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">
+            {{ query.startDay }} - {{ query.endDay }} - {{ query.flowType }}
+          </h2>
+          <button
+            @click="showFlowTable = false"
+            class="md:px-4 md:py-2 px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 font-medium"
           >
             关闭
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+          </button>
+        </div>
 
-    <!-- 流水表格弹窗 -->
-    <v-dialog
-      :width="'80vw'"
-      v-model="showFlowTable"
-      transition="dialog-bottom-transition"
-    >
-      <v-card>
-        <v-card-title>
-          <div class="flex justify-end">
-            <div>
-              <v-btn
-                color="error"
-                variant="elevated"
-                @click="showFlowTable = false"
-              >
-                关闭
-              </v-btn>
-            </div>
-          </div>
-        </v-card-title>
-        <v-card-text>
+        <div class="p-2 md:p-6 overflow-y-auto">
           <DatasFlowTable :query="query" v-if="showFlowTable" />
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+        </div>
+      </div>
+    </div>
 
-    <!-- 添加流水弹窗 -->
+    <!-- Add Flow Dialog -->
     <FlowEditDialog
       v-if="showFlowEditDialog"
       title="添加流水"
@@ -228,225 +222,50 @@
 </template>
 
 <script setup lang="ts">
+import { ref, reactive, computed, onMounted } from "vue";
+import {
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+  ScaleIcon,
+  ChartBarIcon,
+  XMarkIcon,
+} from "@heroicons/vue/24/outline";
+
+import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
+import MobileCalendar from "~/components/ui/MobileCalendar.vue";
+import DesktopCalendar from "~/components/ui/DesktopCalendar.vue";
+import { showFlowEditDialog } from "~/utils/flag";
+import { daily } from "~/utils/apis";
+import { dateFormater } from "~/utils/common";
+import { doApi } from "~/utils/api";
+import type { CommonChartQuery, MonthAnalysis, FlowQuery } from "~/utils/model";
+import type { Flow } from "~/utils/table";
+
 definePageMeta({
   layout: "public",
   middleware: ["auth"],
 });
-import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 
-import { VCalendar } from "vuetify/labs/VCalendar";
-import { showFlowEditDialog } from "~/utils/flag";
-import { daily } from "~/utils/apis";
-import { dateFormater } from "~/utils/common";
-import type { CommonChartQuery } from "~/utils/model";
+// Theme detection
+const isDark = ref(false);
 
-const doQuery = async (param: CommonChartQuery) => {
-  return await daily(param);
-};
-// 支出相关数据存储实体
-const outMonthCount = ref<any>({});
-// key - 日期 value - 金额
-const outDayCount = ref<any>({});
-// 收入相关数据存储实体
-const inMonthCount = ref<any>({});
-// key - 日期 value - 金额
-const inDayCount = ref<any>({});
-const getInMonth = (): number => {
-  const title = dayToMonth(nowDate.value);
-  return Number(
-    inMonthCount.value[title] ? Number(inMonthCount.value[title]).toFixed(2) : 0
-  );
-};
-const getOutMonth = (): number => {
-  const title = dayToMonth(nowDate.value);
-  return Number(
-    outMonthCount.value[title]
-      ? Number(outMonthCount.value[title]).toFixed(2)
-      : 0
-  );
-};
+// Responsive detection
+const isMobile = ref(false);
 
-const query = ref<FlowQuery>({
-  pageNum: 1,
-  pageSize: 20,
-});
-const showFlowTable = ref(false);
-
-// 日期点击事件
-const clickDay = (day: string | any, flowType?: string) => {
-  if (day == "") {
-    query.value.startDay = dateFormater(
-      "YYYY-MM-dd",
-      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth(), 1)
-    );
-    query.value.endDay = dateFormater(
-      "YYYY-MM-dd",
-      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth() + 1, 0)
-    );
-  } else {
-    query.value.startDay = day;
-    query.value.endDay = day;
-  }
-  if (flowType) {
-    query.value.flowType = flowType;
-  } else {
-    query.value.flowType = "";
-  }
-  showFlowTable.value = true;
-};
-
+// Current date and navigation
 const nowDate = ref(new Date());
-const nowYear = ref(new Date().getFullYear());
-const nowMonth = ref(new Date().getMonth());
-const calendar = ref();
 
-// 月份变更
-const changeDate = (value: any) => {
-  if (value == "prev-month") {
-    nowDate.value.setMonth(nowDate.value.getMonth() - 1);
-  } else if (value == "next-month") {
-    nowDate.value.setMonth(nowDate.value.getMonth() + 1);
-  } else {
-    nowDate.value = new Date();
-  }
-  nowMonth.value = nowDate.value.getMonth();
-  nowYear.value = nowDate.value.getFullYear();
-  initDailyButton();
-};
+// Calendar data (removed as now handled by components)
 
-// 初始化日历按钮(新增流水按钮)
-const initDailyButton = () => {
-  const daysInMonth = new Date(nowYear.value, nowMonth.value, 0).getDate();
-  // console.log(nowYear.value, nowMonth.value, daysInMonth);
-  // Add event for the full month
-  for (let day = 1; day <= daysInMonth; day++) {
-    const buttonTitle = `button-${nowYear.value}-${nowMonth.value}-${day}`;
-    const existingEvent = events.find((e) => e.title === buttonTitle);
-    if (existingEvent) {
-      console.log(buttonTitle);
-      return;
-    } else {
-      events.unshift({
-        type: "button",
-        title: buttonTitle,
-        day: `${nowYear.value}-${nowMonth.value + 1}-${day}`,
-        start: new Date(`${nowYear.value}-${nowMonth.value + 1}-${day}`),
-        end: new Date(`${nowYear.value}-${nowMonth.value + 1}-${day}`),
-        color: "",
-        allDay: true,
-        out: false,
-        money: 0,
-      });
-    }
-  }
-};
+// Data storage
+const outMonthCount = ref<Record<string, number>>({});
+const outDayCount = ref<Record<string, number>>({});
+const inMonthCount = ref<Record<string, number>>({});
+const inDayCount = ref<Record<string, number>>({});
 
-// 根据日期获取月份
-const dayToMonth = (day: string | Date) => {
-  let date = new Date(day);
-  let year = date.getFullYear().toString();
-  let month = (date.getMonth() + 1).toString();
-  return year + " 年 " + month + " 月";
-};
-
-// 支出金额样式
-const outMoneyClass = (money: any) => {
-  if (!money || money == 0) {
-    return "no-flow";
-  } else if (money >= 1000) {
-    return "thousand-flow";
-  } else if (money >= 500) {
-    return "five-hundred-flow";
-  } else {
-    return "have-flow";
-  }
-};
-
-// 收入金额样式
-const inMoneyClass = (money: any) => {
-  if (!money || money == 0) {
-    return "no-in";
-  } else {
-    return "have-in";
-  }
-};
-// 存储日历流水数据
-const events = reactive<CalendarDate[]>([]);
-interface CalendarDate {
-  title: string;
-  type: string; // data表示流水数据，button表示按钮
-  day: string;
-  start: Date;
-  end: Date;
-  color: string;
-  allDay: boolean;
-  out: boolean;
-  money: number;
-}
-// 初始化日历数据
-const initQuery = () => {
-  inMonthCount.value = {};
-  inDayCount.value = {};
-  outMonthCount.value = {};
-  outDayCount.value = {};
-  // 支出数据查询
-  doQuery({}).then((res) => {
-    initDailyButton();
-    if (res.length === 0) {
-      Alert.error("暂无数据");
-    }
-    res.forEach((data) => {
-      // 月集合
-      let month = dayToMonth(data.type);
-      // 支出
-      outDayCount.value[data.type] = data.outSum;
-      let count = outMonthCount.value[month] ? outMonthCount.value[month] : 0;
-      outMonthCount.value[month] = count + Number(data.outSum);
-
-      // 收入
-      inDayCount.value[data.type] = data.inSum;
-      let inCount = inMonthCount.value[month] ? inMonthCount.value[month] : 0;
-      inMonthCount.value[month] = inCount + Number(data.inSum);
-
-      // 如果收入和支出都是0，则不显示
-      if (Number(data.outSum) == 0 && Number(data.inSum) == 0) {
-        return;
-      }
-
-      // 支出 chip
-      events.push({
-        type: "data",
-        title: `支出`,
-        day: data.type,
-        start: new Date(data.type),
-        end: new Date(data.type),
-        color: "",
-        allDay: true,
-        out: true,
-        money: data.outSum,
-      });
-
-      // 收入 chip
-      events.push({
-        type: "data",
-        title: `收入`,
-        day: data.type,
-        start: new Date(data.type),
-        end: new Date(data.type),
-        color: "",
-        allDay: true,
-        out: false,
-        money: data.inSum,
-      });
-    });
-  });
-};
-
-onMounted(() => {
-  initQuery();
-});
-
+// Dialog states
 const monthAnalysisDialog = ref(false);
+const showFlowTable = ref(false);
 const monthTitle = ref("");
 const monthAnalysisData = ref<MonthAnalysis>({
   month: "",
@@ -461,17 +280,126 @@ const monthAnalysisData = ref<MonthAnalysis>({
   maxIn: {} as Flow,
   maxZero: {} as Flow,
 });
+
+const query = ref<FlowQuery>({
+  pageNum: 1,
+  pageSize: 20,
+});
+
+const addFlowItem = ref<Flow>({});
+
+// Computed properties
+const balance = computed(() => getInMonth() - getOutMonth());
+
+// Methods
+const doQuery = async (param: CommonChartQuery) => {
+  return await daily(param);
+};
+
+const getInMonth = (): number => {
+  const title = dayToMonth(nowDate.value);
+  return Number(inMonthCount.value[title] || 0);
+};
+
+const getOutMonth = (): number => {
+  const title = dayToMonth(nowDate.value);
+  return Number(outMonthCount.value[title] || 0);
+};
+
+// getDayIncome and getDayExpense methods moved to components
+
+const formatDate = (date: string | Date): string => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+// Helper methods moved to components
+
+const dayToMonth = (day: string | Date): string => {
+  const date = new Date(day);
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString();
+  return `${year} 年 ${month} 月`;
+};
+
+// getExpenseClass method moved to components
+
+// changeDate method moved to component handlers
+
+const clickDay = (day: string, flowType?: string) => {
+  if (day === "") {
+    query.value.startDay = dateFormater(
+      "YYYY-MM-dd",
+      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth(), 1)
+    );
+    query.value.endDay = dateFormater(
+      "YYYY-MM-dd",
+      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth() + 1, 0)
+    );
+  } else {
+    query.value.startDay = day;
+    query.value.endDay = day;
+  }
+
+  query.value.flowType = flowType || "";
+  showFlowTable.value = true;
+};
+
+// addFlow method moved to component handlers
+
+const handleMobileAddFlow = (date: any) => {
+  addFlowItem.value = { day: date.dateString };
+  showFlowEditDialog.value = true;
+};
+
+const handleDesktopAddFlow = (date: any) => {
+  addFlowItem.value = { day: date.dateString };
+  showFlowEditDialog.value = true;
+};
+
+const handleMobileMonthChange = (date: Date) => {
+  nowDate.value = date;
+  initQuery();
+};
+
+const handleDesktopMonthChange = (date: Date) => {
+  nowDate.value = date;
+  initQuery();
+};
+
+const addFlowSuccess = (flow: Flow) => {
+  if (flow.flowType === "不计收支") return;
+
+  const isOutFlow = flow.flowType === "支出";
+  const month = dayToMonth(flow.day || "");
+  const day = flow.day || "";
+
+  // Update month totals
+  if (isOutFlow) {
+    outMonthCount.value[month] =
+      (outMonthCount.value[month] || 0) + Number(flow.money);
+    outDayCount.value[day] = (outDayCount.value[day] || 0) + Number(flow.money);
+  } else {
+    inMonthCount.value[month] =
+      (inMonthCount.value[month] || 0) + Number(flow.money);
+    inDayCount.value[day] = (inDayCount.value[day] || 0) + Number(flow.money);
+  }
+};
+
 const showMonthAnalysis = (month: string) => {
   let monthParam = month
     .replace("年", "-")
     .replace("月", "")
     .replaceAll(" ", "");
-  // 如果月份是单数，则补零
+
   monthTitle.value = month;
   if (monthParam.split("-")[1] && monthParam.split("-")[1].length === 1) {
     monthParam = monthParam.split("-")[0] + "-0" + monthParam.split("-")[1];
   }
-  // console.log(monthParam);
+
   doApi
     .post<MonthAnalysis>("api/entry/analytics/monthAnalysis", {
       month: monthParam,
@@ -482,207 +410,76 @@ const showMonthAnalysis = (month: string) => {
       monthAnalysisDialog.value = true;
     })
     .catch((err) => {
-      // Alert.error("查询出错");
       console.log(err);
     });
 };
 
-const addFlowItem = ref<Flow | any>({});
-const addFlow = (day: any) => {
-  addFlowItem.value.day = day.isoDate;
-  showFlowEditDialog.value = true;
-  // console.log(day);
-};
-// 新增流水成功回调
-const addFlowSuccess = (flow: Flow) => {
-  const dayEvents = events.filter((e) => e.day === flow.day);
+const initQuery = () => {
+  inMonthCount.value = {};
+  inDayCount.value = {};
+  outMonthCount.value = {};
+  outDayCount.value = {};
 
-  if (flow.flowType === "不计收支") {
-    return;
-  }
-  const isOutFlow = flow.flowType === "支出";
-  const matchingEvent = dayEvents.find((e) => e.out === isOutFlow);
+  doQuery({}).then((res) => {
+    if (res.length === 0) {
+      return;
+    }
 
-  // 更新月数据统计
-  const month = dayToMonth(flow.day || "");
-  if (isOutFlow) {
-    outMonthCount.value[month] =
-      Number(outMonthCount.value[month]) + Number(flow.money);
-  } else {
-    inMonthCount.value[month] =
-      Number(inMonthCount.value[month]) + Number(flow.money);
-  }
+    res.forEach((data) => {
+      const month = dayToMonth(data.type);
 
-  // 更新日历 chip
-  if (matchingEvent) {
-    // Update existing event's money
-    matchingEvent.money = Number(
-      (Number(matchingEvent.money) + Number(flow.money)).toFixed(2)
-    );
-    matchingEvent.title = isOutFlow ? "支出" : "收入";
-  } else {
-    // Add new event
-    events.push({
-      start: new Date(flow.day || ""),
-      end: new Date(flow.day || ""),
-      allDay: true,
-      out: isOutFlow,
-      money: Number(flow.money),
-      title: isOutFlow ? "支出" : "收入",
-      type: "data",
-      color: "",
-      day: flow.day || "",
+      // Update day totals
+      outDayCount.value[data.type] = data.outSum;
+      inDayCount.value[data.type] = data.inSum;
+
+      // Update month totals
+      const outCount = outMonthCount.value[month] || 0;
+      outMonthCount.value[month] = outCount + Number(data.outSum);
+
+      const inCount = inMonthCount.value[month] || 0;
+      inMonthCount.value[month] = inCount + Number(data.inSum);
     });
+  });
+};
+
+// Theme detection
+const checkTheme = () => {
+  isDark.value = document.documentElement.classList.contains("dark");
+};
+
+// Responsive detection
+const updateResponsive = () => {
+  if (typeof window !== "undefined") {
+    isMobile.value = window.innerWidth < 1024;
   }
 };
+
+onMounted(() => {
+  checkTheme();
+  updateResponsive();
+  initQuery();
+
+  // Watch for theme changes
+  const themeObserver = new MutationObserver(checkTheme);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+
+  // Watch for screen size changes
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", updateResponsive);
+  }
+
+  return () => {
+    themeObserver.disconnect();
+    if (typeof window !== "undefined") {
+      window.removeEventListener("resize", updateResponsive);
+    }
+  };
+});
 </script>
 
-<style>
-@import "~/assets/css/calendar.css";
-
-/* Additional Calendar Styles */
-.summary-card {
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.03) !important;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-  overflow: hidden;
-}
-
-.summary-content {
-  display: flex;
-  justify-content: space-around;
-  padding: 0.5rem !important;
-}
-
-.summary-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.summary-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
-}
-
-.summary-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.summary-data {
-  display: flex;
-  flex-direction: column;
-}
-
-.summary-label {
-  font-size: 0.8rem;
-  margin-bottom: 4px;
-}
-
-.summary-value {
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-
-.success--text {
-  color: #66bb6a !important;
-}
-
-.error--text {
-  color: #ff5252 !important;
-}
-
-.info--text {
-  color: #42a5f5 !important;
-}
-
-.warning--text {
-  color: #ffa726 !important;
-}
-
-.nav-button {
-  transition: transform 0.2s ease;
-}
-
-.nav-button:hover {
-  transform: scale(1.2);
-}
-
-.analysis-button {
-  transition: all 0.2s ease;
-}
-
-.analysis-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.calendar-event {
-  position: relative;
-}
-
-.calendar-event-content {
-  display: flex;
-  justify-content: center;
-  padding: 2px 0;
-}
-
-/* Dialog Enhancements */
-.v-dialog > .v-card {
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.v-card-title {
-  font-size: 1.25rem;
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(var(--v-border-color), 0.12);
-  display: flex;
-  align-items: center;
-}
-
-.v-card-text {
-  padding: 20px;
-}
-
-.v-card-actions {
-  padding: 12px 20px;
-  border-top: 1px solid rgba(var(--v-border-color), 0.12);
-}
-
-/* Analysis Dialog */
-.analysis-dialog .v-card {
-  background-color: rgba(var(--v-theme-surface), 0.95);
-}
-
-.analysis-title {
-  color: var(--v-theme-primary);
-  font-weight: 600;
-}
-
-/* Flow Table Dialog */
-.flow-table-dialog .v-card {
-  max-height: 80vh;
-}
-
-.flow-table-title {
-  background-color: rgba(var(--v-theme-primary), 0.05);
-}
-
-.flow-table-heading {
-  font-weight: 600;
-  color: var(--v-theme-primary);
-}
+<style scoped>
+/* 自定义日历样式 */
 </style>

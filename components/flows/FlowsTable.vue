@@ -3,7 +3,7 @@
     class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg"
   >
     <!-- 桌面端表格 -->
-    <div class="hidden md:block overflow-x-auto">
+    <div class="hidden md:block max-h-[65vh] overflow-y-auto">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>
@@ -291,14 +291,18 @@
       v-if="!loading && flows.length && totalPages > 1"
       class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
     >
-      <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-center gap-2">
         <!-- 分页信息 -->
-        <div class="text-sm text-gray-700 dark:text-gray-300 text-center">
+        <div
+          class="text-sm text-gray-700 dark:text-gray-300 text-center hidden md:block"
+        >
           共 {{ total }} 条记录
         </div>
 
         <!-- 分页控件 - 响应式布局 -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
           <!-- 每页显示数量选择 -->
           <select
             :value="pageSize"
@@ -328,7 +332,10 @@
             </button>
 
             <!-- 页码按钮 - 移动端限制显示数量 -->
-            <template v-for="(page, index) in mobileFriendlyPageNumbers" :key="index">
+            <template
+              v-for="(page, index) in mobileFriendlyPageNumbers"
+              :key="index"
+            >
               <button
                 v-if="page !== '...'"
                 @click="$emit('changePage', Number(page))"
@@ -398,7 +405,11 @@ const props = defineProps<Props>();
 
 // 生成移动端友好的页码
 const mobileFriendlyPageNumbers = computed(() => {
-  return generateMobileFriendlyPageNumbers(props.currentPage, props.totalPages, 3);
+  return generateMobileFriendlyPageNumbers(
+    props.currentPage,
+    props.totalPages,
+    3
+  );
 });
 
 defineEmits<{

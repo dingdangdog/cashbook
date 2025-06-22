@@ -10,7 +10,7 @@ import { del, page } from "./api";
 import { editInfoFlag } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
 
-const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
+const pageQuery = ref<PageParam>({ pageSize: 10, pageNum: 1 });
 const query = ref<TypeRelation | any>({});
 const tabledata = ref<{ total?: number; data?: TypeRelation[] }>({});
 const loading = ref(false);
@@ -249,27 +249,27 @@ onMounted(() => {
           <thead class="bg-gray-700/50">
             <tr>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
                 账本信息
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
                 用户ID
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
                 原类型
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
                 目标类型
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
                 操作
               </th>
@@ -281,7 +281,7 @@ onMounted(() => {
               :key="item.id"
               class="hover:bg-gray-700/30 transition-colors"
             >
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <td class="px-4 py-2 whitespace-nowrap text-sm">
                 <div class="flex flex-col">
                   <div class="flex items-center space-x-2">
                     <span
@@ -312,16 +312,16 @@ onMounted(() => {
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-white">
                 {{ item.userId }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-white">
                 {{ item.source }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-white">
                 {{ item.target }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
                 <div class="flex items-center space-x-2">
                   <button
                     @click="editItemInfo(item)"

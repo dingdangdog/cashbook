@@ -166,7 +166,11 @@ const totalPages = computed(() =>
 
 // 移动端友好的页码生成
 const mobileFriendlyPageNumbers = computed(() => {
-  return generateMobileFriendlyPageNumbers(pageQuery.value.pageNum, totalPages.value, 3);
+  return generateMobileFriendlyPageNumbers(
+    pageQuery.value.pageNum,
+    totalPages.value,
+    3
+  );
 });
 
 // 在组件挂载时获取数据
@@ -241,7 +245,7 @@ onMounted(() => {
       <!-- 桌面端表格 -->
       <div
         v-if="!loading && tabledata.data?.length"
-        class="hidden lg:block overflow-x-auto"
+        class="hidden lg:block max-h-[70vh] overflow-y-auto"
       >
         <table class="w-full">
           <thead>
@@ -285,9 +289,7 @@ onMounted(() => {
               </th>
             </tr>
           </thead>
-          <tbody
-            class="divide-y divide-gray-200 dark:divide-gray-600 max-h-[50vh] overflow-y-auto"
-          >
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
             <tr
               v-for="item in tabledata.data"
               :key="item.id"
@@ -306,7 +308,7 @@ onMounted(() => {
               <td class="px-4 py-2 whitespace-nowrap">
                 <div
                   class="text-sm font-medium text-green-950 dark:text-white max-w-52 text-ellipsis overflow-hidden"
-                  title="{{ item.bookName }}"
+                  :title="item.bookName"
                 >
                   {{ item.bookName }}
                 </div>
@@ -546,7 +548,10 @@ onMounted(() => {
               </button>
 
               <!-- 页码按钮 - 移动端限制显示数量 -->
-              <template v-for="(page, index) in mobileFriendlyPageNumbers" :key="index">
+              <template
+                v-for="(page, index) in mobileFriendlyPageNumbers"
+                :key="index"
+              >
                 <button
                   v-if="page !== '...'"
                   @click="changePage(Number(page))"

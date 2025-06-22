@@ -188,7 +188,7 @@
           v-else
           v-for="item in flowPageRef.data"
           :key="item.id"
-          class="p-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="p-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1">
