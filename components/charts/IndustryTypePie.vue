@@ -194,7 +194,7 @@ const optionRef = ref({
     // left: '0',
     // orient: 'vertical', // 图例的排列方向
     textStyle: {
-      color: "#000", // 图例文字颜色
+      color: "#374151", // 图例文字颜色
     },
   },
   toolbox: {
@@ -212,7 +212,7 @@ const optionRef = ref({
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10, // 饼图扇形的边框弧度
-        borderColor: "#fff", // 饼图扇形的边框颜色
+        borderColor: "#d1d5db", // 饼图扇形的边框颜色
         borderWidth: 1, // 饼图扇形的边框线宽
       },
       // grid: {
@@ -290,10 +290,12 @@ const doQuery = (query: CommonChartQuery) => {
           });
         }
         optionRef.value.series[0].data = dataList;
-        optionRef.value.legend.textStyle.color = isDark.value ? "#fff" : "#000";
+        optionRef.value.legend.textStyle.color = isDark.value
+          ? "#e5e7eb"
+          : "#374151";
         optionRef.value.series[0].itemStyle.borderColor = isDark.value
-          ? "#fff"
-          : "#000";
+          ? "#4b5563"
+          : "#d1d5db";
         typePieChart.setOption(optionRef.value);
       }
     });

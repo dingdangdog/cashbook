@@ -189,7 +189,7 @@ const optionRef = ref({
       show: true,
     },
     textStyle: {
-      color: "#000",
+      color: "#374151",
     },
   },
   toolbox: {
@@ -207,7 +207,7 @@ const optionRef = ref({
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
-        borderColor: "#fff",
+        borderColor: "#d1d5db",
         borderWidth: 1,
       },
       // grid: {
@@ -288,10 +288,12 @@ const doQuery = (query: CommonChartQuery) => {
         }
 
         optionRef.value.series[0].data = dataList;
-        optionRef.value.legend.textStyle.color = isDark.value ? "#fff" : "#000";
+        optionRef.value.legend.textStyle.color = isDark.value
+          ? "#e5e7eb"
+          : "#374151";
         optionRef.value.series[0].itemStyle.borderColor = isDark.value
-          ? "#fff"
-          : "#000";
+          ? "#4b5563"
+          : "#d1d5db";
 
         attributionChart.setOption(optionRef.value);
       }
