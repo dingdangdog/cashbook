@@ -88,3 +88,65 @@ export const toGithub = () => {
 export const toDocumentation = () => {
   window.open("https://doc.cashbook.oldmoon.top", "_blank");
 };
+
+// 主题切换功能已移至 useAppTheme composable
+
+/**
+ * 生成移动端友好的分页页码数组
+ * @param currentPage 当前页码
+ * @param totalPages 总页数
+ * @param maxVisiblePages 移动端最大可见页码数（默认3个）
+ * @returns 页码数组，包含数字和省略号
+ */
+export const generateMobileFriendlyPageNumbers = (
+  currentPage: number,
+  totalPages: number,
+  maxVisiblePages: number = 3
+): (number | string)[] => {
+  if (totalPages <= maxVisiblePages) {
+    // 如果总页数不超过最大可见页数，直接返回所有页码
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const pages: (number | string)[] = [];
+
+  if (currentPage <= 2) {
+    // 当前页在前部：[1] [2] ... [最后一页]
+    pages.push(1);
+    if (totalPages > 1) {
+      pages.push(2);
+    }
+    if (totalPages > 3) {
+      pages.push("...");
+    }
+    if (totalPages > 2) {
+      pages.push(totalPages);
+    }
+  } else if (currentPage >= totalPages - 1) {
+    // 当前页在后部：[1] ... [倒数第二页] [最后一页]
+    pages.push(1);
+    if (totalPages > 3) {
+      pages.push("...");
+    }
+    if (totalPages > 1) {
+      pages.push(totalPages - 1);
+    }
+    pages.push(totalPages);
+  } else {
+    // 当前页在中间：[1] ... [当前页] ... [最后一页]
+    pages.push(1);
+    pages.push("...");
+    pages.push(currentPage);
+    pages.push("...");
+    pages.push(totalPages);
+  }
+
+  return pages.filter((page, index, arr) => {
+    // 去除重复的页码和多余的省略号
+    if (typeof page === 'number') {
+      return page >= 1 && page <= totalPages && arr.indexOf(page) === index;
+    }
+    // 确保省略号不重复
+    return index === 0 || arr[index - 1] !== "...";
+  });
+};

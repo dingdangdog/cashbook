@@ -1,5 +1,3 @@
-import { transformAssetUrls } from "vite-plugin-vuetify";
-
 export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: "2025-01-10",
@@ -45,7 +43,6 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxtjs/i18n",
-    "vuetify-nuxt-module",
     "@nuxtjs/tailwindcss",
     "nuxt-echarts",
     "@prisma/nuxt",
@@ -85,56 +82,9 @@ export default defineNuxtConfig({
     ],
   },
   tailwindcss: {
-    config: {
-      prefix: "tw-",
-    },
-  },
-  vuetify: {
-    moduleOptions: {
-      ssrClientHints: {},
-    },
-    vuetifyOptions: {
-      theme: {
-        defaultTheme: "dark",
-        themes: {
-          light: {
-            dark: false,
-            colors: {
-              primary: '#1976D2',
-              secondary: '#26A69A',
-              accent: '#FF4081',
-              error: '#F44336',
-              info: '#2196F3',
-              success: '#4CAF50',
-              warning: '#FB8C00',
-              background: '#F5F5F5',
-              surface: '#FFFFFF',
-            }
-          },
-          dark: {
-            dark: true,
-            colors: {
-              primary: '#2196F3',
-              secondary: '#26A69A',
-              accent: '#FF4081',
-              error: '#FF5252',
-              info: '#42A5F5',
-              success: '#66BB6A',
-              warning: '#FFA726',
-              background: '#121212',
-              surface: '#1E1E1E',
-            }
-          }
-        },
-      },
-    },
+    // 使用根目录的 tailwind.config.js 文件
   },
   vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
     resolve: {
       alias: {
         ".prisma/client/index-browser":
