@@ -202,8 +202,9 @@
         <div
           v-for="item in flows"
           :key="item.id"
-          class="bg-gray-50 dark:bg-gray-800 p-3 space-y-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+          class="bg-gray-50 dark:bg-gray-800 px-2 py-2 space-y-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
         >
+          <!-- 顶部：复选框、日期和删除按钮 -->
           <div class="flex justify-between items-start">
             <div class="flex items-center gap-2">
               <input
@@ -216,39 +217,18 @@
                 item.day
               }}</span>
             </div>
-            <div class="flex items-center gap-2">
-              <span
-                :class="[
-                  'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                  item.flowType === '收入'
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                    : item.flowType === '支出'
-                    ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                ]"
+            <div class="flex items-center">
+              <button
+                @click="$emit('deleteItem', item)"
+                class="p-1.5 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                title="删除"
               >
-                {{ Number(item.money || 0).toFixed(2) }}
-              </span>
-              <!-- 操作按钮紧凑布局 -->
-              <div class="flex gap-1">
-                <button
-                  @click="$emit('editItem', item)"
-                  class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
-                  title="编辑"
-                >
-                  <PencilIcon class="h-3 w-3" />
-                </button>
-                <button
-                  @click="$emit('deleteItem', item)"
-                  class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
-                  title="删除"
-                >
-                  <TrashIcon class="h-3 w-3" />
-                </button>
-              </div>
+                <TrashIcon class="h-3 w-3" />
+              </button>
             </div>
           </div>
 
+          <!-- 中间内容 -->
           <div class="space-y-1">
             <div
               class="text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-1"
@@ -258,28 +238,55 @@
             <div class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">
               {{ item.description }}
             </div>
-            <div class="flex flex-wrap gap-1 text-xs">
-              <span
-                class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded"
-              >
-                {{ item.flowType }}
-              </span>
-              <span
-                class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded"
-              >
-                {{ item.industryType }}
-              </span>
-              <span
-                class="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 px-1.5 py-0.5 rounded"
-              >
-                {{ item.payType }}
-              </span>
-              <span
-                v-if="item.attribution"
-                class="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded"
-              >
-                {{ item.attribution }}
-              </span>
+            <!-- 标签、金额和编辑按钮在同一行 -->
+            <div
+              class="flex flex-wrap items-center justify-between gap-1 text-xs"
+            >
+              <div class="flex flex-wrap gap-1">
+                <span
+                  class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded"
+                >
+                  {{ item.flowType }}
+                </span>
+                <span
+                  class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded"
+                >
+                  {{ item.industryType }}
+                </span>
+                <span
+                  class="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 px-1.5 py-0.5 rounded"
+                >
+                  {{ item.payType }}
+                </span>
+                <span
+                  v-if="item.attribution"
+                  class="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded"
+                >
+                  {{ item.attribution }}
+                </span>
+              </div>
+              <!-- 右侧：金额和编辑按钮 -->
+              <div class="flex items-center gap-2">
+                <span
+                  :class="[
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                    item.flowType === '收入'
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                      : item.flowType === '支出'
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+                  ]"
+                >
+                  {{ Number(item.money || 0).toFixed(2) }}
+                </span>
+                <button
+                  @click="$emit('editItem', item)"
+                  class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                  title="编辑"
+                >
+                  <PencilIcon class="h-3 w-3" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

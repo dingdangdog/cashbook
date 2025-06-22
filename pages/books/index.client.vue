@@ -381,12 +381,12 @@ onMounted(() => {
         <div
           v-for="item in tabledata.data"
           :key="item.id"
-          class="p-2 border border-green-500 dark:border-green-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="bg-gray-50 dark:bg-gray-800 p-3 space-y-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
         >
           <!-- 标题行：账本名称 + 删除按钮 -->
           <div class="flex justify-between items-center mb-2">
             <h3
-              class="text-base font-medium text-green-950 dark:text-white flex-1 flex items-center pr-2"
+              class="text-base font-medium text-gray-900 dark:text-gray-100 flex-1 flex items-center pr-2"
             >
               <span class="font-medium">账本名称：</span>
               <span class="text-ellipsis overflow-hidden max-w-52">{{
@@ -401,7 +401,7 @@ onMounted(() => {
                 class="p-1.5 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                 title="删除"
               >
-                <TrashIcon class="h-4 w-4" />
+                <TrashIcon class="h-3 w-3" />
               </button>
             </div>
           </div>
@@ -422,7 +422,7 @@ onMounted(() => {
                 <span class="font-medium">分享KEY:</span>
                 <span
                   v-if="item.shareKey"
-                  class="inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
+                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
                 >
                   {{ item.shareKey }}
                 </span>
@@ -432,10 +432,10 @@ onMounted(() => {
                 <button
                   v-if="item.shareKey"
                   @click="copyShareKey(item.shareKey)"
-                  class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded p-1 transition-colors"
+                  class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
                   title="复制分享Key"
                 >
-                  <DocumentDuplicateIcon class="h-4 w-4" />
+                  <DocumentDuplicateIcon class="h-3 w-3" />
                 </button>
               </div>
             </div>
@@ -449,18 +449,18 @@ onMounted(() => {
               <div class="flex items-center gap-1">
                 <button
                   @click="editItemInfo(item)"
-                  class="p-1.5 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
+                  class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
                   title="编辑"
                 >
-                  <PencilIcon class="h-4 w-4" />
+                  <PencilIcon class="h-3 w-3" />
                 </button>
                 <button
                   v-if="!item.shareKey"
                   @click="toShare(item)"
-                  class="p-1.5 text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded transition-colors"
+                  class="p-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors"
                   title="分享"
                 >
-                  <ShareIcon class="h-4 w-4" />
+                  <ShareIcon class="h-3 w-3" />
                 </button>
               </div>
             </div>

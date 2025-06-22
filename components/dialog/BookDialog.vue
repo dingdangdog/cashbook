@@ -12,25 +12,23 @@
       >
         <!-- Header -->
         <div
-          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+          class="px-4 py-2 md:px-6 md:py-4 border-b border-gray-200 dark:border-gray-700"
         >
-          <h2
-            class="text-xl font-semibold text-green-950 dark:text-white"
-          >
+          <h2 class="text-xl font-semibold text-green-950 dark:text-white">
             打开账本
           </h2>
         </div>
 
         <!-- Content -->
-        <div class="px-6 py-4 flex-1 overflow-y-auto">
-          <div class="flex flex-wrap gap-3">
-                         <button
+        <div class="px-4 py-2 md:px-6 md:py-4 flex-1 overflow-y-auto">
+          <div class="flex flex-wrap gap-2 md:gap-3">
+            <button
               v-for="book in books"
               :key="book.id"
-              class="px-4 py-2 rounded-lg border transition-all duration-200 max-w-40 group"
+              class="px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all duration-200 max-w-32 md:max-w-40 group"
               :class="[
-                checkSelectBook(book.bookId || '') 
-                  ? 'bg-green-50 border-green-500 text-green-700 dark:bg-green-900/20 dark:border-green-400 dark:text-green-300' 
+                checkSelectBook(book.bookId || '')
+                  ? 'bg-green-50 border-green-500 text-green-700 dark:bg-green-900/20 dark:border-green-400 dark:text-green-300'
                   : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600',
               ]"
               @click="openBook(book)"
@@ -45,24 +43,24 @@
 
         <!-- Footer -->
         <div
-          class="px-6 py-4 border-t border-gray-200 dark:border-gray-700"
+          class="px-4 py-2 md:px-6 md:py-4 border-t border-gray-200 dark:border-gray-700"
         >
           <div class="flex flex-wrap gap-3 justify-center">
             <button
               @click="cancelChange"
-              class="px-4 py-2 border border-orange-300 text-orange-600 rounded-md font-medium transition-colors hover:bg-orange-50 dark:border-orange-500 dark:text-orange-400 dark:hover:bg-orange-900/20"
+              class="px-2 py-1 md:px-4 md:py-2 border border-orange-300 text-orange-600 rounded-md font-medium transition-colors hover:bg-orange-50 dark:border-orange-500 dark:text-orange-400 dark:hover:bg-orange-900/20"
             >
               取消
             </button>
             <button
               @click="getShare"
-              class="px-4 py-2 border border-green-300 text-green-600 rounded-md font-medium transition-colors hover:bg-green-50 dark:border-green-500 dark:text-green-400 dark:hover:bg-green-900/20"
+              class="px-2 py-1 md:px-4 md:py-2 border border-green-300 text-green-600 rounded-md font-medium transition-colors hover:bg-green-50 dark:border-green-500 dark:text-green-400 dark:hover:bg-green-900/20"
             >
               添加共享账本
             </button>
             <button
               @click="addBook"
-              class="px-4 py-2 bg-green-600 text-white rounded-md font-medium transition-colors hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
+              class="px-2 py-1 md:px-4 md:py-2 bg-green-600 text-white rounded-md font-medium transition-colors hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
             >
               新建账本
             </button>
@@ -84,12 +82,8 @@
         class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md"
       >
         <!-- Header -->
-        <div
-          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
-        >
-          <h2
-            class="text-lg font-semibold text-green-950 dark:text-white"
-          >
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-green-950 dark:text-white">
             {{ addBookDialog.title }}
           </h2>
         </div>
@@ -122,9 +116,7 @@
         </div>
 
         <!-- Footer -->
-        <div
-          class="px-6 py-4 border-t border-gray-200 dark:border-gray-700"
-        >
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
           <div class="flex gap-3 justify-center">
             <button
               @click="addBookDialog.visible = false"
@@ -180,12 +172,8 @@
         class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md"
       >
         <!-- Header -->
-        <div
-          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
-        >
-          <h2
-            class="text-lg font-semibold text-green-950 dark:text-white"
-          >
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-green-950 dark:text-white">
             添加共享账本
           </h2>
         </div>
@@ -220,9 +208,7 @@
         </div>
 
         <!-- Footer -->
-        <div
-          class="px-6 py-4 border-t border-gray-200 dark:border-gray-700"
-        >
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
           <div class="flex gap-3 justify-center">
             <button
               @click="showGetShareDialog = false"
