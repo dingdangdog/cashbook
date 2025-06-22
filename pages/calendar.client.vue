@@ -30,7 +30,7 @@
               <p
                 class="text-sm md:text-2xl font-bold text-green-700 dark:text-green-300"
               >
-                {{ getInMonth().toFixed(0) }}
+                {{ getInMonth().toFixed(2) }}
               </p>
             </div>
           </div>
@@ -60,7 +60,7 @@
               <p
                 class="text-sm md:text-2xl font-bold text-red-700 dark:text-red-300"
               >
-                {{ getOutMonth().toFixed(0) }}
+                {{ getOutMonth().toFixed(2) }}
               </p>
             </div>
           </div>
@@ -104,7 +104,7 @@
                     : 'text-orange-700 dark:text-orange-300'
                 "
               >
-                {{ balance.toFixed(0) }}
+                {{ balance.toFixed(2) }}
               </p>
             </div>
           </div>
