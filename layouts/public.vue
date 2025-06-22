@@ -40,7 +40,11 @@ onMounted(() => {
   if (!bookName.value) {
     showBookDialogFlag.value.visible = true;
   }
-  getUserInfo();
+  
+  // 只有当 GlobalUserInfo 不存在时才调用 getUserInfo
+  if (!GlobalUserInfo.value) {
+    getUserInfo();
+  }
 
   // Check for version updates
   checkVersion();

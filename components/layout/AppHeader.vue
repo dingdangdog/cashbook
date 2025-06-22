@@ -4,6 +4,7 @@ import {
   UserCircleIcon,
   ChevronDownIcon,
 } from "@heroicons/vue/24/outline";
+import { GlobalUserInfo } from "~/utils/store";
 
 interface Props {
   bookName: string;
