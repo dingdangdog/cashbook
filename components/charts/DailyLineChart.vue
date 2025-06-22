@@ -1,10 +1,14 @@
 <template>
   <div class="chart-common-container">
     <div
-      class="tw-flex tw-flex-col md:tw-flex-row md:tw-justify-between tw-items-center tw-w-full tw-border-b md:tw-h-16"
+      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 md:h-16 mb-4"
     >
-      <div>
-        <h4 class="tw-text-lg my-2">{{ title }}</h4>
+      <div v-if="title">
+        <h4
+          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
+        >
+          {{ title }}
+        </h4>
       </div>
       <div></div>
     </div>
@@ -13,7 +17,8 @@
     </div>
     <div
       v-show="!noData"
-      id="lineDiv"
+      :id="chartId"
+      class="chart-content"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
@@ -27,6 +32,9 @@ import { daily } from "~/utils/apis";
 
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
+
+// 生成唯一ID避免冲突
+const chartId = ref(`lineDiv-${Math.random().toString(36).substr(2, 9)}`);
 
 // 横轴数据
 const xAxisList: string[] = [];
@@ -160,7 +168,11 @@ const zoomChange = (total: number): number => {
 };
 
 onMounted(() => {
-  lineDiv = document.getElementById("lineDiv");
+  lineDiv = document.getElementById(chartId.value);
+  const oldInstance = echarts.getInstanceByDom(lineDiv);
+  if (oldInstance) {
+    oldInstance.dispose();
+  }
   lineChart = echarts.init(lineDiv);
   daily({}).then((res) => {
     // console.log(res);
@@ -194,12 +206,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#lineDiv {
+.chart-content {
   padding: 10px;
 }
 
 @media screen and (max-width: 480px) {
-  #lineDiv {
+  .chart-content {
     font-size: small;
   }
 }

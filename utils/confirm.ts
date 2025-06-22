@@ -4,13 +4,12 @@ export interface ConfirmModel {
   confirmText?: string;
   cancelText?: string;
   closeText?: string;
-  confirm: Function;
-  cancel?: Function;
-  close?: Function;
+  confirm: () => void;
+  cancel?: () => void;
+  close?: () => void;
 }
 
-export const GlobalConfirmModels = ref<ConfirmModel[]>([]);
-export const ThisConfirmModel = ref<ConfirmModel>();
+export const ThisConfirmModel = ref<ConfirmModel | undefined>();
 export const openConfirmDialogFlag = ref(false);
 
 export class Confirm {
@@ -27,5 +26,10 @@ export class Confirm {
       ThisConfirmModel.value = model;
       openConfirmDialogFlag.value = true;
     }
+  };
+
+  static close = () => {
+    openConfirmDialogFlag.value = false;
+    ThisConfirmModel.value = undefined;
   };
 }

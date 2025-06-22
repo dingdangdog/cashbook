@@ -1,109 +1,256 @@
 <template>
-  <v-dialog
-    v-model="showBookDialogFlag.visible"
-    width="40rem"
-    transition="dialog-top-transition"
-    persistent
-  >
-    <v-card>
-      <v-card-title>打开账本</v-card-title>
-      <v-card-text class="tw-max-h-[60vh] tw-overflow-y-auto">
-        <v-chip
-          v-for="book in books"
-          :key="book.id"
-          class="book-card"
-          :class="checkSelectBook(book.id || '')"
-          @click="openBook(book)"
-          :title="book.bookName"
+  <!-- Main Book Dialog -->
+  <Teleport to="body">
+    <div
+      v-if="showBookDialogFlag.visible"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      @click="cancelChange"
+    >
+      <div
+        @click.stop
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col"
+      >
+        <!-- Header -->
+        <div
+          class="px-4 py-2 md:px-6 md:py-4 border-b border-gray-200 dark:border-gray-700"
         >
-          <p class="book-name">
-            {{ book.bookName }}
+          <h2 class="text-xl font-semibold text-green-950 dark:text-white">
+            打开账本
+          </h2>
+        </div>
+
+        <!-- Content -->
+        <div class="px-4 py-2 md:px-6 md:py-4 flex-1 overflow-y-auto">
+          <div class="flex flex-wrap gap-2 md:gap-3">
+            <button
+              v-for="book in books"
+              :key="book.id"
+              class="px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all duration-200 max-w-32 md:max-w-40 group"
+              :class="[
+                checkSelectBook(book.bookId || '')
+                  ? 'bg-green-50 border-green-500 text-green-700 dark:bg-green-900/20 dark:border-green-400 dark:text-green-300'
+                  : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600',
+              ]"
+              @click="openBook(book)"
+              :title="book.bookName"
+            >
+              <p class="truncate text-sm font-medium">
+                {{ book.bookName }}
+              </p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div
+          class="px-4 py-2 md:px-6 md:py-4 border-t border-gray-200 dark:border-gray-700"
+        >
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button
+              @click="cancelChange"
+              class="px-2 py-1 md:px-4 md:py-2 border border-orange-300 text-orange-600 rounded-md font-medium transition-colors hover:bg-orange-50 dark:border-orange-500 dark:text-orange-400 dark:hover:bg-orange-900/20"
+            >
+              取消
+            </button>
+            <button
+              @click="getShare"
+              class="px-2 py-1 md:px-4 md:py-2 border border-green-300 text-green-600 rounded-md font-medium transition-colors hover:bg-green-50 dark:border-green-500 dark:text-green-400 dark:hover:bg-green-900/20"
+            >
+              添加共享账本
+            </button>
+            <button
+              @click="addBook"
+              class="px-2 py-1 md:px-4 md:py-2 bg-green-600 text-white rounded-md font-medium transition-colors hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
+            >
+              新建账本
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+
+  <!-- Add Book Dialog -->
+  <Teleport to="body">
+    <div
+      v-if="addBookDialog.visible"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      @click="addBookDialog.visible = false"
+    >
+      <div
+        @click.stop
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md"
+      >
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-green-950 dark:text-white">
+            {{ addBookDialog.title }}
+          </h2>
+        </div>
+
+        <!-- Content -->
+        <div class="px-6 py-4">
+          <div class="space-y-2">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              账本名称
+            </label>
+            <input
+              v-model="newBook.bookName"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
+              placeholder="请输入账本名称"
+              :class="{
+                'border-red-500':
+                  !newBook.bookName && newBook.bookName !== undefined,
+              }"
+            />
+            <p
+              v-if="!newBook.bookName && newBook.bookName !== undefined"
+              class="text-red-500 text-xs"
+            >
+              必填
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex gap-3 justify-center">
+            <button
+              @click="addBookDialog.visible = false"
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md font-medium transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+              取消
+            </button>
+            <button
+              @click="confirmBookForm()"
+              :disabled="isAddingBook"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md font-medium transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              <span v-if="isAddingBook" class="flex items-center">
+                <svg
+                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                确定
+              </span>
+              <span v-else>确定</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+
+  <!-- Get Share Dialog -->
+  <Teleport to="body">
+    <div
+      v-if="showGetShareDialog"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      @click="showGetShareDialog = false"
+    >
+      <div
+        @click.stop
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md"
+      >
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-green-950 dark:text-white">
+            添加共享账本
+          </h2>
+        </div>
+
+        <!-- Content -->
+        <div class="px-6 py-4">
+          <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+            使用他人分享的共享Key添加共享账本。
           </p>
-        </v-chip>
-      </v-card-text>
-      <hr />
-      <v-card-actions>
-        <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
-          <v-btn color="warning" variant="outlined" @click="cancelChange"
-            >取消</v-btn
-          >
-          <v-btn color="success" variant="outlined" @click="getShare"
-            >添加共享账本</v-btn
-          >
-          <v-btn color="success" variant="elevated" @click="addBook"
-            >新建账本</v-btn
-          >
+          <div class="space-y-2">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              共享Key
+            </label>
+            <input
+              v-model="shareKey"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
+              placeholder="请输入共享Key"
+              :class="{
+                'border-red-500': !shareKey && shareKey !== undefined,
+              }"
+            />
+            <p
+              v-if="!shareKey && shareKey !== undefined"
+              class="text-red-500 text-xs"
+            >
+              必填
+            </p>
+          </div>
         </div>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog width="25rem" v-model="addBookDialog.visible" scrim="rgba(0,0,0,0)">
-    <v-card>
-      <v-card-title>{{ addBookDialog.title }}</v-card-title>
-      <v-card-text>
-        <v-text-field
-          label="账本名称"
-          v-model="newBook.bookName"
-          clearable
-          hide-details="auto"
-          variant="outlined"
-          :rules="[required]"
-          required
-        ></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
-          <v-btn variant="elevated" @click="addBookDialog.visible = false">
-            取消
-          </v-btn>
-          <v-btn
-            variant="elevated"
-            color="primary"
-            @click="confirmBookForm()"
-            :loading="isAddingBook"
-            :disabled="isAddingBook"
-          >
-            确定
-          </v-btn>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex gap-3 justify-center">
+            <button
+              @click="showGetShareDialog = false"
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md font-medium transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+              取消
+            </button>
+            <button
+              @click="confirmGetShare()"
+              :disabled="isAddingShareBook"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md font-medium transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              <span v-if="isAddingShareBook" class="flex items-center">
+                <svg
+                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                确定
+              </span>
+              <span v-else>确定</span>
+            </button>
+          </div>
         </div>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog width="25rem" v-model="showGetShareDialog" scrim="rgba(0,0,0,0)">
-    <v-card>
-      <v-card-title>添加共享账本</v-card-title>
-      <v-card-text>
-        <p class="tw-text-gray-500 tw-text-sm">
-          使用他人分享的共享Key添加共享账本。
-        </p>
-        <v-text-field
-          label="共享Key"
-          v-model="shareKey"
-          clearable
-          hide-details="auto"
-          variant="outlined"
-          :rules="[required]"
-          required
-        ></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <div class="tw-flex tw-space-x-4 tw-justify-center tw-w-full">
-          <v-btn variant="elevated" @click="showGetShareDialog = false">
-            取消
-          </v-btn>
-          <v-btn
-            variant="elevated"
-            color="primary"
-            @click="confirmGetShare()"
-            :loading="isAddingShareBook"
-            :disabled="isAddingShareBook"
-          >
-            确定
-          </v-btn>
-        </div>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -193,7 +340,7 @@ const confirmBookForm = () => {
 };
 
 const checkSelectBook = (bookId: string | number) => {
-  return localStorage.getItem("bookId") === bookId ? "book-card-selected" : "";
+  return localStorage.getItem("bookId") === bookId;
 };
 
 const getShare = () => {

@@ -1,12 +1,202 @@
+<template>
+  <!-- 流水小票编辑对话框 -->
+  <div
+    v-if="showFlowEditInvoiceDialog"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    @click.self="closeDialog"
+  >
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl mx-auto max-h-[90vh] overflow-y-auto"
+      @click.stop
+    >
+      <!-- 标题栏 -->
+      <div
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          上传小票
+        </h3>
+        <button
+          @click="closeDialog"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        >
+          <XMarkIcon class="w-5 h-5" />
+        </button>
+      </div>
+
+      <!-- 表单内容 -->
+      <div class="p-4 space-y-6">
+        <!-- 现有小票 -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            现有小票
+          </h4>
+          <div class="flex flex-wrap gap-3">
+            <div
+              v-for="(img, index) in invoices"
+              :key="index"
+              @mouseover="isHovering = img"
+              @mouseleave="isHovering = ''"
+              class="relative w-24 h-24 cursor-pointer group rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 hover:border-red-500 transition-colors"
+              @click="removeInvoice(img)"
+            >
+              <img
+                :src="invoiceImage[img]"
+                class="w-full h-full object-cover"
+                :alt="`小票 ${index + 1}`"
+              />
+              <!-- 删除悬停遮罩 -->
+              <div
+                v-if="isHovering === img"
+                class="absolute inset-0 bg-red-500 bg-opacity-70 flex items-center justify-center"
+              >
+                <TrashIcon class="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <div
+              v-if="invoices.length === 0"
+              class="text-sm text-gray-500 dark:text-gray-400 py-8 text-center w-full border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg"
+            >
+              <DocumentIcon class="w-8 h-8 mx-auto mb-2 text-gray-400" />
+              暂无小票
+            </div>
+          </div>
+        </div>
+
+        <!-- 新小票上传 -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            新小票
+          </h4>
+          <div class="relative">
+            <input
+              type="file"
+              ref="fileInput"
+              accept="image/*"
+              @change="onFileChange"
+              class="hidden"
+            />
+            <button
+              @click="() => fileInput?.click()"
+              class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <PhotoIcon class="h-6 w-6 text-gray-400" />
+              <span class="text-sm">
+                {{ newInvoice ? newInvoice.name : "点击选择小票图片" }}
+              </span>
+            </button>
+            <!-- 文件信息 -->
+            <div
+              v-if="newInvoice"
+              class="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded text-xs text-blue-800 dark:text-blue-300"
+            >
+              <div class="flex items-center gap-2">
+                <CheckCircleIcon class="h-4 w-4" />
+                <span
+                  >{{ newInvoice.name }} ({{
+                    formatFileSize(newInvoice.size)
+                  }})</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div
+        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+      >
+        <button
+          @click="closeDialog"
+          class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          取消
+        </button>
+        <button
+          @click="uploadInvoiceFile"
+          :disabled="!newInvoice"
+          class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+        >
+          上传
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 删除确认对话框 -->
+  <div
+    v-if="deleteInvoiceConfirmDialog"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    @click.self="cancelDeleteInvoice"
+  >
+    <div
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto"
+      @click.stop
+    >
+      <!-- 标题栏 -->
+      <div
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          确定删除小票吗？
+        </h3>
+      </div>
+
+      <!-- 内容 -->
+      <div class="p-4">
+        <div class="flex justify-center mb-4">
+          <img
+            :src="invoiceImage[deleteInvoice]"
+            class="max-w-60 max-h-60 rounded-lg border border-gray-200 dark:border-gray-600"
+            :alt="'要删除的小票'"
+          />
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
+          删除后无法恢复，请确认是否删除此小票？
+        </p>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div
+        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+      >
+        <button
+          @click="cancelDeleteInvoice"
+          class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          取消
+        </button>
+        <button
+          @click="confirmDeleteInvoice"
+          class="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+        >
+          确定删除
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { showFlowEditInvoiceDialog } from "~/utils/flag";
 import { ref } from "vue";
+import {
+  XMarkIcon,
+  TrashIcon,
+  PhotoIcon,
+  DocumentIcon,
+  CheckCircleIcon,
+} from "@heroicons/vue/24/outline";
 
 const { successCallback, item } = defineProps(["successCallback", "item"]);
 
 const editInvoice = ref<Flow | any>({});
 editInvoice.value = { ...item };
 const invoices = ref<string[]>([]);
+const fileInput = ref<HTMLInputElement>();
+const newInvoice = ref<File | null>(null);
+
 const getInvoiceImage = async (invoice: string) => {
   if (!invoice || invoice === "") {
     return "";
@@ -15,12 +205,12 @@ const getInvoiceImage = async (invoice: string) => {
     const res = await doApi.download("api/entry/flow/invoice/show", {
       invoice,
     });
-    // console.log(res)
     return res ? URL.createObjectURL(res) : res;
   } catch (e) {
     return "";
   }
 };
+
 const invoiceImage = ref<Record<string, string>>({});
 
 const initInvoiceImage = () => {
@@ -35,8 +225,26 @@ const initInvoiceImage = () => {
   }
 };
 initInvoiceImage();
-// 上传新小票
-const newInvoice = ref();
+
+// 格式化文件大小
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+// 文件选择处理
+const onFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    newInvoice.value = file;
+  } else {
+    newInvoice.value = null;
+  }
+};
 
 const uploadInvoiceFile = () => {
   if (!newInvoice.value) {
@@ -51,8 +259,6 @@ const uploadInvoiceFile = () => {
   doApi.postform("api/entry/flow/invoice/upload", formdata).then((res) => {
     Alert.success("上传成功");
     editInvoice.value = res;
-
-    // initInvoiceImage();
     closeDialog();
   });
 };
@@ -67,8 +273,8 @@ const removeInvoice = (img: string) => {
   deleteInvoice.value = img;
   deleteInvoiceConfirmDialog.value = true;
 };
+
 const deleteInvoice = ref();
-// 批量删除
 const deleteInvoiceConfirmDialog = ref(false);
 
 const confirmDeleteInvoice = () => {
@@ -88,98 +294,11 @@ const confirmDeleteInvoice = () => {
       Alert.error("删除失败!");
     });
 };
+
 const cancelDeleteInvoice = () => {
   deleteInvoice.value = "";
   deleteInvoiceConfirmDialog.value = false;
 };
 </script>
-
-<template>
-  <v-dialog
-    v-model="showFlowEditInvoiceDialog"
-    width="30rem"
-    transition="dialog-top-transition"
-    persistent
-  >
-    <v-card>
-      <v-card-title>上传小票</v-card-title>
-      <v-card-text>
-        <!-- <v-text-field disabled label="流水ID" v-model="editInvoice.id" hide-details="auto"></v-text-field> -->
-        <div class="tw-flex tw-items-center">
-          <h4 class="tw-m-4">现有小票</h4>
-          <div class="tw-flex tw-space-x-2">
-            <div v-for="(img, index) in invoices" :key="index">
-              <div
-                v-if="img"
-                @mouseover="isHovering = img"
-                @mouseleave="isHovering = ''"
-                style="width: 6rem; height: 6rem; cursor: pointer"
-                @click="removeInvoice(img)"
-              >
-                <v-img
-                  :src="invoiceImage[img]"
-                  style="width: 100%; height: 100%"
-                >
-                  <div
-                    class="tw-w-full tw-h-full tw-flex tw-bg-red-400/20 tw-justify-center tw-items-center"
-                    v-if="isHovering == img"
-                  >
-                    <v-icon color="error" size="large"> mdi-delete </v-icon>
-                  </div>
-                </v-img>
-              </div>
-            </div>
-            <div v-if="invoices.length < 1">无</div>
-          </div>
-        </div>
-        <div class="tw-flex tw-items-center tw-mt-2">
-          <h4 class="tw-m-4 tw-w-16">新小票</h4>
-          <div class="tw-flex-1">
-            <v-file-input
-              label="选择小票文件"
-              variant="outlined"
-              accept="image/*"
-              small-chips
-              hide-details="auto"
-              prepend-icon="mdi-invoice-text-outline"
-              show-size
-              v-model="newInvoice"
-            ></v-file-input>
-          </div>
-        </div>
-      </v-card-text>
-      <hr />
-      <v-card-actions>
-        <div class="tw-w-full tw-flex tw-justify-center tw-space-x-4">
-          <v-btn color="error" variant="elevated" @click="closeDialog()"
-            >取消
-          </v-btn>
-          <v-btn color="primary" variant="elevated" @click="uploadInvoiceFile"
-            >上传
-          </v-btn>
-        </div>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog v-model="deleteInvoiceConfirmDialog" max-width="30rem">
-    <v-card>
-      <v-card-title class="text-h5"> 确定删除下面的流水小票吗? </v-card-title>
-      <v-card-text>
-        <div style="display: flex; justify-content: center">
-          <v-img
-            :src="invoiceImage[deleteInvoice]"
-            style="max-width: 15rem; max-height: 15rem"
-          ></v-img>
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="cancelDeleteInvoice">取消</v-btn>
-        <v-btn color="primary" @click="confirmDeleteInvoice">确定</v-btn>
-        <v-spacer></v-spacer>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</template>
 
 <style scoped></style>

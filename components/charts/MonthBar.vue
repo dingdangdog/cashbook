@@ -1,22 +1,29 @@
 <template>
   <div class="chart-common-container">
     <div
-      class="tw-flex tw-justify-between tw-items-center tw-w-full tw-border-b tw-h-16"
+      v-if="title || years.length > 0"
+      class="flex flex-col pb-2 md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 mb-2 md:mb-4"
     >
       <div>
-        <h4 class="tw-text-lg my-2">{{ title }}</h4>
+        <h4
+          v-if="title"
+          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
+        >
+          {{ title }}
+        </h4>
       </div>
 
-      <div class="tw-min-w-32">
-        <v-select
+      <div v-if="years.length > 0" class="min-w-32">
+        <select
           v-model="filterYear"
-          :items="years"
-          label="年份筛选"
-          hide-details="auto"
-          clearable
-          variant="outlined"
-          @update:model-value="filterYearChange"
-        ></v-select>
+          @change="filterYearChange"
+          class="w-full px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">全部年份</option>
+          <option v-for="year in years" :key="year.value" :value="year.value">
+            {{ year.title }}
+          </option>
+        </select>
       </div>
     </div>
     <div v-show="noData" :style="`width: ${width}; height: ${height};`">
@@ -24,31 +31,40 @@
     </div>
     <div
       v-show="!noData"
-      id="chartDiv"
+      :id="chartId"
+      class="chart-content"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
 
-  <v-dialog :width="'80vw'" v-model="showFlowTable">
-    <v-card>
-      <v-card-title>
-        <div class="tw-flex tw-justify-end">
-          <div>
-            <v-btn
-              color="error"
-              variant="elevated"
-              @click="showFlowTable = false"
-            >
-              关闭
-            </v-btn>
-          </div>
-        </div>
-      </v-card-title>
-      <v-card-text>
+  <!-- 流水表格对话框 -->
+  <div
+    v-if="showFlowTable"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    @click="showFlowTable = false"
+  >
+    <div
+      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
+      @click.stop
+    >
+      <div
+        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+      >
+        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+          流水详情
+        </h3>
+        <button
+          @click="showFlowTable = false"
+          class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+        >
+          关闭
+        </button>
+      </div>
+      <div class="p-2 md:p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
         <DatasFlowTable :query="query" v-if="showFlowTable" />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -59,6 +75,9 @@ import type { CommonChartData, CommonSelectOption } from "~/utils/model";
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
 
+// 生成唯一ID避免冲突
+const chartId = ref(`chartDiv-${Math.random().toString(36).substr(2, 9)}`);
+
 const dataListOut: any[] = [];
 const dataListIn: any[] = [];
 const notInOut: any[] = [];
@@ -67,7 +86,7 @@ const noData = ref(false);
 
 const years = ref<CommonSelectOption[]>([]);
 const allData = ref<CommonChartData[]>([]);
-const filterYear = ref();
+const filterYear = ref("");
 const filterYearChange = () => {
   dataListOut.length = 0;
   dataListIn.length = 0;
@@ -259,7 +278,11 @@ const doQuery = () => {
 // }
 
 onMounted(() => {
-  chartDiv = document.getElementById("chartDiv");
+  chartDiv = document.getElementById(chartId.value);
+  const oldInstance = echarts.getInstanceByDom(chartDiv);
+  if (oldInstance) {
+    oldInstance.dispose();
+  }
   chart = echarts.init(chartDiv);
   chart.on("click", function (param) {
     query.value.startDay = param.name + "-01";
@@ -271,7 +294,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#chartDiv {
+.chart-content {
   padding: 10px;
 }
 
@@ -290,11 +313,11 @@ onMounted(() => {
     margin: 8px 3px;
   }
 
-  #chartDiv {
+  .chart-content {
     font-size: small;
   }
 
-  #chartDiv > div > canvas {
+  .chart-content > div > canvas {
     margin: 20px;
   }
 }
