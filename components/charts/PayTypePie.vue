@@ -96,7 +96,7 @@
     </div>
     <div
       v-show="!noData"
-      id="payTypeDiv"
+      :id="chartId"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
@@ -145,6 +145,9 @@ const { isDark } = useAppTheme();
 const searchDrawer = ref(false);
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
+
+// 生成唯一ID避免冲突
+const chartId = ref(`payTypeDiv-${Math.random().toString(36).substr(2, 9)}`);
 
 const chartParam = ref<CommonChartQuery>({ flowType: "支出" });
 
@@ -324,7 +327,11 @@ onMounted(() => {
     optionRef.value.legend.orient = "vertical";
   }
 
-  payTypeDiv = document.getElementById("payTypeDiv");
+  payTypeDiv = document.getElementById(chartId.value);
+  const oldInstance = echarts.getInstanceByDom(payTypeDiv);
+  if (oldInstance) {
+    oldInstance.dispose();
+  }
   payTypeChart = echarts.init(payTypeDiv);
   payTypeChart.on("click", function (param) {
     query.value = { ...chartParam.value, payType: param.name };

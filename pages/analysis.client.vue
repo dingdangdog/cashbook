@@ -3,7 +3,7 @@
     <!-- Content Area -->
     <div class="md:max-w-[80vw] mx-auto mt-2">
       <!-- Desktop & Tablet: Chart Carousel -->
-      <div class="hidden md:block">
+      <div class="hidden md:block" v-if="!loading">
         <div
           class="px-2 relative bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
         >
@@ -129,7 +129,7 @@
       </div>
 
       <!-- Mobile: Chart Cards (Always Show) -->
-      <div class="block md:hidden px-2">
+      <div class="block md:hidden px-2" v-if="!loading">
         <div
           class="flex overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory px-2"
         >
@@ -220,28 +220,19 @@ definePageMeta({
 });
 
 import {
-  defineAsyncComponent,
   ref,
   computed,
   onMounted,
   onUnmounted,
+  onBeforeUnmount,
+  nextTick,
 } from "vue";
 import AttributionPie from "~/components/charts/AttributionPie.vue";
 import MobileChartCard from "~/components/charts/MobileChartCard.vue";
-
-// 异步组件引用
-const DailyLineChart = defineAsyncComponent(
-  () => import("~/components/charts/DailyLineChart.vue")
-);
-const IndustryTypePie = defineAsyncComponent(
-  () => import("~/components/charts/IndustryTypePie.vue")
-);
-const PayTypePie = defineAsyncComponent(
-  () => import("~/components/charts/PayTypePie.vue")
-);
-const MonthBar = defineAsyncComponent(
-  () => import("~/components/charts/MonthBar.vue")
-);
+import DailyLineChart from "~/components/charts/DailyLineChart.vue";
+import IndustryTypePie from "~/components/charts/IndustryTypePie.vue";
+import PayTypePie from "~/components/charts/PayTypePie.vue";
+import MonthBar from "~/components/charts/MonthBar.vue";
 
 const windowWidth = ref(
   typeof window !== "undefined" ? window.innerWidth : 1200
@@ -324,10 +315,19 @@ const goToChart = (index: number) => {
   currentCarouselIndex.value = index;
 };
 
-onMounted(() => {
+const loading = ref(true);
+onMounted(async () => {
   if (typeof window !== "undefined") {
     window.addEventListener("resize", handleResize);
   }
+  // 等待DOM完全渲染
+  await nextTick();
+  loading.value = false;
+});
+
+onBeforeUnmount(() => {
+  // 清理资源
+  loading.value = true;
 });
 
 onUnmounted(() => {

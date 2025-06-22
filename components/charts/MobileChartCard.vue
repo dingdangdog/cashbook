@@ -20,31 +20,36 @@
       <div class="relative rounded-lg p-1">
         <!-- 根据图表类型显示对应组件 -->
         <IndustryTypePie
-          v-if="chartType === 'industry'"
+          v-if="chartType === 'industry' && isMounted"
+          :key="`industry-${currentIndex}`"
           :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <PayTypePie
-          v-else-if="chartType === 'paytype'"
+          v-else-if="chartType === 'paytype' && isMounted"
+          :key="`paytype-${currentIndex}`"
           :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <AttributionPie
-          v-else-if="chartType === 'attribution'"
+          v-else-if="chartType === 'attribution' && isMounted"
+          :key="`attribution-${currentIndex}`"
           :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <DailyLineChart
-          v-else-if="chartType === 'daily'"
+          v-else-if="chartType === 'daily' && isMounted"
+          :key="`daily-${currentIndex}`"
           :title="title"
           :width="chartWidth"
           :height="chartHeight"
         />
         <MonthBar
-          v-else-if="chartType === 'month'"
+          v-else-if="chartType === 'month' && isMounted"
+          :key="`month-${currentIndex}`"
           :title="title"
           :width="chartWidth"
           :height="chartHeight"
@@ -55,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, nextTick } from "vue";
 import IndustryTypePie from "./IndustryTypePie.vue";
 import PayTypePie from "./PayTypePie.vue";
 import AttributionPie from "./AttributionPie.vue";
@@ -75,6 +81,13 @@ defineEmits<{
   filter: [];
   details: [];
 }>();
+
+const isMounted = ref(false);
+
+onMounted(async () => {
+  await nextTick();
+  isMounted.value = true;
+});
 </script>
 
 <style scoped>

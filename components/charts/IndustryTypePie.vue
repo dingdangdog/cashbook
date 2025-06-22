@@ -96,7 +96,7 @@
     </div>
     <div
       v-show="!noData"
-      id="typePieDiv"
+      :id="chartId"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
@@ -144,6 +144,9 @@ const { isDark } = useAppTheme();
 
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
+
+// 生成唯一ID避免冲突
+const chartId = ref(`typePieDiv-${Math.random().toString(36).substr(2, 9)}`);
 
 const searchDrawer = ref(false);
 
@@ -324,7 +327,7 @@ onMounted(() => {
     optionRef.value.legend.orient = "vertical";
   }
 
-  typePieDiv = document.getElementById("typePieDiv");
+  typePieDiv = document.getElementById(chartId.value);
   const oldInstance = echarts.getInstanceByDom(typePieDiv);
   if (oldInstance) {
     oldInstance.dispose();

@@ -96,7 +96,7 @@
     </div>
     <div
       v-show="!noData"
-      id="attributionPieDiv"
+      :id="chartId"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
@@ -145,6 +145,11 @@ const { isDark } = useAppTheme();
 const searchDrawer = ref(false);
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
+
+// 生成唯一ID避免冲突
+const chartId = ref(
+  `attributionPieDiv-${Math.random().toString(36).substr(2, 9)}`
+);
 
 const chartParam = ref<CommonChartQuery>({ flowType: "支出" });
 
@@ -324,7 +329,11 @@ onMounted(() => {
     optionRef.value.legend.orient = "vertical";
   }
 
-  attributionDiv = document.getElementById("attributionPieDiv");
+  attributionDiv = document.getElementById(chartId.value);
+  const oldInstance = echarts.getInstanceByDom(attributionDiv);
+  if (oldInstance) {
+    oldInstance.dispose();
+  }
   attributionChart = echarts.init(attributionDiv);
   attributionChart.on("click", function (param) {
     query.value = { ...chartParam.value, attribution: param.name };

@@ -17,7 +17,8 @@
     </div>
     <div
       v-show="!noData"
-      id="lineDiv"
+      :id="chartId"
+      class="chart-content"
       :style="`width: ${width}; height: ${height};`"
     ></div>
   </div>
@@ -31,6 +32,9 @@ import { daily } from "~/utils/apis";
 
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);
+
+// 生成唯一ID避免冲突
+const chartId = ref(`lineDiv-${Math.random().toString(36).substr(2, 9)}`);
 
 // 横轴数据
 const xAxisList: string[] = [];
@@ -164,7 +168,11 @@ const zoomChange = (total: number): number => {
 };
 
 onMounted(() => {
-  lineDiv = document.getElementById("lineDiv");
+  lineDiv = document.getElementById(chartId.value);
+  const oldInstance = echarts.getInstanceByDom(lineDiv);
+  if (oldInstance) {
+    oldInstance.dispose();
+  }
   lineChart = echarts.init(lineDiv);
   daily({}).then((res) => {
     // console.log(res);
@@ -198,12 +206,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#lineDiv {
+.chart-content {
   padding: 10px;
 }
 
 @media screen and (max-width: 480px) {
-  #lineDiv {
+  .chart-content {
     font-size: small;
   }
 }
