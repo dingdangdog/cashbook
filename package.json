@@ -27,7 +27,6 @@
     "v-calendar": "^3.1.2",
     "vue": "latest",
     "vue-toastification": "^2.0.0-rc.5",
-    "vuetify-nuxt-module": "^0.18.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
