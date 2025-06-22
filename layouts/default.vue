@@ -4,7 +4,6 @@
   <div>
     <slot></slot>
   </div>
-  <GlobalAlert />
 </template>
 
 <style scoped></style>
