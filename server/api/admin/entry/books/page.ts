@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
   if (body.userId) {
     where.userId = {
-      equals: body.userId,
+      equals: Number(body.userId),
     };
   }
 
