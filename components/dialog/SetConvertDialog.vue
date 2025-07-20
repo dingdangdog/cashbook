@@ -3,7 +3,6 @@
   <div
     v-if="showSetConvertDialog"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    @click="cancelTypeRelationChange"
   >
     <div
       class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-3xl max-h-[85vh] flex flex-col transform transition-all"

@@ -3,7 +3,6 @@ import { ref } from "vue";
 import {
   XMarkIcon,
   TrashIcon,
-  EyeSlashIcon,
   DocumentDuplicateIcon,
   ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
@@ -99,7 +98,6 @@ const formatDate = (dateStr: string) => {
   <div
     v-if="showAutoDeduplicationFlowsDialog"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    @click="closeDialog"
   >
     <div
       class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl max-h-[95vh] flex flex-col transform transition-all"

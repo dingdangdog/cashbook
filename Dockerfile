@@ -38,7 +38,7 @@ RUN npm install -g prisma@6.10.1
 ENV DATABASE_URL="file:/app/data/db/cashbook.db"
 
 
-ENV NUXT_APP_VERSION="4.3.0"
+ENV NUXT_APP_VERSION="4.3.1"
 ENV NUXT_DATA_PATH="/app/data"
 
 ENV NUXT_AUTH_SECRET="auth123"
