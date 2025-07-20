@@ -3,7 +3,6 @@
   <div
     v-if="showAutoMergeFlowsDialog"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    @click="closeDialog"
   >
     <div
       class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-[95vw] max-h-[90vh] flex flex-col transform transition-all"
@@ -57,7 +56,9 @@
 
         <!-- 桌面端表格 -->
         <div v-else class="hidden lg:block h-full overflow-y-auto">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <table
+            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+          >
             <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
               <tr>
                 <!-- 左侧数据列组 -->
@@ -84,46 +85,72 @@
               </tr>
               <tr>
                 <!-- 左侧数据子列 -->
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                >
                   类型
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                >
                   金额
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                >
                   名称
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                >
                   支付方式
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                >
                   类别
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                >
                   日期
                 </th>
                 <!-- 右侧数据子列 -->
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                >
                   日期
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                >
                   类别
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                >
                   支付方式
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                >
                   名称
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                >
                   金额
                 </th>
-                <th class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20">
+                <th
+                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                >
                   类型
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody
+              class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+            >
               <tr
                 v-for="(pair, index) in candidatePairs"
                 :key="index"
@@ -169,13 +196,19 @@
                 >
                   {{ pair.out.name }}
                 </td>
-                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center">
+                <td
+                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                >
                   {{ pair.out.payType }}
                 </td>
-                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center">
+                <td
+                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                >
                   {{ pair.out.industryType }}
                 </td>
-                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center">
+                <td
+                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                >
                   {{ pair.out.day }}
                 </td>
                 <!-- 操作列 -->
@@ -198,13 +231,19 @@
                   </div>
                 </td>
                 <!-- 右侧数据 -->
-                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center">
+                <td
+                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                >
                   {{ pair.in.day }}
                 </td>
-                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center">
+                <td
+                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                >
                   {{ pair.in.industryType }}
                 </td>
-                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center">
+                <td
+                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                >
                   {{ pair.in.payType }}
                 </td>
                 <td
