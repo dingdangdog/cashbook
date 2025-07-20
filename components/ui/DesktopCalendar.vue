@@ -2,7 +2,7 @@
   <div class="w-full">
     <!-- Calendar Header -->
     <div
-      class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+      class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-green-500 to-cyan-600 dark:from-green-900 dark:to-cyan-900 text-white"
     >
       <!-- Navigation -->
       <div class="flex items-center gap-4">
@@ -49,7 +49,7 @@
     </div>
 
     <!-- Calendar Grid -->
-    <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
+    <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-green-900/30">
       <div
         v-for="date in calendarDates"
         :key="date.key"
@@ -59,7 +59,7 @@
             !date.isCurrentMonth,
           'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-600':
             date.isToday,
-          'bg-yellow-50 dark:bg-yellow-900/10':
+          'bg-yellow-50 dark:bg-yellow-700/20':
             date.isWeekend && date.isCurrentMonth,
         }"
       >
@@ -101,7 +101,7 @@
           <div
             v-if="getDateIncome(date.dateString)"
             @click="clickDay(date.dateString, '收入')"
-            class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900"
           >
             <ArrowDownIcon class="w-4 h-4" />
             <span>{{ getDateIncome(date.dateString).toFixed(2) }}</span>
@@ -218,11 +218,11 @@ const getExpenseClass = (amount: number): string => {
   if (!amount || amount === 0) {
     return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600";
   } else if (amount >= 1000) {
-    return "bg-red-500 text-white hover:bg-red-600 shadow-lg";
+    return "bg-red-500 dark:bg-red-700 text-white hover:bg-red-600 shadow-lg";
   } else if (amount >= 500) {
-    return "bg-orange-500 text-white hover:bg-orange-600 shadow-lg";
+    return "bg-orange-500 dark:bg-orange-700 text-white hover:bg-orange-600 shadow-lg";
   } else {
-    return "bg-yellow-500 text-white hover:bg-yellow-600 shadow-lg";
+    return "bg-yellow-500 dark:bg-yellow-700 text-white hover:bg-yellow-600 shadow-lg";
   }
 };
 

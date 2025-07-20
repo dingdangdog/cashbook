@@ -38,7 +38,7 @@ RUN npm install -g prisma@6.10.1
 ENV DATABASE_URL="mysql://root:123456@localhost:3306/cashbook"
 
 
-ENV NUXT_APP_VERSION="4.3.0"
+ENV NUXT_APP_VERSION="4.3.1"
 ENV NUXT_DATA_PATH="/app/data"
 
 ENV NUXT_AUTH_SECRET="auth123"
