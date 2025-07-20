@@ -3,7 +3,6 @@
   <div
     v-if="showChangePasswordDialog"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    @click.self="closeDialog"
   >
     <div
       class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[90vh] overflow-y-auto"
