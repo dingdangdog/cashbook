@@ -31,7 +31,7 @@ const showUserMenu = ref(false);
 
 <template>
   <header
-    class="bg-white dark:bg-green-950/40 shadow-sm border-b border-gray-200 dark:border-gray-700"
+    class="bg-white dark:bg-green-950 shadow-sm border-b border-gray-200 dark:border-gray-700"
   >
     <div class="px-4 md:px-8">
       <div class="flex justify-between h-12 md:h-16">

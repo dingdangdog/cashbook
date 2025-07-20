@@ -2,7 +2,7 @@
   <div class="w-full overflow-hidden">
     <!-- Calendar Header -->
     <div
-      class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+      class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-green-500 to-cyan-600 dark:from-green-900 dark:to-cyan-900 text-white"
     >
       <button
         @click="prevMonth"
@@ -96,7 +96,7 @@
           <div
             v-if="getDateIncome(date.dateString)"
             @click="clickDay(date.dateString, '收入')"
-            class="flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50"
+            class="flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900"
           >
             <ArrowDownIcon class="w-2.5 h-2.5" />
             <span>{{ getDateIncome(date.dateString).toFixed(0) }}</span>
@@ -210,9 +210,11 @@ const getDateExpense = (dateString: string): number => {
 };
 
 const getExpenseClass = (amount: number): string => {
-  if (amount >= 1000) return "bg-red-500 text-white hover:bg-red-600";
-  if (amount >= 500) return "bg-orange-500 text-white hover:bg-orange-600";
-  return "bg-yellow-500 text-white hover:bg-yellow-600";
+  if (amount >= 1000)
+    return "bg-red-500 dark:bg-red-700 text-white hover:bg-red-600";
+  if (amount >= 500)
+    return "bg-orange-500 dark:bg-orange-700 text-white hover:bg-orange-600";
+  return "bg-yellow-500 dark:bg-yellow-700 text-white hover:bg-yellow-600";
 };
 
 const prevMonth = () => {

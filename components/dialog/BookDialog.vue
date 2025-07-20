@@ -75,7 +75,6 @@
     <div
       v-if="addBookDialog.visible"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
-      @click="addBookDialog.visible = false"
     >
       <div
         @click.stop
@@ -165,7 +164,6 @@
     <div
       v-if="showGetShareDialog"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
-      @click="showGetShareDialog = false"
     >
       <div
         @click.stop
