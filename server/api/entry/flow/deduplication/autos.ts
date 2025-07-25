@@ -1,5 +1,45 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/deduplication/autos:
+ *   post:
+ *     summary: 自动查找重复流水记录
+ *     tags: ["Deduplication"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             criteria:
+ *               name: boolean 是否检查名称相同
+ *               description: boolean 是否检查描述相同
+ *               industryType: boolean 是否检查行业类型相同
+ *               flowType: boolean 是否检查流水类型相同
+ *               payType: boolean 是否检查支付方式相同
+ *     responses:
+ *       200:
+ *         description: 重复记录查找成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d:
+ *                   duplicateGroups: [] #[Flow重复记录组数组]
+ *                   totalGroups: number #重复组总数,
+ *                   totalDuplicates: number #重复记录总数
+ *       400:
+ *         description: 查找失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "No Find bookid"
+ *               }
+ */
 // 查找疑似重复的数据：同一天+金额相同+支出类型相同的数据
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体

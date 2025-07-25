@@ -1,5 +1,29 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/typeRelations/add:
+ *   post:
+ *     summary: 管理员添加类型关系
+ *     tags: ["Admin Type Relations"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             source: string 源类型
+ *             target: string 目标类型
+ *     responses:
+ *       200:
+ *         description: 类型关系添加成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: TypeRelation 创建的类型关系信息
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
 

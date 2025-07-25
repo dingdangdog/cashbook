@@ -43,27 +43,32 @@ export default defineNuxtConfig({
         {
           rel: "apple-touch-startup-image",
           href: "/pwa/apple-splash-640-1136.jpg",
-          media: "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
+          media:
+            "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
         },
         {
           rel: "apple-touch-startup-image",
           href: "/pwa/apple-splash-750-1334.jpg",
-          media: "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
+          media:
+            "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
         },
         {
           rel: "apple-touch-startup-image",
           href: "/pwa/apple-splash-1242-2208.jpg",
-          media: "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
+          media:
+            "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
         },
         {
           rel: "apple-touch-startup-image",
           href: "/pwa/apple-splash-1125-2436.jpg",
-          media: "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
+          media:
+            "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
         },
         {
           rel: "apple-touch-startup-image",
           href: "/pwa/apple-splash-1536-2048.jpg",
-          media: "(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)",
+          media:
+            "(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)",
         },
       ],
     },
@@ -72,10 +77,23 @@ export default defineNuxtConfig({
     port: 9090,
   },
   nitro: {
+    experimental: {
+      openAPI: true,
+    },
     // routeRules: {
     //   "/api/**": { swr: true },
     // },
   },
+  // scalar: {
+  //   darkMode: true,
+  //   // hideClientButton: true,
+  //   hiddenClients: true,
+  //   defaultHttpClient: {
+  //     targetKey: "node",
+  //     clientKey: "server",
+  //   },
+  //   url: "/api/openapi.json",
+  // },
   runtimeConfig: {
     public: {},
     appVersion: "",
@@ -90,7 +108,17 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "nuxt-echarts",
     "@prisma/nuxt",
+    "nuxt-openapi-docs-module",
   ],
+
+  // openApiDocs: {
+  //   files: { openapi: "/api/openapi.json" },
+  //   url: "/api/openapi.json",
+  //   title: "Cashbook API",
+  //   description: "Cashbook API",
+  //   version: "4.3.1",
+  //   tags: [{ name: "Base", description: "基础接口" }],
+  // },
 
   i18n: {
     strategy: "prefix_except_default",

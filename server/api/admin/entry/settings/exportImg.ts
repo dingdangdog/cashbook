@@ -3,6 +3,31 @@ import * as fs from "fs";
 import * as path from "path";
 import JSZip from "jszip";
 
+/**
+ * @swagger
+ * /api/admin/entry/settings/exportImg:
+ *   get:
+ *     summary: 管理员导出系统图片
+ *     tags: ["Admin Settings"]
+ *     security:
+ *       - Admin: []
+ *     responses:
+ *       200:
+ *         description: 图片导出成功
+ *         content:
+ *           application/zip:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: 导出失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   try {
     const runtimeConfig = useRuntimeConfig();

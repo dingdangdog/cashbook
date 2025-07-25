@@ -1,5 +1,39 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/list:
+ *   post:
+ *     summary: 获取流水记录列表
+ *     tags: ["Flow"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             id: number 流水ID（可选）
+ *             flowType: string 流水类型（可选）
+ *             industryType: string 行业分类（可选）
+ *     responses:
+ *       200:
+ *         description: 流水记录列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: [] #[Flow流水记录数组]
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 
