@@ -1,5 +1,53 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/condidate/confirm:
+ *   post:
+ *     summary: 确认候选平账记录
+ *     tags: ["Candidate"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - outId
+ *               - bookId
+ *               - inIds
+ *             properties:
+ *               outId:
+ *                 type: number
+ *                 description: 支出记录ID
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               inIds:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *                 description: 收入记录ID数组
+ *     responses:
+ *       200:
+ *         description: 平账确认成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: 操作结果
+ *               }
+ *       400:
+ *         description: 确认失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息（"Not Find ID" | "Not Find IDS"）
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   // const userId = await getUserId(event);

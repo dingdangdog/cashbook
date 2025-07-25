@@ -1,6 +1,49 @@
 import { encryptBySHA256 } from "../utils/common";
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: 用户注册
+ *     tags: ["Base"]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: 用户名
+ *               password:
+ *                 type: string
+ *                 description: 密码
+ *               name:
+ *                 type: string
+ *                 description: 显示名称（可选）
+ *     responses:
+ *       200:
+ *         description: 注册成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: "注册成功"
+ *               }
+ *       400:
+ *         description: 注册失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   // console.log("body", body);

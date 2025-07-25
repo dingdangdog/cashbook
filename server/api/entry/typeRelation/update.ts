@@ -1,5 +1,59 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/typeRelation/update:
+ *   post:
+ *     summary: 更新类型关系
+ *     tags: ["Type Relation"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *               - types
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               types:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                       description: 关系ID（可选，新增时不需要）
+ *                     source:
+ *                       type: string
+ *                       description: 源类型
+ *                     target:
+ *                       type: string
+ *                       description: 目标类型
+ *                 description: 类型关系数组
+ *     responses:
+ *       200:
+ *         description: 类型关系更新成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: TypeRelation
+ *               }
+ *       400:
+ *         description: 更新失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (!body.bookId) {
@@ -47,5 +101,5 @@ export default defineEventHandler(async (event) => {
     data: creates,
   });
 
-  return success("更新成功");
+  return success(created);
 });

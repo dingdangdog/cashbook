@@ -2,6 +2,55 @@ import * as fs from "fs";
 import * as path from "path";
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/invoice/upload:
+ *   post:
+ *     summary: 上传流水发票
+ *     tags: ["Invoice"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *               - id
+ *               - invoice
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               id:
+ *                 type: number
+ *                 description: 流水ID
+ *               invoice:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 发票文件（支持多文件上传）
+ *     responses:
+ *       200:
+ *         description: 发票上传成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: 操作结果
+ *               }
+ *       400:
+ *         description: 上传失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息（"请先选择账本" | "Not Find File" | "Not Find ID" | "小票上传失败"）
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const formdata = await readFormData(event);
   try {

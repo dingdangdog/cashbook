@@ -1,6 +1,39 @@
 import prisma from "~/lib/prisma";
 import { getUUID } from "~/utils/common";
 
+/**
+ * @swagger
+ * /api/entry/book/add:
+ *   post:
+ *     summary: 添加账本
+ *     tags: ["Book"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookName
+ *             properties:
+ *               bookName:
+ *                 type: string
+ *                 description: 账本名称
+ *               budget:
+ *                 type: number
+ *                 description: 预算金额（可选，默认为0）
+ *     responses:
+ *       200:
+ *         description: 账本添加成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: Book
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
   const { bookName, budget } = body;

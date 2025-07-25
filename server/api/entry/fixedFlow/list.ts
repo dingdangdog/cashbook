@@ -1,5 +1,49 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/fixedFlow/list:
+ *   post:
+ *     summary: 获取固定流水列表
+ *     tags: ["Fixed Flow"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               id:
+ *                 type: number
+ *                 description: 固定流水ID（可选）
+ *               month:
+ *                 type: string
+ *                 description: 月份（可选）
+ *     responses:
+ *       200:
+ *         description: 固定流水列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [] #[FixedFlow固定流水列表数组]
+ *               }
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
   const { bookId } = body;

@@ -1,6 +1,36 @@
 import prisma from "~/lib/prisma";
 import { initTypeRelation } from "~/server/utils/data";
 
+/**
+ * @swagger
+ * /api/entry/typeRelation/list:
+ *   post:
+ *     summary: 获取类型关系列表
+ *     tags: ["Type Relation"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *     responses:
+ *       200:
+ *         description: 类型关系列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [] #[TypeRelation类型关系列表数组]
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const { bookId } = await readBody(event); // 获取查询参数
   // const userId = await getUserId(event);

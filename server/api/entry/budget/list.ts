@@ -1,5 +1,49 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/budget/list:
+ *   post:
+ *     summary: 获取预算列表
+ *     tags: ["Budget"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               id:
+ *                 type: number
+ *                 description: 预算ID（可选）
+ *               month:
+ *                 type: string
+ *                 description: 月份（可选）
+ *     responses:
+ *       200:
+ *         description: 预算列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [] #[Budget预算信息数组]
+ *               }
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
   const { bookId, month } = body;

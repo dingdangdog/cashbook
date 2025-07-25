@@ -1,3 +1,45 @@
+/**
+ * @swagger
+ * /api/admin/login:
+ *   post:
+ *     summary: 管理员登录
+ *     tags: ["Admin"]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - account
+ *               - password
+ *             properties:
+ *               account:
+ *                 type: string
+ *                 description: 管理员账号
+ *               password:
+ *                 type: string
+ *                 description: 管理员密码
+ *     responses:
+ *       200:
+ *         description: 登录成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: {
+ *                   token: 管理员令牌
+ *                 }
+ *               }
+ *       400:
+ *         description: 登录失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "账号密码错误"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { account, password } = body;

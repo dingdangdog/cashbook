@@ -2,6 +2,48 @@ import * as fs from "fs";
 import * as path from "path";
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/invoice/clean:
+ *   post:
+ *     summary: 清理流水所有发票
+ *     tags: ["Invoice"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - bookId
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 description: 流水ID
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *     responses:
+ *       200:
+ *         description: 发票清理成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: string 操作结果
+ *               }
+ *       400:
+ *         description: 清理失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息（"Not Find ID" | "Not Find BookID" | "小票清空失败"）
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const { id, bookId } = await readBody(event);
 

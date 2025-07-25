@@ -1,5 +1,39 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/books/list:
+ *   post:
+ *     summary: 管理员获取账本列表
+ *     tags: ["Admin Books"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 description: 账本ID（可选）
+ *               bookName:
+ *                 type: string
+ *                 description: 账本名称（可选）
+ *               userId:
+ *                 type: number
+ *                 description: 用户ID（可选）
+ *     responses:
+ *       200:
+ *         description: 账本列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [] #[Book账本数组]
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 

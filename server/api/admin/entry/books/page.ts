@@ -1,5 +1,49 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/books/page:
+ *   post:
+ *     summary: 管理员分页获取账本列表
+ *     tags: ["Admin Books"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID（可选）
+ *               bookName:
+ *                 type: string
+ *                 description: 账本名称（可选）
+ *               userId:
+ *                 type: number
+ *                 description: 用户ID（可选）
+ *               pageNum:
+ *                 type: number
+ *                 description: 页码（默认为1）
+ *               pageSize:
+ *                 type: number
+ *                 description: 每页大小（默认为15，-1表示查询全部）
+ *     responses:
+ *       200:
+ *         description: 分页数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: {
+ *                   total: 总记录数,
+ *                   data: [账本列表],
+ *                   pages: 总页数
+ *                 }
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 

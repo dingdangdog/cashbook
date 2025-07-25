@@ -1,5 +1,50 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/budget/add:
+ *   post:
+ *     summary: 添加预算
+ *     tags: ["Budget"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *               - month
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               month:
+ *                 type: string
+ *                 description: 月份
+ *               budget:
+ *                 type: number
+ *                 description: 预算金额（默认为0）
+ *     responses:
+ *       200:
+ *         description: 预算添加成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: Budget 实体
+ *               }
+ *       400:
+ *         description: 添加失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
   const { bookId, month, budget } = body;

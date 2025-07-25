@@ -1,5 +1,48 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/condidate/autos:
+ *   post:
+ *     summary: 自动查找候选平账记录
+ *     tags: ["Candidate"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *     responses:
+ *       200:
+ *         description: 候选记录获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [
+ *                   {
+ *                     out: Flow 支出记录,
+ *                     in: Flow 收入记录
+ *                   }
+ *                 ]
+ *               }
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "No Find bookid"
+ *               }
+ */
 // 此处的相似性判断示例：金额完全相等（你可根据业务需要添加金额误差、日期范围等条件）
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体

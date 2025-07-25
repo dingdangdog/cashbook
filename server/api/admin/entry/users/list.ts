@@ -1,5 +1,42 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/users/list:
+ *   post:
+ *     summary: 管理员获取用户列表
+ *     tags: ["Admin Users"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 description: 用户ID（可选）
+ *               name:
+ *                 type: string
+ *                 description: 用户姓名（可选，支持模糊查询）
+ *               username:
+ *                 type: string
+ *                 description: 用户名（可选，支持模糊查询）
+ *               email:
+ *                 type: string
+ *                 description: 邮箱（可选，支持模糊查询）
+ *     responses:
+ *       200:
+ *         description: 用户列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [用户列表数组]
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const { name, username, email, id } = await readBody(event); // 获取查询参数
 

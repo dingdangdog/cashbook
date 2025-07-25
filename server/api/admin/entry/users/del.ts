@@ -1,5 +1,43 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/users/del:
+ *   post:
+ *     summary: 管理员删除用户
+ *     tags: ["Admin Users"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 description: 用户ID
+ *     responses:
+ *       200:
+ *         description: 用户删除成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: 删除的用户信息
+ *               }
+ *       400:
+ *         description: 删除失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "Not Find ID"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const { id } = await readBody(event); // 从请求体获取 ID
   if (!id) {

@@ -1,5 +1,79 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/page:
+ *   post:
+ *     summary: 分页获取流水记录列表
+ *     tags: ["Flow"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bookId
+ *             properties:
+ *               bookId:
+ *                 type: string
+ *                 description: 账本ID
+ *               id:
+ *                 type: number
+ *                 description: 流水ID（可选）
+ *               flowType:
+ *                 type: string
+ *                 description: 流水类型（可选）
+ *               industryType:
+ *                 type: string
+ *                 description: 行业分类（可选）
+ *               payType:
+ *                 type: string
+ *                 description: 支付方式（可选）
+ *               startDay:
+ *                 type: string
+ *                 description: 开始日期（可选）
+ *               endDay:
+ *                 type: string
+ *                 description: 结束日期（可选）
+ *               name:
+ *                 type: string
+ *                 description: 流水名称（可选，支持模糊查询）
+ *               attribution:
+ *                 type: string
+ *                 description: 归属（可选，支持模糊查询）
+ *               description:
+ *                 type: string
+ *                 description: 描述（可选，支持模糊查询）
+ *               pageNum:
+ *                 type: number
+ *                 description: 页码（默认为1）
+ *               pageSize:
+ *                 type: number
+ *                 description: 每页大小（默认为15，-1表示查询全部）
+ *               moneySort:
+ *                 type: string
+ *                 description: 金额排序（asc/desc）
+ *     responses:
+ *       200:
+ *         description: 分页数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: PagePack<Flow> 流水分页数据
+ *               }
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 
