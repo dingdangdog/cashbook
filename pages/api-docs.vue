@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+const { isDark, toggleTheme } = useAppTheme();
+
+import { SunIcon, MoonIcon } from "@heroicons/vue/24/outline";
 
 const spec = ref<any>({});
 const expandedTags = ref<Set<string>>(new Set());
@@ -44,13 +46,28 @@ const getMethodColor = (method: string) => {
 };
 
 // 获取接口文档
-doApi.get("api/openapi.json").then((res) => {
-  spec.value = res;
-});
+const response = await fetch("/openapi.json");
+spec.value = await response.json();
 </script>
 
 <template>
-  <div class="p-6 max-w-6xl mx-auto text-gray-800">
+  <!-- 主题切换按钮 - 移到最左侧 -->
+  <div class="fixed top-2 right-2">
+    <button
+      @click="toggleTheme()"
+      :class="[
+        'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
+        isDark
+          ? 'bg-gray-800/80 text-green-400 hover:bg-gray-800'
+          : 'bg-white/80 text-green-600 hover:bg-white',
+      ]"
+      title="切换主题"
+    >
+      <SunIcon v-if="isDark" class="w-5 h-5" />
+      <MoonIcon v-else class="w-5 h-5" />
+    </button>
+  </div>
+  <div class="p-6 max-w-6xl mx-auto text-gray-800 dark:text-gray-200">
     <!-- 顶部信息 -->
     <div class="mb-10" v-if="spec.info">
       <h1 class="text-3xl font-bold">{{ spec.info.title }}</h1>
@@ -63,7 +80,7 @@ doApi.get("api/openapi.json").then((res) => {
       <!-- 可展开的标签头部 -->
       <div
         @click="toggleTag(tag)"
-        class="flex items-center justify-between cursor-pointer bg-gray-50 hover:bg-gray-100 p-4 rounded-lg border border-gray-200 transition-colors"
+        class="flex items-center justify-between cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 p-4 rounded-lg border border-gray-200 transition-colors"
       >
         <h2 class="text-2xl font-bold text-purple-600">{{ tag }}</h2>
         <div class="flex items-center gap-2">
@@ -90,17 +107,21 @@ doApi.get("api/openapi.json").then((res) => {
         <div
           v-for="api in apis"
           :key="api.path + api.method"
-          class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm"
+          class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm dark:bg-gray-800"
         >
           <div class="flex items-center gap-2">
             <span
               :class="getMethodColor(api.method)"
-              class="text-sm uppercase text-white inline-block px-2 py-1 rounded font-medium"
+              class="text-sm uppercase text-white dark:text-black inline-block px-2 py-1 rounded font-medium"
             >
               {{ api.method }}
             </span>
-            <span class="text-gray-800 font-semibold">{{ api.path }}</span>
-            <p class="text-md text-gray-600">{{ api.details.summary }}</p>
+            <span class="text-gray-800 dark:text-gray-200 font-semibold">{{
+              api.path
+            }}</span>
+            <p class="text-md text-gray-600 dark:text-gray-400">
+              {{ api.details.summary }}
+            </p>
           </div>
 
           <details class="mt-2">
@@ -108,7 +129,7 @@ doApi.get("api/openapi.json").then((res) => {
               查看接口详情
             </summary>
 
-            <div class="mt-2">
+            <div class="mt-2 text-black dark:text-white">
               <!-- 请求参数 (未展开 definitions 参数渲染，留做扩展) -->
               <!-- <div v-if="api.details.requestBody?.length">
                 <h3 class="font-semibold text-sm mt-2">请求参数：</h3>
@@ -124,10 +145,13 @@ doApi.get("api/openapi.json").then((res) => {
                 <div
                   v-if="api.details.requestBody?.content?.['application/json']"
                 >
-                  <h3 class="font-semibold text-sm text-gray-700 mb-1">
+                  <h3
+                    class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-1"
+                  >
                     请求体:
                   </h3>
-                  <pre class="bg-gray-100 p-2 rounded text-sm overflow-x-auto"
+                  <pre
+                    class="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm overflow-x-auto"
                     >{{
                       JSON.stringify(
                         api.details.requestBody?.content?.["application/json"]
@@ -143,10 +167,13 @@ doApi.get("api/openapi.json").then((res) => {
                     api.details.requestBody?.content?.['multipart/form-data']
                   "
                 >
-                  <h3 class="font-semibold text-sm text-gray-700 mb-1">
+                  <h3
+                    class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-1"
+                  >
                     form-data:
                   </h3>
-                  <pre class="bg-gray-100 p-2 rounded text-sm overflow-x-auto"
+                  <pre
+                    class="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm overflow-x-auto"
                     >{{
                       JSON.stringify(
                         api.details.requestBody?.content?.[
@@ -162,10 +189,13 @@ doApi.get("api/openapi.json").then((res) => {
 
               <!-- 响应体 -->
               <div class="mt-3" v-if="api.details.responses">
-                <h3 class="font-semibold text-sm text-gray-700 mb-1">
+                <h3
+                  class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-1"
+                >
                   响应体:
                 </h3>
-                <pre class="bg-gray-100 p-2 rounded text-sm overflow-x-auto"
+                <pre
+                  class="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm overflow-x-auto"
                   >{{
                     JSON.stringify(
                       api.details.responses?.["200"]?.content?.[
@@ -192,10 +222,13 @@ doApi.get("api/openapi.json").then((res) => {
         class="mb-4"
       >
         <details>
-          <summary class="cursor-pointer text-green-700 underline text-sm">
+          <summary
+            class="cursor-pointer text-green-700 dark:text-green-400 underline text-sm"
+          >
             {{ name }}
           </summary>
-          <pre class="bg-gray-50 p-3 mt-1 rounded text-sm overflow-x-auto"
+          <pre
+            class="bg-gray-50 dark:bg-gray-700 p-3 mt-1 rounded text-sm overflow-x-auto"
             >{{ JSON.stringify(schema, null, 2) }}
           </pre>
         </details>
