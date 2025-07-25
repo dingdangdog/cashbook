@@ -29,7 +29,6 @@ import prisma from "~/lib/prisma";
  *                   total: number 总记录数,
  *                   data: [] #[Book账本列表],
  *                   pages: number 总页数
- *               
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数

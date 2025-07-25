@@ -103,7 +103,7 @@ onMounted(() => {
             placeholder="账本ID"
           />
           <input
-            v-model="query.name"
+            v-model="query.bookName"
             type="text"
             class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="账本名称"
