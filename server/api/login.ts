@@ -13,31 +13,20 @@ import jwt from "jsonwebtoken";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 description: 用户名
- *               password:
- *                 type: string
- *                 description: 密码
+ *             username: string 用户名
+ *             password: string 密码
  *     responses:
  *       200:
  *         description: 登录成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
+ *               Result:
+ *                 d:
  *                   id: 用户ID,
  *                   name: 用户名,
  *                   email: 邮箱,
  *                   token: JWT令牌
- *                 }
- *               }
  *       400:
  *         description: 登录失败
  *         content:

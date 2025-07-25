@@ -13,19 +13,8 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - ids
- *               - bookId
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: number
- *                 description: 流水记录ID数组
- *               bookId:
- *                 type: string
- *                 description: 账本ID
+ *             bookId: string 账本ID
+ *             ids: number[] 流水记录ID数组
  *     responses:
  *       200:
  *         description: 批量忽略成功

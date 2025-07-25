@@ -13,60 +13,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - flows
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               mode:
- *                 type: string
- *                 enum: ["add", "overwrite"]
- *                 description: 导入模式（add-追加，overwrite-覆盖）
- *               flows:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                       description: 流水名称
- *                     day:
- *                       type: string
- *                       description: 日期
- *                     description:
- *                       type: string
- *                       description: 描述
- *                     flowType:
- *                       type: string
- *                       description: 流水类型
- *                     invoice:
- *                       type: string
- *                       description: 发票信息
- *                     money:
- *                       type: number
- *                       description: 金额
- *                     payType:
- *                       type: string
- *                       description: 支付方式
- *                     industryType:
- *                       type: string
- *                       description: 行业类型
- *                     attribution:
- *                       type: string
- *                       description: 归属
- *                 description: 流水记录数组
+ *             bookId: string 账本ID
+ *             mode: string 导入模式（add-追加，overwrite-覆盖）
+ *             flows: [] #[Flow流水记录数组]
  *     responses:
  *       200:
  *         description: 导入成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: number 导入的记录数量
- *               }
  *       400:
  *         description: 导入失败
  *         content:

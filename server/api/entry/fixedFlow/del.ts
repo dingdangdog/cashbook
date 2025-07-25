@@ -13,26 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - id
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               id:
- *                 type: number
- *                 description: 固定流水ID
+ *             bookId: string 账本ID
+ *             id: number 固定流水ID
  *     responses:
  *       200:
  *         description: 固定流水删除成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result: 
  *                 d: FixedFlow 删除的固定流水信息
- *               }
  *       400:
  *         description: 删除失败
  *         content:

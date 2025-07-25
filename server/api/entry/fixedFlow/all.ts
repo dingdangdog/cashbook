@@ -13,36 +13,15 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
+ *             bookId: string 账本ID
  *     responses:
  *       200:
  *         description: 固定流水列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [
- *                   {
- *                     id: 固定流水ID,
- *                     bookId: 账本ID,
- *                     userId: 用户ID,
- *                     month: 月份,
- *                     money: 金额,
- *                     name: 名称,
- *                     description: 描述,
- *                     flowType: 流水类型,
- *                     industryType: 行业类型,
- *                     payType: 支付方式,
- *                     attribution: 归属
- *                   }
- *                 ]
- *               }
+ *               Result:
+ *                 d: [] #[FixedFlow 固定流水信息数组]
  *       400:
  *         description: 获取失败
  *         content:

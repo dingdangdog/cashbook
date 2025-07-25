@@ -13,32 +13,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - outId
- *               - bookId
- *               - inIds
- *             properties:
- *               outId:
- *                 type: number
- *                 description: 支出记录ID
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               inIds:
- *                 type: array
- *                 items:
- *                   type: number
- *                 description: 收入记录ID数组
+ *             bookId: string 账本ID
+ *             outId: number 支出记录ID
+ *             inIds: number[] 收入记录ID数组
  *     responses:
  *       200:
  *         description: 平账确认成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: 操作结果
- *               }
  *       400:
  *         description: 确认失败
  *         content:

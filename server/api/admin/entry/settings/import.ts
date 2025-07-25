@@ -13,23 +13,15 @@ import prisma from "~/lib/prisma";
  *       content:
  *         multipart/form-data:
  *           schema:
- *             type: object
- *             required:
- *               - file
- *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: JSON格式的数据文件
+ *             file: File JSON格式的数据文件
  *     responses:
  *       200:
  *         description: 数据导入成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: "数据导入成功"
- *               }
  *       400:
  *         description: 导入失败
  *         content:

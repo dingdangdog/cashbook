@@ -13,13 +13,7 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: number
- *                 description: 账本ID
+ *             id: number 账本ID
  *     responses:
  *       200:
  *         description: 账本删除成功

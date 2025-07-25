@@ -13,22 +13,15 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
+ *             bookId: string 账本ID
  *     responses:
  *       200:
  *         description: 流水归属列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: [] #[string归属名称数组]
- *               }
  *       400:
  *         description: 获取失败
  *         content:

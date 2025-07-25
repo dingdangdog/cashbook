@@ -13,26 +13,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 description: 关系ID（可选）
- *               bookId:
- *                 type: string
- *                 description: 账本ID（可选）
- *               userId:
- *                 type: number
- *                 description: 用户ID（可选）
+ *             id: number 关系ID（可选）
+ *             bookId: string 账本ID（可选）
+ *             userId: number 用户ID（可选）
  *     responses:
  *       200:
  *         description: 类型关系列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [类型关系列表数组]
- *               }
+ *               Result:
+ *                 d: [] #[TypeRelation类型关系列表数组]
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数

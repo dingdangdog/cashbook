@@ -13,50 +13,24 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - id
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               id:
- *                 type: number
- *                 description: 固定流水ID
- *               month:
- *                 type: string
- *                 description: 月份
- *               money:
- *                 type: number
- *                 description: 金额
- *               name:
- *                 type: string
- *                 description: 名称
- *               description:
- *                 type: string
- *                 description: 描述
- *               flowType:
- *                 type: string
- *                 description: 流水类型
- *               industryType:
- *                 type: string
- *                 description: 行业类型
- *               payType:
- *                 type: string
- *                 description: 支付方式
- *               attribution:
- *                 type: string
- *                 description: 归属
+ *             bookId: string 账本ID
+ *             id: number 固定流水ID
+ *             month: string 月份
+ *             money: number 金额
+ *             name: string 名称
+ *             description: string 描述
+ *             flowType: string 流水类型
+ *             industryType: string 行业类型
+ *             payType: string 支付方式
+ *             attribution: string 归属
  *     responses:
  *       200:
  *         description: 固定流水更新成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: FixedFlow 更新后的固定流水信息
- *               }
  *       400:
  *         description: 更新失败
  *         content:

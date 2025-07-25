@@ -13,22 +13,15 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - key
- *             properties:
- *               key:
- *                 type: string
- *                 description: 分享密钥
+ *             key: string 分享密钥
  *     responses:
  *       200:
  *         description: 成功加入共享账本
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: Book 加入的账本信息
- *               }
  *       400:
  *         description: 加入失败
  *         content:

@@ -15,30 +15,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *               - bookId
- *               - invoice
- *             properties:
- *               id:
- *                 type: number
- *                 description: 流水ID
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               invoice:
- *                 type: string
- *                 description: 发票文件名
+ *             bookId: string 账本ID
+ *             id: number 流水ID
+ *             invoice: string 发票文件名
  *     responses:
  *       200:
  *         description: 发票删除成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: 操作结果
- *               }
  *       400:
  *         description: 删除失败
  *         content:

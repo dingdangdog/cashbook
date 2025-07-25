@@ -15,33 +15,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         multipart/form-data:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - id
- *               - invoice
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               id:
- *                 type: number
- *                 description: 流水ID
- *               invoice:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: binary
- *                 description: 发票文件（支持多文件上传）
+ *             bookId: string 账本ID
+ *             id: number 流水ID
+ *             invoice: string 发票文件名
  *     responses:
  *       200:
  *         description: 发票上传成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: 操作结果
- *               }
  *       400:
  *         description: 上传失败
  *         content:

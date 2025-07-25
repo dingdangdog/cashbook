@@ -13,25 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               flowType:
- *                 type: string
- *                 description: 流水类型（可选）
+ *             bookId: string 账本ID
+ *             flowType: string 流水类型（可选）
  *     responses:
  *       200:
  *         description: 日常分析数据获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [] #[CommonChartData图表通用数据结构：归属分析数据数组]
- *               }
+ *               Result:
+ *                 d: [] #[CommonChartData图表通用数据结构：日常流水分析数据数组]
  *       400:
  *         description: 获取失败
  *         content:

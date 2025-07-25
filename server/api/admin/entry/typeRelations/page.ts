@@ -13,45 +13,26 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 description: 关系ID（可选）
- *               bookId:
- *                 type: string
- *                 description: 账本ID（可选，支持模糊查询）
- *               userId:
- *                 type: number
- *                 description: 用户ID（可选）
- *               source:
- *                 type: string
- *                 description: 源类型（可选，支持模糊查询）
- *               target:
- *                 type: string
- *                 description: 目标类型（可选，支持模糊查询）
- *               excludeTemplate:
- *                 type: boolean
- *                 description: 是否排除模板数据（可选）
- *               pageNum:
- *                 type: number
- *                 description: 页码（默认为1）
- *               pageSize:
- *                 type: number
- *                 description: 每页大小（默认为15，-1表示查询全部）
+ *             id: number 关系ID（可选）
+ *             bookId: string 账本ID（可选，支持模糊查询）
+ *             userId: number 用户ID（可选）
+ *             source: string 源类型（可选，支持模糊查询）
+ *             target: string 目标类型（可选，支持模糊查询）
+ *             excludeTemplate: boolean 是否排除模板数据（可选）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
  *     responses:
  *       200:
  *         description: 分页数据获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
- *                   total: 总记录数,
- *                   data: [类型关系列表],
- *                   pages: 总页数
- *                 }
- *               }
+ *               Result:
+ *                 d:
+ *                   total: number 总记录数,
+ *                   data: [] #[TypeRelation类型关系列表数组],
+ *                   pages: number 总页数
+ *               
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数

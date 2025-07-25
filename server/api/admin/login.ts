@@ -9,17 +9,8 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - account
- *               - password
- *             properties:
- *               account:
- *                 type: string
- *                 description: 管理员账号
- *               password:
- *                 type: string
- *                 description: 管理员密码
+ *             account: string 管理员账号
+ *             password: string 管理员密码
  *     responses:
  *       200:
  *         description: 登录成功

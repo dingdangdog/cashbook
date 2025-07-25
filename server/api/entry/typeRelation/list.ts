@@ -14,22 +14,15 @@ import { initTypeRelation } from "~/server/utils/data";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
+ *             bookId: string 账本ID
  *     responses:
  *       200:
  *         description: 类型关系列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: [] #[TypeRelation类型关系列表数组]
- *               }
  */
 export default defineEventHandler(async (event) => {
   const { bookId } = await readBody(event); // 获取查询参数

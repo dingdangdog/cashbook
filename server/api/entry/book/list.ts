@@ -13,23 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 description: 账本ID（可选）
- *               bookName:
- *                 type: string
- *                 description: 账本名称（可选，支持模糊查询）
+ *             id: number 账本ID（可选）
+ *             bookName: string 账本名称（可选，支持模糊查询）
  *     responses:
  *       200:
  *         description: 账本列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: [] #[Book账本列表数组]
- *               }
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数

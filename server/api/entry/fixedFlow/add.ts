@@ -13,51 +13,24 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - startMonth
- *               - endMonth
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               startMonth:
- *                 type: string
- *                 description: 开始月份（YYYY-MM格式）
- *               endMonth:
- *                 type: string
- *                 description: 结束月份（YYYY-MM格式）
- *               money:
- *                 type: number
- *                 description: 金额
- *               name:
- *                 type: string
- *                 description: 固定流水名称
- *               description:
- *                 type: string
- *                 description: 描述
- *               flowType:
- *                 type: string
- *                 description: 流水类型
- *               industryType:
- *                 type: string
- *                 description: 行业类型
- *               payType:
- *                 type: string
- *                 description: 支付方式
- *               attribution:
- *                 type: string
- *                 description: 归属
+ *             bookId: string 账本ID
+ *             startMonth: string 开始月份（YYYY-MM格式）
+ *             endMonth: string 结束月份（YYYY-MM格式）
+ *             money: number 金额
+ *             name: string 固定流水名称
+ *             description: string 描述
+ *             flowType: string 流水类型
+ *             industryType: string 行业类型
+ *             payType: string 支付方式
+ *             attribution: string 归属
  *     responses:
  *       200:
  *         description: 固定流水添加成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: [] #[FixedFlow创建的固定流水记录数组]
- *               }
  *       400:
  *         description: 添加失败
  *         content:

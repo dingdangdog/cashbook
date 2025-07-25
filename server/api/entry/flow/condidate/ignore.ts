@@ -13,26 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *               - bookId
- *             properties:
- *               id:
- *                 type: number
- *                 description: 流水记录ID
- *               bookId:
- *                 type: string
- *                 description: 账本ID
+ *             bookId: string 账本ID
+ *             id: number 流水记录ID
  *     responses:
  *       200:
  *         description: 忽略成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: Flow 更新后的记录信息
- *               }
  *       400:
  *         description: 忽略失败
  *         content:

@@ -13,34 +13,18 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - name
- *               - password
- *               - email
- *             properties:
- *               username:
- *                 type: string
- *                 description: 用户名
- *               name:
- *                 type: string
- *                 description: 用户姓名
- *               password:
- *                 type: string
- *                 description: 密码
- *               email:
- *                 type: string
- *                 description: 邮箱
+ *             username: string 用户名
+ *             name: string 用户姓名
+ *             password: string 密码
+ *             email: string 邮箱
  *     responses:
  *       200:
  *         description: 用户添加成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: 创建的用户信息
- *               }
+ *               Result:
+ *                 d: User 创建的用户信息
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体

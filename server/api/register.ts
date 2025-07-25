@@ -12,29 +12,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 description: 用户名
- *               password:
- *                 type: string
- *                 description: 密码
- *               name:
- *                 type: string
- *                 description: 显示名称（可选）
+ *             username: string 用户名
+ *             password: string 密码
+ *             name: string 显示名称（可选）
  *     responses:
  *       200:
  *         description: 注册成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: "注册成功"
- *               }
  *       400:
  *         description: 注册失败
  *         content:

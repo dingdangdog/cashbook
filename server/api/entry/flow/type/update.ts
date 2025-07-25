@@ -13,37 +13,19 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - type
- *               - oldValue
- *               - value
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               type:
- *                 type: string
- *                 enum: ["支出类型/收入类型", "支付方式/收款方式"]
- *                 description: 类型分类
- *               oldValue:
- *                 type: string
- *                 description: 原类型值
- *               value:
- *                 type: string
- *                 description: 新类型值
+ *             bookId: string 账本ID
+ *             type: string 类型分类
+ *             oldValue: string 原类型值
+ *             value: string 新类型值
  *     responses:
  *       200:
  *         description: 类型更新成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
+ *               Result:
+ *                 d:
  *                   count: 更新的记录数量
- *                 }
- *               }
  *       400:
  *         description: 更新失败
  *         content:

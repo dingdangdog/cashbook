@@ -13,31 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               flowType:
- *                 type: string
- *                 description: 流水类型（可选）
+ *             bookId: string 账本ID
+ *             flowType: string 流水类型（可选）
  *     responses:
  *       200:
  *         description: 类型列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [
- *                   {
- *                     type: 类型分类（"支出类型/收入类型" | "支付方式/收款方式"）,
- *                     flowType: 流水类型,
- *                     value: 类型值
- *                   }
- *                 ]
- *               }
+ *               Result:
+ *                 d: [] # { type: 类型分类（"支出类型/收入类型" | "支付方式/收款方式"）, flowType: 流水类型, value: 类型值 }
  *       400:
  *         description: 获取失败
  *         content:

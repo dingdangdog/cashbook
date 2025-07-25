@@ -13,31 +13,18 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               flowType:
- *                 type: string
- *                 description: 流水类型（可选）
- *               startDay:
- *                 type: string
- *                 description: 开始日期（可选）
- *               endDay:
- *                 type: string
- *                 description: 结束日期（可选）
+ *             bookId: string 账本ID
+ *             flowType: string 流水类型（可选）
+ *             startDay: string 开始日期（可选）
+ *             endDay: string 结束日期（可选）
  *     responses:
  *       200:
  *         description: 支付类型分析数据获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [] #[CommonChartData图表通用数据结构：归属分析数据数组]
- *               }
+ *               Result:
+ *                 d: [] #[CommonChartData图表通用数据结构：支付类型分析数据数组]
  *       400:
  *         description: 获取失败
  *         content:

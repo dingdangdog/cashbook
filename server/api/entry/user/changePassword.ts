@@ -13,30 +13,18 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - old
- *               - new
- *               - againNew
- *             properties:
- *               old:
- *                 type: string
- *                 description: 原密码
- *               new:
- *                 type: string
- *                 description: 新密码
- *               againNew:
- *                 type: string
- *                 description: 确认新密码
+ *             bookId: string 账本ID
+ *             old: string 原密码
+ *             new: string 新密码
+ *             againNew: string 确认新密码
  *     responses:
  *       200:
  *         description: 密码修改成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: "更新成功"
- *               }
  *       400:
  *         description: 密码修改失败
  *         content:

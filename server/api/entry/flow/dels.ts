@@ -13,28 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - ids
- *               - bookId
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: number
- *                 description: 流水ID数组
- *               bookId:
- *                 type: string
- *                 description: 账本ID
+ *             ids: number[] 流水ID数组
+ *             bookId: string 账本ID
  *     responses:
  *       200:
  *         description: 批量删除成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: number 删除的记录数量
- *               }
  *       400:
  *         description: 删除失败
  *         content:

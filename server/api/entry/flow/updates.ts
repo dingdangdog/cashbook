@@ -13,40 +13,20 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - ids
- *               - bookId
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: number
- *                 description: 流水ID数组
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               flowType:
- *                 type: string
- *                 description: 流水类型（可选）
- *               industryType:
- *                 type: string
- *                 description: 行业分类（可选）
- *               payType:
- *                 type: string
- *                 description: 支付方式（可选）
- *               attribution:
- *                 type: string
- *                 description: 归属（可选）
+ *             bookId: string 账本ID
+ *             ids: number[] 流水ID数组
+ *             flowType: string 流水类型（可选）
+ *             industryType: string 行业分类（可选）
+ *             payType: string 支付方式（可选）
+ *             attribution: string 归属（可选）
  *     responses:
  *       200:
  *         description: 批量更新成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: number 更新的记录数量
- *               }
  *       400:
  *         description: 更新失败
  *         content:

@@ -13,32 +13,19 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *                 description: 系统标题
- *               description:
- *                 type: string
- *                 description: 系统描述
- *               keywords:
- *                 type: string
- *                 description: 关键词
- *               version:
- *                 type: string
- *                 description: 版本号
- *               openRegister:
- *                 type: boolean
- *                 description: 是否开放注册
+ *             title: string 系统标题
+ *             description: string 系统描述
+ *             keywords: string 关键词
+ *             version: string 版本号
+ *             openRegister: boolean 是否开放注册
  *     responses:
  *       200:
  *         description: 系统设置更新成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: 更新后的系统设置信息
- *               }
+ *               Result:
+ *                 d: SystemSetting 更新后的系统设置信息
  */
 export default defineEventHandler(async (event) => {
   const { title, description, keywords, version, openRegister } =

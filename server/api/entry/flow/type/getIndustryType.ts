@@ -13,29 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               flowType:
- *                 type: string
- *                 description: 流水类型（可选）
+ *             bookId: string 账本ID
+ *             flowType: string 流水类型（可选）
  *     responses:
  *       200:
  *         description: 行业类型列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [
- *                   {
- *                     industryType: 行业类型名称
- *                   }
- *                 ]
- *               }
+ *               Result:
+ *                 d: [] # {industryType: 行业类型名称}
  *       400:
  *         description: 获取失败
  *         content:

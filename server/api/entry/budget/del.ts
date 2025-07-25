@@ -13,26 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - id
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               id:
- *                 type: number
- *                 description: 预算ID
+ *             bookId: string 账本ID
+ *             id: number 预算ID
  *     responses:
  *       200:
  *         description: 预算删除成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: 删除的预算信息
- *               }
+ *               Result:
+ *                 d: Budget 删除的预算信息
  *       400:
  *         description: 删除失败
  *         content:

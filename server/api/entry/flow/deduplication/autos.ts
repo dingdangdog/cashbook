@@ -13,45 +13,24 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               criteria:
- *                 type: object
- *                 properties:
- *                   name:
- *                     type: boolean
- *                     description: 是否检查名称相同
- *                   description:
- *                     type: boolean
- *                     description: 是否检查描述相同
- *                   industryType:
- *                     type: boolean
- *                     description: 是否检查行业类型相同
- *                   flowType:
- *                     type: boolean
- *                     description: 是否检查流水类型相同
- *                   payType:
- *                     type: boolean
- *                     description: 是否检查支付方式相同
- *                 description: 去重检测条件（可选，默认全部检查）
+ *             bookId: string 账本ID
+ *             criteria:
+ *               name: boolean 是否检查名称相同
+ *               description: boolean 是否检查描述相同
+ *               industryType: boolean 是否检查行业类型相同
+ *               flowType: boolean 是否检查流水类型相同
+ *               payType: boolean 是否检查支付方式相同
  *     responses:
  *       200:
  *         description: 重复记录查找成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
- *                   duplicateGroups: [], #[Flow重复记录组数组]
- *                   totalGroups: number, #重复组总数,
- *                   totalDuplicates: number, #重复记录总数
- *                 }
- *               }
+ *               Result:
+ *                 d:
+ *                   duplicateGroups: [] #[Flow重复记录组数组]
+ *                   totalGroups: number #重复组总数,
+ *                   totalDuplicates: number #重复记录总数
  *       400:
  *         description: 查找失败
  *         content:

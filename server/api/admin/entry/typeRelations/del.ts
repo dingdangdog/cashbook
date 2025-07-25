@@ -13,22 +13,15 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: number
- *                 description: 关系ID
+ *             id: number 关系ID
  *     responses:
  *       200:
  *         description: 类型关系删除成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: 删除的类型关系信息
- *               }
+ *               Result:
+ *                 d: TypeRelation 删除的类型关系信息
  *       400:
  *         description: 删除失败
  *         content:

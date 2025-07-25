@@ -13,28 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - month
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               month:
- *                 type: string
- *                 description: 月份
+ *             bookId: string 账本ID
+ *             month: string 月份
  *     responses:
  *       200:
  *         description: 已使用金额重新加载成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
- *                   count: 更新的记录数量
- *                 }
- *               }
+ *               Result:
+ *                 d: number 更新的记录数量
  *       400:
  *         description: 重新加载失败
  *         content:

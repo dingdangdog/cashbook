@@ -13,29 +13,18 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 description: 用户ID（可选）
- *               name:
- *                 type: string
- *                 description: 用户姓名（可选，支持模糊查询）
- *               username:
- *                 type: string
- *                 description: 用户名（可选，支持模糊查询）
- *               email:
- *                 type: string
- *                 description: 邮箱（可选，支持模糊查询）
+ *             id: number 用户ID（可选）
+ *             name: string 用户姓名（可选，支持模糊查询）
+ *             username: string 用户名（可选，支持模糊查询）
+ *             email: string 邮箱（可选，支持模糊查询）
  *     responses:
  *       200:
  *         description: 用户列表获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: [用户列表数组]
- *               }
+ *               Result:
+ *                 d: [] #[User用户列表数组]
  */
 export default defineEventHandler(async (event) => {
   const { name, username, email, id } = await readBody(event); // 获取查询参数

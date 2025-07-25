@@ -13,22 +13,15 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: number
- *                 description: 用户ID
+ *             id: number 用户ID
  *     responses:
  *       200:
  *         description: 用户删除成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: 删除的用户信息
- *               }
+ *               Result:
+ *                 d: User 删除的用户信息
  *       400:
  *         description: 删除失败
  *         content:

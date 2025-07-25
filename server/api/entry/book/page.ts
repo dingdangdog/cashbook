@@ -13,23 +13,11 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 description: 账本ID（可选）
- *               bookName:
- *                 type: string
- *                 description: 账本名称（可选，支持模糊查询）
- *               shareKey:
- *                 type: string
- *                 description: 分享密钥（可选）
- *               pageNum:
- *                 type: number
- *                 description: 页码（默认为1）
- *               pageSize:
- *                 type: number
- *                 description: 每页大小（默认为15，-1表示查询全部）
+ *             id: number 账本ID（可选）
+ *             bookName: string 账本名称（可选，支持模糊查询）
+ *             shareKey: string 分享密钥（可选）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
  *     responses:
  *       200:
  *         description: 分页数据获取成功

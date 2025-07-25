@@ -13,38 +13,16 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - types
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               types:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                       description: 关系ID（可选，新增时不需要）
- *                     source:
- *                       type: string
- *                       description: 源类型
- *                     target:
- *                       type: string
- *                       description: 目标类型
- *                 description: 类型关系数组
+ *             bookId: string 账本ID
+ *             types: [] #[TypeRelation类型关系数组]
  *     responses:
  *       200:
  *         description: 类型关系更新成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: TypeRelation
- *               }
  *       400:
  *         description: 更新失败
  *         content:

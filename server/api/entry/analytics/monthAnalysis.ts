@@ -13,20 +13,9 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - month
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               month:
- *                 type: string
- *                 description: 月份（YYYY-MM格式）
- *               flowType:
- *                 type: string
- *                 description: 流水类型（可选）
+ *             bookId: string 账本ID
+ *             month: string 月份（YYYY-MM格式）
+ *             flowType: string 流水类型（可选）
  *     responses:
  *       200:
  *         description: 月度详细分析数据获取成功

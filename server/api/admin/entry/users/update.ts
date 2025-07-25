@@ -13,34 +13,19 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: number
- *                 description: 用户ID
- *               name:
- *                 type: string
- *                 description: 用户姓名（可选）
- *               username:
- *                 type: string
- *                 description: 用户名（可选，需要同时提供password）
- *               password:
- *                 type: string
- *                 description: 密码（可选，需要同时提供username）
- *               email:
- *                 type: string
- *                 description: 邮箱（可选）
+ *             id: number 用户ID
+ *             name: string 用户姓名（可选）
+ *             username: string 用户名（可选，需要同时提供password）
+ *             password: string 密码（可选，需要同时提供username）
+ *             email: string 邮箱（可选）
  *     responses:
  *       200:
  *         description: 用户更新成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: 更新后的用户信息
- *               }
+ *               Result:
+ *                 d: User 更新后的用户信息
  *       400:
  *         description: 更新失败
  *         content:

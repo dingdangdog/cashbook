@@ -9,17 +9,8 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 description: 用户名
- *               password:
- *                 type: string
- *                 description: 原始密码
+ *             username: string 用户名
+ *             password: string 原始密码
  *     responses:
  *       200:
  *         description: 密码哈希生成成功

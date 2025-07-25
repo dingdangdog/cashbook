@@ -14,22 +14,15 @@ import { getUUID } from "~/utils/common";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: number
- *                 description: 账本ID
+ *             id: number 账本ID
  *     responses:
  *       200:
  *         description: 分享密钥生成成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: Book 更新后的账本信息
- *               }
  *       400:
  *         description: 生成失败
  *         content:

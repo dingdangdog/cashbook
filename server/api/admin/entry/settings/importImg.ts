@@ -16,31 +16,21 @@ import JSZip from "jszip";
  *       content:
  *         multipart/form-data:
  *           schema:
- *             type: object
- *             required:
- *               - file
- *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: ZIP格式的图片文件包
+ *             file: File ZIP格式的图片文件包
  *     responses:
  *       200:
  *         description: 图片导入成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
+ *               Result:
+ *                 d:
  *                   message: 导入结果信息,
- *                   stats: {
+ *                   stats:
  *                     total: 总文件数,
  *                     imported: 导入成功数,
  *                     skipped: 跳过数,
  *                     errors: 错误数
- *                   }
- *                 }
- *               }
  *       400:
  *         description: 导入失败
  *         content:

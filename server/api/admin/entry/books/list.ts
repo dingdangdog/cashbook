@@ -13,17 +13,9 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 description: 账本ID（可选）
- *               bookName:
- *                 type: string
- *                 description: 账本名称（可选）
- *               userId:
- *                 type: number
- *                 description: 用户ID（可选）
+ *             id: number 账本ID（可选）
+ *             bookName: string 账本名称（可选）
+ *             userId: number 用户ID（可选）
  *     responses:
  *       200:
  *         description: 账本列表获取成功

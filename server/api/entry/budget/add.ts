@@ -13,29 +13,17 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bookId
- *               - month
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID
- *               month:
- *                 type: string
- *                 description: 月份
- *               budget:
- *                 type: number
- *                 description: 预算金额（默认为0）
+ *             bookId: string 账本ID
+ *             month: string 月份
+ *             budget: number 预算金额（默认为0）
  *     responses:
  *       200:
  *         description: 预算添加成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
+ *               Result:
  *                 d: Budget 实体
- *               }
  *       400:
  *         description: 添加失败
  *         content:

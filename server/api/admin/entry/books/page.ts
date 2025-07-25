@@ -13,36 +13,23 @@ import prisma from "~/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               bookId:
- *                 type: string
- *                 description: 账本ID（可选）
- *               bookName:
- *                 type: string
- *                 description: 账本名称（可选）
- *               userId:
- *                 type: number
- *                 description: 用户ID（可选）
- *               pageNum:
- *                 type: number
- *                 description: 页码（默认为1）
- *               pageSize:
- *                 type: number
- *                 description: 每页大小（默认为15，-1表示查询全部）
+ *             bookId: string 账本ID（可选）
+ *             bookName: string 账本名称（可选）
+ *             userId: number 用户ID（可选）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
  *     responses:
  *       200:
  *         description: 分页数据获取成功
  *         content:
  *           application/json:
  *             schema:
- *               Result: {
- *                 d: {
- *                   total: 总记录数,
- *                   data: [账本列表],
- *                   pages: 总页数
- *                 }
- *               }
+ *               Result:
+ *                 d:
+ *                   total: number 总记录数,
+ *                   data: [] #[Book账本列表],
+ *                   pages: number 总页数
+ *               
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
