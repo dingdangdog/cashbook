@@ -96,11 +96,11 @@ const getIconComponent = (iconName: string) => {
   </Head>
 
   <div
-    class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900"
+    class="min-h-screen bg-gradient-to-br from-gray-900 via-green-950 to-gray-900"
   >
     <!-- 顶部导航栏 -->
     <header
-      class="bg-gray-800/90 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-40"
+      class="bg-green-900/10 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-40"
     >
       <div class="flex items-center justify-between px-4 py-3">
         <!-- 左侧：菜单按钮和Logo -->
@@ -165,7 +165,7 @@ const getIconComponent = (iconName: string) => {
       <!-- 侧边栏 -->
       <aside
         :class="[
-          'bg-gray-800/90 backdrop-blur-sm border-r border-gray-700 transition-all duration-300 z-30',
+          'bg-gray-900/20 backdrop-blur-sm border-r border-gray-700 transition-all duration-300 z-30',
           menuer ? 'w-64' : 'w-0 overflow-hidden',
           miniWindow
             ? 'fixed inset-y-0 left-0 top-16'
