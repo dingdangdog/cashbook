@@ -69,6 +69,14 @@ definePageMeta({
             <div class="text-orange-400 font-medium">系统设置</div>
             <div class="text-gray-400 text-xs mt-1">系统配置管理</div>
           </div>
+          <a
+            class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
+            href="https://doc.cashbook.oldmoon.top"
+            target="_blank"
+          >
+            <div class="text-green-400 font-medium">官方文档</div>
+            <div class="text-gray-400 text-xs mt-1">官方文档站</div>
+          </a>
           <div
             class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
             @click="navigateTo('/api-docs')"
