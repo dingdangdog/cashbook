@@ -26,5 +26,5 @@ export default defineEventHandler((event) => {
   }
   // 设置响应头为 JSON
   setHeader(event, "Content-Type", "application/json");
-  return success(swaggerSpec);
+  return swaggerSpec;
 });
