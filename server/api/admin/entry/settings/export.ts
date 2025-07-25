@@ -1,5 +1,31 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/settings/export:
+ *   get:
+ *     summary: 管理员导出系统数据
+ *     tags: ["Admin Settings"]
+ *     security:
+ *       - Admin: []
+ *     responses:
+ *       200:
+ *         description: 数据导出成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: {
+ *                   SystemSetting: [系统设置数据],
+ *                   User: [用户数据],
+ *                   Book: [账本数据],
+ *                   Flow: [流水数据],
+ *                   Budget: [预算数据],
+ *                   FixedFlow: [固定流水数据],
+ *                   TypeRelation: [类型关系数据]
+ *                 }
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   // 获取所有表名
   const tableNames: string[] = [
@@ -28,7 +54,18 @@ export default defineEventHandler(async (event) => {
     const data = await prisma.$queryRawUnsafe(
       'SELECT * FROM "' + tableName + '";'
     );
-    allData[tableName] = data;
+
+    let serializedPageData;
+    // Convert BigInt to string for JSON serialization
+    if (data) {
+      serializedPageData = Array.isArray(data)
+        ? data.map((item: any) => ({
+            ...item,
+          }))
+        : data;
+      allData[tableName] = data;
+    }
+    allData[tableName] = serializedPageData;
   }
 
   // 返回文件流

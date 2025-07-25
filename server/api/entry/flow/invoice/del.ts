@@ -1,6 +1,40 @@
 import * as fs from "fs";
 import * as path from "path";
 import prisma from "~/lib/prisma";
+
+/**
+ * @swagger
+ * /api/entry/flow/invoice/del:
+ *   post:
+ *     summary: 删除流水发票
+ *     tags: ["Invoice"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             id: number 流水ID
+ *             invoice: string 发票文件名
+ *     responses:
+ *       200:
+ *         description: 发票删除成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: 操作结果
+ *       400:
+ *         description: 删除失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息（"请先选择账本" | "Not Find ID" | "Not Find ImageName" | "流水信息不存在" | "小票删除失败"）
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const { id, bookId, invoice } = await readBody(event);
 

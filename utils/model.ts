@@ -27,7 +27,7 @@ export interface UserInfo {
   username: string;
   createDate: Date;
 }
-export interface CommonOption {}
+
 export interface MonthAnalysis {
   month: string;
   outSum: string; // 总支出
