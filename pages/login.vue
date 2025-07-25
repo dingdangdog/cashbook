@@ -128,7 +128,7 @@ onMounted(async () => {
 
   doApi.get("api/check").then((res) => {
     console.log("res", res);
-    if (!res) {
+    if (res == 0) {
       Confirm.open({
         title: "提示",
         content: '当前系统没有普通用户，请前往【后台】"添加用户"或"开放注册"！',
@@ -137,6 +137,15 @@ onMounted(async () => {
         confirm: () => {
           navigateTo("/admin");
         },
+      });
+    } else if (res == -1) {
+      Confirm.open({
+        title: "提示",
+        content: "你的数据库很可能没有成功连接，请检查！！！",
+        confirmText: "知道了",
+        cancelText: "我不管了",
+        confirm: () => {},
+        cancel: () => {},
       });
     }
   });
@@ -174,9 +183,7 @@ const toAdmin = () => {
     ]"
   >
     <!-- 右上角导航栏 -->
-    <div
-      class="fixed top-2 right-2 flex items-center gap-2 z-50"
-    >
+    <div class="fixed top-2 right-2 flex items-center gap-2 z-50">
       <!-- 主题切换按钮 - 移到最左侧 -->
       <button
         @click="toggleTheme()"
@@ -281,9 +288,7 @@ const toAdmin = () => {
         <div
           :class="[
             'rounded-xl shadow-xl p-4 md:p-6 border',
-            isDark
-              ? 'bg-gray-800 border-gray-700'
-              : 'bg-white border-gray-200',
+            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
           ]"
         >
           <form @submit.prevent="login" class="space-y-4">
