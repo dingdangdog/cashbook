@@ -1,5 +1,39 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/typeRelations/page:
+ *   post:
+ *     summary: 管理员分页获取类型关系列表
+ *     tags: ["Admin Type Relations"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             id: number 关系ID（可选）
+ *             bookId: string 账本ID（可选，支持模糊查询）
+ *             userId: number 用户ID（可选）
+ *             source: string 源类型（可选，支持模糊查询）
+ *             target: string 目标类型（可选，支持模糊查询）
+ *             excludeTemplate: boolean 是否排除模板数据（可选）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
+ *     responses:
+ *       200:
+ *         description: 分页数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d:
+ *                   total: number 总记录数,
+ *                   data: [] #[TypeRelation类型关系列表数组],
+ *                   pages: number 总页数
+ *               
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 

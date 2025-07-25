@@ -1,5 +1,33 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/typeRelations/all:
+ *   get:
+ *     summary: 管理员获取所有类型关系
+ *     tags: ["Admin Type Relations"]
+ *     security:
+ *       - Admin: []
+ *     responses:
+ *       200:
+ *         description: 类型关系列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: [
+ *                   {
+ *                     id: 关系ID,
+ *                     bookId: 账本ID,
+ *                     userId: 用户ID,
+ *                     source: 源类型,
+ *                     target: 目标类型,
+ *                     bookName: 账本名称,
+ *                     bookDbId: 账本数据库ID
+ *                   }
+ *                 ]
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const typeRelations = await prisma.typeRelation.findMany();
   

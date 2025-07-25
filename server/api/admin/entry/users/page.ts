@@ -1,5 +1,37 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/users/page:
+ *   post:
+ *     summary: 管理员分页获取用户列表
+ *     tags: ["Admin Users"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             id: number 用户ID（可选）
+ *             name: string 用户姓名（可选，支持模糊查询）
+ *             username: string 用户名（可选，支持模糊查询）
+ *             email: string 邮箱（可选，支持模糊查询）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
+ *     responses:
+ *       200:
+ *         description: 分页数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d:
+ *                   total: number 总记录数,
+ *                   data: [] #[User用户列表数组],
+ *                   pages: number 总页数
+ *               
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
   const { name, username, email, id } = await readBody(event); // 获取查询参数

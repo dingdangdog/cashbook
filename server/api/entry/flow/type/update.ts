@@ -1,5 +1,40 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/type/update:
+ *   post:
+ *     summary: 更新流水类型
+ *     tags: ["Flow Type"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             type: string 类型分类
+ *             oldValue: string 原类型值
+ *             value: string 新类型值
+ *     responses:
+ *       200:
+ *         description: 类型更新成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d:
+ *                   count: 更新的记录数量
+ *       400:
+ *         description: 更新失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息（"Not Find ID" | "Not Find value" | "Unknown Type"）
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 

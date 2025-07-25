@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
-    "@mdi/font": "^7.4.47",
     "@nuxtjs/i18n": "^8.3.1",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@popperjs/core": "^2.11.8",
@@ -24,12 +23,16 @@
     "jszip": "^3.10.1",
     "nuxt": "^3.15.4",
     "nuxt-echarts": "^0.2.4",
+    "nuxt-openapi-docs-module": "^5.3.1",
     "v-calendar": "^3.1.2",
     "vue": "latest",
     "vue-toastification": "^2.0.0-rc.5",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.9"
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }

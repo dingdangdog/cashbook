@@ -1,6 +1,27 @@
 import * as fs from "fs";
 import * as path from "path";
 
+/**
+ * @swagger
+ * /api/entry/flow/invoice/show:
+ *   get:
+ *     summary: 显示发票图片
+ *     tags: ["Invoice"]
+ *     parameters:
+ *       - in: query
+ *         name: invoice
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 发票文件名
+ *     responses:
+ *       200:
+ *         description: 发票图片
+ *         content:
+ *           image/*:
+ *             schema:
+ *               Blob: 文件流，前端直接显示图片
+ */
 export default defineEventHandler(async (event) => {
   // 获取文件路径参数
   // const file = decodeURIComponent(getRouterParam(event, "file") || "");

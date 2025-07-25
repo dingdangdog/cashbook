@@ -1,5 +1,37 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/budget/reloadUsedAmount:
+ *   post:
+ *     summary: 重新加载预算已使用金额
+ *     tags: ["Budget"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             month: string 月份
+ *     responses:
+ *       200:
+ *         description: 已使用金额重新加载成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: number 更新的记录数量
+ *       400:
+ *         description: 重新加载失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
   const { bookId, month } = body;

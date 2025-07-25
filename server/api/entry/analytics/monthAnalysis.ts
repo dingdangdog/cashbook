@@ -1,5 +1,51 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/analytics/monthAnalysis:
+ *   post:
+ *     summary: 获取月度详细分析数据
+ *     tags: ["Analytics"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             month: string 月份（YYYY-MM格式）
+ *             flowType: string 流水类型（可选）
+ *     responses:
+ *       200:
+ *         description: 月度详细分析数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: {
+ *                   month: 月份,
+ *                   inSum: 总收入,
+ *                   outSum: 总支出,
+ *                   zeroSum: 总不计收支,
+ *                   maxInType: 最大收入类型,
+ *                   maxInTypeSum: 最大收入类型金额,
+ *                   maxOutType: 最大支出类型,
+ *                   maxOutTypeSum: 最大支出类型金额,
+ *                   maxIn: 最大单笔收入记录,
+ *                   maxOut: 最大单笔支出记录,
+ *                   maxZero: 最大单笔不计收支记录
+ *                 }
+ *               }
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息（"请先选择账本" | "Not Find Month" | "暂无数据"）
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const { bookId, flowType, month } = await readBody(event); // 获取查询参数
   if (!bookId) {
