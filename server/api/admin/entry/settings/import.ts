@@ -1,5 +1,36 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/settings/import:
+ *   post:
+ *     summary: 管理员导入系统数据
+ *     tags: ["Admin Settings"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             file: File JSON格式的数据文件
+ *     responses:
+ *       200:
+ *         description: 数据导入成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: "数据导入成功"
+ *       400:
+ *         description: 导入失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   // 1. 读取上传的文件
   const data = await readMultipartFormData(event);

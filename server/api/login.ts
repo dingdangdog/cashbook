@@ -2,6 +2,40 @@ import { encryptBySHA256 } from "../utils/common";
 import prisma from "~/lib/prisma";
 import jwt from "jsonwebtoken";
 
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: 用户登录
+ *     tags: ["Base"]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             username: string 用户名
+ *             password: string 密码
+ *     responses:
+ *       200:
+ *         description: 登录成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d:
+ *                   id: 用户ID,
+ *                   name: 用户名,
+ *                   email: 邮箱,
+ *                   token: JWT令牌
+ *       400:
+ *         description: 登录失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   // console.log("body", body);

@@ -1,5 +1,48 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/flow/page:
+ *   post:
+ *     summary: 分页获取流水记录列表
+ *     tags: ["Flow"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             bookId: string 账本ID
+ *             id: number 流水ID（可选）
+ *             flowType: string 流水类型（可选）
+ *             industryType: string 行业分类（可选）
+ *             payType: string 支付方式（可选）
+ *             startDay: string 开始日期（可选）
+ *             endDay: string 结束日期（可选）
+ *             name: string 流水名称（可选，支持模糊查询）
+ *             attribution: string 归属（可选，支持模糊查询）
+ *             description: string 描述（可选，支持模糊查询）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
+ *             moneySort: string 金额排序（asc/desc）
+ *     responses:
+ *       200:
+ *         description: 分页数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: PagePack<Flow> 流水分页数据
+ *       400:
+ *         description: 获取失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: "请先选择账本"
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 

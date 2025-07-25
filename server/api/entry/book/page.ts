@@ -1,5 +1,33 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/entry/book/page:
+ *   post:
+ *     summary: 分页获取账本列表
+ *     tags: ["Book"]
+ *     security:
+ *       - Authorization: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             id: number 账本ID（可选）
+ *             bookName: string 账本名称（可选，支持模糊查询）
+ *             shareKey: string 分享密钥（可选）
+ *             pageNum: number 页码（默认为1）
+ *             pageSize: number 每页大小（默认为15，-1表示查询全部）
+ *     responses:
+ *       200:
+ *         description: 分页数据获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result: {
+ *                 d: PagePack<Book> 账本分页数据
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
   const userId = await getUserId(event);

@@ -250,7 +250,7 @@
     <input
       ref="csvFileInput"
       type="file"
-      accept=".csv"
+      accept=".csv,.xlsx"
       style="display: none"
       @change="readCsvInfo"
     />

@@ -1,5 +1,30 @@
 import prisma from "~/lib/prisma";
 
+/**
+ * @swagger
+ * /api/admin/entry/typeRelations/list:
+ *   post:
+ *     summary: 管理员获取类型关系列表
+ *     tags: ["Admin Type Relations"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             id: number 关系ID（可选）
+ *             bookId: string 账本ID（可选）
+ *             userId: number 用户ID（可选）
+ *     responses:
+ *       200:
+ *         description: 类型关系列表获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d: [] #[TypeRelation类型关系列表数组]
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 

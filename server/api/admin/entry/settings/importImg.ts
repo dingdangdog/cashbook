@@ -3,6 +3,43 @@ import * as fs from "fs";
 import * as path from "path";
 import JSZip from "jszip";
 
+/**
+ * @swagger
+ * /api/admin/entry/settings/importImg:
+ *   post:
+ *     summary: 管理员导入系统图片
+ *     tags: ["Admin Settings"]
+ *     security:
+ *       - Admin: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             file: File ZIP格式的图片文件包
+ *     responses:
+ *       200:
+ *         description: 图片导入成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Result:
+ *                 d:
+ *                   message: 导入结果信息,
+ *                   stats:
+ *                     total: 总文件数,
+ *                     imported: 导入成功数,
+ *                     skipped: 跳过数,
+ *                     errors: 错误数
+ *       400:
+ *         description: 导入失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               Error: {
+ *                 message: 错误信息
+ *               }
+ */
 export default defineEventHandler(async (event) => {
   try {
     // 1. 读取上传的文件
