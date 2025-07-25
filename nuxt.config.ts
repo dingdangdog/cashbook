@@ -111,15 +111,6 @@ export default defineNuxtConfig({
     "nuxt-openapi-docs-module",
   ],
 
-  // openApiDocs: {
-  //   files: { openapi: "/api/openapi.json" },
-  //   url: "/api/openapi.json",
-  //   title: "Cashbook API",
-  //   description: "Cashbook API",
-  //   version: "4.3.1",
-  //   tags: [{ name: "Base", description: "基础接口" }],
-  // },
-
   i18n: {
     strategy: "prefix_except_default",
     defaultLocale: "zh",
