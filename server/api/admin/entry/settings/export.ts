@@ -28,7 +28,18 @@ export default defineEventHandler(async (event) => {
     const data = await prisma.$queryRawUnsafe(
       'SELECT * FROM "' + tableName + '";'
     );
-    allData[tableName] = data;
+
+    let serializedPageData;
+    // Convert BigInt to string for JSON serialization
+    if (data) {
+      serializedPageData = Array.isArray(data)
+        ? data.map((item: any) => ({
+            ...item,
+          }))
+        : data;
+      allData[tableName] = data;
+    }
+    allData[tableName] = serializedPageData;
   }
 
   // 返回文件流
