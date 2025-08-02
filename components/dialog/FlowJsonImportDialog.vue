@@ -155,6 +155,13 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/vue/24/outline";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showFlowJsonImportDialog.value) {
+    showFlowJsonImportDialog.value = false;
+  }
+}, showFlowJsonImportDialog);
+
 const { successCallback } = defineProps(["successCallback"]);
 
 const bookId = localStorage.getItem("bookId");

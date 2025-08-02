@@ -175,7 +175,7 @@
           </button>
         </div>
 
-        <div class="p-2 md:p-6 max-h-[70vh] overflow-y-auto">
+        <div class="p-2 md:p-4 max-h-[70vh] overflow-y-auto">
           <DatasMonthAnalysis :data="monthAnalysisData" />
         </div>
       </div>
@@ -362,12 +362,12 @@ const handleDesktopAddFlow = (date: any) => {
 
 const handleMobileMonthChange = (date: Date) => {
   nowDate.value = date;
-  initQuery();
+  // No need to call initQuery() - we already have all the data
 };
 
 const handleDesktopMonthChange = (date: Date) => {
   nowDate.value = date;
-  initQuery();
+  // No need to call initQuery() - we already have all the data
 };
 
 const addFlowSuccess = (flow: Flow) => {

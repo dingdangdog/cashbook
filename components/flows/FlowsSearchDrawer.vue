@@ -10,7 +10,9 @@
       @click.stop
     >
       <!-- 标题栏 -->
-      <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center">
+      <div
+        class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+      >
         <h3 class="text-lg font-semibold text-green-950 dark:text-white">
           筛选条件
         </h3>
@@ -26,7 +28,7 @@
       <div class="flex-1 overflow-y-auto p-4 space-y-4">
         <!-- 日期范围 -->
         <div class="space-y-2">
-          <DatePicker 
+          <DatePicker
             v-model="localQuery.startDay"
             label="开始日期"
             placeholder="请选择开始日期"
@@ -35,7 +37,7 @@
         </div>
 
         <div class="space-y-2">
-          <DatePicker 
+          <DatePicker
             v-model="localQuery.endDay"
             label="结束日期"
             placeholder="请选择结束日期"
@@ -45,7 +47,9 @@
 
         <!-- 流水归属 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             流水归属
           </label>
           <div class="relative">
@@ -77,7 +81,9 @@
 
         <!-- 名称 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             名称
           </label>
           <div class="relative">
@@ -109,7 +115,9 @@
 
         <!-- 备注 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             备注
           </label>
           <input
@@ -122,7 +130,9 @@
 
         <!-- 流水类型 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             流水类型
           </label>
           <select
@@ -139,7 +149,9 @@
 
         <!-- 支出/收入类型 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             {{ industryTypeLabel }}
           </label>
           <div class="relative">
@@ -154,7 +166,9 @@
             />
             <!-- 下拉选项 -->
             <div
-              v-if="showIndustryTypeDropdown && filteredIndustryTypes.length > 0"
+              v-if="
+                showIndustryTypeDropdown && filteredIndustryTypes.length > 0
+              "
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
@@ -163,8 +177,18 @@
                 @mousedown="selectIndustryType(item)"
                 class="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2"
               >
-                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                <svg
+                  class="w-4 h-4 text-green-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  />
                 </svg>
                 {{ item }}
               </div>
@@ -174,7 +198,9 @@
 
         <!-- 支付/收款方式 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             {{ payTypeLabel }}
           </label>
           <div class="relative">
@@ -207,7 +233,9 @@
 
         <!-- 金额范围 -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             最小金额
           </label>
           <input
@@ -220,7 +248,9 @@
         </div>
 
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label
+            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+          >
             最大金额
           </label>
           <input
@@ -234,17 +264,19 @@
       </div>
 
       <!-- 操作栏 -->
-      <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30">
+      <div
+        class="px-4 py-3 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+      >
         <div class="flex gap-2">
           <button
             @click="resetFilters"
-            class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded text-sm font-medium transition-colors"
+            class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded text-sm font-semibold transition-colors"
           >
             重置
           </button>
           <button
             @click="applyFilters"
-            class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors flex items-center justify-center gap-1"
+            class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold transition-colors flex items-center justify-center gap-1"
           >
             <CheckIcon class="w-3 h-3" />
             应用筛选
@@ -256,9 +288,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue';
-import { XMarkIcon, CheckIcon, CreditCardIcon } from '@heroicons/vue/24/outline';
-import DatePicker from '@/components/ui/DatePicker.vue';
+import { ref, watch, computed, onMounted } from "vue";
+import {
+  XMarkIcon,
+  CheckIcon,
+  CreditCardIcon,
+} from "@heroicons/vue/24/outline";
+import DatePicker from "@/components/ui/DatePicker.vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 
 interface FlowQuery {
@@ -311,49 +347,54 @@ const payTypeLabel = computed(() => {
 // 过滤后的选项
 const filteredNames = computed(() => {
   if (!localQuery.value.name || !props.nameList) return props.nameList || [];
-  return props.nameList.filter(item => 
+  return props.nameList.filter((item) =>
     item.toLowerCase().includes(localQuery.value.name!.toLowerCase())
   );
 });
 
 const filteredAttributions = computed(() => {
-  if (!localQuery.value.attribution || !props.attributionList) return props.attributionList || [];
-  return props.attributionList.filter(item => 
+  if (!localQuery.value.attribution || !props.attributionList)
+    return props.attributionList || [];
+  return props.attributionList.filter((item) =>
     item.toLowerCase().includes(localQuery.value.attribution!.toLowerCase())
   );
 });
 
 const filteredIndustryTypes = computed(() => {
   if (!localQuery.value.industryType) return industryTypeOptions.value;
-  return industryTypeOptions.value.filter(item => 
+  return industryTypeOptions.value.filter((item) =>
     item.toLowerCase().includes(localQuery.value.industryType!.toLowerCase())
   );
 });
 
 const filteredPayTypes = computed(() => {
   if (!localQuery.value.payType) return payTypeOptions.value;
-  return payTypeOptions.value.filter(item => 
+  return payTypeOptions.value.filter((item) =>
     item.toLowerCase().includes(localQuery.value.payType!.toLowerCase())
   );
 });
 
 // 监听外部查询变化
-watch(() => props.query, (newQuery) => {
-  localQuery.value = { ...newQuery };
-}, { deep: true });
+watch(
+  () => props.query,
+  (newQuery) => {
+    localQuery.value = { ...newQuery };
+  },
+  { deep: true }
+);
 
 // 获取类型选项
 const loadTypeOptions = async (flowType?: string) => {
   try {
     const [industryData, payData] = await Promise.all([
       getIndustryType(flowType || ""),
-      getPayType(flowType || "")
+      getPayType(flowType || ""),
     ]);
-    
-    industryTypeOptions.value = industryData.map(d => d.industryType);
-    payTypeOptions.value = payData.map(d => d.payType);
+
+    industryTypeOptions.value = industryData.map((d) => d.industryType);
+    payTypeOptions.value = payData.map((d) => d.payType);
   } catch (error) {
-    console.error('获取类型选项失败:', error);
+    console.error("获取类型选项失败:", error);
   }
 };
 
@@ -434,8 +475,8 @@ const resetFilters = () => {
 };
 
 const applyFilters = () => {
-  emit('apply', localQuery.value);
-  emit('close');
+  emit("apply", localQuery.value);
+  emit("close");
 };
 
 const emit = defineEmits<{
@@ -466,4 +507,4 @@ onMounted(() => {
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400 dark:bg-gray-500;
 }
-</style> 
+</style>

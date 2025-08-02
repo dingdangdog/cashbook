@@ -552,6 +552,13 @@ import {
 } from "@heroicons/vue/24/outline";
 import { showAutoMergeFlowsDialog } from "~/utils/flag";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showAutoMergeFlowsDialog.value) {
+    showAutoMergeFlowsDialog.value = false;
+  }
+}, showAutoMergeFlowsDialog);
+
 interface CandidatePair {
   out: Flow;
   in: Flow;

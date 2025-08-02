@@ -33,7 +33,7 @@ const showUserMenu = ref(false);
   <header
     class="bg-white dark:bg-green-950 shadow-sm border-b border-gray-200 dark:border-gray-700"
   >
-    <div class="px-4 md:px-8">
+    <div class="px-2 md:px-4">
       <div class="flex justify-between h-12 md:h-16">
         <!-- Left side -->
         <div class="flex items-center">

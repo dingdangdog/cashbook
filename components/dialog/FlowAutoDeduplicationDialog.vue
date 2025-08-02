@@ -10,6 +10,13 @@ import { showAutoDeduplicationFlowsDialog } from "~/utils/flag";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showAutoDeduplicationFlowsDialog.value) {
+    showAutoDeduplicationFlowsDialog.value = false;
+  }
+}, showAutoDeduplicationFlowsDialog);
+
 interface DuplicateData {
   duplicateGroups: Flow[][];
   totalGroups: number;
