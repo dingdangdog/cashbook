@@ -2,7 +2,7 @@
   <!-- 导入导出抽屉 -->
   <div
     v-if="show"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50"
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-start z-50"
     @click="$emit('close')"
   >
     <div
