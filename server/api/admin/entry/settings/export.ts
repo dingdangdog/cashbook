@@ -21,11 +21,52 @@ import prisma from "~/lib/prisma";
  *                   Book: [账本数据],
  *                   Flow: [流水数据],
  *                   Budget: [预算数据],
+ *                   Receivable: [应收款数据],
  *                   FixedFlow: [固定流水数据],
  *                   TypeRelation: [类型关系数据]
  *                 }
  *               }
  */
+// 递归函数：将对象中的所有 BigInt 转换为字符串
+const convertBigIntToString = (obj: any): any => {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  if (typeof obj === "bigint") {
+    console.log(obj);
+
+    return obj.toString();
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(convertBigIntToString);
+  }
+
+  if (typeof obj === "object") {
+    const newObj: any = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        // 处理 BigInt
+        if (typeof value === "bigint") {
+          newObj[key] = value.toString();
+        }
+        // 处理 Date
+        else if (value instanceof Date) {
+          newObj[key] = value.toISOString();
+        }
+        // 递归处理嵌套对象/数组
+        else {
+          newObj[key] = convertBigIntToString(value);
+        }
+      }
+    }
+    return newObj;
+  }
+
+  return obj;
+};
+
 export default defineEventHandler(async (event) => {
   // 获取所有表名
   const tableNames: string[] = [
@@ -35,6 +76,7 @@ export default defineEventHandler(async (event) => {
     "Book",
     "Flow",
     "Budget",
+    "Receivable",
     "FixedFlow",
     "TypeRelation",
   ];
@@ -55,17 +97,13 @@ export default defineEventHandler(async (event) => {
       'SELECT * FROM "' + tableName + '";'
     );
 
-    let serializedPageData;
     // Convert BigInt to string for JSON serialization
     if (data) {
-      serializedPageData = Array.isArray(data)
-        ? data.map((item: any) => ({
-            ...item,
-          }))
-        : data;
-      allData[tableName] = data;
+      const serializedPageData = convertBigIntToString(data);
+      allData[tableName] = serializedPageData;
+    } else {
+      allData[tableName] = null;
     }
-    allData[tableName] = serializedPageData;
   }
 
   // 返回文件流

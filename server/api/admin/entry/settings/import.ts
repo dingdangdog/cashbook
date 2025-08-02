@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
   try {
     // 获取当前系统版本号
     const currentSystemSetting = await prisma.systemSetting.findFirst({
-      where: { id: 1 }
+      where: { id: 1 },
     });
     const currentVersion = currentSystemSetting?.version;
 
@@ -76,10 +76,25 @@ export default defineEventHandler(async (event) => {
 
           // 批量导入数据
           if (tableData.length > 0) {
-            // 清空表数据并重置序列（自动更新索引）
-            await prisma.$queryRawUnsafe(
-              `TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`
-            );
+            // 跳过 _prisma_migrations 表，因为它可能包含重要的迁移历史
+            if (tableName === "_prisma_migrations") {
+              console.info(`跳过 ${tableName} 表的导入，保留现有迁移历史`);
+              importStats[tableName].imported = importStats[tableName].total; // 标记为已处理
+              continue;
+            } else {
+              // SQLite: 清空表数据（使用DELETE代替TRUNCATE）
+              await prisma.$queryRawUnsafe(`DELETE FROM "${tableName}";`);
+
+              // SQLite: 重置自增序列（如果存在）
+              try {
+                await prisma.$queryRawUnsafe(
+                  `DELETE FROM sqlite_sequence WHERE name = '${tableName}';`
+                );
+              } catch (seqErr) {
+                // 忽略序列表不存在的错误，继续执行
+                console.warn(`重置序列失败 ${tableName}:`, seqErr);
+              }
+            }
 
             // 获取所有列名
             const columns = Object.keys(tableData[0]);
@@ -90,18 +105,54 @@ export default defineEventHandler(async (event) => {
             for (const item of tableData) {
               try {
                 // 如果是SystemSetting表且是version字段，则保留当前版本
-                if (tableName === "SystemSetting" && currentVersion && item.id === 1) {
+                if (
+                  tableName === "SystemSetting" &&
+                  currentVersion &&
+                  item.id === 1
+                ) {
                   item.version = currentVersion;
                 }
+
+                // 处理数据，特别是日期字段
+                const processedItem = { ...item };
+
+                // 调试：打印原始数据结构
+                if (importStats[tableName].imported === 0) {
+                  console.log(`表 ${tableName} 第一条数据结构:`, Object.keys(processedItem));
+                  console.log(`表 ${tableName} 第一条数据值:`, processedItem);
+                }
+
+                // 检查并处理日期字段 - 更全面的检查
+                const dateFields = [
+                  "createDate",
+                  "updateBy", 
+                  "started_at",
+                  "finished_at",
+                ];
                 
-                const values = Object.values(item)
+                for (const field of dateFields) {
+                  if (field in processedItem) {
+                    const value = processedItem[field];
+                    // 检查各种空值情况
+                    if (value === null || 
+                        value === undefined || 
+                        value === "" || 
+                        value === "NULL" ||
+                        (typeof value === 'string' && value.trim() === "")) {
+                      console.log(`修复空日期字段 ${tableName}.${field}: ${value} -> 当前时间`);
+                      processedItem[field] = new Date().toISOString();
+                    }
+                  }
+                }
+
+                const values = Object.values(processedItem)
                   .map((value) => {
-                    if (value === null) {
+                    if (value === null || value === undefined) {
                       return "NULL";
                     } else if (typeof value === "string") {
                       return `'${value.replace(/'/g, "''")}'`; // 转义单引号
                     } else if (typeof value === "boolean") {
-                      return value;
+                      return value ? 1 : 0; // SQLite 布尔值转换
                     } else if (typeof value === "number") {
                       return value;
                     } else {
@@ -126,27 +177,56 @@ export default defineEventHandler(async (event) => {
             continue;
           }
 
-          // 检查是否有自增ID序列需要更新
-          const hasIdSequence = await prisma.$queryRaw<
-            [{ has_sequence: boolean }]
-          >`
-            SELECT EXISTS (
-              SELECT 1 FROM pg_class c 
-              JOIN pg_namespace n ON n.oid = c.relnamespace
-              WHERE c.relkind = 'S' 
-              AND n.nspname = 'public'
-              AND c.relname = ${`${tableName}_id_seq`}
-            ) as has_sequence;
-          `;
+          // SQLite: 检查表是否有自增主键
+          try {
+            const tableInfo = await prisma.$queryRawUnsafe(
+              `PRAGMA table_info("${tableName}")`
+            ) as Array<{
+              cid: number;
+              name: string;
+              type: string;
+              notnull: number;
+              dflt_value: any;
+              pk: number;
+            }>;
 
-          // console.error("更新序列:", hasIdSequence);
-          if (hasIdSequence[0]?.has_sequence) {
-            console.info("更新主键序列:", tableName);
-            // 更新序列
-            await prisma.$queryRawUnsafe(`
-              SELECT setval('"${tableName}_id_seq"', 
-              COALESCE((SELECT MAX(id) FROM "${tableName}"), 0) + 1, false);
-            `);
+            const hasAutoIncrement = tableInfo.some(
+              (column) =>
+                column.pk === 1 && column.type.toUpperCase().includes("INTEGER")
+            );
+
+            if (hasAutoIncrement && tableData.length > 0) {
+              console.info("更新SQLite自增序列:", tableName);
+              // SQLite: 更新自增序列到最大ID值
+                             const maxIdResult = await prisma.$queryRawUnsafe(
+                 `SELECT MAX(id) as max_id FROM "${tableName}"`
+               ) as [{ max_id: number | null }];
+              const maxId = maxIdResult[0]?.max_id || 0;
+
+              if (maxId > 0) {
+                try {
+                  await prisma.$queryRawUnsafe(
+                    `UPDATE sqlite_sequence SET seq = ${maxId} WHERE name = '${tableName}';`
+                  );
+                } catch (updateSeqErr) {
+                  console.warn(`更新序列值失败 ${tableName}:`, updateSeqErr);
+                  // 尝试插入新的序列记录
+                  try {
+                    await prisma.$queryRawUnsafe(
+                      `INSERT INTO sqlite_sequence (name, seq) VALUES ('${tableName}', ${maxId});`
+                    );
+                  } catch (insertSeqErr) {
+                    console.warn(
+                      `插入序列记录失败 ${tableName}:`,
+                      insertSeqErr
+                    );
+                  }
+                }
+              }
+            }
+          } catch (sequenceErr) {
+            console.warn(`更新序列失败 ${tableName}:`, sequenceErr);
+            // 继续执行，不要因为序列更新失败而中断整个导入过程
           }
         } catch (tableErr) {
           console.error(`处理表 ${tableName} 时出错:`, tableErr);
@@ -157,10 +237,35 @@ export default defineEventHandler(async (event) => {
 
     // 确保系统版本号是最新的
     if (currentVersion) {
-      await prisma.systemSetting.update({
-        where: { id: 1 },
-        data: { version: currentVersion }
-      });
+      try {
+        await prisma.systemSetting.update({
+          where: { id: 1 },
+          data: { version: currentVersion },
+        });
+      } catch (updateErr) {
+        console.warn(
+          "无法更新系统版本号，可能SystemSetting记录不存在:",
+          updateErr
+        );
+        // 尝试创建SystemSetting记录
+        try {
+          await prisma.systemSetting.create({
+            data: {
+              id: 1,
+              version: currentVersion,
+              title: "",
+              description: "",
+              keywords: "",
+              openRegister: false,
+              createDate: new Date(),
+              updateBy: new Date(),
+            },
+          });
+          console.info("已创建新的SystemSetting记录");
+        } catch (createErr) {
+          console.warn("创建SystemSetting记录也失败:", createErr);
+        }
+      }
     }
 
     // 检查是否所有数据都成功导入
