@@ -1,203 +1,268 @@
 <template>
   <div class="w-full">
     <!-- Content Area -->
-    <div class="md:max-w-[80vw] mx-auto mt-2">
+    <div class="md:max-w-[80vw] mx-auto w-full mt-2">
       <!-- Desktop & Tablet: Chart Carousel -->
-      <div class="hidden md:block" v-if="!loading">
+      <div class="w-full" v-if="!loading">
         <div
-          class="px-2 relative bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
         >
           <!-- Chart Container -->
-          <div class="relative overflow-hidden rounded-lg">
-            <div
-              class="flex transition-transform duration-300 ease-in-out"
-              :style="{
-                transform: `translateX(-${currentCarouselIndex * 100}%)`,
-              }"
-            >
-              <!-- Chart 1: Industry Type -->
-              <div class="w-full flex-shrink-0">
-                <IndustryTypePie
-                  :title="'支出类型统计'"
-                  :width="carouselChartWidth"
-                  :height="carouselChartHeight"
-                />
-              </div>
-
-              <!-- Chart 2: Pay Type -->
-              <div class="w-full flex-shrink-0">
-                <PayTypePie
-                  :title="'支付方式统计'"
-                  :width="carouselChartWidth"
-                  :height="carouselChartHeight"
-                />
-              </div>
-
-              <!-- Chart 3: Attribution -->
-              <div class="w-full flex-shrink-0">
-                <AttributionPie
-                  :title="'流水归属统计'"
-                  :width="carouselChartWidth"
-                  :height="carouselChartHeight"
-                />
-              </div>
-
-              <!-- Chart 4: Daily Line -->
-              <div class="w-full flex-shrink-0">
-                <DailyLineChart
-                  :title="'每日流水统计'"
-                  :width="carouselChartWidth"
-                  :height="carouselChartHeight"
-                />
-              </div>
-
-              <!-- Chart 5: Month Bar -->
-              <div class="w-full flex-shrink-0">
-                <MonthBar
-                  :title="'每月流水统计'"
-                  :width="carouselChartWidth"
-                  :height="carouselChartHeight"
-                />
-              </div>
+          <div
+            class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
+          >
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <DailyLineChart
+                title="每日流水曲线"
+                width="100%"
+                height="300px"
+              />
+            </div>
+            <div class="w-full">
+              <MonthBar title="每月流水统计" width="100%" height="320px" />
+            </div>
+          </div>
+        </div>
+        <div
+          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+        >
+          <!-- Chart Container -->
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+              支出分析
+            </h3>
+            <!-- 图表类型切换 -->
+            <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+              <button
+                @click="expenseChartType = 'pie'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                  expenseChartType === 'pie'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                ]"
+              >
+                饼图
+              </button>
+              <button
+                @click="expenseChartType = 'bar'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                  expenseChartType === 'bar'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                ]"
+              >
+                柱图
+              </button>
             </div>
           </div>
 
-          <!-- Navigation Buttons -->
-          <button
-            @click="prevChart"
-            class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/60 dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600 rounded-full p-2 shadow-lg hover:bg-gray-50/50 dark:hover:bg-gray-600/50 transition-colors z-10"
-          >
-            <svg
-              class="w-5 h-5 text-gray-600 dark:text-gray-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-
-          <button
-            @click="nextChart"
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/60 dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600 rounded-full p-2 shadow-lg hover:bg-gray-50/50 dark:hover:bg-gray-600/50 transition-colors z-10"
-          >
-            <svg
-              class="w-5 h-5 text-gray-600 dark:text-gray-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-
-          <!-- Indicators -->
+          <!-- 饼图展示 -->
           <div
-            class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
+            v-if="expenseChartType === 'pie'"
+            class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
           >
-            <button
-              v-for="(chart, index) in carouselCharts"
-              :key="index"
-              @click="goToChart(index)"
-              class="w-3 h-3 rounded-full transition-colors"
-              :class="[
-                currentCarouselIndex === index
-                  ? 'bg-green-500'
-                  : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500',
-              ]"
-            ></button>
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonPie
+                title="支付方式分析"
+                width="100%"
+                height="300px"
+                groupBy="payType"
+                flowType="支出"
+                seriesName="支付方式"
+                :showLegend="true"
+                queryField="payType"
+              />
+            </div>
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonPie
+                title="消费类型分析"
+                width="100%"
+                height="300px"
+                groupBy="industryType"
+                flowType="支出"
+                seriesName="消费类型"
+                :showLegend="true"
+                queryField="industryType"
+              />
+            </div>
+            <div class="w-full">
+              <ChartsCommonPie
+                title="消费归属分析"
+                width="100%"
+                height="300px"
+                groupBy="attribution"
+                flowType="支出"
+                seriesName="消费归属"
+                :showLegend="true"
+                queryField="attribution"
+              />
+            </div>
           </div>
 
-          <!-- Chart Info -->
+          <!-- 柱图展示 -->
           <div
-            class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium"
+            v-if="expenseChartType === 'bar'"
+            class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
           >
-            {{ currentCarouselIndex + 1 }} / {{ carouselCharts.length }} -
-            {{ carouselCharts[currentCarouselIndex].name }}
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonBar
+                title="支付方式分析"
+                width="100%"
+                height="300px"
+                groupBy="payType"
+                flowType="支出"
+                seriesName="支付方式"
+                :showLegend="true"
+                queryField="payType"
+              />
+            </div>
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonBar
+                title="消费类型分析"
+                width="100%"
+                height="300px"
+                groupBy="industryType"
+                flowType="支出"
+                seriesName="消费类型"
+                :showLegend="true"
+                queryField="industryType"
+              />
+            </div>
+            <div class="w-full">
+              <ChartsCommonBar
+                title="消费归属分析"
+                width="100%"
+                height="300px"
+                groupBy="attribution"
+                flowType="支出"
+                seriesName="消费归属"
+                :showLegend="true"
+                queryField="attribution"
+              />
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Mobile: Chart Cards (Always Show) -->
-      <div class="block md:hidden px-2" v-if="!loading">
         <div
-          class="flex overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory px-2"
+          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
         >
-          <MobileChartCard
-            title="支出类型"
-            :icon="TagIcon"
-            :current-index="0"
-            :total-count="5"
-            chart-type="industry"
-            :chart-width="mobileChartWidth"
-            :chart-height="mobileChartHeight"
-            @filter="handleMobileFilter('industry')"
-            @details="handleMobileDetails('industry')"
-          />
+          <!-- Chart Container -->
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+              收入分析
+            </h3>
+            <!-- 图表类型切换 -->
+            <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+              <button
+                @click="incomeChartType = 'pie'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                  incomeChartType === 'pie'
+                    ? 'bg-green-600 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                ]"
+              >
+                饼图
+              </button>
+              <button
+                @click="incomeChartType = 'bar'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                  incomeChartType === 'bar'
+                    ? 'bg-green-600 text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                ]"
+              >
+                柱图
+              </button>
+            </div>
+          </div>
 
-          <MobileChartCard
-            title="支付方式"
-            :icon="CreditCardIcon"
-            :current-index="1"
-            :total-count="5"
-            chart-type="paytype"
-            :chart-width="mobileChartWidth"
-            :chart-height="mobileChartHeight"
-            @filter="handleMobileFilter('payType')"
-            @details="handleMobileDetails('payType')"
-          />
+          <!-- 饼图展示 -->
+          <div
+            v-if="incomeChartType === 'pie'"
+            class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
+          >
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonPie
+                title="收款方式分析"
+                width="100%"
+                height="300px"
+                groupBy="payType"
+                flowType="收入"
+                seriesName="收款方式"
+                :showLegend="true"
+                queryField="payType"
+              />
+            </div>
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonPie
+                title="收入类型分析"
+                width="100%"
+                height="300px"
+                groupBy="industryType"
+                flowType="收入"
+                seriesName="收入类型"
+                :showLegend="true"
+                queryField="industryType"
+              />
+            </div>
+            <div class="w-full">
+              <ChartsCommonPie
+                title="收入归属分析"
+                width="100%"
+                height="300px"
+                groupBy="attribution"
+                flowType="收入"
+                seriesName="收入归属"
+                :showLegend="true"
+                queryField="attribution"
+              />
+            </div>
+          </div>
 
-          <MobileChartCard
-            title="归属统计"
-            :icon="UserGroupIcon"
-            :current-index="2"
-            :total-count="5"
-            chart-type="attribution"
-            :chart-width="mobileChartWidth"
-            :chart-height="mobileChartHeight"
-            @filter="handleMobileFilter('attribution')"
-            @details="handleMobileDetails('attribution')"
-          />
-
-          <MobileChartCard
-            title="每日流水"
-            :icon="ChartBarIcon"
-            :current-index="3"
-            :total-count="5"
-            chart-type="daily"
-            :chart-width="mobileChartWidth"
-            :chart-height="mobileChartHeight"
-            @filter="handleMobileFilter('daily')"
-            @details="handleMobileDetails('daily')"
-          />
-
-          <MobileChartCard
-            title="每月流水"
-            :icon="CalendarIcon"
-            :current-index="4"
-            :total-count="5"
-            chart-type="month"
-            :chart-width="mobileChartWidth"
-            :chart-height="mobileChartHeight"
-            @filter="handleMobileFilter('monthly')"
-            @details="handleMobileDetails('monthly')"
-          />
-        </div>
-
-        <!-- Enhanced Mobile Navigation -->
-        <div class="flex justify-center items-center mt-2">
-          <div class="text-xs text-gray-500 dark:text-gray-400">
-            左右滑动切换图表
+          <!-- 柱图展示 -->
+          <div
+            v-if="incomeChartType === 'bar'"
+            class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
+          >
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonBar
+                title="收款方式分析"
+                width="100%"
+                height="300px"
+                groupBy="payType"
+                flowType="收入"
+                seriesName="收款方式"
+                :showLegend="true"
+                queryField="payType"
+              />
+            </div>
+            <div class="w-full border-b md:border-b-0 md:border-r">
+              <ChartsCommonBar
+                title="收入类型分析"
+                width="100%"
+                height="300px"
+                groupBy="industryType"
+                flowType="收入"
+                seriesName="收入类型"
+                :showLegend="true"
+                queryField="industryType"
+              />
+            </div>
+            <div class="w-full">
+              <ChartsCommonBar
+                title="收入归属分析"
+                width="100%"
+                height="300px"
+                groupBy="attribution"
+                flowType="收入"
+                seriesName="收入归属"
+                :showLegend="true"
+                queryField="attribution"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -227,16 +292,17 @@ import {
   onBeforeUnmount,
   nextTick,
 } from "vue";
-import AttributionPie from "~/components/charts/AttributionPie.vue";
 import MobileChartCard from "~/components/charts/MobileChartCard.vue";
 import DailyLineChart from "~/components/charts/DailyLineChart.vue";
-import IndustryTypePie from "~/components/charts/IndustryTypePie.vue";
-import PayTypePie from "~/components/charts/PayTypePie.vue";
 import MonthBar from "~/components/charts/MonthBar.vue";
 
 const windowWidth = ref(
   typeof window !== "undefined" ? window.innerWidth : 1200
 );
+
+// 图表类型切换状态
+const expenseChartType = ref<"pie" | "bar">("pie");
+const incomeChartType = ref<"pie" | "bar">("pie");
 
 // 轮播图相关状态
 const currentCarouselIndex = ref(0);
@@ -253,18 +319,6 @@ const carouselCharts = [
 // Mobile charts (horizontal scroll)
 const mobileChartWidth = computed(() => "100%");
 const mobileChartHeight = computed(() => "62vh");
-
-// Carousel charts (larger size for better viewing)
-const carouselChartWidth = computed(() => "100%");
-const carouselChartHeight = computed(() => {
-  if (windowWidth.value < 768) {
-    return "70vh";
-  } else if (windowWidth.value < 1024) {
-    return "70vh";
-  } else {
-    return "80vh";
-  }
-});
 
 // 窗口大小变化监听
 const handleResize = () => {

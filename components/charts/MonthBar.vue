@@ -2,18 +2,16 @@
   <div class="chart-common-container">
     <div
       v-if="title || years.length > 0"
-      class="flex flex-col pb-2 md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 mb-2 md:mb-4"
+      class="relative w-full border-b border-gray-200 dark:border-gray-700 mb-2 h-12 md:mb-4"
     >
-      <div>
-        <h4
-          v-if="title"
-          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
-        >
-          {{ title }}
-        </h4>
-      </div>
+      <h4
+        v-if="title"
+        class="md:text-center text-lg font-semibold text-green-950 dark:text-white my-2"
+      >
+        {{ title }}
+      </h4>
 
-      <div v-if="years.length > 0" class="min-w-32">
+      <div v-if="years.length > 0" class="min-w-32 absolute right-0 top-0">
         <select
           v-model="filterYear"
           @change="filterYearChange"

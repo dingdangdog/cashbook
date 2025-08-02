@@ -1,16 +1,15 @@
 <template>
-  <div class="chart-common-container">
+  <div class="">
     <div
-      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 md:h-16 mb-4"
+      class="w-full border-b border-gray-200 dark:border-gray-700 md:h-12 mb-4"
     >
       <div v-if="title">
         <h4
-          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
+          class="text-lg text-center font-semibold text-green-950 dark:text-white my-2"
         >
           {{ title }}
         </h4>
       </div>
-      <div></div>
     </div>
     <div v-show="noData" :style="`width: ${width}; height: ${height};`">
       <h3 style="width: 100%; text-align: center; color: tomato">暂无数据</h3>

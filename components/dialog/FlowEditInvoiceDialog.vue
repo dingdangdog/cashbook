@@ -188,6 +188,13 @@ import {
   CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showFlowEditInvoiceDialog.value) {
+    showFlowEditInvoiceDialog.value = false;
+  }
+}, showFlowEditInvoiceDialog);
+
 const { successCallback, item } = defineProps(["successCallback", "item"]);
 
 const editInvoice = ref<Flow | any>({});
