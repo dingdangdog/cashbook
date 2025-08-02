@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Cashbook API",
-    "version": "4.3.3",
+    "version": "4.3.4",
     "description": "接口文档需要手动维护，因此不能保证完全正确，请以接口实际效果为准！"
   },
   "servers": [
@@ -203,7 +203,9 @@
     "/api/admin/entry/books/all": {
       "get": {
         "summary": "管理员获取所有账本",
-        "tags": ["Admin Books"],
+        "tags": [
+          "Admin Books"
+        ],
         "security": [
           {
             "Admin": []
@@ -216,7 +218,9 @@
               "application/json": {
                 "schema": {
                   "Result": {
-                    "d": ["账本列表数组"]
+                    "d": [
+                      "账本列表数组"
+                    ]
                   }
                 }
               }
@@ -228,7 +232,9 @@
     "/api/admin/entry/books/del": {
       "post": {
         "summary": "管理员删除账本",
-        "tags": ["Admin Books"],
+        "tags": [
+          "Admin Books"
+        ],
         "security": [
           {
             "Admin": []
@@ -275,7 +281,9 @@
     "/api/admin/entry/books/list": {
       "post": {
         "summary": "管理员获取账本列表",
-        "tags": ["Admin Books"],
+        "tags": [
+          "Admin Books"
+        ],
         "security": [
           {
             "Admin": []
@@ -312,7 +320,9 @@
     "/api/admin/entry/books/page": {
       "post": {
         "summary": "管理员分页获取账本列表",
-        "tags": ["Admin Books"],
+        "tags": [
+          "Admin Books"
+        ],
         "security": [
           {
             "Admin": []
@@ -355,7 +365,9 @@
     "/api/admin/entry/books/update": {
       "post": {
         "summary": "管理员更新账本信息",
-        "tags": ["Admin Books"],
+        "tags": [
+          "Admin Books"
+        ],
         "security": [
           {
             "Admin": []
@@ -403,7 +415,9 @@
     "/api/admin/entry/settings/export": {
       "get": {
         "summary": "管理员导出系统数据",
-        "tags": ["Admin Settings"],
+        "tags": [
+          "Admin Settings"
+        ],
         "security": [
           {
             "Admin": []
@@ -417,13 +431,27 @@
                 "schema": {
                   "Result": {
                     "d": {
-                      "SystemSetting": ["系统设置数据"],
-                      "User": ["用户数据"],
-                      "Book": ["账本数据"],
-                      "Flow": ["流水数据"],
-                      "Budget": ["预算数据"],
-                      "FixedFlow": ["固定流水数据"],
-                      "TypeRelation": ["类型关系数据"]
+                      "SystemSetting": [
+                        "系统设置数据"
+                      ],
+                      "User": [
+                        "用户数据"
+                      ],
+                      "Book": [
+                        "账本数据"
+                      ],
+                      "Flow": [
+                        "流水数据"
+                      ],
+                      "Budget": [
+                        "预算数据"
+                      ],
+                      "FixedFlow": [
+                        "固定流水数据"
+                      ],
+                      "TypeRelation": [
+                        "类型关系数据"
+                      ]
                     }
                   }
                 }
@@ -436,7 +464,9 @@
     "/api/admin/entry/settings/exportImg": {
       "get": {
         "summary": "管理员导出系统图片",
-        "tags": ["Admin Settings"],
+        "tags": [
+          "Admin Settings"
+        ],
         "security": [
           {
             "Admin": []
@@ -472,7 +502,9 @@
     "/api/admin/entry/settings/get": {
       "get": {
         "summary": "管理员获取系统设置",
-        "tags": ["Admin Settings"],
+        "tags": [
+          "Admin Settings"
+        ],
         "security": [
           {
             "Admin": []
@@ -504,7 +536,9 @@
     "/api/admin/entry/settings/import": {
       "post": {
         "summary": "管理员导入系统数据",
-        "tags": ["Admin Settings"],
+        "tags": [
+          "Admin Settings"
+        ],
         "security": [
           {
             "Admin": []
@@ -551,7 +585,9 @@
     "/api/admin/entry/settings/importImg": {
       "post": {
         "summary": "管理员导入系统图片",
-        "tags": ["Admin Settings"],
+        "tags": [
+          "Admin Settings"
+        ],
         "security": [
           {
             "Admin": []
@@ -606,7 +642,9 @@
     "/api/admin/entry/settings/update": {
       "post": {
         "summary": "管理员更新系统设置",
-        "tags": ["Admin Settings"],
+        "tags": [
+          "Admin Settings"
+        ],
         "security": [
           {
             "Admin": []
@@ -645,7 +683,9 @@
     "/api/admin/entry/typeRelations/add": {
       "post": {
         "summary": "管理员添加类型关系",
-        "tags": ["Admin Type Relations"],
+        "tags": [
+          "Admin Type Relations"
+        ],
         "security": [
           {
             "Admin": []
@@ -681,7 +721,9 @@
     "/api/admin/entry/typeRelations/all": {
       "get": {
         "summary": "管理员获取所有类型关系",
-        "tags": ["Admin Type Relations"],
+        "tags": [
+          "Admin Type Relations"
+        ],
         "security": [
           {
             "Admin": []
@@ -716,7 +758,9 @@
     "/api/admin/entry/typeRelations/del": {
       "post": {
         "summary": "管理员删除类型关系",
-        "tags": ["Admin Type Relations"],
+        "tags": [
+          "Admin Type Relations"
+        ],
         "security": [
           {
             "Admin": []
@@ -763,7 +807,9 @@
     "/api/admin/entry/typeRelations/list": {
       "post": {
         "summary": "管理员获取类型关系列表",
-        "tags": ["Admin Type Relations"],
+        "tags": [
+          "Admin Type Relations"
+        ],
         "security": [
           {
             "Admin": []
@@ -800,7 +846,9 @@
     "/api/admin/entry/typeRelations/page": {
       "post": {
         "summary": "管理员分页获取类型关系列表",
-        "tags": ["Admin Type Relations"],
+        "tags": [
+          "Admin Type Relations"
+        ],
         "security": [
           {
             "Admin": []
@@ -846,7 +894,9 @@
     "/api/admin/entry/typeRelations/update": {
       "post": {
         "summary": "管理员更新类型关系",
-        "tags": ["Admin Type Relations"],
+        "tags": [
+          "Admin Type Relations"
+        ],
         "security": [
           {
             "Admin": []
@@ -895,7 +945,9 @@
     "/api/admin/entry/users/add": {
       "post": {
         "summary": "管理员添加用户",
-        "tags": ["Admin Users"],
+        "tags": [
+          "Admin Users"
+        ],
         "security": [
           {
             "Admin": []
@@ -933,7 +985,9 @@
     "/api/admin/entry/users/all": {
       "get": {
         "summary": "管理员获取所有用户",
-        "tags": ["Admin Users"],
+        "tags": [
+          "Admin Users"
+        ],
         "security": [
           {
             "Admin": []
@@ -946,7 +1000,9 @@
               "application/json": {
                 "schema": {
                   "Result": {
-                    "d": ["用户列表数组"]
+                    "d": [
+                      "用户列表数组"
+                    ]
                   }
                 }
               }
@@ -958,7 +1014,9 @@
     "/api/admin/entry/users/del": {
       "post": {
         "summary": "管理员删除用户",
-        "tags": ["Admin Users"],
+        "tags": [
+          "Admin Users"
+        ],
         "security": [
           {
             "Admin": []
@@ -1005,7 +1063,9 @@
     "/api/admin/entry/users/list": {
       "post": {
         "summary": "管理员获取用户列表",
-        "tags": ["Admin Users"],
+        "tags": [
+          "Admin Users"
+        ],
         "security": [
           {
             "Admin": []
@@ -1043,7 +1103,9 @@
     "/api/admin/entry/users/page": {
       "post": {
         "summary": "管理员分页获取用户列表",
-        "tags": ["Admin Users"],
+        "tags": [
+          "Admin Users"
+        ],
         "security": [
           {
             "Admin": []
@@ -1087,7 +1149,9 @@
     "/api/admin/entry/users/update": {
       "post": {
         "summary": "管理员更新用户信息",
-        "tags": ["Admin Users"],
+        "tags": [
+          "Admin Users"
+        ],
         "security": [
           {
             "Admin": []
@@ -1138,7 +1202,9 @@
     "/api/admin/getPassword": {
       "post": {
         "summary": "生成管理员密码哈希",
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1169,7 +1235,9 @@
     "/api/admin/login": {
       "post": {
         "summary": "管理员登录",
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1214,7 +1282,9 @@
     "/api/admin/logout": {
       "post": {
         "summary": "管理员退出登录",
-        "tags": ["Admin"],
+        "tags": [
+          "Admin"
+        ],
         "security": [
           {
             "Admin": []
@@ -1239,7 +1309,9 @@
     "/api/check": {
       "get": {
         "summary": "获取用户数量",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "responses": {
           "200": {
             "description": "用户数量获取成功",
@@ -1259,7 +1331,9 @@
     "/api/checkuser": {
       "get": {
         "summary": "检查用户登录状态",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1289,7 +1363,9 @@
     "/api/config": {
       "get": {
         "summary": "获取系统配置信息",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "responses": {
           "200": {
             "description": "系统配置获取成功",
@@ -1315,7 +1391,9 @@
     "/api/entry/analytics/attribution": {
       "post": {
         "summary": "获取归属分析数据",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1365,7 +1443,9 @@
     "/api/entry/analytics/daily": {
       "post": {
         "summary": "获取日常流水分析数据",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1413,7 +1493,9 @@
     "/api/entry/analytics/industryType": {
       "post": {
         "summary": "获取行业类型分析数据",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1463,7 +1545,9 @@
     "/api/entry/analytics/month": {
       "post": {
         "summary": "获取月度流水分析数据",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1513,7 +1597,9 @@
     "/api/entry/analytics/monthAnalysis": {
       "post": {
         "summary": "获取月度详细分析数据",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1574,7 +1660,9 @@
     "/api/entry/analytics/payType": {
       "post": {
         "summary": "获取支付类型分析数据",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1624,7 +1712,9 @@
     "/api/entry/book/add": {
       "post": {
         "summary": "添加账本",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1660,7 +1750,9 @@
     "/api/entry/book/all": {
       "get": {
         "summary": "获取用户所有账本",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1685,7 +1777,9 @@
     "/api/entry/book/del": {
       "post": {
         "summary": "删除账本",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1732,7 +1826,9 @@
     "/api/entry/book/inshare": {
       "post": {
         "summary": "通过分享密钥加入账本",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1779,7 +1875,9 @@
     "/api/entry/book/list": {
       "post": {
         "summary": "获取账本列表",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1815,7 +1913,9 @@
     "/api/entry/book/page": {
       "post": {
         "summary": "分页获取账本列表",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1854,7 +1954,9 @@
     "/api/entry/book/share": {
       "post": {
         "summary": "生成账本分享密钥",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1901,7 +2003,9 @@
     "/api/entry/book/update": {
       "post": {
         "summary": "更新账本信息",
-        "tags": ["Book"],
+        "tags": [
+          "Book"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1950,7 +2054,9 @@
     "/api/entry/budget/add": {
       "post": {
         "summary": "添加预算",
-        "tags": ["Budget"],
+        "tags": [
+          "Budget"
+        ],
         "security": [
           {
             "Authorization": []
@@ -1999,7 +2105,9 @@
     "/api/entry/budget/all": {
       "post": {
         "summary": "获取账本所有预算",
-        "tags": ["Budget"],
+        "tags": [
+          "Budget"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2046,7 +2154,9 @@
     "/api/entry/budget/del": {
       "post": {
         "summary": "删除预算",
-        "tags": ["Budget"],
+        "tags": [
+          "Budget"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2094,7 +2204,9 @@
     "/api/entry/budget/list": {
       "post": {
         "summary": "获取预算列表",
-        "tags": ["Budget"],
+        "tags": [
+          "Budget"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2143,7 +2255,9 @@
     "/api/entry/budget/reloadUsedAmount": {
       "post": {
         "summary": "重新加载预算已使用金额",
-        "tags": ["Budget"],
+        "tags": [
+          "Budget"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2191,7 +2305,9 @@
     "/api/entry/budget/update": {
       "post": {
         "summary": "更新预算",
-        "tags": ["Budget"],
+        "tags": [
+          "Budget"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2241,7 +2357,9 @@
     "/api/entry/fixedFlow/add": {
       "post": {
         "summary": "添加固定流水",
-        "tags": ["Fixed Flow"],
+        "tags": [
+          "Fixed Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2297,7 +2415,9 @@
     "/api/entry/fixedFlow/all": {
       "post": {
         "summary": "获取账本所有固定流水",
-        "tags": ["Fixed Flow"],
+        "tags": [
+          "Fixed Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2344,7 +2464,9 @@
     "/api/entry/fixedFlow/del": {
       "post": {
         "summary": "删除固定流水",
-        "tags": ["Fixed Flow"],
+        "tags": [
+          "Fixed Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2392,7 +2514,9 @@
     "/api/entry/fixedFlow/list": {
       "post": {
         "summary": "获取固定流水列表",
-        "tags": ["Fixed Flow"],
+        "tags": [
+          "Fixed Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2441,7 +2565,9 @@
     "/api/entry/fixedFlow/update": {
       "post": {
         "summary": "更新固定流水",
-        "tags": ["Fixed Flow"],
+        "tags": [
+          "Fixed Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2497,7 +2623,9 @@
     "/api/entry/flow/add": {
       "post": {
         "summary": "添加流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2540,7 +2668,9 @@
     "/api/entry/flow/all": {
       "get": {
         "summary": "获取账本所有流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2588,7 +2718,9 @@
     "/api/entry/flow/condidate/autos": {
       "post": {
         "summary": "自动查找候选平账记录",
-        "tags": ["Candidate"],
+        "tags": [
+          "Candidate"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2635,7 +2767,9 @@
     "/api/entry/flow/condidate/confirm": {
       "post": {
         "summary": "确认候选平账记录",
-        "tags": ["Candidate"],
+        "tags": [
+          "Candidate"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2684,7 +2818,9 @@
     "/api/entry/flow/condidate/ignore": {
       "post": {
         "summary": "忽略候选平账记录",
-        "tags": ["Candidate"],
+        "tags": [
+          "Candidate"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2732,7 +2868,9 @@
     "/api/entry/flow/condidate/ignoreAll": {
       "post": {
         "summary": "批量忽略候选平账记录",
-        "tags": ["Candidate"],
+        "tags": [
+          "Candidate"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2780,7 +2918,9 @@
     "/api/entry/flow/deduplication/autos": {
       "post": {
         "summary": "自动查找重复流水记录",
-        "tags": ["Deduplication"],
+        "tags": [
+          "Deduplication"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2838,7 +2978,9 @@
     "/api/entry/flow/del": {
       "post": {
         "summary": "删除流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2886,7 +3028,9 @@
     "/api/entry/flow/dels": {
       "post": {
         "summary": "批量删除流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2934,7 +3078,9 @@
     "/api/entry/flow/getAttributions": {
       "post": {
         "summary": "获取流水归属列表",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -2981,7 +3127,9 @@
     "/api/entry/flow/getNames": {
       "post": {
         "summary": "获取流水名称列表",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3028,7 +3176,9 @@
     "/api/entry/flow/imports": {
       "post": {
         "summary": "批量导入流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3077,7 +3227,9 @@
     "/api/entry/flow/invoice/clean": {
       "post": {
         "summary": "清理流水所有发票",
-        "tags": ["Invoice"],
+        "tags": [
+          "Invoice"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3125,7 +3277,9 @@
     "/api/entry/flow/invoice/del": {
       "post": {
         "summary": "删除流水发票",
-        "tags": ["Invoice"],
+        "tags": [
+          "Invoice"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3174,7 +3328,9 @@
     "/api/entry/flow/invoice/show": {
       "get": {
         "summary": "显示发票图片",
-        "tags": ["Invoice"],
+        "tags": [
+          "Invoice"
+        ],
         "parameters": [
           {
             "in": "query",
@@ -3203,7 +3359,9 @@
     "/api/entry/flow/invoice/upload": {
       "post": {
         "summary": "上传流水发票",
-        "tags": ["Invoice"],
+        "tags": [
+          "Invoice"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3252,7 +3410,9 @@
     "/api/entry/flow/list": {
       "post": {
         "summary": "获取流水记录列表",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3302,7 +3462,9 @@
     "/api/entry/flow/page": {
       "post": {
         "summary": "分页获取流水记录列表",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3358,10 +3520,66 @@
         }
       }
     },
+    "/api/entry/flow/toreceivable": {
+      "post": {
+        "summary": "将支出流水转换为待收款（借出记录）",
+        "tags": [
+          "Flow"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "bookId": "string 账本ID",
+                "id": "number 流水ID",
+                "expectDay": "string 预期收款日期（可选）"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "转换成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Result": {
+                    "d": {
+                      "flow": "Flow 更新后的流水记录",
+                      "receivable": "Receivable 创建的待收款记录"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "转换失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Error": {
+                    "message": "错误信息"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/entry/flow/type/getAll": {
       "post": {
         "summary": "获取所有流水类型",
-        "tags": ["Flow Type"],
+        "tags": [
+          "Flow Type"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3409,7 +3627,9 @@
     "/api/entry/flow/type/getIndustryType": {
       "post": {
         "summary": "获取行业类型列表",
-        "tags": ["Flow Type"],
+        "tags": [
+          "Flow Type"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3457,7 +3677,9 @@
     "/api/entry/flow/type/getPayType": {
       "post": {
         "summary": "获取支付类型列表",
-        "tags": ["Flow Type"],
+        "tags": [
+          "Flow Type"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3505,7 +3727,9 @@
     "/api/entry/flow/type/update": {
       "post": {
         "summary": "更新流水类型",
-        "tags": ["Flow Type"],
+        "tags": [
+          "Flow Type"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3557,7 +3781,9 @@
     "/api/entry/flow/update": {
       "post": {
         "summary": "更新流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3613,7 +3839,9 @@
     "/api/entry/flow/updates": {
       "post": {
         "summary": "批量更新流水记录",
-        "tags": ["Flow"],
+        "tags": [
+          "Flow"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3662,10 +3890,227 @@
         }
       }
     },
+    "/api/entry/receivable/all": {
+      "post": {
+        "summary": "获取账本所有待收款",
+        "tags": [
+          "Receivable"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "bookId": "string 账本ID",
+                "status": "number 状态过滤（可选）"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "待收款列表获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Result": {
+                    "d": []
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "获取失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Error": {
+                    "message": "请先选择账本"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entry/receivable/del": {
+      "post": {
+        "summary": "删除待收款",
+        "tags": [
+          "Receivable"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "bookId": "string 账本ID",
+                "id": "number 待收款ID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "待收款删除成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Result": {
+                    "d": "Receivable 删除的待收款信息"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "删除失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Error": {
+                    "message": "错误信息（\"请先选择账本\" | \"Not Find ID\"）"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entry/receivable/toflow": {
+      "post": {
+        "summary": "将待收款转换为收入流水",
+        "tags": [
+          "Receivable"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "bookId": "string 账本ID",
+                "id": "number 待收款ID",
+                "actualDay": "string 实际收款日期",
+                "payType": "string 收款方式（可选）",
+                "industryType": "string 收入类型（可选）",
+                "attribution": "string 流水归属（可选）"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "转换成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Result": {
+                    "d": {
+                      "receivable": "Receivable 更新后的待收款",
+                      "flow": "Flow 创建的流水记录"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "转换失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Error": {
+                    "message": "错误信息"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entry/receivable/update": {
+      "post": {
+        "summary": "更新待收款",
+        "tags": [
+          "Receivable"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "bookId": "string 账本ID",
+                "id": "number 待收款ID",
+                "name": "string 待收款名称（可选）",
+                "description": "string 描述（可选）",
+                "occurDay": "string 发生日期（可选）",
+                "expectDay": "string 预期收款日期（可选）",
+                "actualDay": "string 实际收款日期（可选）",
+                "money": "number 金额（可选）",
+                "status": "number 状态（可选）",
+                "actualId": "number 关联的收款流水ID（可选）"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "待收款更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Result": {
+                    "d": "Receivable 更新后的待收款信息"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "更新失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "Error": {
+                    "message": "错误信息（\"请先选择账本\" | \"Not Find ID\"）"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/entry/test": {
       "get": {
         "summary": "测试接口",
-        "tags": ["Test"],
+        "tags": [
+          "Test"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3690,7 +4135,9 @@
     "/api/entry/typeRelation/list": {
       "post": {
         "summary": "获取类型关系列表",
-        "tags": ["Type Relation"],
+        "tags": [
+          "Type Relation"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3725,7 +4172,9 @@
     "/api/entry/typeRelation/update": {
       "post": {
         "summary": "更新类型关系",
-        "tags": ["Type Relation"],
+        "tags": [
+          "Type Relation"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3773,7 +4222,9 @@
     "/api/entry/user/changePassword": {
       "post": {
         "summary": "修改用户密码",
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3823,7 +4274,9 @@
     "/api/entry/user/info": {
       "get": {
         "summary": "获取用户信息",
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3853,7 +4306,9 @@
     "/api/login": {
       "post": {
         "summary": "用户登录",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -3901,7 +4356,9 @@
     "/api/logout": {
       "post": {
         "summary": "用户退出登录",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "security": [
           {
             "Authorization": []
@@ -3926,7 +4383,9 @@
     "/api/openapi.json": {
       "get": {
         "summary": "获取OpenAPI规范文档",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "responses": {
           "200": {
             "description": "OpenAPI规范文档",
@@ -3946,7 +4405,9 @@
     "/api/register": {
       "post": {
         "summary": "用户注册",
-        "tags": ["Base"],
+        "tags": [
+          "Base"
+        ],
         "requestBody": {
           "required": true,
           "content": {
