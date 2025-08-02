@@ -175,6 +175,13 @@ import { showChangePasswordDialog } from "~/utils/flag";
 import { ref } from "vue";
 import { XMarkIcon, EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showChangePasswordDialog.value) {
+    showChangePasswordDialog.value = false;
+  }
+}, showChangePasswordDialog);
+
 interface NewPassword {
   old?: string;
   new?: string;

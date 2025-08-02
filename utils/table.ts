@@ -56,6 +56,22 @@ export interface Budget {
   used?: number;
 }
 
+// 待收款
+export interface Receivable {
+  id?: number;
+  occurId?: number;
+  actualId?: number;
+  bookId?: string;
+  userId?: number;
+  name?: string;
+  description?: string;
+  occurDay?: string;
+  expectDay?: string;
+  actualDay?: string;
+  money?: number;
+  status?: number; // 状态：0未收款；1已收款；-1不要了；-2已放弃；-3不可抗力
+}
+
 export interface FixedFlow {
   id?: number;
   userId?: number;

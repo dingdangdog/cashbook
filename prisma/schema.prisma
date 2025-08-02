@@ -69,6 +69,21 @@ model Budget {
   used   Float?
 }
 
+model Receivable {
+  id          Int     @id @default(autoincrement())
+  occurId     Int? // 关联的借出流水id
+  actualId    Int? // 关联的收款流水id
+  bookId      String
+  userId      Int
+  name        String?
+  description String?
+  occurDay    String // 发生日(借出日)
+  expectDay   String? // 预计收款日
+  actualDay   String? // 实际收款日
+  money       Float?
+  status      Int     @default(0) // 状态：0未收款；1已收款；-1不要了；-2已放弃；-3不可抗力
+}
+
 model FixedFlow {
   id           Int     @id @default(autoincrement())
   bookId       String
