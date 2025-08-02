@@ -270,6 +270,13 @@ import { showSetConvertDialog } from "~/utils/flag";
 import { getTypeRelation } from "~/utils/apis";
 import { typeRelationStore } from "~/utils/store";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showSetConvertDialog.value) {
+    showSetConvertDialog.value = false;
+  }
+}, showSetConvertDialog);
+
 const editRelations = ref<TypeRelation[] | any>([]);
 
 // Fetch and load the initial data

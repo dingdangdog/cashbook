@@ -257,6 +257,13 @@ import { onMounted, ref, computed } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showFlowEditDialog.value) {
+    closeDialog();
+  }
+}, showFlowEditDialog);
+
 const { title, flow, successCallback } = defineProps([
   "title",
   "flow",
