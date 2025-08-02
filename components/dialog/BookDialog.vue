@@ -256,6 +256,13 @@ import { ref } from "vue";
 
 import { showBookDialogFlag } from "~/utils/flag";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showBookDialogFlag.value.visible) {
+    cancelChange();
+  }
+}, showBookDialogFlag.value.visible);
+
 const books = ref<Book[]>([]);
 
 const initBooks = () => {

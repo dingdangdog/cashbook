@@ -311,6 +311,13 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/vue/24/outline";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showFlowExcelImportDialog.value) {
+    showFlowExcelImportDialog.value = false;
+  }
+}, showFlowExcelImportDialog);
+
 // Define Flow interface
 interface Flow {
   day?: string;

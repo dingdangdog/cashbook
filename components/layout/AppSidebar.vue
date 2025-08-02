@@ -3,6 +3,7 @@ import {
   CalendarDaysIcon,
   ChartBarIcon,
   ExclamationTriangleIcon,
+  BanknotesIcon,
   CurrencyDollarIcon,
   BookOpenIcon,
   Squares2X2Icon,
@@ -50,16 +51,22 @@ const items: Menu[] = [
     color: "text-purple-500",
   },
   {
-    title: "预算管理",
-    path: "budget",
-    icon: ExclamationTriangleIcon,
-    color: "text-red-500",
-  },
-  {
     title: "流水管理",
     path: "flows",
     icon: CurrencyDollarIcon,
     color: "text-green-500",
+  },
+  {
+    title: "待收款",
+    path: "receivable",
+    icon: BanknotesIcon,
+    color: "text-green-500",
+  },
+  {
+    title: "预算管理",
+    path: "budget",
+    icon: ExclamationTriangleIcon,
+    color: "text-red-500",
   },
   {
     title: "账本管理",

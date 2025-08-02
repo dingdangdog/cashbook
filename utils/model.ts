@@ -102,6 +102,7 @@ export interface CommonChartQuery {
   flowType?: string;
   startDay?: string;
   endDay?: string;
+  groupBy?: string; // 新增：分组字段，用于通用接口
 }
 export interface CommonChartData {
   type: string; // 数据标记 key，可能是日期、年月、支出类型、收入类型等，视具体使用场景而定

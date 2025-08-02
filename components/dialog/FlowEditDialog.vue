@@ -28,7 +28,7 @@
         <!-- 日期选择 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             日期
           </label>
@@ -38,7 +38,7 @@
         <!-- 流水类型 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             流水类型
           </label>
@@ -61,7 +61,7 @@
         <!-- 支出类型/收入类型 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             {{ industryTypeLabel }}
           </label>
@@ -97,7 +97,7 @@
         <!-- 支付方式/收款方式 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             {{ payTypeLabel }}
           </label>
@@ -130,7 +130,7 @@
         <!-- 金额 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             金额
           </label>
@@ -146,7 +146,7 @@
         <!-- 流水归属 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             流水归属
           </label>
@@ -178,7 +178,7 @@
         <!-- 流水名称 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             流水名称
           </label>
@@ -210,7 +210,7 @@
         <!-- 备注 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
           >
             备注
           </label>
@@ -257,6 +257,13 @@ import { onMounted, ref, computed } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
+// ESC键监听
+useEscapeKey(() => {
+  if (showFlowEditDialog.value) {
+    closeDialog();
+  }
+}, showFlowEditDialog);
+
 const { title, flow, successCallback } = defineProps([
   "title",
   "flow",
@@ -279,7 +286,9 @@ const showNameDropdown = ref(false);
 const industryTypeOptions = ref<any[]>([]);
 // 支付类型
 const payTypeOptions = ref<any[]>([]);
-const flowEdit = ref<Flow | any>({});
+const flowEdit = ref<Flow | any>({
+  flowType: "",
+});
 
 const nameList = ref<string[]>([]);
 const getNames = async () => {
