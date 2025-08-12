@@ -30,6 +30,7 @@
       @toggle-select-all="toggleSelectAll"
       @toggle-select-item="toggleSelectItem"
       @edit-item="editItem"
+      @edit-invoice="editInvoice"
       @delete-item="deleteItem"
       @change-page="changePage"
       @change-page-size="changePageSize"
@@ -268,6 +269,12 @@
       :flow="selectedFlow"
       :success-callback="doQuery"
     />
+
+    <FlowEditInvoiceDialog
+      v-if="showFlowEditInvoiceDialog"
+      :item="selectedFlow"
+      :success-callback="doQuery"
+    />
   </div>
 </template>
 
@@ -284,10 +291,12 @@ import FlowsImportDrawer from "@/components/flows/FlowsImportDrawer.vue";
 import FlowAutoMergeDialog from "~/components/dialog/FlowAutoMergeDialog.vue";
 import FlowAutoDeduplicationDialog from "~/components/dialog/FlowAutoDeduplicationDialog.vue";
 import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
+import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import {
   showAutoMergeFlowsDialog,
   showAutoDeduplicationFlowsDialog,
   showFlowEditDialog,
+  showFlowEditInvoiceDialog,
 } from "~/utils/flag";
 import CsvFlowTable from "@/components/datas/CsvFlowTable.vue";
 import FlowCustomImportDialog from "@/components/dialog/FlowCustomImport.vue";
@@ -816,19 +825,6 @@ const closeCsvTableDialog = () => {
   removeFile();
 };
 
-// 导入导出方法
-const importAlipay = () => {
-  console.log("导入支付宝账单");
-};
-
-const importWechat = () => {
-  console.log("导入微信账单");
-};
-
-const importJd = () => {
-  console.log("导入京东金融账单");
-};
-
 const showFlowCustomImport = () => {
   showFlowCustomImportDialog.value = true;
   importDrawer.value = false;
@@ -873,6 +869,16 @@ const importCsvTemplate = () => {
   titleRowIndex.value = 0;
   importDrawer.value = false;
   csvFileInput.value.click();
+};
+
+// 编辑单个流水
+const editInvoice = (item: any) => {
+  selectedFlow.value = item;
+  showFlowEditInvoiceDialog.value = true;
+};
+
+const closeInvoiceDialog = () => {
+  selectedFlow.value = undefined;
 };
 
 // 初始化数据
