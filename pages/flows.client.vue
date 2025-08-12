@@ -56,6 +56,7 @@
       @custom-import="showFlowCustomImport"
       @import-json="openJsonImport"
       @export-json="exportJson"
+      @export-csv="exportCsv"
       @download-template="downloadCsvTemplate"
       @import-template="importCsvTemplate"
     />
@@ -279,7 +280,7 @@
 </template>
 
 <script setup lang="ts">
-import { exportJson as exportJsonFile } from "~/utils/fileUtils";
+import { exportJson as exportJsonFile, exportCsv as exportCsvFile } from "~/utils/fileUtils";
 import type { Page } from "~/utils/model";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
@@ -845,6 +846,23 @@ const exportJson = () => {
     .then((data) => {
       const fileName = bookName + "-" + new Date().getTime() + ".json";
       exportJsonFile(fileName, JSON.stringify(data));
+      Alert.success("导出成功");
+    })
+    .catch(() => {
+      Alert.error("数据获取出错，无法导出！");
+    });
+};
+
+const exportCsv = () => {
+  const bookName = localStorage.getItem("bookName");
+  doApi
+    .post<any[]>("api/entry/flow/list", {
+      ...flowQuery.value,
+      bookId: localStorage.getItem("bookId"),
+    })
+    .then((data) => {
+      const fileName = bookName + "-" + new Date().getTime() + ".csv";
+      exportCsvFile(fileName, data);
       Alert.success("导出成功");
     })
     .catch(() => {
