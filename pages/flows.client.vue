@@ -30,6 +30,7 @@
       @toggle-select-all="toggleSelectAll"
       @toggle-select-item="toggleSelectItem"
       @edit-item="editItem"
+      @edit-invoice="editInvoice"
       @delete-item="deleteItem"
       @change-page="changePage"
       @change-page-size="changePageSize"
@@ -55,6 +56,7 @@
       @custom-import="showFlowCustomImport"
       @import-json="openJsonImport"
       @export-json="exportJson"
+      @export-csv="exportCsv"
       @download-template="downloadCsvTemplate"
       @import-template="importCsvTemplate"
     />
@@ -268,11 +270,17 @@
       :flow="selectedFlow"
       :success-callback="doQuery"
     />
+
+    <FlowEditInvoiceDialog
+      v-if="showFlowEditInvoiceDialog"
+      :item="selectedFlow"
+      :success-callback="doQuery"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { exportJson as exportJsonFile } from "~/utils/fileUtils";
+import { exportJson as exportJsonFile, exportCsv as exportCsvFile } from "~/utils/fileUtils";
 import type { Page } from "~/utils/model";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
@@ -284,10 +292,14 @@ import FlowsImportDrawer from "@/components/flows/FlowsImportDrawer.vue";
 import FlowAutoMergeDialog from "~/components/dialog/FlowAutoMergeDialog.vue";
 import FlowAutoDeduplicationDialog from "~/components/dialog/FlowAutoDeduplicationDialog.vue";
 import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
+import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import {
   showAutoMergeFlowsDialog,
   showAutoDeduplicationFlowsDialog,
   showFlowEditDialog,
+  showFlowEditInvoiceDialog,
+  showFlowExcelImportDialog,
+  showFlowJsonImportDialog,
 } from "~/utils/flag";
 import CsvFlowTable from "@/components/datas/CsvFlowTable.vue";
 import FlowCustomImportDialog from "@/components/dialog/FlowCustomImport.vue";
@@ -316,9 +328,7 @@ const flowPageRef = ref<any>({
 const selectedFlows = ref<any[]>([]);
 const searchDrawer = ref(false);
 const importDrawer = ref(false);
-const showFlowExcelImportDialog = ref(false);
 const showFlowCustomImportDialog = ref(false);
-const showFlowJsonImportDialog = ref(false);
 const showBatchChangeDialog = ref(false);
 const loading = ref(false);
 
@@ -816,19 +826,6 @@ const closeCsvTableDialog = () => {
   removeFile();
 };
 
-// 导入导出方法
-const importAlipay = () => {
-  console.log("导入支付宝账单");
-};
-
-const importWechat = () => {
-  console.log("导入微信账单");
-};
-
-const importJd = () => {
-  console.log("导入京东金融账单");
-};
-
 const showFlowCustomImport = () => {
   showFlowCustomImportDialog.value = true;
   importDrawer.value = false;
@@ -856,6 +853,23 @@ const exportJson = () => {
     });
 };
 
+const exportCsv = () => {
+  const bookName = localStorage.getItem("bookName");
+  doApi
+    .post<any[]>("api/entry/flow/list", {
+      ...flowQuery.value,
+      bookId: localStorage.getItem("bookId"),
+    })
+    .then((data) => {
+      const fileName = bookName + "-" + new Date().getTime() + ".csv";
+      exportCsvFile(fileName, data);
+      Alert.success("导出成功");
+    })
+    .catch(() => {
+      Alert.error("数据获取出错，无法导出！");
+    });
+};
+
 const downloadCsvTemplate = () => {
   const fileName = "Cashbook模板.csv";
   const url = "/csvtemplate.csv";
@@ -873,6 +887,16 @@ const importCsvTemplate = () => {
   titleRowIndex.value = 0;
   importDrawer.value = false;
   csvFileInput.value.click();
+};
+
+// 编辑单个流水
+const editInvoice = (item: any) => {
+  selectedFlow.value = item;
+  showFlowEditInvoiceDialog.value = true;
+};
+
+const closeInvoiceDialog = () => {
+  selectedFlow.value = undefined;
 };
 
 // 初始化数据
