@@ -297,6 +297,8 @@ import {
   showAutoDeduplicationFlowsDialog,
   showFlowEditDialog,
   showFlowEditInvoiceDialog,
+  showFlowExcelImportDialog,
+  showFlowJsonImportDialog,
 } from "~/utils/flag";
 import CsvFlowTable from "@/components/datas/CsvFlowTable.vue";
 import FlowCustomImportDialog from "@/components/dialog/FlowCustomImport.vue";
@@ -325,9 +327,7 @@ const flowPageRef = ref<any>({
 const selectedFlows = ref<any[]>([]);
 const searchDrawer = ref(false);
 const importDrawer = ref(false);
-const showFlowExcelImportDialog = ref(false);
 const showFlowCustomImportDialog = ref(false);
-const showFlowJsonImportDialog = ref(false);
 const showBatchChangeDialog = ref(false);
 const loading = ref(false);
 
