@@ -52,7 +52,7 @@
         </button>
       </div>
       <div class="p-2 md:p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
-        <DatasFlowTable :query="query" v-if="showFlowTable" />
+        <DatasFlowTable :query="query" v-if="showFlowTable" :actions="false" />
       </div>
     </div>
   </div>
@@ -222,13 +222,16 @@ const doQuery = (query: CommonChartQuery & { groupBy: string }) => {
         // 根据流水类型设置不同颜色，参考MonthBar.vue
         if (query.flowType == "支出") {
           optionRef.value.series[0].itemStyle.color = "rgba(217,159,8, 0.9)"; // 黄色
-          optionRef.value.series[0].emphasis.itemStyle.color = "rgba(217,159,8, 1)";
+          optionRef.value.series[0].emphasis.itemStyle.color =
+            "rgba(217,159,8, 1)";
         } else if (query.flowType == "收入") {
           optionRef.value.series[0].itemStyle.color = "rgba(76, 152, 112, 0.9)"; // 绿色
-          optionRef.value.series[0].emphasis.itemStyle.color = "rgba(76, 152, 112, 1)";
+          optionRef.value.series[0].emphasis.itemStyle.color =
+            "rgba(76, 152, 112, 1)";
         } else {
           optionRef.value.series[0].itemStyle.color = "rgba(66, 66, 66, 0.9)"; // 灰色
-          optionRef.value.series[0].emphasis.itemStyle.color = "rgba(66, 66, 66, 1)";
+          optionRef.value.series[0].emphasis.itemStyle.color =
+            "rgba(66, 66, 66, 1)";
         }
 
         // 确保图表完全重新渲染

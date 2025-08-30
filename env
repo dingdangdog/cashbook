@@ -1,0 +1,10 @@
+NODE_ENV="postgre" # development, production
+DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
+
+NUXT_APP_VERSION="4.3.6"
+NUXT_DATA_PATH="E:/Code/cashbook/data"
+
+NUXT_AUTH_SECRET="auth123"
+
+NUXT_ADMIN_USERNAME="admin"
+NUXT_ADMIN_PASSWORD="fb35e9343a1c095ce1c1d1eb6973dc570953159441c3ee315ecfefb6ed05f4cc"
