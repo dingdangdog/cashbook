@@ -15,8 +15,7 @@ const query = ref<TypeRelation | any>({});
 const tabledata = ref<{ total?: number; data?: TypeRelation[] }>({});
 const loading = ref(false);
 
-// 是否显示模板数据
-const showTemplateData = ref(false);
+// 移除不再使用的变量
 
 // 账本选择列表
 const bookOptions = ref<{ text: string; value: string }[]>([]);
@@ -29,8 +28,9 @@ const getBookList = async () => {
       {}
     )) as Book[];
     bookOptions.value = [
-      { text: "全部账本", value: "" },
-      { text: "🔧 模板数据", value: "0" },
+      { text: "📋 全部账本（不含模板）", value: "exclude_template" },
+      { text: "🔧 仅模板数据", value: "0" },
+      { text: "📊 全部数据（含模板）", value: "all" },
       ...books.map((book: Book) => ({
         text: `${book.bookName} (${book.bookId})`,
         value: book.bookId,
@@ -86,11 +86,21 @@ const toDelete = (item: TypeRelation) => {
 const getPages = () => {
   loading.value = true;
 
-  // 如果没有显式选择查看模板数据，则过滤掉模板数据
+  // 根据选择的值构建查询参数
   const queryParams = { ...query.value };
-  if (!showTemplateData.value && !query.value.bookId) {
-    queryParams.excludeTemplate = true; // 添加排除模板数据的标志
+
+  if (query.value.bookId === "exclude_template") {
+    // 排除模板数据
+    queryParams.excludeTemplate = true;
+    delete queryParams.bookId; // 删除特殊值，避免影响查询
+  } else if (query.value.bookId === "all") {
+    // 显示全部数据（包括模板）
+    delete queryParams.bookId; // 删除特殊值，显示所有数据
+  } else if (query.value.bookId === "0") {
+    // 仅显示模板数据
+    queryParams.bookId = "0";
   }
+  // 其他情况保持原有的 bookId 查询
 
   page(pageQuery.value, queryParams).then((res) => {
     tabledata.value = res;
@@ -126,6 +136,8 @@ const endItem = computed(() => {
 // 初始化
 onMounted(() => {
   getBookList();
+  // 设置默认选择为排除模板数据
+  query.value.bookId = "exclude_template";
   getPages();
 });
 </script>
@@ -286,9 +298,15 @@ onMounted(() => {
                   <div class="flex items-center space-x-2">
                     <span
                       v-if="item.bookId === '0'"
-                      class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded"
+                      class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded font-medium"
                     >
-                      模板数据
+                      🔧 系统模板
+                    </span>
+                    <span
+                      v-else
+                      class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded font-medium"
+                    >
+                      📋 用户账本
                     </span>
                     <span
                       class="font-medium"
@@ -300,7 +318,7 @@ onMounted(() => {
                     >
                       {{
                         item.bookId === "0"
-                          ? "系统模板"
+                          ? "系统模板数据"
                           : item.bookName || "未知账本"
                       }}
                     </span>
