@@ -195,7 +195,10 @@
               >
                 {{ item.description }}
               </td>
-              <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
+              <td
+                v-if="actions"
+                class="px-3 py-2 whitespace-nowrap text-sm font-medium"
+              >
                 <div class="flex gap-2">
                   <button
                     @click="$emit('editItem', item)"
@@ -318,7 +321,10 @@
               </span>
             </div>
             <!-- 操作按钮 -->
-            <div class="flex items-center justify-end gap-2 mt-2">
+            <div
+              v-if="actions"
+              class="flex items-center justify-end gap-2 mt-2"
+            >
               <button
                 @click="$emit('editItem', item)"
                 class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
@@ -486,7 +492,7 @@ import { Confirm } from "~/utils/confirm";
 import { doApi } from "~/utils/api";
 import { showFlowEditDialog, showFlowEditInvoiceDialog } from "~/utils/flag";
 
-const { query } = defineProps(["query"]);
+const { query, actions = false } = defineProps(["query", "actions"]);
 
 const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20, ...query });
 
@@ -534,7 +540,8 @@ const changeTypes = () => {
   });
 };
 
-const headers = ref([
+// 基础表头配置
+const baseHeaders = [
   { title: "日期", key: "day", sortable: false },
   { title: "流水类型", key: "flowType", sortable: false },
   { title: "消费类型", key: "industryType", sortable: false },
@@ -543,8 +550,16 @@ const headers = ref([
   { title: "名称", key: "name", sortable: false },
   { title: "小票", key: "invoice", sortable: false },
   { title: "备注", key: "description", sortable: false },
-  { title: "操作", key: "actions", sortable: false },
-]);
+];
+
+// 根据 actions 属性动态生成表头
+const headers = computed(() => {
+  const result = [...baseHeaders];
+  if (actions) {
+    result.push({ title: "操作", key: "actions", sortable: false });
+  }
+  return result;
+});
 
 // 组件属性绑定
 const loading = ref(true);

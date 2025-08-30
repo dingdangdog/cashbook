@@ -211,6 +211,7 @@
             :query="query"
             v-if="showFlowTable"
             @edit-item="editItem"
+            :actions="true"
           />
         </div>
       </div>
