@@ -73,7 +73,7 @@
               <th
                 v-for="header in headers"
                 :key="header.key"
-                class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-3 py-2 min-w-20 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                 :class="
                   header.key === 'money'
                     ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600'
@@ -273,7 +273,7 @@
               <div
                 v-for="(img, index) in getInvoiceImages(item.invoice || '')"
                 :key="index"
-                class="relative w-6 h-6 cursor-pointer group rounded overflow-hidden border border-gray-200 dark:border-gray-600 hover:border-blue-500 transition-colors"
+                class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-gray-200 dark:border-gray-600 hover:border-blue-500 transition-colors"
                 @click="openFullscreen(invoiceImageMap[img])"
               >
                 <img
@@ -318,7 +318,7 @@
               </span>
             </div>
             <!-- 操作按钮 -->
-            <div class="flex items-center gap-2 mt-2">
+            <div class="flex items-center justify-end gap-2 mt-2">
               <button
                 @click="editFlow(item)"
                 class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
