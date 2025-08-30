@@ -58,7 +58,12 @@ export function alipayConvert(
   flow.payType = "支付宝";
   flow.money = row[indexMap["金额"]];
   flow.name = String(row[indexMap["交易对方"]]);
-  flow.description = row[indexMap["商品说明"]] + "-" + row[indexMap["备注"]];
+  flow.description =
+    row[indexMap["商品说明"]] +
+    "-" +
+    row[indexMap["收/付款方式"]] +
+    "-" +
+    row[indexMap["备注"]];
   return flow;
 }
 
