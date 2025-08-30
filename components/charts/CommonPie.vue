@@ -50,7 +50,7 @@
         </button>
       </div>
       <div class="p-2 md:p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
-        <DatasFlowTable :query="query" v-if="showFlowTable" />
+        <DatasFlowTable :query="query" v-if="showFlowTable" :actions="false" />
       </div>
     </div>
   </div>
