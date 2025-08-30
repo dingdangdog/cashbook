@@ -198,7 +198,7 @@
               <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
                 <div class="flex gap-2">
                   <button
-                    @click="editFlow(item)"
+                    @click="$emit('editItem', item)"
                     class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                     title="编辑"
                   >
@@ -320,7 +320,7 @@
             <!-- 操作按钮 -->
             <div class="flex items-center justify-end gap-2 mt-2">
               <button
-                @click="editFlow(item)"
+                @click="$emit('editItem', item)"
                 class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
                 title="编辑"
               >
@@ -443,13 +443,6 @@
       </div>
     </div>
   </div>
-  <!-- 编辑对话框 -->
-  <FlowEditDialog
-    v-if="showFlowEditDialog"
-    :title="dialogFormTitle"
-    :flow="selectedFlow"
-    :success-callback="doQuery"
-  />
 
   <FlowEditInvoiceDialog
     v-if="showFlowEditInvoiceDialog"
@@ -487,7 +480,6 @@ import {
   EyeIcon,
 } from "@heroicons/vue/24/outline";
 import { generateMobileFriendlyPageNumbers } from "~/utils/common";
-import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
@@ -649,6 +641,7 @@ onMounted(() => {});
 // 暴露方法给父组件调用
 defineExpose({
   doQuery,
+  refresh: doQuery, // 暴露刷新方法
 });
 
 // 编辑流水
