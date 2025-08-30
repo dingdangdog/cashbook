@@ -1,35 +1,35 @@
 import prisma from "~/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 /**
  * @swagger
  * /api/admin/entry/settings/export:
- *   get:
- *     summary: 管理员导出系统数据
- *     tags: ["Admin Settings"]
- *     security:
- *       - Admin: []
- *     responses:
- *       200:
- *         description: 数据导出成功
- *         content:
- *           application/json:
- *             schema:
- *               Result: {
- *                 d: {
- *                   SystemSetting: [系统设置数据],
- *                   User: [用户数据],
- *                   Book: [账本数据],
- *                   Flow: [流水数据],
- *                   Budget: [预算数据],
- *                   FixedFlow: [固定流水数据],
- *                   TypeRelation: [类型关系数据]
- *                 }
- *               }
+ * get:
+ * summary: 管理员导出系统数据
+ * tags: ["Admin Settings"]
+ * security:
+ * - Admin: []
+ * responses:
+ * 200:
+ * description: 数据导出成功
+ * content:
+ * application/json:
+ * schema:
+ * Result: {
+ * d: {
+ * SystemSetting: [系统设置数据],
+ * User: [用户数据],
+ * Book: [账本数据],
+ * Flow: [流水数据],
+ * Budget: [预算数据],
+ * FixedFlow: [固定流水数据],
+ * TypeRelation: [类型关系数据]
+ * }
+ * }
  */
 export default defineEventHandler(async (event) => {
-  // 获取所有表名
-  const tableNames: string[] = [
-    "_prisma_migrations",
+  // 定义需要导出的表名
+  const tableNames: Prisma.ModelName[] = [
     "SystemSetting",
     "User",
     "Book",
@@ -38,36 +38,30 @@ export default defineEventHandler(async (event) => {
     "FixedFlow",
     "TypeRelation",
   ];
-  // const tableNames: any[] = await prisma.$queryRaw`
-  //   SELECT table_name
-  //   FROM information_schema.tables
-  //   WHERE table_schema = 'public' -- 替换为你的schema名称
-  //   AND table_type = 'BASE TABLE'
-  // `;
-  // console.log(tableNames);
+
   const allData: any = {};
 
   // 遍历所有表，查询数据并添加到allData对象中
   for (const tableName of tableNames) {
-    console.log(tableName);
-    // const sql = 'SELECT * FROM "' + tableName + '"';
-    const data = await prisma.$queryRawUnsafe(
-      'SELECT * FROM "' + tableName + '";'
-    );
+    const data = await (
+      prisma[tableName as keyof typeof prisma] as any
+    ).findMany();
 
-    let serializedPageData;
-    // Convert BigInt to string for JSON serialization
-    if (data) {
-      serializedPageData = Array.isArray(data)
-        ? data.map((item: any) => ({
-            ...item,
-          }))
-        : data;
-      allData[tableName] = data;
-    }
-    allData[tableName] = serializedPageData;
+    // 将 BigInt 类型转换为字符串，以确保 JSON 序列化正常
+    const serializedData = data.map((item: any) => {
+      const newItem: any = {};
+      for (const key in item) {
+        if (Object.prototype.hasOwnProperty.call(item, key)) {
+          newItem[key] =
+            typeof item[key] === "bigint" ? item[key].toString() : item[key];
+        }
+      }
+      return newItem;
+    });
+
+    allData[tableName] = serializedData;
   }
 
-  // 返回文件流
+  // 返回所有数据
   return success(allData);
 });
