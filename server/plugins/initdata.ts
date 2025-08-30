@@ -24,7 +24,11 @@ export default defineNitroPlugin((nitroApp) => {
       },
     });
     // 保证eliminate字段有值，防止业务出错
-    await prisma.$executeRaw`UPDATE "Flow" SET "eliminate" = 0 WHERE "eliminate" is null;`;
+    try {
+      await prisma.$executeRaw`UPDATE \`Flow\` SET \`eliminate\` = 0 WHERE \`eliminate\` IS NULL;`;
+    } catch (error) {
+      console.error("Init System Settings 3333", error);
+    }
     initTypeRelation();
   });
 });

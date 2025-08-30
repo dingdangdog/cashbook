@@ -6,6 +6,7 @@ export const initTypeRelation = async (bookId?: string) => {
   }
   // 初始化 TypeRelation 配置
   const types = await prisma.typeRelation.count({ where: { bookId } });
+  // console.log("types", types);
   if (types < 1) {
     console.log("~初始化类型转换数据~" + bookId);
     const typeRelations = {
