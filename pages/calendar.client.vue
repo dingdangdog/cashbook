@@ -206,7 +206,13 @@
         </div>
 
         <div class="p-2 md:p-4 overflow-y-auto">
-          <DatasFlowTable :query="query" v-if="showFlowTable" />
+          <DatasFlowTable
+            ref="flowTableRef"
+            :query="query"
+            v-if="showFlowTable"
+            @edit-item="editItem"
+            :actions="true"
+          />
         </div>
       </div>
     </div>
@@ -214,15 +220,15 @@
     <!-- Add Flow Dialog -->
     <FlowEditDialog
       v-if="showFlowEditDialog"
-      title="添加流水"
-      :flow="addFlowItem"
+      :title="dialogFormTitle"
+      :flow="selectedFlow"
       :success-callback="addFlowSuccess"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
@@ -246,6 +252,17 @@ definePageMeta({
   middleware: ["auth"],
 });
 
+// 编辑相关
+const selectedFlow = ref<Flow | any>({});
+const dialogFormTitle = ref("新增流水");
+const formTitle = ["新增流水", "修改流水"];
+const flowTableRef = ref();
+
+const editItem = (item: any) => {
+  dialogFormTitle.value = formTitle[1];
+  selectedFlow.value = item;
+  showFlowEditDialog.value = true;
+};
 // Theme detection
 const isDark = ref(false);
 
@@ -286,8 +303,6 @@ const query = ref<FlowQuery>({
   pageSize: 20,
 });
 
-const addFlowItem = ref<Flow>({});
-
 // Computed properties
 const balance = computed(() => getInMonth() - getOutMonth());
 
@@ -306,18 +321,7 @@ const getOutMonth = (): number => {
   return Number(outMonthCount.value[title] || 0);
 };
 
-// getDayIncome and getDayExpense methods moved to components
-
-const formatDate = (date: string | Date): string => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
 // Helper methods moved to components
-
 const dayToMonth = (day: string | Date): string => {
   const date = new Date(day);
   const year = date.getFullYear().toString();
@@ -351,12 +355,12 @@ const clickDay = (day: string, flowType?: string) => {
 // addFlow method moved to component handlers
 
 const handleMobileAddFlow = (date: any) => {
-  addFlowItem.value = { day: date.dateString };
+  selectedFlow.value = { day: date.dateString };
   showFlowEditDialog.value = true;
 };
 
 const handleDesktopAddFlow = (date: any) => {
-  addFlowItem.value = { day: date.dateString };
+  selectedFlow.value = { day: date.dateString };
   showFlowEditDialog.value = true;
 };
 
@@ -372,21 +376,27 @@ const handleDesktopMonthChange = (date: Date) => {
 
 const addFlowSuccess = (flow: Flow) => {
   if (flow.flowType === "不计收支") return;
+  initQuery();
 
-  const isOutFlow = flow.flowType === "支出";
-  const month = dayToMonth(flow.day || "");
-  const day = flow.day || "";
-
-  // Update month totals
-  if (isOutFlow) {
-    outMonthCount.value[month] =
-      (outMonthCount.value[month] || 0) + Number(flow.money);
-    outDayCount.value[day] = (outDayCount.value[day] || 0) + Number(flow.money);
-  } else {
-    inMonthCount.value[month] =
-      (inMonthCount.value[month] || 0) + Number(flow.money);
-    inDayCount.value[day] = (inDayCount.value[day] || 0) + Number(flow.money);
+  // 刷新 FlowTable 数据
+  if (flowTableRef.value && flowTableRef.value.refresh) {
+    flowTableRef.value.refresh();
   }
+
+  // const isOutFlow = flow.flowType === "支出";
+  // const month = dayToMonth(flow.day || "");
+  // const day = flow.day || "";
+
+  // // Update month totals
+  // if (isOutFlow) {
+  //   outMonthCount.value[month] =
+  //     (outMonthCount.value[month] || 0) + Number(flow.money);
+  //   outDayCount.value[day] = (outDayCount.value[day] || 0) + Number(flow.money);
+  // } else {
+  //   inMonthCount.value[month] =
+  //     (inMonthCount.value[month] || 0) + Number(flow.money);
+  //   inDayCount.value[day] = (inDayCount.value[day] || 0) + Number(flow.money);
+  // }
 };
 
 const showMonthAnalysis = (month: string) => {

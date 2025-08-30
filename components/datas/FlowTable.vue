@@ -195,10 +195,13 @@
               >
                 {{ item.description }}
               </td>
-              <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
+              <td
+                v-if="actions"
+                class="px-3 py-2 whitespace-nowrap text-sm font-medium"
+              >
                 <div class="flex gap-2">
                   <button
-                    @click="editFlow(item)"
+                    @click="$emit('editItem', item)"
                     class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                     title="编辑"
                   >
@@ -318,9 +321,12 @@
               </span>
             </div>
             <!-- 操作按钮 -->
-            <div class="flex items-center justify-end gap-2 mt-2">
+            <div
+              v-if="actions"
+              class="flex items-center justify-end gap-2 mt-2"
+            >
               <button
-                @click="editFlow(item)"
+                @click="$emit('editItem', item)"
                 class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
                 title="编辑"
               >
@@ -443,13 +449,6 @@
       </div>
     </div>
   </div>
-  <!-- 编辑对话框 -->
-  <FlowEditDialog
-    v-if="showFlowEditDialog"
-    :title="dialogFormTitle"
-    :flow="selectedFlow"
-    :success-callback="doQuery"
-  />
 
   <FlowEditInvoiceDialog
     v-if="showFlowEditInvoiceDialog"
@@ -487,14 +486,13 @@ import {
   EyeIcon,
 } from "@heroicons/vue/24/outline";
 import { generateMobileFriendlyPageNumbers } from "~/utils/common";
-import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
 import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
 import { doApi } from "~/utils/api";
 import { showFlowEditDialog, showFlowEditInvoiceDialog } from "~/utils/flag";
 
-const { query } = defineProps(["query"]);
+const { query, actions = false } = defineProps(["query", "actions"]);
 
 const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20, ...query });
 
@@ -542,7 +540,8 @@ const changeTypes = () => {
   });
 };
 
-const headers = ref([
+// 基础表头配置
+const baseHeaders = [
   { title: "日期", key: "day", sortable: false },
   { title: "流水类型", key: "flowType", sortable: false },
   { title: "消费类型", key: "industryType", sortable: false },
@@ -551,8 +550,16 @@ const headers = ref([
   { title: "名称", key: "name", sortable: false },
   { title: "小票", key: "invoice", sortable: false },
   { title: "备注", key: "description", sortable: false },
-  { title: "操作", key: "actions", sortable: false },
-]);
+];
+
+// 根据 actions 属性动态生成表头
+const headers = computed(() => {
+  const result = [...baseHeaders];
+  if (actions) {
+    result.push({ title: "操作", key: "actions", sortable: false });
+  }
+  return result;
+});
 
 // 组件属性绑定
 const loading = ref(true);
@@ -649,6 +656,7 @@ onMounted(() => {});
 // 暴露方法给父组件调用
 defineExpose({
   doQuery,
+  refresh: doQuery, // 暴露刷新方法
 });
 
 // 编辑流水
