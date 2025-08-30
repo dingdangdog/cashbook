@@ -64,7 +64,7 @@
     <div v-else class="flow-container">
       <!-- 桌面端表格 -->
       <div
-        class="hidden lg:block overflow-x-auto"
+        class="hidden lg:block overflow-x-auto min-h-40"
         :style="{ height: getTableHeight() + 'px' }"
       >
         <table class="w-full">
@@ -168,6 +168,31 @@
               >
                 {{ item.description }}
               </td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
+                <div class="flex gap-2">
+                  <button
+                    @click="editFlow(item)"
+                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    title="编辑"
+                  >
+                    <PencilIcon class="h-4 w-4" />
+                  </button>
+                  <button
+                    @click="editTicket(item)"
+                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    title="编辑小票"
+                  >
+                    <TicketIcon class="h-4 w-4" />
+                  </button>
+                  <button
+                    @click="deleteFlow(item)"
+                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    title="删除"
+                  >
+                    <TrashIcon class="h-4 w-4" />
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -228,6 +253,30 @@
               >
                 {{ item.payType }}
               </span>
+            </div>
+            <!-- 操作按钮 -->
+            <div class="flex items-center gap-2 mt-2">
+              <button
+                @click="editFlow(item)"
+                class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                title="编辑"
+              >
+                <PencilIcon class="h-3 w-3" />
+              </button>
+              <button
+                @click="editTicket(item)"
+                class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                title="编辑小票"
+              >
+                <TicketIcon class="h-3 w-3" />
+              </button>
+              <button
+                @click="deleteFlow(item)"
+                class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                title="删除"
+              >
+                <TrashIcon class="h-3 w-3" />
+              </button>
             </div>
           </div>
         </div>
@@ -331,21 +380,47 @@
       </div>
     </div>
   </div>
+  <!-- 编辑对话框 -->
+  <FlowEditDialog
+    v-if="showFlowEditDialog"
+    :title="dialogFormTitle"
+    :flow="selectedFlow"
+    :success-callback="doQuery"
+  />
+
+  <FlowEditInvoiceDialog
+    v-if="showFlowEditInvoiceDialog"
+    :item="selectedFlow"
+    :success-callback="doQuery"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  PencilIcon,
+  TicketIcon,
+  TrashIcon,
 } from "@heroicons/vue/24/outline";
 import { generateMobileFriendlyPageNumbers } from "~/utils/common";
+import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
+import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
+import { Alert } from "~/utils/alert";
+import { Confirm } from "~/utils/confirm";
+import { doApi } from "~/utils/api";
+import { showFlowEditDialog, showFlowEditInvoiceDialog } from "~/utils/flag";
 
 const { query } = defineProps(["query"]);
 
 const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20, ...query });
+
+// 编辑相关变量
+const selectedFlow = ref<Flow | any>({});
+const dialogFormTitle = ref("修改流水");
 
 const typeLabel = ref("支出/收入类型");
 const payTypeLabel = ref("支付/收款方式");
@@ -395,6 +470,7 @@ const headers = ref([
   { title: "金额", key: "money" },
   { title: "名称", key: "name", sortable: false },
   { title: "备注", key: "description", sortable: false },
+  { title: "操作", key: "actions", sortable: false },
 ]);
 
 // 组件属性绑定
@@ -493,6 +569,45 @@ onMounted(() => {});
 defineExpose({
   doQuery,
 });
+
+// 编辑流水
+const editFlow = (item: Flow) => {
+  dialogFormTitle.value = "修改流水";
+  selectedFlow.value = item;
+  showFlowEditDialog.value = true;
+};
+
+// 编辑小票
+const editTicket = (item: Flow) => {
+  selectedFlow.value = item;
+  showFlowEditInvoiceDialog.value = true;
+};
+
+// 删除流水
+const deleteFlow = (item: Flow) => {
+  if (!item.id) {
+    Alert.error("请选择要删除的数据");
+    return;
+  }
+  Confirm.open({
+    title: "删除确认",
+    content: `确定删除流水 【${item.name}:${item.money}】吗?`,
+    confirm: () => {
+      doApi
+        .post("api/entry/flow/del", {
+          id: item.id,
+          bookId: localStorage.getItem("bookId"),
+        })
+        .then(() => {
+          Alert.success("删除成功");
+          doQuery();
+        })
+        .catch(() => {
+          Alert.error("删除失败");
+        });
+    },
+  });
+};
 </script>
 
 <style scoped>
