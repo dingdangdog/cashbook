@@ -162,6 +162,33 @@
               >
                 {{ item.name }}
               </td>
+              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100">
+                <!-- 小票显示 -->
+                <div
+                  v-if="getInvoiceImages(item.invoice || '').length > 0"
+                  class="flex flex-wrap gap-1"
+                >
+                  <div
+                    v-for="(img, index) in getInvoiceImages(item.invoice || '')"
+                    :key="index"
+                    class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-gray-200 dark:border-gray-600 hover:border-blue-500 transition-colors"
+                    @click="openFullscreen(invoiceImageMap[img])"
+                  >
+                    <img
+                      :src="invoiceImageMap[img]"
+                      class="w-full h-full object-cover"
+                      :alt="`小票 ${index + 1}`"
+                    />
+                    <!-- 悬停遮罩 -->
+                    <div
+                      class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all"
+                    >
+                      <EyeIcon class="h-4 w-4 text-green-500" />
+                    </div>
+                  </div>
+                </div>
+                <span v-else class="text-gray-400 text-xs">无小票</span>
+              </td>
               <td
                 class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
                 :title="item.description"
@@ -237,6 +264,42 @@
           </div>
           <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
             <p v-if="item.description">{{ item.description }}</p>
+
+            <!-- 小票显示 - 移动端 -->
+            <div
+              v-if="getInvoiceImages(item.invoice || '').length > 0"
+              class="flex flex-wrap gap-1 mt-1"
+            >
+              <div
+                v-for="(img, index) in getInvoiceImages(item.invoice || '')"
+                :key="index"
+                class="relative w-6 h-6 cursor-pointer group rounded overflow-hidden border border-gray-200 dark:border-gray-600 hover:border-blue-500 transition-colors"
+                @click="openFullscreen(invoiceImageMap[img])"
+              >
+                <img
+                  :src="invoiceImageMap[img]"
+                  class="w-full h-full object-cover"
+                  :alt="`小票 ${index + 1}`"
+                />
+                <!-- 悬停遮罩 -->
+                <div
+                  class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all"
+                >
+                  <svg
+                    class="w-2 h-2 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
             <div class="flex flex-wrap gap-1">
               <span
                 class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded"
@@ -393,10 +456,26 @@
     :item="selectedFlow"
     :success-callback="doQuery"
   />
+
+  <!-- 图片蒙版 -->
+  <div class="overlay" v-if="fullscrenn">
+    <div class="flex justify-center items-center">
+      <img
+        :src="fullscreenImage"
+        class="max-h-[95vh] max-w-[95vw] object-contains"
+        alt="Fullscreen Image"
+      />
+    </div>
+    <span
+      class="close-button bg-gray-500 hover:bg-gray-400"
+      @click="closeFullscreen"
+      >&times;</span
+    >
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
@@ -405,6 +484,7 @@ import {
   PencilIcon,
   TicketIcon,
   TrashIcon,
+  EyeIcon,
 } from "@heroicons/vue/24/outline";
 import { generateMobileFriendlyPageNumbers } from "~/utils/common";
 import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
@@ -469,6 +549,7 @@ const headers = ref([
   { title: "支付方式", key: "payType", sortable: false },
   { title: "金额", key: "money" },
   { title: "名称", key: "name", sortable: false },
+  { title: "小票", key: "invoice", sortable: false },
   { title: "备注", key: "description", sortable: false },
   { title: "操作", key: "actions", sortable: false },
 ]);
@@ -608,6 +689,86 @@ const deleteFlow = (item: Flow) => {
     },
   });
 };
+
+// 小票图片管理
+const invoiceImageMap = ref<Record<string, string>>({});
+
+// 获取小票图片
+const getInvoiceImage = async (invoice: string) => {
+  if (!invoice || invoice === "") {
+    return "";
+  }
+  try {
+    const res = await doApi.download("api/entry/flow/invoice/show", {
+      invoice,
+    });
+    return res ? URL.createObjectURL(res) : "";
+  } catch (e) {
+    return "";
+  }
+};
+
+// 处理单个流水的小票
+const processFlowInvoices = async (flow: Flow) => {
+  if (flow.invoice) {
+    const invoices = flow.invoice.split(",");
+    for (let invoice of invoices) {
+      if (invoice.trim() && !invoiceImageMap.value[invoice]) {
+        const imageUrl = await getInvoiceImage(invoice);
+        if (imageUrl) {
+          invoiceImageMap.value[invoice] = imageUrl;
+        }
+      }
+    }
+  }
+};
+
+// 处理所有流水的小票
+const processAllInvoices = async () => {
+  if (!loading.value && flowPageRef.value.data.length > 0) {
+    for (let flow of flowPageRef.value.data) {
+      await processFlowInvoices(flow);
+    }
+  }
+};
+
+// 获取指定流水的小票列表
+const getInvoiceImages = (invoiceString: string): string[] => {
+  if (!invoiceString) return [];
+  return invoiceString
+    .split(",")
+    .filter((invoice) => invoice.trim() && invoiceImageMap.value[invoice]);
+};
+
+// 监听流水数据变化，处理小票
+watch(
+  () => [flowPageRef.value.data, loading.value],
+  () => {
+    if (!loading.value && flowPageRef.value.data.length > 0) {
+      processAllInvoices();
+    }
+  },
+  { immediate: true }
+);
+
+// 全屏展示小票
+const fullscrenn = ref(false);
+const fullscreenImage = ref("");
+const openFullscreen = (image: string) => {
+  fullscrenn.value = true;
+  fullscreenImage.value = image;
+  window.addEventListener("keydown", handleKeydown);
+};
+const closeFullscreen = () => {
+  fullscrenn.value = false;
+  window.removeEventListener("keydown", handleKeydown);
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === "Escape" && fullscrenn.value) {
+    fullscrenn.value = false;
+  }
+};
 </script>
 
 <style scoped>
@@ -635,5 +796,36 @@ const deleteFlow = (item: Flow) => {
 .overflow-x-auto::-webkit-scrollbar-thumb:hover,
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* 全屏预览样式 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
 }
 </style>
