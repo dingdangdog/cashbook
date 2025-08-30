@@ -192,20 +192,20 @@
         @click.stop
       >
         <div
-          class="flex items-center justify-between p-2 md:p-4 border-b border-gray-200 dark:border-gray-700"
+          class="flex items-center justify-between p-2 md:p-3 border-b border-gray-200 dark:border-gray-700"
         >
           <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">
             {{ query.startDay }} - {{ query.endDay }} - {{ query.flowType }}
           </h2>
           <button
             @click="showFlowTable = false"
-            class="md:px-4 md:py-2 px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 font-medium"
+            class="md:px-3 px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 font-xs md:font-sm"
           >
             关闭
           </button>
         </div>
 
-        <div class="p-2 md:p-6 overflow-y-auto">
+        <div class="p-2 md:p-4 overflow-y-auto">
           <DatasFlowTable :query="query" v-if="showFlowTable" />
         </div>
       </div>
