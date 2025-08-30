@@ -310,6 +310,7 @@ const getAttributions = async () => {
 getAttributions();
 
 onMounted(() => {
+  console.log("flow", flow);
   if (flow) {
     flowEdit.value = { ...flow };
     if (flowEdit.value.day) {
@@ -480,13 +481,14 @@ const updateOne = () => {
     })
     .then((res) => {
       if (res.id) {
-        successCallback();
+        successCallback(res);
         Alert.success("更新成功!");
         showFlowEditDialog.value = false;
       }
     })
-    .catch(() => {
-      Alert.error("更新出现异常");
+    .catch((err) => {
+      console.log(err);
+      Alert.error("更新出现异常" + err.message);
     });
 };
 
