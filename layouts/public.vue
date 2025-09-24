@@ -38,7 +38,7 @@ watch(
 // Responsive functions
 const updateResponsive = () => {
   if (typeof window !== "undefined") {
-    isMobile.value = window.innerWidth < 768;
+    isMobile.value = window.innerWidth < 1024;
     if (!isMobile.value) {
       sidebarOpen.value = false;
     }
