@@ -69,8 +69,14 @@
           <div class="relative">
             <input
               v-model="flowEdit.industryType"
-              @input="(industryTypeSearchText = flowEdit.industryType, showIndustryTypeDropdown = true, industryActiveIndex = 0)"
-              @focus="(showIndustryTypeDropdown = true, industryActiveIndex = 0)"
+              @input="
+                (industryTypeSearchText = flowEdit.industryType),
+                  (showIndustryTypeDropdown = true),
+                  (industryActiveIndex = 0)
+              "
+              @focus="
+                (showIndustryTypeDropdown = true), (industryActiveIndex = 0)
+              "
               @blur="hideIndustryTypeDropdown"
               @keydown="onIndustryKeydown($event)"
               placeholder="输入或选择类型"
@@ -90,7 +96,9 @@
                 @mousedown="selectIndustryType(item)"
                 :class="[
                   'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
-                  index === industryActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  index === industryActiveIndex
+                    ? 'bg-gray-100 dark:bg-gray-600'
+                    : '',
                 ]"
               >
                 {{ item }}
@@ -109,8 +117,12 @@
           <div class="relative">
             <input
               v-model="flowEdit.payType"
-              @input="(payTypeSearchText = flowEdit.payType, showPayTypeDropdown = true, payTypeActiveIndex = 0)"
-              @focus="(showPayTypeDropdown = true, payTypeActiveIndex = 0)"
+              @input="
+                (payTypeSearchText = flowEdit.payType),
+                  (showPayTypeDropdown = true),
+                  (payTypeActiveIndex = 0)
+              "
+              @focus="(showPayTypeDropdown = true), (payTypeActiveIndex = 0)"
               @blur="hidePayTypeDropdown"
               @keydown="onPayTypeKeydown($event)"
               placeholder="输入或选择支付方式"
@@ -127,7 +139,9 @@
                 @mousedown="selectPayType(item)"
                 :class="[
                   'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
-                  index === payTypeActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  index === payTypeActiveIndex
+                    ? 'bg-gray-100 dark:bg-gray-600'
+                    : '',
                 ]"
               >
                 {{ item }}
@@ -162,8 +176,14 @@
           <div class="relative">
             <input
               v-model="flowEdit.attribution"
-              @input="(attributionSearchText = flowEdit.attribution, showAttributionDropdown = true, attributionActiveIndex = 0)"
-              @focus="(showAttributionDropdown = true, attributionActiveIndex = 0)"
+              @input="
+                (attributionSearchText = flowEdit.attribution),
+                  (showAttributionDropdown = true),
+                  (attributionActiveIndex = 0)
+              "
+              @focus="
+                (showAttributionDropdown = true), (attributionActiveIndex = 0)
+              "
               @blur="hideAttributionDropdown"
               @keydown="onAttributionKeydown($event)"
               placeholder="输入或选择归属"
@@ -180,7 +200,9 @@
                 @mousedown="selectAttribution(item)"
                 :class="[
                   'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
-                  index === attributionActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  index === attributionActiveIndex
+                    ? 'bg-gray-100 dark:bg-gray-600'
+                    : '',
                 ]"
               >
                 {{ item }}
@@ -199,8 +221,12 @@
           <div class="relative">
             <input
               v-model="flowEdit.name"
-              @input="(nameSearchText = flowEdit.name, showNameDropdown = true, nameActiveIndex = 0)"
-              @focus="(showNameDropdown = true, nameActiveIndex = 0)"
+              @input="
+                (nameSearchText = flowEdit.name),
+                  (showNameDropdown = true),
+                  (nameActiveIndex = 0)
+              "
+              @focus="(showNameDropdown = true), (nameActiveIndex = 0)"
               @blur="hideNameDropdown"
               @keydown="onNameKeydown($event)"
               placeholder="输入或选择名称"
@@ -217,7 +243,9 @@
                 @mousedown="selectName(item)"
                 :class="[
                   'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white line-clamp-1',
-                  index === nameActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  index === nameActiveIndex
+                    ? 'bg-gray-100 dark:bg-gray-600'
+                    : '',
                 ]"
               >
                 {{ item }}
@@ -272,7 +300,7 @@
 
 <script setup lang="ts">
 import { showFlowEditDialog } from "~/utils/flag";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
@@ -328,14 +356,29 @@ const getAttributions = async () => {
 getAttributions();
 
 onMounted(() => {
-  console.log("flow", flow);
+  // console.log("flow", flow);
   if (flow) {
     flowEdit.value = { ...flow };
     if (flowEdit.value.day) {
       flowEdit.value.day = flowEdit.value.day;
     }
   }
+  if (formTitle[0] === title) {
+    const day =
+      (flow && (flow as any).day) || new Date().toISOString().split("T")[0];
+    flowEdit.value = { flowType: "", day } as any;
+  } else if (flow) {
+    flowEdit.value = { ...flow } as any;
+  }
+  // 强制清除 id，确保新增不会走更新逻辑
+  if (formTitle[0] === title && (flowEdit.value as any).id) {
+    delete (flowEdit.value as any).id;
+  }
+  // 根据当前 flowType 联动标签与选项
+  changeFlowTypes();
 });
+
+// 每次打开弹窗时，根据标题判定并重置表单，避免误把新增识别为修改
 
 // 修改FlowType后联动
 const changeFlowTypes = () => {
@@ -419,18 +462,30 @@ const clampIndex = (index: number, length: number) => {
 
 const onIndustryKeydown = (e: KeyboardEvent) => {
   const list = filteredIndustryTypeOptions.value;
-  if (!showIndustryTypeDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+  if (
+    !showIndustryTypeDropdown.value &&
+    (e.key === "ArrowDown" || e.key === "ArrowUp")
+  ) {
     showIndustryTypeDropdown.value = true;
   }
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    industryActiveIndex.value = clampIndex(industryActiveIndex.value + 1, list.length);
+    industryActiveIndex.value = clampIndex(
+      industryActiveIndex.value + 1,
+      list.length
+    );
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    industryActiveIndex.value = clampIndex(industryActiveIndex.value - 1, list.length);
+    industryActiveIndex.value = clampIndex(
+      industryActiveIndex.value - 1,
+      list.length
+    );
   } else if (e.key === "Enter") {
     e.preventDefault();
-    if (industryActiveIndex.value >= 0 && industryActiveIndex.value < list.length) {
+    if (
+      industryActiveIndex.value >= 0 &&
+      industryActiveIndex.value < list.length
+    ) {
       selectIndustryType(list[industryActiveIndex.value]);
     }
   } else if (e.key === "Escape") {
@@ -440,18 +495,30 @@ const onIndustryKeydown = (e: KeyboardEvent) => {
 
 const onPayTypeKeydown = (e: KeyboardEvent) => {
   const list = filteredPayTypeOptions.value;
-  if (!showPayTypeDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+  if (
+    !showPayTypeDropdown.value &&
+    (e.key === "ArrowDown" || e.key === "ArrowUp")
+  ) {
     showPayTypeDropdown.value = true;
   }
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    payTypeActiveIndex.value = clampIndex(payTypeActiveIndex.value + 1, list.length);
+    payTypeActiveIndex.value = clampIndex(
+      payTypeActiveIndex.value + 1,
+      list.length
+    );
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    payTypeActiveIndex.value = clampIndex(payTypeActiveIndex.value - 1, list.length);
+    payTypeActiveIndex.value = clampIndex(
+      payTypeActiveIndex.value - 1,
+      list.length
+    );
   } else if (e.key === "Enter") {
     e.preventDefault();
-    if (payTypeActiveIndex.value >= 0 && payTypeActiveIndex.value < list.length) {
+    if (
+      payTypeActiveIndex.value >= 0 &&
+      payTypeActiveIndex.value < list.length
+    ) {
       selectPayType(list[payTypeActiveIndex.value]);
     }
   } else if (e.key === "Escape") {
@@ -461,18 +528,30 @@ const onPayTypeKeydown = (e: KeyboardEvent) => {
 
 const onAttributionKeydown = (e: KeyboardEvent) => {
   const list = attributionList.value;
-  if (!showAttributionDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+  if (
+    !showAttributionDropdown.value &&
+    (e.key === "ArrowDown" || e.key === "ArrowUp")
+  ) {
     showAttributionDropdown.value = true;
   }
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    attributionActiveIndex.value = clampIndex(attributionActiveIndex.value + 1, list.length);
+    attributionActiveIndex.value = clampIndex(
+      attributionActiveIndex.value + 1,
+      list.length
+    );
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    attributionActiveIndex.value = clampIndex(attributionActiveIndex.value - 1, list.length);
+    attributionActiveIndex.value = clampIndex(
+      attributionActiveIndex.value - 1,
+      list.length
+    );
   } else if (e.key === "Enter") {
     e.preventDefault();
-    if (attributionActiveIndex.value >= 0 && attributionActiveIndex.value < list.length) {
+    if (
+      attributionActiveIndex.value >= 0 &&
+      attributionActiveIndex.value < list.length
+    ) {
       selectAttribution(list[attributionActiveIndex.value]);
     }
   } else if (e.key === "Escape") {
@@ -482,7 +561,10 @@ const onAttributionKeydown = (e: KeyboardEvent) => {
 
 const onNameKeydown = (e: KeyboardEvent) => {
   const list = nameList.value;
-  if (!showNameDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+  if (
+    !showNameDropdown.value &&
+    (e.key === "ArrowDown" || e.key === "ArrowUp")
+  ) {
     showNameDropdown.value = true;
   }
   if (e.key === "ArrowDown") {
