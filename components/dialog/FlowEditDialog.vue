@@ -69,9 +69,10 @@
           <div class="relative">
             <input
               v-model="flowEdit.industryType"
-              @input="industryTypeSearchText = flowEdit.industryType"
-              @focus="showIndustryTypeDropdown = true"
+              @input="(industryTypeSearchText = flowEdit.industryType, showIndustryTypeDropdown = true, industryActiveIndex = 0)"
+              @focus="(showIndustryTypeDropdown = true, industryActiveIndex = 0)"
               @blur="hideIndustryTypeDropdown"
+              @keydown="onIndustryKeydown($event)"
               placeholder="输入或选择类型"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -84,10 +85,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in filteredIndustryTypeOptions"
+                v-for="(item, index) in filteredIndustryTypeOptions"
                 :key="item"
                 @mousedown="selectIndustryType(item)"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white"
+                :class="[
+                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
+                  index === industryActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 {{ item }}
               </div>
@@ -105,9 +109,10 @@
           <div class="relative">
             <input
               v-model="flowEdit.payType"
-              @input="payTypeSearchText = flowEdit.payType"
-              @focus="showPayTypeDropdown = true"
+              @input="(payTypeSearchText = flowEdit.payType, showPayTypeDropdown = true, payTypeActiveIndex = 0)"
+              @focus="(showPayTypeDropdown = true, payTypeActiveIndex = 0)"
               @blur="hidePayTypeDropdown"
+              @keydown="onPayTypeKeydown($event)"
               placeholder="输入或选择支付方式"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -117,10 +122,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in filteredPayTypeOptions"
+                v-for="(item, index) in filteredPayTypeOptions"
                 :key="item"
                 @mousedown="selectPayType(item)"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white"
+                :class="[
+                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
+                  index === payTypeActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 {{ item }}
               </div>
@@ -154,8 +162,9 @@
           <div class="relative">
             <input
               v-model="flowEdit.attribution"
-              @focus="showAttributionDropdown = true"
+              @focus="(showAttributionDropdown = true, attributionActiveIndex = 0)"
               @blur="hideAttributionDropdown"
+              @keydown="onAttributionKeydown($event)"
               placeholder="输入或选择归属"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -165,10 +174,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in attributionList"
+                v-for="(item, index) in attributionList"
                 :key="item"
                 @mousedown="selectAttribution(item)"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white"
+                :class="[
+                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
+                  index === attributionActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 {{ item }}
               </div>
@@ -186,8 +198,9 @@
           <div class="relative">
             <input
               v-model="flowEdit.name"
-              @focus="showNameDropdown = true"
+              @focus="(showNameDropdown = true, nameActiveIndex = 0)"
               @blur="hideNameDropdown"
+              @keydown="onNameKeydown($event)"
               placeholder="输入或选择名称"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -197,10 +210,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in nameList"
+                v-for="(item, index) in nameList"
                 :key="item"
                 @mousedown="selectName(item)"
-                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white line-clamp-1"
+                :class="[
+                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white line-clamp-1',
+                  index === nameActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 {{ item }}
               </div>
@@ -367,6 +383,103 @@ const filteredPayTypeOptions = computed(() => {
     item.toLowerCase().includes(payTypeSearchText.value.toLowerCase())
   );
 });
+
+// 键盘导航：活动索引（响应式）
+const industryActiveIndex = ref(0);
+const payTypeActiveIndex = ref(0);
+const attributionActiveIndex = ref(0);
+const nameActiveIndex = ref(0);
+
+const clampIndex = (index: number, length: number) => {
+  if (length <= 0) return -1;
+  if (index < 0) return length - 1;
+  if (index >= length) return 0;
+  return index;
+};
+
+const onIndustryKeydown = (e: KeyboardEvent) => {
+  const list = filteredIndustryTypeOptions.value;
+  if (!showIndustryTypeDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showIndustryTypeDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    industryActiveIndex.value = clampIndex(industryActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    industryActiveIndex.value = clampIndex(industryActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (industryActiveIndex.value >= 0 && industryActiveIndex.value < list.length) {
+      selectIndustryType(list[industryActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showIndustryTypeDropdown.value = false;
+  }
+};
+
+const onPayTypeKeydown = (e: KeyboardEvent) => {
+  const list = filteredPayTypeOptions.value;
+  if (!showPayTypeDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showPayTypeDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    payTypeActiveIndex.value = clampIndex(payTypeActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    payTypeActiveIndex.value = clampIndex(payTypeActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (payTypeActiveIndex.value >= 0 && payTypeActiveIndex.value < list.length) {
+      selectPayType(list[payTypeActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showPayTypeDropdown.value = false;
+  }
+};
+
+const onAttributionKeydown = (e: KeyboardEvent) => {
+  const list = attributionList.value;
+  if (!showAttributionDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showAttributionDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    attributionActiveIndex.value = clampIndex(attributionActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    attributionActiveIndex.value = clampIndex(attributionActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (attributionActiveIndex.value >= 0 && attributionActiveIndex.value < list.length) {
+      selectAttribution(list[attributionActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showAttributionDropdown.value = false;
+  }
+};
+
+const onNameKeydown = (e: KeyboardEvent) => {
+  const list = nameList.value;
+  if (!showNameDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showNameDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    nameActiveIndex.value = clampIndex(nameActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    nameActiveIndex.value = clampIndex(nameActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (nameActiveIndex.value >= 0 && nameActiveIndex.value < list.length) {
+      selectName(list[nameActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showNameDropdown.value = false;
+  }
+};
 
 // 下拉框处理方法
 const hideIndustryTypeDropdown = () => {
