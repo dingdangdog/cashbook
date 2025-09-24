@@ -162,6 +162,7 @@
           <div class="relative">
             <input
               v-model="flowEdit.attribution"
+              @input="(attributionSearchText = flowEdit.attribution, showAttributionDropdown = true, attributionActiveIndex = 0)"
               @focus="(showAttributionDropdown = true, attributionActiveIndex = 0)"
               @blur="hideAttributionDropdown"
               @keydown="onAttributionKeydown($event)"
@@ -174,7 +175,7 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="(item, index) in attributionList"
+                v-for="(item, index) in filteredAttributionList"
                 :key="item"
                 @mousedown="selectAttribution(item)"
                 :class="[
@@ -198,6 +199,7 @@
           <div class="relative">
             <input
               v-model="flowEdit.name"
+              @input="(nameSearchText = flowEdit.name, showNameDropdown = true, nameActiveIndex = 0)"
               @focus="(showNameDropdown = true, nameActiveIndex = 0)"
               @blur="hideNameDropdown"
               @keydown="onNameKeydown($event)"
@@ -210,7 +212,7 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="(item, index) in nameList"
+                v-for="(item, index) in filteredNameList"
                 :key="item"
                 @mousedown="selectName(item)"
                 :class="[
@@ -381,6 +383,24 @@ const filteredPayTypeOptions = computed(() => {
   }
   return payTypeOptions.value.filter((item) =>
     item.toLowerCase().includes(payTypeSearchText.value.toLowerCase())
+  );
+});
+
+// 归属与名称的前端过滤
+const attributionSearchText = ref("");
+const nameSearchText = ref("");
+
+const filteredAttributionList = computed(() => {
+  if (!attributionSearchText.value) return attributionList.value;
+  return attributionList.value.filter((item) =>
+    item.toLowerCase().includes(attributionSearchText.value.toLowerCase())
+  );
+});
+
+const filteredNameList = computed(() => {
+  if (!nameSearchText.value) return nameList.value;
+  return nameList.value.filter((item) =>
+    item.toLowerCase().includes(nameSearchText.value.toLowerCase())
   );
 });
 

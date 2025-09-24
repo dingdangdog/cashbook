@@ -58,9 +58,10 @@
               type="text"
               placeholder="请输入流水归属..."
               class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-              @input="filterAttributions"
-              @focus="showAttributionDropdown = true"
+              @input="(filterAttributions(), attributionActiveIndex = 0)"
+              @focus="(showAttributionDropdown = true, attributionActiveIndex = 0)"
               @blur="hideAttributionDropdown"
+              @keydown="onAttributionKeydown($event)"
             />
             <!-- 下拉选项 -->
             <div
@@ -68,10 +69,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in filteredAttributions"
+                v-for="(item, index) in filteredAttributions"
                 :key="item"
                 @mousedown="selectAttribution(item)"
-                class="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100"
+                :class="[
+                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100',
+                  index === attributionActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 {{ item }}
               </div>
@@ -92,9 +96,10 @@
               type="text"
               placeholder="请输入名称..."
               class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-              @input="filterNames"
-              @focus="showNameDropdown = true"
+              @input="(filterNames(), nameActiveIndex = 0)"
+              @focus="(showNameDropdown = true, nameActiveIndex = 0)"
               @blur="hideNameDropdown"
+              @keydown="onNameKeydown($event)"
             />
             <!-- 下拉选项 -->
             <div
@@ -102,10 +107,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in filteredNames"
+                v-for="(item, index) in filteredNames"
                 :key="item"
                 @mousedown="selectName(item)"
-                class="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100"
+                :class="[
+                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100',
+                  index === nameActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 {{ item }}
               </div>
@@ -160,9 +168,10 @@
               type="text"
               :placeholder="`请输入${industryTypeLabel}...`"
               class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-              @input="filterIndustryTypes"
-              @focus="showIndustryTypeDropdown = true"
+              @input="(filterIndustryTypes(), industryActiveIndex = 0)"
+              @focus="(showIndustryTypeDropdown = true, industryActiveIndex = 0)"
               @blur="hideIndustryTypeDropdown"
+              @keydown="onIndustryKeydown($event)"
             />
             <!-- 下拉选项 -->
             <div
@@ -172,10 +181,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in filteredIndustryTypes"
+                v-for="(item, index) in filteredIndustryTypes"
                 :key="item"
                 @mousedown="selectIndustryType(item)"
-                class="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2"
+                :class="[
+                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2',
+                  index === industryActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 <svg
                   class="w-4 h-4 text-green-500"
@@ -209,9 +221,10 @@
               type="text"
               :placeholder="`请输入${payTypeLabel}...`"
               class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-              @input="filterPayTypes"
-              @focus="showPayTypeDropdown = true"
+              @input="(filterPayTypes(), payTypeActiveIndex = 0)"
+              @focus="(showPayTypeDropdown = true, payTypeActiveIndex = 0)"
               @blur="hidePayTypeDropdown"
+              @keydown="onPayTypeKeydown($event)"
             />
             <!-- 下拉选项 -->
             <div
@@ -219,10 +232,13 @@
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
-                v-for="item in filteredPayTypes"
+                v-for="(item, index) in filteredPayTypes"
                 :key="item"
                 @mousedown="selectPayType(item)"
-                class="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2"
+                :class="[
+                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2',
+                  index === payTypeActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                ]"
               >
                 <CreditCardIcon class="w-4 h-4 text-blue-500" />
                 {{ item }}
@@ -488,6 +504,103 @@ const emit = defineEmits<{
 onMounted(() => {
   loadTypeOptions(localQuery.value.flowType);
 });
+
+// 键盘导航：活动索引（响应式）
+const nameActiveIndex = ref(0);
+const attributionActiveIndex = ref(0);
+const industryActiveIndex = ref(0);
+const payTypeActiveIndex = ref(0);
+
+const clampIndex = (index: number, length: number) => {
+  if (length <= 0) return -1;
+  if (index < 0) return length - 1;
+  if (index >= length) return 0;
+  return index;
+};
+
+const onNameKeydown = (e: KeyboardEvent) => {
+  const list = filteredNames.value;
+  if (!showNameDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showNameDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    nameActiveIndex.value = clampIndex(nameActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    nameActiveIndex.value = clampIndex(nameActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (nameActiveIndex.value >= 0 && nameActiveIndex.value < list.length) {
+      selectName(list[nameActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showNameDropdown.value = false;
+  }
+};
+
+const onAttributionKeydown = (e: KeyboardEvent) => {
+  const list = filteredAttributions.value;
+  if (!showAttributionDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showAttributionDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    attributionActiveIndex.value = clampIndex(attributionActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    attributionActiveIndex.value = clampIndex(attributionActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (attributionActiveIndex.value >= 0 && attributionActiveIndex.value < list.length) {
+      selectAttribution(list[attributionActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showAttributionDropdown.value = false;
+  }
+};
+
+const onIndustryKeydown = (e: KeyboardEvent) => {
+  const list = filteredIndustryTypes.value;
+  if (!showIndustryTypeDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showIndustryTypeDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    industryActiveIndex.value = clampIndex(industryActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    industryActiveIndex.value = clampIndex(industryActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (industryActiveIndex.value >= 0 && industryActiveIndex.value < list.length) {
+      selectIndustryType(list[industryActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showIndustryTypeDropdown.value = false;
+  }
+};
+
+const onPayTypeKeydown = (e: KeyboardEvent) => {
+  const list = filteredPayTypes.value;
+  if (!showPayTypeDropdown.value && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    showPayTypeDropdown.value = true;
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    payTypeActiveIndex.value = clampIndex(payTypeActiveIndex.value + 1, list.length);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    payTypeActiveIndex.value = clampIndex(payTypeActiveIndex.value - 1, list.length);
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (payTypeActiveIndex.value >= 0 && payTypeActiveIndex.value < list.length) {
+      selectPayType(list[payTypeActiveIndex.value]);
+    }
+  } else if (e.key === "Escape") {
+    showPayTypeDropdown.value = false;
+  }
+};
 </script>
 
 <style scoped>
