@@ -16,9 +16,14 @@
           class="w-full flex flex-col md:flex-row md:items-center justify-between gap-2"
         >
           <div class="flex-1 flex md:justify-between gap-2">
-            <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-              自动平账候选数据
-            </h3>
+            <div>
+              <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+                自动平账候选数据
+              </h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                一般用于清理支付后又退款等无效数据
+              </p>
+            </div>
             <div class="flex items-center gap-2">
               <span
                 class="hidden md:inline-flex items-center text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
