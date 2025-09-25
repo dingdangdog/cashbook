@@ -38,7 +38,18 @@
               </button>
             </div>
           </div>
-          <div class="flex-1 flex items-center gap-2">
+          <div class="flex-1 flex items-center gap-1 md:gap-2 flex-wrap">
+            <button
+              @click="fetchCandidates"
+              :disabled="loading"
+              class="px-3 py-1 bg-green-600 disabled:opacity-50 hover:bg-green-700 text-white rounded text-xs md:text-sm font-medium transition-colors flex items-center gap-1"
+            >
+              <ArrowPathIcon
+                class="w-4 h-4"
+                :class="{ 'animate-spin': loading }"
+              />
+              <span class="hidden sm:inline">刷新</span>
+            </button>
             <button
               @click="batchConfirmBalance"
               :disabled="selectedIds.length === 0 || loading"
@@ -342,7 +353,10 @@
         </div>
 
         <!-- 移动端卡片 -->
-        <div class="lg:hidden max-h-[75vh] overflow-y-auto p-1">
+        <div
+          v-if="!loading && candidatePairs.length > 0"
+          class="lg:hidden max-h-[75vh] overflow-y-auto p-1"
+        >
           <div class="space-y-2">
             <div
               v-for="(pair, index) in candidatePairs"
@@ -616,8 +630,10 @@ import {
   MinusIcon,
   PlusIcon,
   ScaleIcon,
+  ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 import { showAutoMergeFlowsDialog } from "~/utils/flag";
+import { Alert } from "~/utils/alert";
 
 // ESC键监听
 useEscapeKey(() => {
@@ -656,6 +672,10 @@ const fetchCandidates = () => {
     .then((res) => {
       candidatePairs.value = res;
       selectedIds.value = [];
+    })
+    .catch((error) => {
+      console.error("获取平账候选数据失败", error);
+      Alert.error("刷新数据失败，请重试");
     })
     .finally(() => {
       loading.value = false;
