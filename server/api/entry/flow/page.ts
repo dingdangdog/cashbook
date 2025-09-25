@@ -26,6 +26,8 @@ import prisma from "~/lib/prisma";
  *             pageNum: number 页码（默认为1）
  *             pageSize: number 每页大小（默认为15，-1表示查询全部）
  *             moneySort: string 金额排序（asc/desc）
+ *             minMoney: number 最小金额（可选）
+ *             maxMoney: number 最大金额（可选）
  *     responses:
  *       200:
  *         description: 分页数据获取成功
@@ -107,6 +109,28 @@ export default defineEventHandler(async (event) => {
     where.description = {
       contains: body.description,
     };
+  }
+
+  // 金额范围过滤
+  if (
+    body.minMoney !== undefined &&
+    body.minMoney !== null &&
+    body.minMoney !== ""
+  ) {
+    const min = Number(body.minMoney);
+    if (!Number.isNaN(min)) {
+      where.money = { ...(where.money || {}), gte: min };
+    }
+  }
+  if (
+    body.maxMoney !== undefined &&
+    body.maxMoney !== null &&
+    body.maxMoney !== ""
+  ) {
+    const max = Number(body.maxMoney);
+    if (!Number.isNaN(max)) {
+      where.money = { ...(where.money || {}), lte: max };
+    }
   }
 
   // 分页条件

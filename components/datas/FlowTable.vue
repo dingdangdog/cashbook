@@ -378,7 +378,7 @@
         <!-- 分页控件 -->
         <div
           v-if="flowPageRef.total > (flowQuery.pageSize || 20)"
-          class="flex flex-col gap-2"
+          class="flex flex-col md:flex-row items-center justify-center gap-2"
         >
           <!-- 分页信息 -->
           <div class="text-sm text-gray-700 dark:text-gray-300 text-center">

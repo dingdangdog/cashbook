@@ -355,11 +355,13 @@ const clickDay = (day: string, flowType?: string) => {
 // addFlow method moved to component handlers
 
 const handleMobileAddFlow = (date: any) => {
+  dialogFormTitle.value = formTitle[0];
   selectedFlow.value = { day: date.dateString };
   showFlowEditDialog.value = true;
 };
 
 const handleDesktopAddFlow = (date: any) => {
+  dialogFormTitle.value = formTitle[0];
   selectedFlow.value = { day: date.dateString };
   showFlowEditDialog.value = true;
 };
