@@ -17,6 +17,14 @@ import prisma from "~/lib/prisma";
  *             id: number 流水ID（可选）
  *             flowType: string 流水类型（可选）
  *             industryType: string 行业分类（可选）
+ *             payType: string 支付方式（可选）
+ *             startDay: string 开始日期（可选）
+ *             endDay: string 结束日期（可选）
+ *             name: string 流水名称（可选，支持模糊查询）
+ *             attribution: string 归属（可选，支持模糊查询）
+ *             description: string 描述（可选，支持模糊查询）
+ *             minMoney: number 最小金额（可选）
+ *             maxMoney: number 最大金额（可选）
  *     responses:
  *       200:
  *         description: 流水记录列表获取成功
@@ -101,6 +109,28 @@ export default defineEventHandler(async (event) => {
     where.description = {
       contains: body.description,
     };
+  }
+
+  // 金额范围过滤
+  if (
+    body.minMoney !== undefined &&
+    body.minMoney !== null &&
+    body.minMoney !== ""
+  ) {
+    const min = Number(body.minMoney);
+    if (!Number.isNaN(min)) {
+      where.money = { ...(where.money || {}), gte: min };
+    }
+  }
+  if (
+    body.maxMoney !== undefined &&
+    body.maxMoney !== null &&
+    body.maxMoney !== ""
+  ) {
+    const max = Number(body.maxMoney);
+    if (!Number.isNaN(max)) {
+      where.money = { ...(where.money || {}), lte: max };
+    }
   }
 
   const flows = await prisma.flow.findMany({

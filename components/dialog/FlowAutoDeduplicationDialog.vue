@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import {
   XMarkIcon,
   TrashIcon,
@@ -30,6 +30,7 @@ const duplicateData = ref<DuplicateData>({
 });
 
 const loading = ref(false);
+const selectedIds = ref<number[]>([]);
 
 // 定义去重检测条件
 const deduplicationCriteria = ref({
@@ -38,6 +39,17 @@ const deduplicationCriteria = ref({
   industryType: true,
   flowType: true,
   payType: true,
+});
+
+// 计算属性
+const selectedCount = computed(() => selectedIds.value.length);
+const isAllSelected = computed(() => {
+  const total = duplicateData.value.duplicateGroups.reduce(
+    (sum, group) => sum + group.length,
+    0
+  );
+  if (total === 0) return false;
+  return selectedIds.value.length > 0 && selectedIds.value.length === total;
 });
 
 // 获取疑似重复数据
@@ -50,6 +62,7 @@ const fetchDuplicates = () => {
     })
     .then((res) => {
       duplicateData.value = res;
+      selectedIds.value = []; // 重置选择
     })
     .finally(() => {
       loading.value = false;
@@ -88,6 +101,56 @@ const deleteFlow = (item: Flow) => {
   });
 };
 
+// 全选/取消全选
+const toggleSelectAll = () => {
+  if (isAllSelected.value) {
+    selectedIds.value = [];
+  } else {
+    const allIds: number[] = [];
+    duplicateData.value.duplicateGroups.forEach((group) => {
+      group.forEach((item) => {
+        if (item.id) {
+          allIds.push(Number(item.id));
+        }
+      });
+    });
+    selectedIds.value = allIds;
+  }
+};
+
+// 批量删除
+const batchDeleteFlows = () => {
+  if (selectedIds.value.length === 0) {
+    Alert.error("请先选择要删除的项");
+    return;
+  }
+
+  Confirm.open({
+    title: "批量删除确认",
+    content: `确定要删除已选择的 ${selectedIds.value.length} 条重复记录吗？此操作不可撤销！`,
+    confirm: () => {
+      loading.value = true;
+      doApi
+        .post("api/entry/flow/dels", {
+          ids: selectedIds.value,
+          bookId: localStorage.getItem("bookId"),
+        })
+        .then(() => {
+          Alert.success(`成功删除 ${selectedIds.value.length} 条记录`);
+          // 重新加载数据
+          fetchDuplicates();
+        })
+        .catch((error) => {
+          console.error("批量删除失败", error);
+          Alert.error("批量删除失败");
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    },
+  });
+};
+
 // 关闭对话框
 const closeDialog = () => {
   showAutoDeduplicationFlowsDialog.value = false;
@@ -112,15 +175,35 @@ const formatDate = (dateStr: string) => {
     >
       <!-- 标题栏 -->
       <div
-        class="px-6 py-4 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-2 md:px-6 py-2 md:py-4 border-b border-gray-200 dark:border-gray-600 flex justify-between"
       >
-        <div>
-          <h3 class="text-xl font-semibold text-green-950 dark:text-white">
-            疑似重复数据检测
-          </h3>
-          <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            共发现 {{ duplicateData.totalGroups }} 组疑似重复数据，涉及
-            {{ duplicateData.totalDuplicates }} 条记录
+        <div class="flex-1 flex flex-col md:flex-row justify-between">
+          <div class="flex-1">
+            <h3 class="text-xl font-semibold text-green-950 dark:text-white">
+              疑似重复数据检测
+            </h3>
+            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              共发现 {{ duplicateData.totalGroups }} 组疑似重复数据，涉及
+              {{ duplicateData.totalDuplicates }} 条记录
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600 dark:text-gray-400">
+              已选 {{ selectedCount }} 项
+            </span>
+            <button
+              @click="toggleSelectAll"
+              class="px-3 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 rounded text-sm font-medium transition-colors"
+            >
+              {{ isAllSelected ? "取消全选" : "全选" }}
+            </button>
+            <button
+              @click="batchDeleteFlows"
+              :disabled="selectedIds.length === 0 || loading"
+              class="px-3 py-1 bg-red-600 disabled:opacity-50 hover:bg-red-700 text-white rounded text-sm font-medium transition-colors"
+            >
+              批量删除
+            </button>
           </div>
         </div>
         <button
@@ -133,7 +216,7 @@ const formatDate = (dateStr: string) => {
 
       <!-- 检测条件选择器 -->
       <div
-        class="px-6 py-2 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-600"
+        class="px-2 md:px-6 py-2 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-600"
       >
         <div
           class="flex flex-col lg:flex-row items-start lg:items-center gap-2 md:gap-4"
@@ -141,7 +224,7 @@ const formatDate = (dateStr: string) => {
           <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
             检测条件选择（日期和金额为默认条件）：
           </div>
-          <div class="flex flex-wrap gap-4">
+          <div class="flex flex-wrap gap-2 md:gap-4">
             <label class="flex items-center">
               <input
                 type="checkbox"
@@ -194,7 +277,7 @@ const formatDate = (dateStr: string) => {
             </label>
             <button
               @click="fetchDuplicates"
-              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              class="px-3 py-1 md:px-4 md:py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
             >
               <ArrowPathIcon class="w-4 h-4" />
               <span class="hidden md:inline">应用筛选条件</span>
@@ -305,6 +388,11 @@ const formatDate = (dateStr: string) => {
                     >
                       操作
                     </th>
+                    <th
+                      class="px-2 py-1 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                    >
+                      选择
+                    </th>
                   </tr>
                 </thead>
                 <tbody
@@ -382,6 +470,14 @@ const formatDate = (dateStr: string) => {
                         删除
                       </button>
                     </td>
+                    <td class="px-2 py-1 text-center">
+                      <input
+                        type="checkbox"
+                        class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        :value="item.id"
+                        v-model="selectedIds"
+                      />
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -399,6 +495,18 @@ const formatDate = (dateStr: string) => {
                     : 'bg-white dark:bg-gray-800'
                 "
               >
+                <!-- 选择框 -->
+                <div class="flex items-center justify-between mb-2">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    选择
+                  </div>
+                  <input
+                    type="checkbox"
+                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    :value="item.id"
+                    v-model="selectedIds"
+                  />
+                </div>
                 <!-- 流水类型和金额 -->
                 <div class="flex items-center justify-between mb-2">
                   <span
@@ -469,14 +577,14 @@ const formatDate = (dateStr: string) => {
 
                 <!-- 操作按钮 -->
                 <div
-                  class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600"
+                  class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600 flex gap-2"
                 >
                   <button
                     @click="deleteFlow(item)"
-                    class="w-full px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
+                    class="flex-1 px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
                   >
                     <TrashIcon class="w-4 h-4" />
-                    删除重复项
+                    删除
                   </button>
                 </div>
               </div>
@@ -492,14 +600,22 @@ const formatDate = (dateStr: string) => {
         <div class="flex justify-center gap-4">
           <button
             @click="fetchDuplicates"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
           >
             <ArrowPathIcon class="w-4 h-4" />
             刷新数据
           </button>
           <button
+            @click="batchDeleteFlows"
+            :disabled="selectedIds.length === 0 || loading"
+            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-red-600 disabled:opacity-50 hover:bg-red-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+          >
+            <TrashIcon class="w-4 h-4" />
+            删除 ({{ selectedCount }})
+          </button>
+          <button
             @click="closeDialog"
-            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
+            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
           >
             关闭
           </button>

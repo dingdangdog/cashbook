@@ -82,7 +82,7 @@
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .Vue-Toastification__container {
     padding: 0 16px;
   }

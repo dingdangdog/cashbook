@@ -444,7 +444,7 @@ onUnmounted(() => {
 }
 
 /* 移动端卡片滚动动画 */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .snap-x {
     scroll-behavior: smooth;
   }
