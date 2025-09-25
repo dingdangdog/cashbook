@@ -95,7 +95,7 @@
         </div>
 
         <!-- 桌面端表格 -->
-        <div v-else class="hidden lg:block h-full overflow-y-auto">
+        <div v-else class="hidden lg:block h-full max-h-[60vh] overflow-y-auto">
           <table
             class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
           >
@@ -815,39 +815,3 @@ const closeDialog = () => {
   showAutoMergeFlowsDialog.value = false;
 };
 </script>
-
-<style scoped>
-/* 自定义滚动条样式 */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
-}
-
-.overflow-x-auto::-webkit-scrollbar {
-  height: 4px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
-}
-</style>
