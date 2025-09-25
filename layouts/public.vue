@@ -168,7 +168,11 @@ const checkVersion = () => {
       @show-book-dialog="showBookDialogFlag.visible = true"
     />
 
-    <div class="flex relative" style="height: calc(100vh - 64px)">
+    <div
+      class="flex relative"
+      style="height: calc(100vh - 64px)"
+      :class="{ 'pb-12': isMobile }"
+    >
       <!-- Sidebar - Desktop -->
       <div v-if="!isMobile" class="w-64 flex-shrink-0 h-full overflow-y-auto">
         <LayoutAppSidebar
@@ -191,10 +195,7 @@ const checkVersion = () => {
 
       <!-- Main Content -->
       <main
-        :class="[
-          'flex-1 h-full overflow-y-auto bg-gray-50 dark:bg-green-950/20 transition-colors duration-200 relative',
-          isMobile ? 'pb-16' : '', // Add bottom padding for mobile bottom nav
-        ]"
+        class="flex-1 h-full overflow-y-auto bg-gray-50 dark:bg-green-950/20 transition-colors duration-200 relative"
       >
         <!-- Loading Overlay -->
         <div
