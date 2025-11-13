@@ -44,6 +44,7 @@ RUN chmod +x entrypoint.sh
 RUN npm install -g prisma@6.19.0
 ENV DATABASE_URL="file:/app/data/db/cashbook.db"
 
+
 ENV NUXT_APP_VERSION="4.3.8"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
