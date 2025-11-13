@@ -41,7 +41,7 @@ COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 # 预装prisma，可以提升容器启动速度，但镜像体积会大很多
-RUN npm install -g prisma@6.16.2
+RUN npm install -g prisma@6.19.0
 ENV DATABASE_URL="file:/app/data/db/cashbook.db"
 
 ENV NUXT_APP_VERSION="4.3.8"
