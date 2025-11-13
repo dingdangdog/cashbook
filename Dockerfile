@@ -40,7 +40,7 @@ COPY ./prisma/ ./prisma/
 COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-RUN npm install -g prisma@6.16.2
+RUN npm install -g prisma@6.19.0
 # 4. 环境变量设置
 #    - 确保 DATABASE_URL 仅用于运行时，如果只是为了 prisma generate，可以删除
 #    - 确保所有的敏感信息使用 Secrets 或 Docker Compose/K8s 配置，而非硬编码
