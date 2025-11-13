@@ -45,7 +45,7 @@ RUN npm install -g prisma@6.16.2
 #    - 确保 DATABASE_URL 仅用于运行时，如果只是为了 prisma generate，可以删除
 #    - 确保所有的敏感信息使用 Secrets 或 Docker Compose/K8s 配置，而非硬编码
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
-ENV NUXT_APP_VERSION="4.3.7"
+ENV NUXT_APP_VERSION="4.3.8"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
 ENV NUXT_ADMIN_USERNAME="admin"
