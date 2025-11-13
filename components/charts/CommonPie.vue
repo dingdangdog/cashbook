@@ -235,9 +235,22 @@ watch(showLegend, () => {
   chart.setOption(optionRef.value);
 });
 
-watch(chartParam.value, () => {
-  doQuery(chartParam.value);
-});
+// 监听 props 变化，更新 chartParam
+watch(
+  () => [props.startDay, props.endDay],
+  ([newStartDay, newEndDay]) => {
+    chartParam.value.startDay = newStartDay;
+    chartParam.value.endDay = newEndDay;
+  }
+);
+
+watch(
+  chartParam,
+  () => {
+    doQuery(chartParam.value);
+  },
+  { deep: true }
+);
 
 const query = ref();
 const showFlowTable = ref(false);

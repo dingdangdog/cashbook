@@ -12,6 +12,13 @@
   padding: 0;
 }
 
+/* 全局颜色过渡效果 - 使用与 Tailwind 一致的过渡值 */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+  transition-duration: 200ms;
+}
+
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 6px;

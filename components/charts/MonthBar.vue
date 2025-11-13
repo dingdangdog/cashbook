@@ -11,11 +11,26 @@
         {{ title }}
       </h4>
 
-      <div v-if="years.length > 0" class="min-w-32 absolute right-0 top-0">
+      <div
+        v-if="years.length > 0 || attributions.length > 0"
+        class="flex gap-2 absolute right-0 top-0"
+      >
         <select
+          v-if="attributions.length > 0"
+          v-model="filterAttribution"
+          @change="filterAttributionChange"
+          class="min-w-20 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">全部归属</option>
+          <option v-for="attr in attributions" :key="attr" :value="attr">
+            {{ attr }}
+          </option>
+        </select>
+        <select
+          v-if="years.length > 0"
           v-model="filterYear"
           @change="filterYearChange"
-          class="w-full px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          class="min-w-24 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">全部年份</option>
           <option v-for="year in years" :key="year.value" :value="year.value">
@@ -85,6 +100,12 @@ const noData = ref(false);
 const years = ref<CommonSelectOption[]>([]);
 const allData = ref<CommonChartData[]>([]);
 const filterYear = ref("");
+const attributions = ref<string[]>([]);
+const filterAttribution = ref("");
+const filterAttributionChange = () => {
+  // 切换归属时重新查询数据
+  doQuery();
+};
 const filterYearChange = () => {
   dataListOut.length = 0;
   dataListIn.length = 0;
@@ -220,11 +241,27 @@ let chart: echarts.ECharts;
 const query = ref<FlowQuery>({ pageNum: 1, pageSize: 20 });
 const showFlowTable = ref(false);
 
-const doQuery = () => {
-  doApi
-    .post<CommonChartData[]>("api/entry/analytics/month", {
+const getAttributions = async () => {
+  try {
+    const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
       bookId: localStorage.getItem("bookId"),
-    })
+    });
+    attributions.value = res || [];
+  } catch (error) {
+    console.error("获取归属列表失败:", error);
+    attributions.value = [];
+  }
+};
+
+const doQuery = () => {
+  const queryParams: any = {
+    bookId: localStorage.getItem("bookId"),
+  };
+  if (filterAttribution.value) {
+    queryParams.attribution = filterAttribution.value;
+  }
+  doApi
+    .post<CommonChartData[]>("api/entry/analytics/month", queryParams)
     .then((res) => {
       if (res) {
         if (res.length === 0) {
@@ -233,13 +270,26 @@ const doQuery = () => {
           noData.value = true;
           return;
         }
+        // 重置所有数据数组
         years.value = [];
         allData.value = res;
         dataListOut.length = 0;
         dataListIn.length = 0;
         notInOut.length = 0;
+        xAxisList.length = 0;
+
         const monthYears: string[] = [];
-        res.forEach((data) => {
+
+        // 根据年份过滤条件决定使用哪些数据
+        let dataToProcess = res;
+        if (filterYear.value) {
+          dataToProcess = res.filter((d) => {
+            return d.type.startsWith(filterYear.value);
+          });
+        }
+
+        // 填充数据
+        dataToProcess.forEach((data) => {
           monthYears.push(data.type.split("-")[0]);
           xAxisList.push(data.type);
           dataListOut.push(Number(data.outSum).toFixed(2));
@@ -247,18 +297,24 @@ const doQuery = () => {
           notInOut.push(Number(data.zeroSum).toFixed(2));
         });
 
-        // 去重
-        const uniqueYears = Array.from(new Set(monthYears));
+        // 去重年份列表（基于全部数据，而不是过滤后的数据）
+        const allMonthYears: string[] = [];
+        res.forEach((data) => {
+          allMonthYears.push(data.type.split("-")[0]);
+        });
+        const uniqueYears = Array.from(new Set(allMonthYears));
         uniqueYears.forEach((year) => {
           years.value.push({ title: year, value: year });
         });
 
+        // 更新图表配置
         optionRef.value.series[0].data = dataListOut;
         optionRef.value.series[1].data = dataListIn;
         optionRef.value.series[2].data = notInOut;
         optionRef.value.xAxis.data = xAxisList;
 
-        chart.setOption(optionRef.value);
+        // 使用 notMerge: true 完全替换图表数据，而不是合并
+        chart.setOption(optionRef.value, { notMerge: true });
       }
     });
 };
@@ -285,8 +341,12 @@ onMounted(() => {
   chart.on("click", function (param) {
     query.value.startDay = param.name + "-01";
     query.value.endDay = param.name + "-31";
+    if (filterAttribution.value) {
+      query.value.attribution = filterAttribution.value;
+    }
     showFlowTable.value = true;
   });
+  getAttributions();
   doQuery();
 });
 </script>

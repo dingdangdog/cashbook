@@ -1,5 +1,5 @@
 <template>
-  <div class="date-picker-container">
+  <div class="relative">
     <label
       v-if="label"
       class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
@@ -50,13 +50,21 @@
     <!-- Date Picker Popup -->
     <div
       v-if="showPicker"
-      class="absolute z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"
+      :class="[
+        'absolute z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg',
+        props.position === 'right' ? 'right-0' : 'left-0',
+      ]"
       @click.stop
     >
       <VCalendar
         :locale="'zh'"
-        :theme="isDark ? 'dark' : 'light'"
+        :model-value="selectedDate"
+        :attributes="selectedAttributes"
+        :month="calendarMonth"
         @dayclick="onDateSelect"
+        @update:month="calendarMonth = $event"
+        :color="isDarkMode ? 'blue' : 'blue'"
+        :is-dark="isDarkMode"
         class="border-0"
       />
     </div>
@@ -79,12 +87,14 @@ interface Props {
   placeholder?: string;
   clearable?: boolean;
   format?: string;
+  position?: "left" | "right"; // 弹出框对齐方式
 }
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: "请选择日期",
   clearable: true,
   format: "YYYY-MM-DD",
+  position: "left",
 });
 
 const emit = defineEmits<{
@@ -92,28 +102,29 @@ const emit = defineEmits<{
   change: [value: string | null];
 }>();
 
+const { isDark } = useAppTheme();
+
 const inputRef = ref<HTMLInputElement>();
 const showPicker = ref(false);
 const selectedDate = ref<Date | null>(null);
-const isDark = ref(false);
+const calendarMonth = ref<Date>(new Date());
 
-// 检测主题
-onMounted(() => {
-  const checkTheme = () => {
-    isDark.value = document.documentElement.classList.contains("dark");
-  };
-  checkTheme();
+// 响应式获取主题状态
+const isDarkMode = computed(() => isDark.value);
 
-  // 监听主题变化
-  const observer = new MutationObserver(checkTheme);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-
-  onUnmounted(() => {
-    observer.disconnect();
-  });
+// 计算选中的日期属性，用于 VCalendar 显示
+const selectedAttributes = computed(() => {
+  if (!selectedDate.value) return [];
+  return [
+    {
+      key: "selected",
+      dates: selectedDate.value,
+      highlight: {
+        color: "blue",
+        fillMode: "solid",
+      },
+    },
+  ];
 });
 
 // 显示值
@@ -142,13 +153,25 @@ const formatDate = (date: Date, format: string): string => {
     .replace("DD", day);
 };
 
-// 监听modelValue变化
+// 监听modelValue变化，更新选中日期和日历月份
 watch(
   () => props.modelValue,
   (newValue) => {
     if (newValue) {
-      selectedDate.value =
-        typeof newValue === "string" ? new Date(newValue) : newValue;
+      const date = typeof newValue === "string" ? new Date(newValue) : newValue;
+      if (!isNaN(date.getTime())) {
+        // 确保日期对象正确创建
+        const normalizedDate = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+        selectedDate.value = normalizedDate;
+        // 自动定位到对应的年月
+        calendarMonth.value = new Date(date.getFullYear(), date.getMonth(), 1);
+      } else {
+        selectedDate.value = null;
+      }
     } else {
       selectedDate.value = null;
     }
@@ -158,6 +181,14 @@ watch(
 
 const togglePicker = () => {
   showPicker.value = !showPicker.value;
+  // 打开日历 picker 时，如果有选中日期，确保定位到对应的年月
+  if (showPicker.value && selectedDate.value) {
+    calendarMonth.value = new Date(
+      selectedDate.value.getFullYear(),
+      selectedDate.value.getMonth(),
+      1
+    );
+  }
 };
 
 const closePicker = () => {
@@ -166,9 +197,15 @@ const closePicker = () => {
 
 const onDateSelect = (day: any) => {
   const date = day.date;
-  selectedDate.value = date;
+  // 确保日期对象正确创建
+  const normalizedDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+  selectedDate.value = normalizedDate;
 
-  const formattedDate = formatDate(date, props.format);
+  const formattedDate = formatDate(normalizedDate, props.format);
   emit("update:modelValue", formattedDate);
   emit("change", formattedDate);
 
@@ -196,51 +233,3 @@ onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 </script>
-
-<style scoped>
-.date-picker-container {
-  position: relative;
-}
-
-/* 自定义日历样式 */
-:deep(.vc-container) {
-  border: none !important;
-  border-radius: 0.5rem;
-}
-
-:deep(.vc-header) {
-  padding: 0.75rem;
-}
-
-:deep(.vc-weeks) {
-  margin-top: 0.5rem;
-  padding: 0 0.75rem 0.75rem;
-}
-
-:deep(.vc-day) {
-  min-height: 2rem;
-}
-
-:deep(.vc-day-content) {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.375rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.875rem;
-}
-
-:deep(.vc-day-content:hover) {
-  background-color: theme("colors.blue.100");
-}
-
-:deep(.dark .vc-day-content:hover) {
-  background-color: theme("colors.blue.900");
-}
-
-:deep(.vc-day-content.vc-is-selected) {
-  background-color: theme("colors.blue.500") !important;
-  color: white !important;
-}
-</style>
