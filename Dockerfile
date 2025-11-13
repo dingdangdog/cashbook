@@ -40,11 +40,10 @@ COPY ./prisma/ ./prisma/
 COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
+# 预装prisma，可以提升容器启动速度，但镜像体积会大很多
 RUN npm install -g prisma@6.19.0
-# 4. 环境变量设置
-#    - 确保 DATABASE_URL 仅用于运行时，如果只是为了 prisma generate，可以删除
-#    - 确保所有的敏感信息使用 Secrets 或 Docker Compose/K8s 配置，而非硬编码
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
+
 ENV NUXT_APP_VERSION="4.3.8"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
