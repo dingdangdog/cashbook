@@ -2,7 +2,7 @@
   <div class="w-full">
     <!-- Calendar Header -->
     <div
-      class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-green-500 to-cyan-600 dark:from-green-900 dark:to-cyan-900 text-white"
+      class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-950/80 dark:to-emerald-950/80 text-white"
     >
       <!-- Navigation -->
       <div class="flex items-center gap-4">
@@ -37,29 +37,29 @@
 
     <!-- Weekday Headers -->
     <div
-      class="grid grid-cols-7 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600"
+      class="grid grid-cols-7 bg-green-50 dark:bg-transparent border-b border-green-200 dark:border-green-900/30"
     >
       <div
         v-for="day in weekdays"
         :key="day"
-        class="py-4 text-center text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide"
+        class="py-4 text-center text-sm font-semibold text-green-700 dark:text-green-500/50 uppercase tracking-wide"
       >
         {{ day }}
       </div>
     </div>
 
     <!-- Calendar Grid -->
-    <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-green-900/30">
+    <div class="grid grid-cols-7 gap-px bg-green-200 dark:bg-transparent">
       <div
         v-for="date in calendarDates"
         :key="date.key"
-        class="min-h-36 p-4 bg-white dark:bg-gray-800 flex flex-col relative transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:shadow-lg"
+        class="min-h-36 p-4 flex flex-col relative transition-all duration-200 hover:bg-green-50 dark:hover:bg-green-800/20 hover:-translate-y-0.5 hover:shadow-lg border border-green-50 dark:border-green-900"
         :class="{
-          'bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600':
+          'bg-green-50 dark:bg-transparent text-gray-400 dark:text-green-700':
             !date.isCurrentMonth,
-          'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-600':
+          'bg-green-100 dark:bg-green-800/40 border-2 border-green-400 dark:border-green-700':
             date.isToday,
-          'bg-yellow-50 dark:bg-yellow-700/20':
+          'bg-emerald-50/50 dark:bg-green-950/50':
             date.isWeekend && date.isCurrentMonth,
         }"
       >
@@ -68,10 +68,10 @@
           <span
             class="text-lg font-medium"
             :class="{
-              'text-blue-600 dark:text-blue-400 font-bold': date.isToday,
+              'text-green-600 dark:text-green-500/60 font-bold': date.isToday,
               'text-gray-900 dark:text-gray-100':
                 date.isCurrentMonth && !date.isToday,
-              'text-gray-400 dark:text-gray-600': !date.isCurrentMonth,
+              'text-gray-400 dark:text-green-700/30': !date.isCurrentMonth,
             }"
           >
             {{ date.day }}
@@ -79,7 +79,7 @@
           <button
             v-if="date.isCurrentMonth"
             @click="addFlow(date)"
-            class="w-7 h-7 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-70 hover:opacity-100"
+            class="w-7 h-7 rounded-full bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-600 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-70 hover:opacity-100"
           >
             <PlusIcon class="w-4 h-4" />
           </button>
@@ -101,7 +101,7 @@
           <div
             v-if="getDateIncome(date.dateString)"
             @click="clickDay(date.dateString, '收入')"
-            class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-green-100 dark:bg-transparent dark:border dark:border-green-800/40 text-green-700 dark:text-green-500/60 hover:bg-green-200 dark:hover:bg-green-950/20"
           >
             <ArrowDownIcon class="w-4 h-4" />
             <span>{{ getDateIncome(date.dateString).toFixed(2) }}</span>
@@ -216,13 +216,13 @@ const getDateExpense = (dateString: string): number => {
 
 const getExpenseClass = (amount: number): string => {
   if (!amount || amount === 0) {
-    return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600";
+    return "bg-green-100/50 dark:bg-transparent dark:border dark:border-green-800/30 text-gray-600 dark:text-green-500/50 hover:bg-green-100 dark:hover:bg-green-950/15";
   } else if (amount >= 1000) {
-    return "bg-red-500 dark:bg-red-700 text-white hover:bg-red-600 shadow-lg";
+    return "bg-red-500 dark:bg-red-950/50 dark:border dark:border-red-900/40 text-white hover:bg-red-600 dark:hover:bg-red-950/60 shadow-lg";
   } else if (amount >= 500) {
-    return "bg-orange-500 dark:bg-orange-700 text-white hover:bg-orange-600 shadow-lg";
+    return "bg-orange-500 dark:bg-orange-950/50 dark:border dark:border-orange-900/40 text-white hover:bg-orange-600 dark:hover:bg-orange-950/60 shadow-lg";
   } else {
-    return "bg-yellow-500 dark:bg-yellow-700 text-white hover:bg-yellow-600 shadow-lg";
+    return "bg-yellow-500 dark:bg-yellow-950/50 dark:border dark:border-yellow-900/40 text-white hover:bg-yellow-600 dark:hover:bg-yellow-950/60 shadow-lg";
   }
 };
 

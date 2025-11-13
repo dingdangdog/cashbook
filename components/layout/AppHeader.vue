@@ -31,9 +31,9 @@ const showUserMenu = ref(false);
 
 <template>
   <header
-    class="bg-green-100 dark:bg-green-950/10 shadow-sm border-b border-green-100 dark:border-green-900"
+    class="bg-white dark:bg-black shadow-sm border-b border-green-100 dark:border-green-900"
   >
-    <div class="px-2 md:px-4">
+    <div class="px-2 md:px-4 bg-green-100 dark:bg-green-950/30">
       <div class="flex justify-between h-12 md:h-16">
         <!-- Left side -->
         <div class="flex items-center">
@@ -41,7 +41,7 @@ const showUserMenu = ref(false);
           <button
             v-if="isMobile"
             @click="emit('toggleSidebar')"
-            class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-green-950 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            class="p-2 rounded-md text-green-600 dark:text-green-500 hover:text-green-950 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <Bars3Icon class="h-6 w-6" />
           </button>
@@ -66,7 +66,7 @@ const showUserMenu = ref(false);
             </span>
             <button
               @click="emit('showBookDialog')"
-              class="px-3 py-1.5 md:px-4 md:py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-sm font-medium"
+              class="px-2 py-1 md:px-4 md:py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-xs font-medium"
             >
               切换账本
             </button>
