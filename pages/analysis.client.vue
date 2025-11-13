@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <!-- Content Area -->
-    <div class="md:max-w-[80vw] mx-auto w-full mt-2">
+    <div class="xl:max-w-[80vw] mx-auto w-full mt-2">
       <!-- Desktop & Tablet: Chart Carousel -->
       <div class="w-full" v-if="!loading">
         <div

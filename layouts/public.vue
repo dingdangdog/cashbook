@@ -193,7 +193,7 @@ const checkVersion = () => {
 
       <!-- Main Content -->
       <main
-        class="flex-1 h-full overflow-y-auto bg-green-50 dark:bg-green-950/20 transition-colors duration-200 relative"
+        class="flex-1 h-full overflow-y-auto bg-green-50 dark:bg-black transition-colors duration-200 relative"
       >
         <!-- Loading Overlay -->
         <div
