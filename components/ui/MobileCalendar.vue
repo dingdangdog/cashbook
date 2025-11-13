@@ -45,7 +45,7 @@
     </div>
 
     <!-- Calendar Grid -->
-    <div class="grid grid-cols-7 gap-px bg-green-200 dark:bg-transparent">
+    <div class="grid grid-cols-7 gap-px bg-green-200 dark:bg-black">
       <div
         v-for="date in calendarDates"
         :key="date.key"
@@ -53,9 +53,11 @@
         :class="{
           'bg-green-50 dark:bg-transparent text-gray-400 dark:text-green-700':
             !date.isCurrentMonth,
-          'bg-green-100 dark:bg-green-800/40 border-2 border-green-400 dark:border-green-700':
+          'bg-green-100 dark:bg-green-950/50':
+            date.isCurrentMonth && !date.isWeekend && !date.isToday,
+          'bg-green-200 dark:bg-green-800/50 border-2 border-green-400 dark:border-green-700':
             date.isToday,
-          'bg-emerald-50/50 dark:bg-green-950/50':
+          'bg-green-50/50 dark:bg-green-950/30':
             date.isWeekend && date.isCurrentMonth,
         }"
       >
