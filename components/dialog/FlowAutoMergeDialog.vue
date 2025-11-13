@@ -12,16 +12,67 @@
       <div
         class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-          自动平账候选数据
-        </h3>
-        <div class="flex items-center gap-2">
-          <button
-            @click="ignoreAllBalance"
-            class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-sm font-medium transition-colors"
-          >
-            忽略全部
-          </button>
+        <div
+          class="w-full flex flex-col md:flex-row md:items-center justify-between gap-2"
+        >
+          <div class="flex-1 flex md:justify-between gap-2">
+            <div>
+              <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+                自动平账候选数据
+              </h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                一般用于清理支付后又退款等无效数据
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span
+                class="hidden md:inline-flex items-center text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+              >
+                已选 {{ selectedCount }} 项
+              </span>
+              <button
+                @click="toggleSelectAll"
+                class="px-3 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 rounded text-sm font-medium transition-colors"
+              >
+                {{ isAllSelected ? "取消全选" : "全选" }}
+              </button>
+            </div>
+          </div>
+          <div class="flex-1 flex items-center gap-1 md:gap-2 flex-wrap">
+            <button
+              @click="fetchCandidates"
+              :disabled="loading"
+              class="px-3 py-1 bg-green-600 disabled:opacity-50 hover:bg-green-700 text-white rounded text-xs md:text-sm font-medium transition-colors flex items-center gap-1"
+            >
+              <ArrowPathIcon
+                class="w-4 h-4"
+                :class="{ 'animate-spin': loading }"
+              />
+              <span class="hidden sm:inline">刷新</span>
+            </button>
+            <button
+              @click="batchConfirmBalance"
+              :disabled="selectedIds.length === 0 || loading"
+              class="px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors"
+            >
+              批量平账
+            </button>
+            <button
+              @click="batchIgnoreBalance"
+              :disabled="selectedIds.length === 0 || loading"
+              class="px-3 py-1 bg-orange-600 disabled:opacity-50 hover:bg-orange-700 text-white rounded text-sm font-medium transition-colors"
+            >
+              批量忽略
+            </button>
+            <button
+              @click="ignoreAllBalance"
+              class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-sm font-medium transition-colors"
+            >
+              忽略全部
+            </button>
+          </div>
+        </div>
+        <div>
           <button
             @click="closeDialog"
             class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
@@ -55,7 +106,7 @@
         </div>
 
         <!-- 桌面端表格 -->
-        <div v-else class="hidden lg:block h-full overflow-y-auto">
+        <div v-else class="hidden lg:block h-full max-h-[60vh] overflow-y-auto">
           <table
             class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
           >
@@ -75,6 +126,13 @@
                 >
                   操作
                 </th>
+                <th
+                  rowspan="2"
+                  class="py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600"
+                >
+                  多选
+                </th>
+                <!-- 选择列 -->
                 <!-- 右侧数据列组 -->
                 <th
                   colspan="6"
@@ -230,6 +288,15 @@
                     </button>
                   </div>
                 </td>
+                <!-- 选择列 -->
+                <td class="px-3 py-3 text-center">
+                  <input
+                    type="checkbox"
+                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    :value="pair.out.id"
+                    v-model="selectedIds"
+                  />
+                </td>
                 <!-- 右侧数据 -->
                 <td
                   class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
@@ -286,7 +353,10 @@
         </div>
 
         <!-- 移动端卡片 -->
-        <div class="lg:hidden max-h-[75vh] overflow-y-auto p-1">
+        <div
+          v-if="!loading && candidatePairs.length > 0"
+          class="lg:hidden max-h-[75vh] overflow-y-auto p-1"
+        >
           <div class="space-y-2">
             <div
               v-for="(pair, index) in candidatePairs"
@@ -295,6 +365,17 @@
             >
               <!-- 左右对比布局 -->
               <div class="grid grid-cols-2 gap-3">
+                <div class="col-span-2 flex items-center justify-between">
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    选择
+                  </div>
+                  <input
+                    type="checkbox"
+                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    :value="pair.out.id"
+                    v-model="selectedIds"
+                  />
+                </div>
                 <!-- 支出卡片 -->
                 <div
                   class="bg-red-50 dark:bg-red-900/20 rounded p-2 border border-red-200 dark:border-red-800"
@@ -540,7 +621,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import {
   XMarkIcon,
   CheckIcon,
@@ -549,8 +630,10 @@ import {
   MinusIcon,
   PlusIcon,
   ScaleIcon,
+  ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 import { showAutoMergeFlowsDialog } from "~/utils/flag";
+import { Alert } from "~/utils/alert";
 
 // ESC键监听
 useEscapeKey(() => {
@@ -566,6 +649,19 @@ interface CandidatePair {
 
 const candidatePairs = ref<CandidatePair[]>([]);
 const loading = ref(false);
+const selectedIds = ref<number[]>([]);
+
+const selectedCount = computed(() => selectedIds.value.length);
+const isAllSelected = computed(() => {
+  const total = candidatePairs.value.length;
+  if (total === 0) return false;
+  const validIds = candidatePairs.value
+    .map((p) => Number(p.out.id))
+    .filter((id): id is number => Number.isFinite(id));
+  return (
+    selectedIds.value.length > 0 && selectedIds.value.length === validIds.length
+  );
+});
 
 const fetchCandidates = () => {
   loading.value = true;
@@ -575,6 +671,11 @@ const fetchCandidates = () => {
     })
     .then((res) => {
       candidatePairs.value = res;
+      selectedIds.value = [];
+    })
+    .catch((error) => {
+      console.error("获取平账候选数据失败", error);
+      Alert.error("刷新数据失败，请重试");
     })
     .finally(() => {
       loading.value = false;
@@ -653,43 +754,84 @@ const ignoreAllBalance = () => {
   });
 };
 
+const toggleSelectAll = () => {
+  if (isAllSelected.value) {
+    selectedIds.value = [];
+  } else {
+    selectedIds.value = candidatePairs.value
+      .map((p) => Number(p.out.id))
+      .filter((id): id is number => Number.isFinite(id));
+  }
+};
+
+const batchIgnoreBalance = () => {
+  if (selectedIds.value.length === 0) {
+    Alert.error("请先选择要忽略的项");
+    return;
+  }
+  Confirm.open({
+    title: "批量忽略确认",
+    content: `确定要忽略已选择的 ${selectedIds.value.length} 条数据吗？`,
+    confirm: () => {
+      loading.value = true;
+      doApi
+        .post("api/entry/flow/condidate/patchignore", {
+          bookId: localStorage.getItem("bookId"),
+          ids: selectedIds.value,
+        })
+        .then(() => {
+          Alert.warning("已忽略所选");
+          fetchCandidates();
+        })
+        .catch((error) => {
+          console.error("批量忽略失败", error);
+          Alert.error("批量忽略失败");
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    },
+  });
+};
+
+const batchConfirmBalance = () => {
+  if (selectedIds.value.length === 0) {
+    Alert.error("请先选择要平账的项");
+    return;
+  }
+  const selectedPairs = candidatePairs.value.filter((p) =>
+    selectedIds.value.includes(Number(p.out.id))
+  );
+  const items = selectedPairs.map((pair) => ({
+    outId: Number(pair.out.id),
+    inIds: [Number(pair.in.id)],
+  }));
+  Confirm.open({
+    title: "批量平账确认",
+    content: `确定要对 ${selectedPairs.length} 组数据执行平账吗？`,
+    confirm: () => {
+      loading.value = true;
+      doApi
+        .post("api/entry/flow/condidate/patchcomfirm", {
+          bookId: localStorage.getItem("bookId"),
+          items,
+        })
+        .then(() => {
+          Alert.success("批量平账成功");
+          fetchCandidates();
+        })
+        .catch((error) => {
+          console.error("批量平账失败", error);
+          Alert.error("批量平账失败");
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    },
+  });
+};
+
 const closeDialog = () => {
   showAutoMergeFlowsDialog.value = false;
 };
 </script>
-
-<style scoped>
-/* 自定义滚动条样式 */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
-}
-
-.overflow-x-auto::-webkit-scrollbar {
-  height: 4px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
-}
-</style>
