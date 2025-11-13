@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg"
+    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-md md:rounded-lg"
   >
     <!-- 桌面端表格 -->
     <div class="hidden md:block max-h-[65vh] overflow-y-auto">
@@ -237,7 +237,7 @@
       >
         暂无数据
       </div>
-      <div class="max-h-[50vh] overflow-y-auto" v-else>
+      <div class="max-h-[62vh] overflow-y-auto" v-else>
         <div
           v-for="item in flows"
           :key="item.id"

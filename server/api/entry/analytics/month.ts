@@ -1,4 +1,5 @@
 import prisma from "~/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 /**
  * @swagger
@@ -17,6 +18,7 @@ import prisma from "~/lib/prisma";
  *             flowType: string 流水类型（可选）
  *             startDay: string 开始日期（可选）
  *             endDay: string 结束日期（可选）
+ *             attribution: string 流水归属（可选）
  *     responses:
  *       200:
  *         description: 月度分析数据获取成功
@@ -67,16 +69,41 @@ export default defineEventHandler(async (event) => {
 
   // flowType = 收入 / 支出 / 不计收支
   // 使用 `to_char` 将日期按月份分组 (PostgreSQL 支持)
-  const monthGroups: any[] = await prisma.$queryRaw`
-    SELECT 
-      SUBSTRING(day, 1, 7) AS month,
-      "flowType",
-      SUM("money") AS money_sum
-    FROM "Flow"
-    WHERE "bookId" = ${String(body.bookId)}
-    GROUP BY SUBSTRING(day, 1, 7), "flowType"
-    ORDER BY month ASC, "flowType" ASC;
-  `;
+  // 构建 WHERE 条件
+  if (body.attribution) {
+    where.attribution = {
+      equals: body.attribution,
+    };
+  }
+
+  // 使用 Prisma.sql 进行参数化查询
+  let sqlQuery: Prisma.Sql;
+  if (body.attribution) {
+    sqlQuery = Prisma.sql`
+      SELECT 
+        SUBSTRING(day, 1, 7) AS month,
+        "flowType",
+        SUM("money") AS money_sum
+      FROM "Flow"
+      WHERE "bookId" = ${String(body.bookId)}
+        AND "attribution" = ${body.attribution}
+      GROUP BY SUBSTRING(day, 1, 7), "flowType"
+      ORDER BY month ASC, "flowType" ASC;
+    `;
+  } else {
+    sqlQuery = Prisma.sql`
+      SELECT 
+        SUBSTRING(day, 1, 7) AS month,
+        "flowType",
+        SUM("money") AS money_sum
+      FROM "Flow"
+      WHERE "bookId" = ${String(body.bookId)}
+      GROUP BY SUBSTRING(day, 1, 7), "flowType"
+      ORDER BY month ASC, "flowType" ASC;
+    `;
+  }
+
+  const monthGroups: any[] = await prisma.$queryRaw(sqlQuery);
 
   // 初始化结果格式
   const datas = [];

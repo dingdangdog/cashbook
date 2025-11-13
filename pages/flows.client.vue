@@ -1,5 +1,8 @@
 <template>
-  <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full">
+  <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full space-y-2">
+    <!-- 统计信息 -->
+    <FlowsStatistics :statistics="flowPageRef" />
+
     <!-- 操作栏 -->
     <FlowsToolbar
       :selected-count="selectedFlows.length"
@@ -13,8 +16,6 @@
       @reset-query="resetQuery"
     />
 
-    <!-- 统计信息 -->
-    <FlowsStatistics :statistics="flowPageRef" />
 
     <!-- 流水表格 -->
     <FlowsTable
