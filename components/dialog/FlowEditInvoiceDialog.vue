@@ -108,12 +108,14 @@
         class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
       >
         <button
+          type="button"
           @click="closeDialog"
           class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           取消
         </button>
         <button
+          type="button"
           @click="uploadInvoiceFile"
           :disabled="!newInvoice"
           class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
@@ -163,12 +165,14 @@
         class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
       >
         <button
+          type="button"
           @click="cancelDeleteInvoice"
           class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           取消
         </button>
         <button
+          type="button"
           @click="confirmDeleteInvoice"
           class="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
         >
@@ -181,7 +185,7 @@
 
 <script setup lang="ts">
 import { showFlowEditInvoiceDialog } from "~/utils/flag";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import {
   XMarkIcon,
   TrashIcon,
@@ -268,6 +272,12 @@ const uploadInvoiceFile = () => {
     Alert.success("上传成功");
     editInvoice.value = res;
     closeDialog();
+    // 使用 nextTick 确保对话框关闭后再刷新列表
+    nextTick(() => {
+      if (successCallback && typeof successCallback === "function") {
+        successCallback();
+      }
+    });
   });
 };
 
@@ -295,8 +305,14 @@ const confirmDeleteInvoice = () => {
     .then((res) => {
       editInvoice.value = res;
       Alert.success("删除成功!");
-      closeDialog();
       deleteInvoiceConfirmDialog.value = false;
+      closeDialog();
+      // 使用 nextTick 确保对话框关闭后再刷新列表
+      nextTick(() => {
+        if (successCallback && typeof successCallback === "function") {
+          successCallback();
+        }
+      });
     })
     .catch(() => {
       Alert.error("删除失败!");
