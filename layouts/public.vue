@@ -241,34 +241,3 @@ const checkVersion = () => {
   </div>
 </template>
 
-<style scoped>
-/* Custom scrollbar for dark mode */
-:deep(.overflow-y-auto) {
-  scrollbar-width: thin;
-  scrollbar-color: theme("colors.gray.400") transparent;
-}
-
-:deep(.overflow-y-auto::-webkit-scrollbar) {
-  width: 6px;
-}
-
-:deep(.overflow-y-auto::-webkit-scrollbar-track) {
-  background: transparent;
-}
-
-:deep(.overflow-y-auto::-webkit-scrollbar-thumb) {
-  background-color: theme("colors.gray.400");
-  border-radius: 3px;
-}
-
-:deep(.dark .overflow-y-auto::-webkit-scrollbar-thumb) {
-  background-color: theme("colors.gray.600");
-}
-
-/* Ensure smooth transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
-}
-</style>
