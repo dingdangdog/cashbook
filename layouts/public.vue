@@ -154,7 +154,7 @@ const checkVersion = () => {
   </Head>
 
   <div
-    class="h-screen p-0 m-0 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors duration-200"
+    class="h-screen p-0 m-0 overflow-hidden bg-green-50 dark:bg-green-950/10 transition-colors duration-200"
   >
     <!-- Header -->
     <LayoutAppHeader

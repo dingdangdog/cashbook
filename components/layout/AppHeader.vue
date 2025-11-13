@@ -31,7 +31,7 @@ const showUserMenu = ref(false);
 
 <template>
   <header
-    class="bg-white dark:bg-green-950 shadow-sm border-b border-gray-200 dark:border-gray-700"
+    class="bg-green-100 dark:bg-green-950/10 shadow-sm border-b border-green-100 dark:border-green-900"
   >
     <div class="px-2 md:px-4">
       <div class="flex justify-between h-12 md:h-16">
@@ -95,7 +95,7 @@ const showUserMenu = ref(false);
             >
               <div
                 @click.stop
-                class="absolute right-4 top-16 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                class="absolute right-4 top-16 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-green-100 dark:border-green-900 z-50"
               >
                 <div class="py-1">
                   <button
