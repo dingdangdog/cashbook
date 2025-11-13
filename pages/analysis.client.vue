@@ -48,6 +48,7 @@
                 placeholder="结束日期"
                 class="text-sm md:text-base w-36 md:w-48"
                 clearable
+                position="right"
               />
             </div>
             <!-- 图表类型切换 -->
@@ -203,6 +204,7 @@
               placeholder="结束日期"
               class="text-sm md:text-base w-36 md:w-48"
               clearable
+              position="right"
             />
           </div>
           <!-- 图表类型切换 -->
