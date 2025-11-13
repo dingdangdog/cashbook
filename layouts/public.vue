@@ -153,9 +153,7 @@ const checkVersion = () => {
     />
   </Head>
 
-  <div
-    class="h-screen p-0 m-0 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors duration-200"
-  >
+  <div class="h-screen p-0 m-0 overflow-hidden">
     <!-- Header -->
     <LayoutAppHeader
       :book-name="bookName"
@@ -195,25 +193,25 @@ const checkVersion = () => {
 
       <!-- Main Content -->
       <main
-        class="flex-1 h-full overflow-y-auto bg-gray-50 dark:bg-green-950/20 transition-colors duration-200 relative"
+        class="flex-1 h-full overflow-y-auto bg-green-50 dark:bg-black transition-colors duration-200 relative"
       >
         <!-- Loading Overlay -->
         <div
           v-if="pageLoading"
-          class="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 flex items-center justify-center"
+          class="absolute inset-0 bg-white/80 dark:bg-green-900/10 backdrop-blur-sm z-50 flex items-center justify-center"
         >
           <div class="flex flex-col items-center space-y-4">
             <!-- Spinner -->
             <div class="relative">
               <div
-                class="w-12 h-12 border-4 border-gray-300 dark:border-gray-600 rounded-full animate-spin"
+                class="w-12 h-12 border-4 border-green-300 dark:border-green-600 rounded-full animate-spin"
               ></div>
               <div
                 class="w-12 h-12 border-4 border-transparent border-t-green-500 rounded-full animate-spin absolute top-0 left-0"
               ></div>
             </div>
             <!-- Loading Text -->
-            <div class="text-sm text-gray-600 dark:text-gray-300 font-medium">
+            <div class="text-sm text-green-600 dark:text-green-300 font-medium">
               页面加载中...
             </div>
           </div>
@@ -243,34 +241,3 @@ const checkVersion = () => {
   </div>
 </template>
 
-<style scoped>
-/* Custom scrollbar for dark mode */
-:deep(.overflow-y-auto) {
-  scrollbar-width: thin;
-  scrollbar-color: theme("colors.gray.400") transparent;
-}
-
-:deep(.overflow-y-auto::-webkit-scrollbar) {
-  width: 6px;
-}
-
-:deep(.overflow-y-auto::-webkit-scrollbar-track) {
-  background: transparent;
-}
-
-:deep(.overflow-y-auto::-webkit-scrollbar-thumb) {
-  background-color: theme("colors.gray.400");
-  border-radius: 3px;
-}
-
-:deep(.dark .overflow-y-auto::-webkit-scrollbar-thumb) {
-  background-color: theme("colors.gray.600");
-}
-
-/* Ensure smooth transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
-}
-</style>

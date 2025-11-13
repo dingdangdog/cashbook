@@ -7,7 +7,7 @@
       <div class="flex flex-wrap gap-2">
         <button
           @click="$emit('openImportExport')"
-          class="flex-1 md:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+          class="flex-1 md:flex-none px-2 py-1 md:px-3 md:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
         >
           <CloudArrowDownIcon class="w-4 h-4" />
           <span class="hidden sm:inline">导入导出</span>
@@ -15,7 +15,7 @@
         </button>
         <button
           @click="$emit('autoMerge')"
-          class="flex-1 md:flex-none px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+          class="flex-1 md:flex-none px-2 py-1 md:px-3 md:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
         >
           <AdjustmentsHorizontalIcon class="w-4 h-4" />
           <span class="hidden sm:inline">自助平账</span>
@@ -23,7 +23,7 @@
         </button>
         <button
           @click="$emit('autoDeduplication')"
-          class="flex-1 md:flex-none px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+          class="flex-1 md:flex-none px-2 py-1 md:px-3 md:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
         >
           <DocumentDuplicateIcon class="w-4 h-4" />
           <span class="hidden sm:inline">自助去重</span>
@@ -31,7 +31,7 @@
         </button>
         <button
           @click="$emit('createNew')"
-          class="flex-1 md:flex-none px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+          class="flex-1 md:flex-none px-2 py-1 md:px-3 md:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
         >
           <PlusIcon class="w-4 h-4" />
           新增
@@ -43,7 +43,7 @@
         <div v-if="selectedCount > 0" class="flex gap-2">
           <button
             @click="$emit('deleteSelected')"
-            class="flex-1 sm:flex-none px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+            class="flex-1 sm:flex-none px-2 py-1 md:px-3 md:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
           >
             <TrashIcon class="w-4 h-4" />
             <span class="hidden sm:inline">删除选中({{ selectedCount }})</span>
@@ -51,7 +51,7 @@
           </button>
           <button
             @click="$emit('batchChangeType')"
-            class="flex-1 sm:flex-none px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+            class="flex-1 sm:flex-none px-2 py-1 md:px-3 md:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
           >
             <PencilSquareIcon class="w-4 h-4" />
             <span class="hidden sm:inline">类型修改({{ selectedCount }})</span>
@@ -63,14 +63,14 @@
         <div class="flex gap-2">
           <button
             @click="$emit('openSearch')"
-            class="flex-1 sm:flex-none px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+            class="flex-1 sm:flex-none px-2 py-1 md:px-3 md:py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
           >
             <FunnelIcon class="w-4 h-4" />
             筛选
           </button>
           <button
             @click="$emit('resetQuery')"
-            class="flex-1 sm:flex-none px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
+            class="flex-1 sm:flex-none px-2 py-1 md:px-3 md:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium"
           >
             <ArrowPathIcon class="w-4 h-4" />
             重置
