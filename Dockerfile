@@ -44,7 +44,7 @@ RUN chmod +x entrypoint.sh
 RUN npm install -g prisma@6.19.1
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
-ENV NUXT_APP_VERSION="4.3.9"
+ENV NUXT_APP_VERSION="4.3.10"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
 ENV NUXT_ADMIN_USERNAME="admin"
