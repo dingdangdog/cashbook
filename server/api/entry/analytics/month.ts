@@ -1,5 +1,4 @@
 import prisma from "~/lib/prisma";
-import { Prisma } from "@prisma/client";
 
 /**
  * @swagger
@@ -67,43 +66,28 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  // flowType = 收入 / 支出 / 不计收支
-  // 使用 `to_char` 将日期按月份分组 (PostgreSQL 支持)
-  // 构建 WHERE 条件
   if (body.attribution) {
     where.attribution = {
       equals: body.attribution,
     };
   }
 
-  // 使用 Prisma.sql 进行参数化查询
-  let sqlQuery: Prisma.Sql;
-  if (body.attribution) {
-    sqlQuery = Prisma.sql`
-      SELECT 
-        SUBSTRING(day, 1, 7) AS month,
-        "flowType",
-        SUM("money") AS money_sum
-      FROM "Flow"
-      WHERE "bookId" = ${String(body.bookId)}
-        AND "attribution" = ${body.attribution}
-      GROUP BY SUBSTRING(day, 1, 7), "flowType"
-      ORDER BY month ASC, "flowType" ASC;
-    `;
-  } else {
-    sqlQuery = Prisma.sql`
-      SELECT 
-        SUBSTRING(day, 1, 7) AS month,
-        "flowType",
-        SUM("money") AS money_sum
-      FROM "Flow"
-      WHERE "bookId" = ${String(body.bookId)}
-      GROUP BY SUBSTRING(day, 1, 7), "flowType"
-      ORDER BY month ASC, "flowType" ASC;
-    `;
-  }
-
-  const monthGroups: any[] = await prisma.$queryRaw(sqlQuery);
+  // 使用 Prisma 的 groupBy 方法，按 day 和 flowType 分组
+  const dayGroups = await prisma.flow.groupBy({
+    by: ["day", "flowType"],
+    _sum: {
+      money: true,
+    },
+    where, // 使用条件查询
+    orderBy: [
+      {
+        day: "asc",
+      },
+      {
+        flowType: "asc",
+      },
+    ],
+  });
 
   // 初始化结果格式
   const datas = [];
@@ -116,11 +100,15 @@ export default defineEventHandler(async (event) => {
       zeroSum: number;
     }
   > = {};
-  // 按 month 分组，合并数据到目标格式
-  monthGroups.forEach((item: any) => {
-    const month = item.month;
+
+  // 按 day 分组，提取月份并合并数据到目标格式
+  dayGroups.forEach((item) => {
+    // 从 day 字段提取月份（格式：YYYY-MM-DD -> YYYY-MM）
+    const month = item.day ? item.day.substring(0, 7) : "";
+    if (!month) return;
+
     const flowType = item.flowType;
-    const moneySum = parseFloat(item.money_sum) || 0; // 防止 NULL 转为数字
+    const moneySum = item._sum.money || 0; // 如果 money 为 null，默认值为 0
 
     // 如果当前 month 不存在，则初始化
     if (!groupedByMonth[month]) {
@@ -143,8 +131,18 @@ export default defineEventHandler(async (event) => {
   });
 
   // 转换为数组格式
-  for (const day in groupedByMonth) {
-    datas.push(groupedByMonth[day]);
+  for (const month in groupedByMonth) {
+    groupedByMonth[month].inSum = parseFloat(
+      groupedByMonth[month].inSum.toFixed(2)
+    );
+    groupedByMonth[month].outSum = parseFloat(
+      groupedByMonth[month].outSum.toFixed(2)
+    );
+    groupedByMonth[month].zeroSum = parseFloat(
+      groupedByMonth[month].zeroSum.toFixed(2)
+    );
+    datas.push(groupedByMonth[month]);
   }
+
   return success(datas);
 });
