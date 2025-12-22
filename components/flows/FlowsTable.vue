@@ -532,6 +532,21 @@ defineEmits<{
 // 小票图片管理
 const invoiceImageMap = ref<Record<string, string>>({});
 
+// 根据文件扩展名获取 MIME 类型
+const getMimeTypeFromFileName = (fileName: string): string => {
+  const ext = fileName.toLowerCase().split(".").pop() || "";
+  const mimeTypes: Record<string, string> = {
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    png: "image/png",
+    gif: "image/gif",
+    webp: "image/webp",
+    bmp: "image/bmp",
+    svg: "image/svg+xml",
+  };
+  return mimeTypes[ext] || "image/jpeg"; // 默认为 jpeg
+};
+
 // 获取小票图片
 const getInvoiceImage = async (invoice: string) => {
   if (!invoice || invoice === "") {
@@ -541,7 +556,26 @@ const getInvoiceImage = async (invoice: string) => {
     const res = await doApi.download("api/entry/flow/invoice/show", {
       invoice,
     });
-    return res ? URL.createObjectURL(res) : "";
+    if (!res) return "";
+
+    // 获取正确的 MIME 类型
+    const mimeType = getMimeTypeFromFileName(invoice);
+
+    // 确保 Blob 有正确的 MIME 类型，这样浏览器才能正确识别图片
+    // 如果原 Blob 没有类型或类型不正确，创建新的 Blob 并指定正确的类型
+    let blob: Blob;
+    if (res instanceof Blob) {
+      // 如果原 Blob 已经有正确的类型，直接使用；否则创建新的 Blob
+      if (res.type === mimeType) {
+        blob = res;
+      } else {
+        blob = new Blob([res], { type: mimeType });
+      }
+    } else {
+      blob = new Blob([res], { type: mimeType });
+    }
+
+    return URL.createObjectURL(blob);
   } catch (e) {
     return "";
   }
