@@ -19,7 +19,7 @@
           v-if="attributions.length > 0"
           v-model="filterAttribution"
           @change="filterAttributionChange"
-          class="min-w-20 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          class="min-w-20 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">全部归属</option>
           <option v-for="attr in attributions" :key="attr" :value="attr">
@@ -30,7 +30,7 @@
           v-if="years.length > 0"
           v-model="filterYear"
           @change="filterYearChange"
-          class="min-w-24 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          class="min-w-24 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">全部年份</option>
           <option v-for="year in years" :key="year.value" :value="year.value">
