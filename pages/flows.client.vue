@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full space-y-2">
+  <div class="p-2 md:p-4 min-h-full space-y-2">
     <!-- 统计信息 -->
     <FlowsStatistics :statistics="flowPageRef" />
 
@@ -15,7 +15,6 @@
       @open-search="searchDrawer = true"
       @reset-query="resetQuery"
     />
-
 
     <!-- 流水表格 -->
     <FlowsTable
@@ -281,7 +280,10 @@
 </template>
 
 <script setup lang="ts">
-import { exportJson as exportJsonFile, exportCsv as exportCsvFile } from "~/utils/fileUtils";
+import {
+  exportJson as exportJsonFile,
+  exportCsv as exportCsvFile,
+} from "~/utils/fileUtils";
 import type { Page } from "~/utils/model";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";

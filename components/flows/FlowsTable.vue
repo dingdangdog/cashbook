@@ -3,7 +3,7 @@
     class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-md md:rounded-lg"
   >
     <!-- 桌面端表格 -->
-    <div class="hidden md:block max-h-[65vh] overflow-y-auto">
+    <div class="hidden md:block max-h-[68vh] overflow-y-auto">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>

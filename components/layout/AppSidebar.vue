@@ -156,7 +156,7 @@ const handleNavigate = (menu: Menu) => {
           :key="item.path"
           @click="handleNavigate(item)"
           :class="[
-            'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200',
+            'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
             currentPath === item.path
               ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-300 border border-green-200 dark:border-green-700'
               : 'text-gray-700 dark:text-gray-200 hover:bg-green-200 dark:hover:bg-green-800',
