@@ -16,7 +16,7 @@
     "@nuxtjs/i18n": "8.5.6",
     "@nuxtjs/tailwindcss": "6.13.1",
     "@popperjs/core": "2.11.8",
-    "@prisma/client": "6.19.1",
+    "@prisma/client": "^6.19.1",
     "@prisma/nuxt": "0.2.0",
     "echarts": "5.6.0",
     "jsonwebtoken": "9.0.2",
@@ -30,9 +30,9 @@
     "xlsx": "0.18.5"
   },
   "devDependencies": {
-    "prisma": "6.19.1",
     "@types/jsonwebtoken": "9.0.9",
     "@types/swagger-jsdoc": "6.0.4",
+    "prisma": "6.19.1",
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.1"
   }
