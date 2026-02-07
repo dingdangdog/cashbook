@@ -102,7 +102,8 @@ const emit = defineEmits<{
   change: [value: string | null];
 }>();
 
-const { isDark } = useAppTheme();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
 
 const inputRef = ref<HTMLInputElement>();
 const showPicker = ref(false);

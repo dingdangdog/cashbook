@@ -64,7 +64,8 @@ import { doApi } from "@/utils/api";
 import type { CommonChartData, CommonChartQuery } from "~/utils/model";
 import DatasFlowTable from "@/components/datas/FlowTable.vue";
 
-const { isDark } = useAppTheme();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
 
 // 定义组件的props
 interface Props {

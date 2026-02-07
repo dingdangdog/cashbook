@@ -1,53 +1,33 @@
 <template>
   <div class="w-full">
     <div class="md:h-16 mb-2 relative">
-      <h4
-        class="hidden md:block text-center font-semibold text-foreground my-2"
-      >
+      <h4 class="hidden md:block text-center font-semibold text-foreground my-2">
         {{ title }}
       </h4>
       <span
         class="absolute left-0 top-0 text-xs text-primary-500 dark:text-primary-400 hover:text-primary-600 cursor-pointer rounded-md shadow-sm transition-colors"
-        @click="toggleLegend()"
-      >
+        @click="toggleLegend()">
         {{ showLegend ? "隐藏图例" : "显示图例" }}
       </span>
     </div>
 
-    <div
-      v-show="noData"
-      :style="`width: ${width}; height: ${height};`"
-      class="flex items-center justify-center"
-    >
+    <div v-show="noData" :style="`width: ${width}; height: ${height};`" class="flex items-center justify-center">
       <h3 class="text-lg text-red-500 font-medium">暂无数据</h3>
     </div>
-    <div
-      v-show="!noData"
-      :id="chartId"
-      :style="`width: ${width}; height: ${height};`"
-    ></div>
+    <div v-show="!noData" :id="chartId" :style="`width: ${width}; height: ${height};`"></div>
   </div>
 
   <!-- 流水表格对话框 -->
-  <div
-    v-if="showFlowTable"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-    @click="showFlowTable = false"
-  >
-    <div
-      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
-      @click.stop
-    >
-      <div
-        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
-      >
+  <div v-if="showFlowTable" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    @click="showFlowTable = false">
+    <div class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
+      @click.stop>
+      <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
         <h3 class="text-lg font-semibold text-foreground">
           流水详情
         </h3>
-        <button
-          @click="showFlowTable = false"
-          class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
-        >
+        <button @click="showFlowTable = false"
+          class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
           关闭
         </button>
       </div>
@@ -66,7 +46,8 @@ import { doApi } from "@/utils/api";
 import type { CommonChartData, CommonChartQuery } from "~/utils/model";
 import DatasFlowTable from "@/components/datas/FlowTable.vue";
 
-const { isDark } = useAppTheme();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
 
 // 定义组件的props
 interface Props {

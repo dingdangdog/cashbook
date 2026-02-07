@@ -140,7 +140,8 @@ import { doApi } from "@/utils/api";
 import type { CommonChartData, CommonChartQuery } from "~/utils/model";
 import DatasFlowTable from "@/components/datas/FlowTable.vue";
 
-const { isDark } = useAppTheme();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
 
 // 使用 props 来接收外部传入的参数
 const { title, width, height } = defineProps(["title", "width", "height"]);

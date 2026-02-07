@@ -22,7 +22,8 @@ import {
   DocumentDuplicateIcon,
 } from "@heroicons/vue/24/outline";
 
-const { isDark } = useAppTheme();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
 
 const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
 const query = ref<Book | any>({});

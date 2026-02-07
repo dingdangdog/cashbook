@@ -89,8 +89,6 @@ export const toDocumentation = () => {
   window.open("https://doc.cashbook.oldmoon.top", "_blank");
 };
 
-// 主题切换功能已移至 useAppTheme composable
-
 /**
  * 生成移动端友好的分页页码数组
  * @param currentPage 当前页码
