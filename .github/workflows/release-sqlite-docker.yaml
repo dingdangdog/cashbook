@@ -1,0 +1,46 @@
+name: Release-SQLite-Docker
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  docker_build:
+    environment: docker_hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main-sqlite
+
+      - name: Get version
+        id: get_version
+        run: |
+          # Get the tag name from the GitHub context (without the 'v' prefix)
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV  # Store version as an environment variable
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 设置 Docker Buildx (支持多平台构建)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 单次构建多平台镜像并推送
+      - name: Build and push multi-platform image
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag dingdangdog/cashbook:${VERSION}-sqlite \
+            --tag dingdangdog/cashbook:latest-sqlite \
+            --push .
+
+      - name: Clean up Docker images
+        run: docker system prune -af

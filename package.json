@@ -10,9 +10,30 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "nuxt": "^4.3.0",
-    "vue": "^3.5.27",
-    "vue-router": "^4.6.4"
+    "nuxt": "4.3.0",
+    "vue": "3.5.27",
+    "vue-router": "4.6.4",
+    "@heroicons/vue": "2.2.0",
+    "@nuxtjs/tailwindcss": "6.14.0",
+    "@popperjs/core": "2.11.8",
+    "@prisma/adapter-pg": "7.3.0",
+    "@prisma/extension-accelerate": "3.0.1",
+    "echarts": "6.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "jszip": "3.10.1",
+    "nuxt-echarts": "1.0.1",
+    "nuxt-openapi-docs-module": "5.3.1",
+    "v-calendar": "3.1.2",
+    "vue-toastification": "2.0.0-rc.5",
+    "xlsx": "0.18.5"
   },
-  "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316"
+  "devDependencies": {
+    "@prisma/client": "7.3.0",
+    "@types/jsonwebtoken": "9.0.10",
+    "@types/swagger-jsdoc": "6.0.4",
+    "prisma": "7.3.0",
+    "swagger-jsdoc": "6.2.8",
+    "swagger-ui-express": "5.0.1"
+  },
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
 }

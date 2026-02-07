@@ -1,0 +1,100 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* 确保深色模式生效 */
+.dark {
+  color-scheme: dark;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* 全局颜色过渡效果 - 使用与 Tailwind 一致的过渡值 */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+  transition-duration: 200ms;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(179, 179, 179, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 92, 2, 0.5);
+  /* border-radius: 5px; */
+}
+
+.top-index {
+  z-index: 999;
+}
+
+.table-default-column {
+  width: 6rem;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.chart-common-container {
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.queryParam {
+  margin-bottom: 0.5rem;
+  min-width: 12rem;
+}
+
+/* Toast 自定义样式 */
+.Vue-Toastification__toast {
+  font-family: inherit;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 0.5rem;
+}
+
+.Vue-Toastification__toast--success {
+  background-color: #4caf50;
+}
+
+.Vue-Toastification__toast--error {
+  background-color: #f44336;
+}
+
+.Vue-Toastification__toast--warning {
+  background-color: #ff9800;
+}
+
+.Vue-Toastification__toast--info {
+  background-color: #2196f3;
+}
+
+.Vue-Toastification__progress-bar {
+  height: 3px;
+}
+
+.Vue-Toastification__toast-body {
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .Vue-Toastification__container {
+    padding: 0 16px;
+  }
+
+  .Vue-Toastification__toast {
+    margin-bottom: 8px;
+  }
+}

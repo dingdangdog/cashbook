@@ -1,0 +1,11 @@
+name: 其他👽
+description: 提交其他类型Issue
+title: "[其他]: "
+labels: [other]
+body:
+  - type: textarea
+    attributes:
+      label: 问题描述
+      description: 请在此处填写您的 Issue 内容。
+    validations:
+      required: true

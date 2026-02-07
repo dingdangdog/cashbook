@@ -1,0 +1,14 @@
+name: 功能❤️建议
+description: 提交我的有趣想法
+title: "[功能建议]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: 详细描述
+      description: 请详细描述您希望添加的功能，包括具体用法、界面设计等。
+
+  - type: textarea
+    attributes:
+      label: 理由
+      description: 请说明您提出此建议的理由，以及该功能可能带来的好处。
