@@ -193,25 +193,25 @@ const checkVersion = () => {
 
       <!-- Main Content -->
       <main
-        class="flex-1 h-full overflow-y-auto bg-green-50 dark:bg-black transition-colors duration-200 relative"
+        class="flex-1 h-full overflow-y-auto bg-background text-foreground transition-colors duration-200 relative"
       >
         <!-- Loading Overlay -->
         <div
           v-if="pageLoading"
-          class="absolute inset-0 bg-white/80 dark:bg-green-900/10 backdrop-blur-sm z-50 flex items-center justify-center"
+          class="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center"
         >
           <div class="flex flex-col items-center space-y-4">
             <!-- Spinner -->
             <div class="relative">
               <div
-                class="w-12 h-12 border-4 border-green-300 dark:border-green-600 rounded-full animate-spin"
+                class="w-12 h-12 border-4 border-primary-200 rounded-full animate-spin"
               ></div>
               <div
-                class="w-12 h-12 border-4 border-transparent border-t-green-500 rounded-full animate-spin absolute top-0 left-0"
+                class="w-12 h-12 border-4 border-transparent border-t-primary-500 rounded-full animate-spin absolute top-0 left-0"
               ></div>
             </div>
             <!-- Loading Text -->
-            <div class="text-sm text-green-600 dark:text-green-300 font-medium">
+            <div class="text-sm text-primary-600 font-medium">
               页面加载中...
             </div>
           </div>

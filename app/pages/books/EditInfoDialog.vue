@@ -101,19 +101,19 @@ const closeOnBackdrop = (event: MouseEvent) => {
   >
     <!-- 对话框内容 -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto"
+      class="bg-surface rounded-lg shadow-xl border border-border w-full max-w-md max-h-[90vh] overflow-y-auto"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-600"
+        class="flex items-center justify-between p-2 border-b border-border"
       >
-        <h3 class="text-xl font-semibold text-green-950 dark:text-white">
+        <h3 class="text-xl font-semibold text-foreground">
           {{ title }}
         </h3>
         <button
           @click="close"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+          class="text-muted hover:text-foreground transition-colors p-1 hover:bg-surface-muted rounded"
         >
           <XMarkIcon class="h-6 w-6" />
         </button>
@@ -125,7 +125,7 @@ const closeOnBackdrop = (event: MouseEvent) => {
           <!-- 账本名称 -->
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
             >
               账本名称 <span class="text-red-500">*</span>
             </label>
@@ -135,12 +135,12 @@ const closeOnBackdrop = (event: MouseEvent) => {
               placeholder="请输入账本名称"
               :class="[
                 'w-full px-3 py-2 border rounded-lg transition-colors',
-                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
-                'bg-white dark:bg-gray-700 text-green-950 dark:text-white',
-                'placeholder-gray-500 dark:placeholder-gray-400',
+                'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500',
+                'bg-surface text-foreground',
+                'placeholder-muted',
                 formErrors.bookName
                   ? 'border-red-500 dark:border-red-400'
-                  : 'border-gray-300 dark:border-gray-600',
+                  : 'border-border',
               ]"
             />
             <p
@@ -154,7 +154,7 @@ const closeOnBackdrop = (event: MouseEvent) => {
           <!-- 预算 -->
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
             >
               预算（每月）
             </label>
@@ -166,11 +166,11 @@ const closeOnBackdrop = (event: MouseEvent) => {
               :class="[
                 'w-full px-3 py-2 border rounded-lg transition-colors',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
-                'bg-white dark:bg-gray-700 text-green-950 dark:text-white',
-                'placeholder-gray-500 dark:placeholder-gray-400',
+                'bg-surface text-foreground',
+                'placeholder-muted',
                 formErrors.budget
                   ? 'border-red-500 dark:border-red-400'
-                  : 'border-gray-300 dark:border-gray-600',
+                  : 'border-border',
               ]"
             />
             <p
@@ -179,7 +179,7 @@ const closeOnBackdrop = (event: MouseEvent) => {
             >
               {{ formErrors.budget }}
             </p>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p class="mt-1 text-xs text-muted">
               可选项，用于预算管理功能
             </p>
           </div>
@@ -188,12 +188,12 @@ const closeOnBackdrop = (event: MouseEvent) => {
 
       <!-- 操作按钮 -->
       <div
-        class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700"
+        class="flex items-center justify-end gap-3 p-6 border-t border-border bg-surface-muted"
       >
         <button
           @click="close"
           type="button"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors"
+          class="px-4 py-2 text-sm font-medium text-foreground bg-surface border border-border rounded-lg hover:bg-surface-muted transition-colors"
         >
           取消
         </button>
@@ -202,10 +202,10 @@ const closeOnBackdrop = (event: MouseEvent) => {
           :disabled="isSaving"
           :class="[
             'px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+            'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             isSaving
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800',
+              ? 'bg-muted cursor-not-allowed'
+              : 'bg-primary-600 hover:bg-primary-500 active:bg-primary-700',
           ]"
         >
           <span v-if="isSaving" class="flex items-center">

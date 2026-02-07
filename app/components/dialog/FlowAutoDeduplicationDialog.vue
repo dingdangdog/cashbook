@@ -167,33 +167,31 @@ const formatDate = (dateStr: string) => {
   <!-- 自助去重对话框 -->
   <div
     v-if="showAutoDeduplicationFlowsDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl max-h-[95vh] flex flex-col transform transition-all"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-7xl max-h-[95vh] flex flex-col transform transition-all border border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="px-2 md:px-6 py-2 md:py-4 border-b border-gray-200 dark:border-gray-600 flex justify-between"
+        class="px-2 md:px-6 py-2 md:py-4 border-b border-border flex justify-between"
       >
         <div class="flex-1 flex flex-col md:flex-row justify-between">
           <div class="flex-1">
-            <h3 class="text-xl font-semibold text-green-950 dark:text-white">
-              疑似重复数据检测
-            </h3>
-            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <h3 class="text-xl font-semibold">疑似重复数据检测</h3>
+            <div class="text-sm text-foreground/60 mt-1">
               共发现 {{ duplicateData.totalGroups }} 组疑似重复数据，涉及
               {{ duplicateData.totalDuplicates }} 条记录
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-600 dark:text-gray-400">
+            <span class="text-sm text-foreground/70">
               已选 {{ selectedCount }} 项
             </span>
             <button
               @click="toggleSelectAll"
-              class="px-3 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 rounded text-sm font-medium transition-colors"
+              class="px-3 py-1 bg-surface hover:bg-surface-muted text-foreground/80 rounded text-sm font-medium transition-colors border border-border"
             >
               {{ isAllSelected ? "取消全选" : "全选" }}
             </button>
@@ -208,7 +206,7 @@ const formatDate = (dateStr: string) => {
         </div>
         <button
           @click="closeDialog"
-          class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded transition-colors"
+          class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-2 rounded transition-colors"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -216,12 +214,12 @@ const formatDate = (dateStr: string) => {
 
       <!-- 检测条件选择器 -->
       <div
-        class="px-2 md:px-6 py-2 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-600"
+        class="px-2 md:px-6 py-2 bg-surface-muted border-b border-border"
       >
         <div
           class="flex flex-col lg:flex-row items-start lg:items-center gap-2 md:gap-4"
         >
-          <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div class="text-sm font-medium text-foreground/80">
             检测条件选择（日期和金额为默认条件）：
           </div>
           <div class="flex flex-wrap gap-2 md:gap-4">
@@ -229,55 +227,45 @@ const formatDate = (dateStr: string) => {
               <input
                 type="checkbox"
                 v-model="deduplicationCriteria.name"
-                class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                class="w-4 h-4 text-primary-600 bg-background border-border rounded focus:ring-primary-500 focus:ring-2"
               />
-              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >名称</span
-              >
+              <span class="ml-2 text-sm text-foreground/80">名称</span>
             </label>
             <label class="flex items-center">
               <input
                 type="checkbox"
                 v-model="deduplicationCriteria.description"
-                class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                class="w-4 h-4 text-primary-600 bg-background border-border rounded focus:ring-primary-500 focus:ring-2"
               />
-              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >备注</span
-              >
+              <span class="ml-2 text-sm text-foreground/80">备注</span>
             </label>
             <label class="flex items-center">
               <input
                 type="checkbox"
                 v-model="deduplicationCriteria.flowType"
-                class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                class="w-4 h-4 text-primary-600 bg-background border-border rounded focus:ring-primary-500 focus:ring-2"
               />
-              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >流水类型</span
-              >
+              <span class="ml-2 text-sm text-foreground/80">流水类型</span>
             </label>
             <label class="flex items-center">
               <input
                 type="checkbox"
                 v-model="deduplicationCriteria.industryType"
-                class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                class="w-4 h-4 text-primary-600 bg-background border-border rounded focus:ring-primary-500 focus:ring-2"
               />
-              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >支出/收入类型</span
-              >
+              <span class="ml-2 text-sm text-foreground/80">支出/收入类型</span>
             </label>
             <label class="flex items-center">
               <input
                 type="checkbox"
                 v-model="deduplicationCriteria.payType"
-                class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                class="w-4 h-4 text-primary-600 bg-background border-border rounded focus:ring-primary-500 focus:ring-2"
               />
-              <span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >支付/收款方式</span
-              >
+              <span class="ml-2 text-sm text-foreground/80">支付/收款方式</span>
             </label>
             <button
               @click="fetchDuplicates"
-              class="px-3 py-1 md:px-4 md:py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              class="px-3 py-1 md:px-4 md:py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
             >
               <ArrowPathIcon class="w-4 h-4" />
               <span class="hidden md:inline">应用筛选条件</span>
@@ -291,9 +279,9 @@ const formatDate = (dateStr: string) => {
         <!-- 加载状态 -->
         <div v-if="loading" class="flex justify-center items-center py-20">
           <div
-            class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
           ></div>
-          <span class="ml-4 text-gray-600 dark:text-gray-400">加载中...</span>
+          <span class="ml-4 text-foreground/60">加载中...</span>
         </div>
 
         <!-- 空状态 -->
@@ -301,13 +289,13 @@ const formatDate = (dateStr: string) => {
           v-else-if="duplicateData.duplicateGroups.length === 0"
           class="text-center py-20"
         >
-          <div class="text-gray-400 dark:text-gray-500 mb-4">
+          <div class="text-foreground/40 mb-4">
             <DocumentDuplicateIcon class="mx-auto h-16 w-16" />
           </div>
-          <h3 class="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">
+          <h3 class="text-xl font-medium mb-2">
             未发现疑似重复数据
           </h3>
-          <p class="text-gray-500 dark:text-gray-400">
+          <p class="text-foreground/60">
             系统未发现符合条件的重复流水数据
           </p>
         </div>
@@ -320,21 +308,21 @@ const formatDate = (dateStr: string) => {
           <div
             v-for="(group, groupIndex) in duplicateData.duplicateGroups"
             :key="groupIndex"
-            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden"
+            class="bg-surface border border-border rounded-lg overflow-hidden"
           >
             <!-- 组标题 -->
             <div
-              class="bg-gray-100 dark:bg-gray-700 px-2 py-1 border-b border-gray-200 dark:border-gray-600"
+              class="bg-surface-muted px-2 py-1 border-b border-border"
             >
               <div
                 class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2"
               >
                 <span
-                  class="text-base md:text-lg font-semibold text-gray-900 dark:text-white"
+                  class="text-base md:text-lg font-semibold"
                 >
                   疑似重复组 #{{ groupIndex + 1 }}-{{ group.length }}条
                 </span>
-                <div class="text-sm text-gray-600 dark:text-gray-400">
+                <div class="text-sm text-foreground/60">
                   {{ formatDate(group[0]?.day) }} | {{ group[0]?.flowType }} |
                   {{ group[0]?.money?.toFixed(2) }}元
                 </div>
@@ -344,86 +332,86 @@ const formatDate = (dateStr: string) => {
             <!-- 桌面端表格 -->
             <div class="hidden md:block overflow-x-auto">
               <table
-                class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+                class="min-w-full divide-y divide-border"
               >
-                <thead class="bg-gray-50 dark:bg-gray-700">
+                <thead class="bg-surface">
                   <tr>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       类型
                     </th>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       名称
                     </th>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       金额
                     </th>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       日期
                     </th>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       支付/收款方式
                     </th>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       类别
                     </th>
                     <th
-                      class="px-2 py-1 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       备注
                     </th>
                     <th
-                      class="px-2 py-1 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-center text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       操作
                     </th>
                     <th
-                      class="px-2 py-1 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      class="px-2 py-1 text-center text-xs font-medium text-foreground/60 uppercase tracking-wider"
                     >
                       选择
                     </th>
                   </tr>
                 </thead>
                 <tbody
-                  class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                  class="bg-surface divide-y divide-border"
                 >
                   <tr
                     v-for="(item, itemIndex) in group"
                     :key="item.id"
                     :class="
                       itemIndex % 2 === 0
-                        ? 'bg-gray-50 dark:bg-gray-700/30'
-                        : 'bg-white dark:bg-gray-800'
+                        ? 'bg-surface-muted/50'
+                        : 'bg-surface'
                     "
-                    class="hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    class="hover:bg-surface-muted transition-colors"
                   >
                     <td class="px-2 py-1">
                       <span
                         :class="[
-                          'inline-flex px-2 py-1 text-xs font-medium rounded-full',
+                          'inline-flex px-2 py-1 text-xs font-medium rounded-full border',
                           item.flowType === '支出'
-                            ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                            ? 'bg-red-500/10 text-red-600 border-red-500/20'
                             : item.flowType === '收入'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                            : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                            ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                            : 'bg-surface-muted text-foreground/70 border-border',
                         ]"
                       >
                         {{ item.flowType }}
                       </span>
                     </td>
                     <td
-                      class="px-2 py-1 text-sm text-gray-900 dark:text-gray-100 max-w-48 truncate"
+                      class="px-2 py-1 text-sm max-w-48 truncate"
                       :title="item.name"
                     >
                       {{ item.name }}
@@ -433,30 +421,30 @@ const formatDate = (dateStr: string) => {
                         :class="[
                           'text-sm font-semibold',
                           item.flowType === '支出'
-                            ? 'text-red-600 dark:text-red-400'
-                            : 'text-green-600 dark:text-green-400',
+                            ? 'text-red-600'
+                            : 'text-primary-600',
                         ]"
                       >
                         {{ Number(item.money).toFixed(2) }}
                       </span>
                     </td>
                     <td
-                      class="px-2 py-1 text-sm text-gray-900 dark:text-gray-100"
+                      class="px-2 py-1 text-sm"
                     >
                       {{ formatDate(item.day) }}
                     </td>
                     <td
-                      class="px-2 py-1 text-sm text-gray-900 dark:text-gray-100"
+                      class="px-2 py-1 text-sm"
                     >
                       {{ item.payType }}
                     </td>
                     <td
-                      class="px-2 py-1 text-sm text-gray-900 dark:text-gray-100"
+                      class="px-2 py-1 text-sm"
                     >
                       {{ item.industryType }}
                     </td>
                     <td
-                      class="px-2 py-1 text-sm text-gray-900 dark:text-gray-100 max-w-48 truncate"
+                      class="px-2 py-1 text-sm max-w-48 truncate"
                       :title="item.description"
                     >
                       {{ item.description || "-" }}
@@ -473,7 +461,7 @@ const formatDate = (dateStr: string) => {
                     <td class="px-2 py-1 text-center">
                       <input
                         type="checkbox"
-                        class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        class="w-4 h-4 rounded border-border text-primary-600 focus:ring-primary-500"
                         :value="item.id"
                         v-model="selectedIds"
                       />
@@ -488,21 +476,19 @@ const formatDate = (dateStr: string) => {
               <div
                 v-for="(item, itemIndex) in group"
                 :key="item.id"
-                class="p-2 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
+                class="p-2 border-b border-border last:border-b-0"
                 :class="
                   itemIndex % 2 === 0
-                    ? 'bg-gray-50 dark:bg-gray-700/30'
-                    : 'bg-white dark:bg-gray-800'
+                    ? 'bg-surface-muted/50'
+                    : 'bg-surface'
                 "
               >
                 <!-- 选择框 -->
                 <div class="flex items-center justify-between mb-2">
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
-                    选择
-                  </div>
+                  <div class="text-xs text-foreground/60">选择</div>
                   <input
                     type="checkbox"
-                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    class="w-4 h-4 rounded border-border text-primary-600 focus:ring-primary-500"
                     :value="item.id"
                     v-model="selectedIds"
                   />
@@ -511,12 +497,12 @@ const formatDate = (dateStr: string) => {
                 <div class="flex items-center justify-between mb-2">
                   <span
                     :class="[
-                      'inline-flex px-3 py-1 text-sm font-medium rounded-full',
+                      'inline-flex px-3 py-1 text-sm font-medium rounded-full border',
                       item.flowType === '支出'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : item.flowType === '收入'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ item.flowType }}
@@ -525,8 +511,8 @@ const formatDate = (dateStr: string) => {
                     :class="[
                       'text-lg font-bold',
                       item.flowType === '支出'
-                        ? 'text-red-600 dark:text-red-400'
-                        : 'text-green-600 dark:text-green-400',
+                        ? 'text-red-600'
+                        : 'text-primary-600',
                     ]"
                   >
                     {{ Number(item.money).toFixed(2) }}
@@ -536,38 +522,30 @@ const formatDate = (dateStr: string) => {
                 <!-- 详细信息 -->
                 <div class="space-y-1 text-sm">
                   <div class="flex justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">名称:</span>
+                    <span class="text-foreground/60">名称:</span>
                     <span
-                      class="text-gray-900 dark:text-gray-100 max-w-40 truncate text-right"
+                      class="max-w-40 truncate text-right"
                       :title="item.name"
                     >
                       {{ item.name }}
                     </span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600 dark:text-gray-400"
-                      >支付方式:</span
-                    >
-                    <span class="text-gray-900 dark:text-gray-100">{{
-                      item.payType
-                    }}</span>
+                    <span class="text-foreground/60">支付方式:</span>
+                    <span>{{ item.payType }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">类别:</span>
-                    <span class="text-gray-900 dark:text-gray-100">{{
-                      item.industryType
-                    }}</span>
+                    <span class="text-foreground/60">类别:</span>
+                    <span>{{ item.industryType }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">日期:</span>
-                    <span class="text-gray-900 dark:text-gray-100">{{
-                      formatDate(item.day)
-                    }}</span>
+                    <span class="text-foreground/60">日期:</span>
+                    <span>{{ formatDate(item.day) }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600 dark:text-gray-400">备注:</span>
+                    <span class="text-foreground/60">备注:</span>
                     <span
-                      class="text-gray-900 dark:text-gray-100 max-w-40 truncate text-right"
+                      class="max-w-40 truncate text-right"
                       :title="item.description"
                     >
                       {{ item.description || "-" }}
@@ -577,7 +555,7 @@ const formatDate = (dateStr: string) => {
 
                 <!-- 操作按钮 -->
                 <div
-                  class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600 flex gap-2"
+                  class="mt-2 pt-2 border-t border-border flex gap-2"
                 >
                   <button
                     @click="deleteFlow(item)"
@@ -595,12 +573,12 @@ const formatDate = (dateStr: string) => {
 
       <!-- 底部操作栏 -->
       <div
-        class="px-6 py-4 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+        class="px-6 py-4 border-t border-border bg-surface-muted"
       >
         <div class="flex justify-center gap-4">
           <button
             @click="fetchDuplicates"
-            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
           >
             <ArrowPathIcon class="w-4 h-4" />
             刷新数据
@@ -615,7 +593,7 @@ const formatDate = (dateStr: string) => {
           </button>
           <button
             @click="closeDialog"
-            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
+            class="px-3 py-1 md:px-4 md:py-2 text-sm md:text-base bg-surface hover:bg-surface-muted text-foreground/80 font-medium rounded-lg transition-colors border border-border"
           >
             关闭
           </button>
@@ -633,15 +611,16 @@ const formatDate = (dateStr: string) => {
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 
 .overflow-x-auto::-webkit-scrollbar {
@@ -649,14 +628,15 @@ const formatDate = (dateStr: string) => {
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 </style>

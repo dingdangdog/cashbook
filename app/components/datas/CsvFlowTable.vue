@@ -1,24 +1,24 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+  <div class="bg-surface text-foreground rounded-lg shadow-sm border border-border overflow-hidden">
     <!-- 表格容器 -->
     <div class="max-h-[60vh] overflow-auto">
       <table ref="excelTable" class="w-full border-collapse">
-        <thead ref="excelTableHead" class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10"></thead>
-        <tbody ref="excelTableBody" class="divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+        <thead ref="excelTableHead" class="bg-surface-muted sticky top-0 z-10"></thead>
+        <tbody ref="excelTableBody" class="divide-y divide-border"></tbody>
       </table>
     </div>
 
     <!-- 分隔线 -->
-    <div class="border-t border-gray-200 dark:border-gray-700"></div>
+    <div class="border-t border-border"></div>
 
     <!-- 底部操作栏 -->
-    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700">
+    <div class="px-4 py-3 bg-surface-muted">
       <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <!-- 左侧信息 -->
         <div class="flex items-center gap-4">
-          <span class="text-sm text-gray-600 dark:text-gray-400">
+          <span class="text-sm text-foreground/70">
             解析到的流水数量: 
-            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ flows.length }}</span>
+            <span class="font-semibold text-primary-600">{{ flows.length }}</span>
           </span>
         </div>
 
@@ -26,14 +26,14 @@
         <div class="flex gap-3 items-center">
           <!-- 流水归属输入 -->
           <div class="flex items-center gap-2">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+            <label class="text-sm font-medium text-foreground/80 whitespace-nowrap">
               流水归属:
             </label>
             <input
               v-model="attribution"
               type="text"
               placeholder="可选"
-              class="w-32 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-green-950 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-32 px-2 py-1 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
@@ -41,7 +41,7 @@
           <button
             @click="submitUpload"
             :disabled="uploading"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-secondary-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
           >
             <div v-if="uploading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             <CloudArrowUpIcon v-else class="h-4 w-4" />
@@ -83,13 +83,14 @@ onMounted(() => {
   if (excelTableHead.value) {
     // 表头行元素
     const head = document.createElement("tr");
-    head.className = "border-b border-gray-200 dark:border-gray-600";
+    head.className = "border-b border-border";
     
     for (let h in tableHead) {
       // 创建表头单元格元素
       const th = document.createElement("th");
       th.innerText = h;
-      th.className = "px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-700";
+      th.className =
+        "px-3 py-2 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider bg-surface-muted";
       th.style.textAlign = "left";
       head.appendChild(th);
     }
@@ -101,7 +102,7 @@ onMounted(() => {
     for (let row of tableBody) {
       // 创建行元素
       const tr = document.createElement("tr");
-      tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
+      tr.className = "hover:bg-surface-muted transition-colors";
       
       // 部分数据字段格式化，并回显
       for (let c of row) {
@@ -109,7 +110,8 @@ onMounted(() => {
         // 创建单元格元素
         const td = document.createElement("td");
         td.innerText = cellValue;
-        td.className = "px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate border-b border-gray-200 dark:border-gray-700";
+        td.className =
+          "px-3 py-2 text-sm text-foreground max-w-32 truncate border-b border-border";
         td.title = cellValue;
         tr.appendChild(td);
       }
@@ -165,14 +167,15 @@ const submitUpload = () => {
 }
 
 .overflow-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 </style>

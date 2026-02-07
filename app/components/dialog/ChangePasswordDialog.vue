@@ -2,22 +2,20 @@
   <!-- 修改密码对话框 -->
   <div
     v-if="showChangePasswordDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[90vh] overflow-y-auto"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[90vh] overflow-y-auto border border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          修改密码
-        </h3>
+        <h3 class="text-lg font-semibold">修改密码</h3>
         <button
           @click="closeDialog"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="text-foreground/40 hover:text-foreground/70 transition-colors"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -28,7 +26,7 @@
         <!-- 原密码 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-foreground/80 mb-1"
           >
             原密码
           </label>
@@ -39,7 +37,7 @@
               :readonly="loading"
               placeholder="请输入旧密码"
               autocomplete="current-password"
-              class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-600"
+              class="w-full px-3 py-2 pr-10 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-70"
               :class="{
                 'border-red-500': !changPasswordData.old && showErrors,
               }"
@@ -47,7 +45,7 @@
             <button
               type="button"
               @click="lookKey = !lookKey"
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-foreground/40 hover:text-foreground/70"
             >
               <EyeIcon v-if="!lookKey" class="h-5 w-5" />
               <EyeSlashIcon v-else class="h-5 w-5" />
@@ -55,7 +53,7 @@
           </div>
           <p
             v-if="!changPasswordData.old && showErrors"
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-red-500"
           >
             原密码为必填项
           </p>
@@ -64,7 +62,7 @@
         <!-- 新密码 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-foreground/80 mb-1"
           >
             新密码
           </label>
@@ -74,7 +72,7 @@
               :type="lookKey ? 'text' : 'password'"
               :readonly="loading"
               placeholder="请输入新密码"
-              class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-600"
+              class="w-full px-3 py-2 pr-10 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-70"
               :class="{
                 'border-red-500': !changPasswordData.new && showErrors,
               }"
@@ -82,7 +80,7 @@
             <button
               type="button"
               @click="lookKey = !lookKey"
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-foreground/40 hover:text-foreground/70"
             >
               <EyeIcon v-if="!lookKey" class="h-5 w-5" />
               <EyeSlashIcon v-else class="h-5 w-5" />
@@ -90,7 +88,7 @@
           </div>
           <p
             v-if="!changPasswordData.new && showErrors"
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-red-500"
           >
             新密码为必填项
           </p>
@@ -99,7 +97,7 @@
         <!-- 重复新密码 -->
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-foreground/80 mb-1"
           >
             重复新密码
           </label>
@@ -109,7 +107,7 @@
               :type="lookKey ? 'text' : 'password'"
               :readonly="loading"
               placeholder="请再次输入新密码"
-              class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-600"
+              class="w-full px-3 py-2 pr-10 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-70"
               :class="{
                 'border-red-500':
                   (!changPasswordData.againNew ||
@@ -120,7 +118,7 @@
             <button
               type="button"
               @click="lookKey = !lookKey"
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-foreground/40 hover:text-foreground/70"
             >
               <EyeIcon v-if="!lookKey" class="h-5 w-5" />
               <EyeSlashIcon v-else class="h-5 w-5" />
@@ -128,7 +126,7 @@
           </div>
           <p
             v-if="!changPasswordData.againNew && showErrors"
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-red-500"
           >
             重复新密码为必填项
           </p>
@@ -136,7 +134,7 @@
             v-else-if="
               changPasswordData.new !== changPasswordData.againNew && showErrors
             "
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-red-500"
           >
             两次密码不一致
           </p>
@@ -145,19 +143,19 @@
 
       <!-- 操作按钮 -->
       <div
-        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-border bg-surface-muted"
       >
         <button
           @click="closeDialog"
           :disabled="loading"
-          class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="flex-1 px-4 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           取消
         </button>
         <button
           @click="submitChange"
           :disabled="loading"
-          class="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-secondary-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <div
             v-if="loading"

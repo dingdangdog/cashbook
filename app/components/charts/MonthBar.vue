@@ -2,11 +2,11 @@
   <div class="chart-common-container">
     <div
       v-if="title || years.length > 0"
-      class="relative w-full border-b border-gray-200 dark:border-gray-700 mb-2 h-12 md:mb-4"
+      class="relative w-full border-b border-border mb-2 h-12 md:mb-4"
     >
       <h4
         v-if="title"
-        class="md:text-center text-lg font-semibold text-green-950 dark:text-white my-2"
+        class="md:text-center text-lg font-semibold text-foreground my-2"
       >
         {{ title }}
       </h4>
@@ -19,7 +19,7 @@
           v-if="attributions.length > 0"
           v-model="filterAttribution"
           @change="filterAttributionChange"
-          class="min-w-20 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="min-w-20 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-border rounded-md shadow-md bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         >
           <option value="">全部归属</option>
           <option v-for="attr in attributions" :key="attr" :value="attr">
@@ -30,7 +30,7 @@
           v-if="years.length > 0"
           v-model="filterYear"
           @change="filterYearChange"
-          class="min-w-24 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="min-w-24 md:min-w-32 px-2 py-1 md:px-3 md:py-2 border border-border rounded-md shadow-md bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         >
           <option value="">全部年份</option>
           <option v-for="year in years" :key="year.value" :value="year.value">
@@ -57,13 +57,13 @@
     @click="showFlowTable = false"
   >
     <div
-      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
+      class="w-full max-w-6xl max-h-[90vh] bg-surface rounded-lg shadow-xl overflow-hidden"
       @click.stop
     >
       <div
-        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex justify-between items-center p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+        <h3 class="text-lg font-semibold text-foreground">
           流水详情
         </h3>
         <button

@@ -64,17 +64,17 @@ const handleNavigate = (path: string) => {
 
 <template>
   <nav
-    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-green-100 dark:border-green-900 z-40 lg:hidden"
+    class="fixed bottom-0 left-0 right-0 bg-surface border-t border-border z-40 lg:hidden"
   >
-    <div class="grid grid-cols-5 h-16 bg-green-100 dark:bg-green-950/30">
+    <div class="grid grid-cols-5 h-16 bg-surface-muted">
       <button
         v-for="item in bottomNavItems"
         :key="item.path"
         @click="handleNavigate(item.path)"
         :class="[
-          'flex flex-col items-center justify-center space-y-1 transition-colors duration-200 text-green-600 dark:text-green-700',
+          'flex flex-col items-center justify-center space-y-1 transition-colors duration-200 text-primary-600',
           currentPath == item.path
-            ? ' bg-green-300/20 font-bold'
+            ? ' bg-primary-500/20 font-bold'
             : 'font-medium',
         ]"
       >

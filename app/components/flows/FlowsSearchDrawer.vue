@@ -2,23 +2,21 @@
   <!-- 筛选抽屉 -->
   <div
     v-if="show"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50"
+    class="fixed inset-0 bg-black/50 flex justify-end z-50"
     @click="$emit('close')"
   >
     <div
-      class="bg-white dark:bg-gray-800 w-full max-w-sm h-full flex flex-col shadow-xl transform transition-transform"
+      class="bg-surface text-foreground w-full max-w-sm h-full flex flex-col shadow-xl transform transition-transform border-l border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-4 py-3 border-b border-border flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-          筛选条件
-        </h3>
+        <h3 class="text-lg font-semibold">筛选条件</h3>
         <button
           @click="$emit('close')"
-          class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+          class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
         >
           <XMarkIcon class="w-4 h-4" />
         </button>
@@ -48,7 +46,7 @@
         <!-- 流水归属 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             流水归属
           </label>
@@ -57,7 +55,7 @@
               v-model="localQuery.attribution"
               type="text"
               placeholder="请输入流水归属..."
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
               @input="(filterAttributions(), attributionActiveIndex = 0)"
               @focus="(showAttributionDropdown = true, attributionActiveIndex = 0)"
               @blur="hideAttributionDropdown"
@@ -66,15 +64,15 @@
             <!-- 下拉选项 -->
             <div
               v-if="showAttributionDropdown && filteredAttributions.length > 0"
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredAttributions"
                 :key="item"
                 @mousedown="selectAttribution(item)"
                 :class="[
-                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100',
-                  index === attributionActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  'px-3 py-2 text-sm hover:bg-surface-muted cursor-pointer text-foreground',
+                  index === attributionActiveIndex ? 'bg-surface-muted' : ''
                 ]"
               >
                 {{ item }}
@@ -86,7 +84,7 @@
         <!-- 名称 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             名称
           </label>
@@ -95,7 +93,7 @@
               v-model="localQuery.name"
               type="text"
               placeholder="请输入名称..."
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
               @input="(filterNames(), nameActiveIndex = 0)"
               @focus="(showNameDropdown = true, nameActiveIndex = 0)"
               @blur="hideNameDropdown"
@@ -104,15 +102,15 @@
             <!-- 下拉选项 -->
             <div
               v-if="showNameDropdown && filteredNames.length > 0"
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredNames"
                 :key="item"
                 @mousedown="selectName(item)"
                 :class="[
-                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100',
-                  index === nameActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  'px-3 py-2 text-sm hover:bg-surface-muted cursor-pointer text-foreground',
+                  index === nameActiveIndex ? 'bg-surface-muted' : ''
                 ]"
               >
                 {{ item }}
@@ -124,7 +122,7 @@
         <!-- 备注 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             备注
           </label>
@@ -132,21 +130,21 @@
             v-model="localQuery.description"
             type="text"
             placeholder="请输入备注..."
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+            class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
 
         <!-- 流水类型 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             流水类型
           </label>
           <select
             v-model="localQuery.flowType"
             @change="onFlowTypeChange"
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+            class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="">全部</option>
             <option value="支出">支出</option>
@@ -158,7 +156,7 @@
         <!-- 支出/收入类型 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             {{ industryTypeLabel }}
           </label>
@@ -167,7 +165,7 @@
               v-model="localQuery.industryType"
               type="text"
               :placeholder="`请输入${industryTypeLabel}...`"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
               @input="(filterIndustryTypes(), industryActiveIndex = 0)"
               @focus="(showIndustryTypeDropdown = true, industryActiveIndex = 0)"
               @blur="hideIndustryTypeDropdown"
@@ -178,19 +176,19 @@
               v-if="
                 showIndustryTypeDropdown && filteredIndustryTypes.length > 0
               "
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredIndustryTypes"
                 :key="item"
                 @mousedown="selectIndustryType(item)"
                 :class="[
-                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2',
-                  index === industryActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  'px-3 py-2 text-sm hover:bg-surface-muted cursor-pointer text-foreground flex items-center gap-2',
+                  index === industryActiveIndex ? 'bg-surface-muted' : ''
                 ]"
               >
                 <svg
-                  class="w-4 h-4 text-green-500"
+                  class="w-4 h-4 text-primary-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -211,7 +209,7 @@
         <!-- 支付/收款方式 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             {{ payTypeLabel }}
           </label>
@@ -220,7 +218,7 @@
               v-model="localQuery.payType"
               type="text"
               :placeholder="`请输入${payTypeLabel}...`"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
               @input="(filterPayTypes(), payTypeActiveIndex = 0)"
               @focus="(showPayTypeDropdown = true, payTypeActiveIndex = 0)"
               @blur="hidePayTypeDropdown"
@@ -229,18 +227,18 @@
             <!-- 下拉选项 -->
             <div
               v-if="showPayTypeDropdown && filteredPayTypes.length > 0"
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredPayTypes"
                 :key="item"
                 @mousedown="selectPayType(item)"
                 :class="[
-                  'px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-gray-900 dark:text-gray-100 flex items-center gap-2',
-                  index === payTypeActiveIndex ? 'bg-gray-100 dark:bg-gray-600' : ''
+                  'px-3 py-2 text-sm hover:bg-surface-muted cursor-pointer text-foreground flex items-center gap-2',
+                  index === payTypeActiveIndex ? 'bg-surface-muted' : ''
                 ]"
               >
-                <CreditCardIcon class="w-4 h-4 text-blue-500" />
+                <CreditCardIcon class="w-4 h-4 text-primary-500" />
                 {{ item }}
               </div>
             </div>
@@ -250,7 +248,7 @@
         <!-- 金额范围 -->
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             最小金额
           </label>
@@ -259,13 +257,13 @@
             type="number"
             step="0.01"
             placeholder="0.00"
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+            class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
 
         <div class="space-y-2">
           <label
-            class="block text-sm font-semibold text-gray-600 dark:text-gray-400"
+            class="block text-sm font-semibold text-foreground/70"
           >
             最大金额
           </label>
@@ -274,25 +272,25 @@
             type="number"
             step="0.01"
             placeholder="0.00"
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+            class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
       </div>
 
       <!-- 操作栏 -->
       <div
-        class="px-4 py-3 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+        class="px-4 py-3 border-t border-border bg-surface-muted"
       >
         <div class="flex gap-2">
           <button
             @click="resetFilters"
-            class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded text-sm font-semibold transition-colors"
+            class="flex-1 px-4 py-2 bg-surface hover:bg-surface-muted text-foreground/80 rounded text-sm font-semibold transition-colors border border-border"
           >
             重置
           </button>
           <button
             @click="applyFilters"
-            class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold transition-colors flex items-center justify-center gap-1"
+            class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-semibold transition-colors flex items-center justify-center gap-1"
           >
             <CheckIcon class="w-3 h-3" />
             应用筛选
@@ -610,14 +608,15 @@ const onPayTypeKeydown = (e: KeyboardEvent) => {
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 </style>

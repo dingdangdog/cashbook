@@ -1,17 +1,17 @@
 <template>
   <div class="mobile-chart-card">
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-2 border border-gray-200 dark:border-gray-700 h-full"
+      class="bg-surface rounded-xl shadow-lg p-2 border border-border h-full"
     >
       <!-- Card Header -->
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center space-x-2">
-          <component :is="icon" class="w-5 h-5 text-blue-500" />
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+          <component :is="icon" class="w-5 h-5 text-primary-500" />
+          <h3 class="text-lg font-semibold text-foreground">
             {{ title }}
           </h3>
         </div>
-        <div class="text-xs text-gray-500 dark:text-gray-400">
+        <div class="text-xs text-muted">
           {{ currentIndex + 1 }} / {{ totalCount }}
         </div>
       </div>

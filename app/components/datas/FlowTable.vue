@@ -1,51 +1,51 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg"
+    class="bg-surface text-foreground shadow-sm border border-border overflow-hidden rounded-lg"
   >
     <!-- 查询条件显示 -->
     <div
-      class="px-2 py-1 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+      class="px-2 py-1 bg-surface-muted border-b border-border"
     >
       <div class="flex flex-wrap gap-2 text-sm">
         <span
           v-if="flowQuery.startDay"
-          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-500/10 text-primary-700 border border-primary-500/20"
         >
           开始: {{ flowQuery.startDay }}
         </span>
         <span
           v-if="flowQuery.endDay"
-          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-500/10 text-primary-700 border border-primary-500/20"
         >
           结束: {{ flowQuery.endDay }}
         </span>
         <span
           v-if="flowQuery.flowType"
-          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-surface text-foreground/80 border border-border"
         >
           {{ flowQuery.flowType }}
         </span>
         <span
           v-if="flowQuery.industryType"
-          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-surface text-foreground/80 border border-border"
         >
           {{ flowQuery.industryType }}
         </span>
         <span
           v-if="flowQuery.payType"
-          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-surface text-foreground/80 border border-border"
         >
           {{ flowQuery.payType }}
         </span>
         <span
           v-if="flowQuery.attribution"
-          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-surface text-foreground/70 border border-border"
         >
           {{ flowQuery.attribution }}
         </span>
         <span
           v-if="!hasFilters"
-          class="text-gray-500 dark:text-gray-400 text-xs"
+          class="text-foreground/60 text-xs"
         >
           显示全部数据
         </span>
@@ -55,9 +55,9 @@
     <!-- 加载状态 -->
     <div v-if="loading" class="flex justify-center items-center py-12">
       <div
-        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
       ></div>
-      <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
+      <span class="ml-2 text-foreground/60">加载中...</span>
     </div>
 
     <!-- 表格内容 -->
@@ -68,15 +68,15 @@
         :style="{ height: getTableHeight() + 'px' }"
       >
         <table class="w-full">
-          <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
-            <tr class="border-b border-gray-200 dark:border-gray-600">
+          <thead class="bg-surface-muted sticky top-0 z-10">
+            <tr class="border-b border-border">
               <th
                 v-for="header in headers"
                 :key="header.key"
-                class="px-3 py-2 min-w-20 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-3 py-2 min-w-20 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
                 :class="
                   header.key === 'money'
-                    ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600'
+                    ? 'cursor-pointer hover:bg-surface'
                     : ''
                 "
                 @click="header.key === 'money' ? toggleSort() : null"
@@ -88,16 +88,16 @@
                       class="h-3 w-3"
                       :class="
                         flowQuery.moneySort === 'asc'
-                          ? 'text-blue-600'
-                          : 'text-gray-400'
+                          ? 'text-primary-600'
+                          : 'text-foreground/30'
                       "
                     />
                     <ChevronDownIcon
                       class="h-3 w-3 -mt-0.5"
                       :class="
                         flowQuery.moneySort === 'desc'
-                          ? 'text-blue-600'
-                          : 'text-gray-400'
+                          ? 'text-primary-600'
+                          : 'text-foreground/30'
                       "
                     />
                   </div>
@@ -106,12 +106,12 @@
             </tr>
           </thead>
           <tbody
-            class="divide-y divide-gray-200 dark:divide-gray-600 overflow-y-auto"
+            class="divide-y divide-border overflow-y-auto"
           >
             <tr v-if="flowPageRef.data.length === 0">
               <td
                 :colspan="headers.length"
-                class="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
+                class="px-4 py-8 text-center text-foreground/60"
               >
                 暂无数据
               </td>
@@ -120,26 +120,26 @@
               v-else
               v-for="item in flowPageRef.data"
               :key="item.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              class="hover:bg-surface-muted transition-colors"
             >
               <td
-                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap"
+                class="px-3 py-2 text-sm whitespace-nowrap"
               >
                 {{ item.day }}
               </td>
               <td
-                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap"
+                class="px-3 py-2 text-sm whitespace-nowrap"
               >
                 {{ item.flowType }}
               </td>
               <td
-                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                class="px-3 py-2 text-sm max-w-32 truncate"
                 :title="item.industryType"
               >
                 {{ item.industryType }}
               </td>
               <td
-                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                class="px-3 py-2 text-sm max-w-32 truncate"
                 :title="item.payType"
               >
                 {{ item.payType }}
@@ -147,22 +147,22 @@
               <td class="px-3 py-2 whitespace-nowrap">
                 <span
                   :class="[
-                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
                     Number(item.money) > 100
-                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+                      ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                      : 'bg-surface-muted text-foreground/70 border-border',
                   ]"
                 >
                   {{ Number(item.money || 0).toFixed(2) }}
                 </span>
               </td>
               <td
-                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                class="px-3 py-2 text-sm max-w-32 truncate"
                 :title="item.name"
               >
                 {{ item.name }}
               </td>
-              <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100">
+              <td class="px-3 py-2 text-sm">
                 <!-- 小票显示 -->
                 <div
                   v-if="getInvoiceImages(item.invoice || '').length > 0"
@@ -171,7 +171,7 @@
                   <div
                     v-for="(img, index) in getInvoiceImages(item.invoice || '')"
                     :key="index"
-                    class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-gray-200 dark:border-gray-600 hover:border-blue-500 transition-colors"
+                    class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-border hover:border-primary-500 transition-colors"
                     @click="openFullscreen(invoiceImageMap[img])"
                   >
                     <img
@@ -183,14 +183,14 @@
                     <div
                       class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all"
                     >
-                      <EyeIcon class="h-4 w-4 text-green-500" />
+                      <EyeIcon class="h-4 w-4 text-primary-400" />
                     </div>
                   </div>
                 </div>
-                <span v-else class="text-gray-400 text-xs">无小票</span>
+                <span v-else class="text-foreground/40 text-xs">无小票</span>
               </td>
               <td
-                class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate"
+                class="px-3 py-2 text-sm max-w-32 truncate"
                 :title="item.description"
               >
                 {{ item.description }}
@@ -202,21 +202,21 @@
                 <div class="flex gap-2">
                   <button
                     @click="$emit('editItem', item)"
-                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    class="text-primary-600 hover:text-primary-700 p-1 rounded hover:bg-primary-500/10 transition-colors"
                     title="编辑"
                   >
                     <PencilIcon class="h-4 w-4" />
                   </button>
                   <button
                     @click="editTicket(item)"
-                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    class="text-primary-600 hover:text-primary-700 p-1 rounded hover:bg-primary-500/10 transition-colors"
                     title="编辑小票"
                   >
                     <TicketIcon class="h-4 w-4" />
                   </button>
                   <button
                     @click="deleteFlow(item)"
-                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    class="text-red-600 hover:text-red-700 p-1 rounded hover:bg-red-500/10 transition-colors"
                     title="删除"
                   >
                     <TrashIcon class="h-4 w-4" />
@@ -235,7 +235,7 @@
       >
         <div
           v-if="flowPageRef.data.length === 0"
-          class="p-8 text-center text-gray-500 dark:text-gray-400"
+        class="p-8 text-center text-foreground/60"
         >
           暂无数据
         </div>
@@ -243,29 +243,29 @@
           v-else
           v-for="item in flowPageRef.data"
           :key="item.id"
-          class="p-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        class="p-2 border-b border-border last:border-b-0 hover:bg-surface-muted transition-colors"
         >
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1">
-              <h3 class="text-sm font-medium text-green-950 dark:text-white">
+              <h3 class="text-sm font-medium">
                 {{ item.name }}
               </h3>
-              <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p class="text-xs text-foreground/60 mt-1">
                 {{ item.day }}
               </p>
             </div>
             <span
               :class="[
-                'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
                 Number(item.money) > 100
-                  ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                  : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+                  ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                  : 'bg-surface-muted text-foreground/70 border-border',
               ]"
             >
               {{ Number(item.money || 0).toFixed(2) }}
             </span>
           </div>
-          <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+          <div class="space-y-1 text-xs text-foreground/60">
             <p v-if="item.description">{{ item.description }}</p>
 
             <!-- 小票显示 - 移动端 -->
@@ -276,7 +276,7 @@
               <div
                 v-for="(img, index) in getInvoiceImages(item.invoice || '')"
                 :key="index"
-                class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-gray-200 dark:border-gray-600 hover:border-blue-500 transition-colors"
+                class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-border hover:border-primary-500 transition-colors"
                 @click="openFullscreen(invoiceImageMap[img])"
               >
                 <img
@@ -305,17 +305,17 @@
 
             <div class="flex flex-wrap gap-1">
               <span
-                class="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 px-1.5 py-0.5 rounded"
+                class="bg-surface-muted text-foreground/80 px-1.5 py-0.5 rounded border border-border"
               >
                 {{ item.flowType }}
               </span>
               <span
-                class="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-1.5 py-0.5 rounded"
+                class="bg-surface-muted text-foreground/80 px-1.5 py-0.5 rounded border border-border"
               >
                 {{ item.industryType }}
               </span>
               <span
-                class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded"
+                class="bg-surface-muted text-foreground/80 px-1.5 py-0.5 rounded border border-border"
               >
                 {{ item.payType }}
               </span>
@@ -327,14 +327,14 @@
             >
               <button
                 @click="$emit('editItem', item)"
-                class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                class="p-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded transition-colors"
                 title="编辑"
               >
                 <PencilIcon class="h-3 w-3" />
               </button>
               <button
                 @click="editTicket(item)"
-                class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                class="p-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded transition-colors"
                 title="编辑小票"
               >
                 <TicketIcon class="h-3 w-3" />
@@ -352,24 +352,24 @@
       </div>
 
       <!-- 分隔线 -->
-      <div class="border-t border-gray-200 dark:border-gray-700"></div>
+      <div class="border-t border-border"></div>
 
       <!-- 统计信息和分页 -->
-      <div class="px-2 py-1 bg-gray-50 dark:bg-gray-700">
+      <div class="px-2 py-1 bg-surface-muted">
         <!-- 统计信息 -->
         <div class="flex flex-wrap gap-1 mb-2">
           <span
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-500/10 text-primary-700 border border-primary-500/20"
           >
             总收入: ¥{{ Number(flowPageRef.totalIn || 0).toFixed(2) }}
           </span>
           <span
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-500/10 text-red-600 border border-red-500/20"
           >
             总支出: ¥{{ Number(flowPageRef.totalOut || 0).toFixed(2) }}
           </span>
           <span
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-surface text-foreground/70 border border-border"
           >
             不计收支: ¥{{ Number(flowPageRef.notInOut || 0).toFixed(2) }}
           </span>
@@ -381,7 +381,7 @@
           class="flex flex-col md:flex-row items-center justify-center gap-2"
         >
           <!-- 分页信息 -->
-          <div class="text-sm text-gray-700 dark:text-gray-300 text-center">
+          <div class="text-sm text-foreground/70 text-center">
             显示第 {{ (currentPage - 1) * (flowQuery.pageSize || 20) + 1 }} -
             {{
               Math.min(
@@ -398,7 +398,7 @@
             <select
               v-model="flowQuery.pageSize"
               @change="changePageSize"
-              class="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-800 text-green-950 dark:text-white"
+              class="text-sm border border-border rounded px-2 py-1 bg-background text-foreground"
             >
               <option value="10">10条/页</option>
               <option value="20">20条/页</option>
@@ -411,7 +411,7 @@
               <button
                 @click="changePage(currentPage - 1)"
                 :disabled="currentPage <= 1"
-                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-border rounded hover:bg-surface disabled:opacity-50 disabled:cursor-not-allowed bg-background text-foreground transition-colors"
               >
                 <ChevronLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
@@ -427,19 +427,19 @@
                   :class="[
                     'h-7 w-7 sm:h-8 sm:w-8 text-center text-xs sm:text-sm border rounded transition-colors',
                     page === currentPage
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 bg-white dark:bg-gray-800 text-green-950 dark:text-white',
+                      ? 'bg-primary-600 text-white border-primary-600'
+                      : 'border-border hover:bg-surface bg-background text-foreground',
                   ]"
                 >
                   {{ page }}
                 </button>
-                <span v-else class="px-1 text-gray-500 text-xs">...</span>
+                <span v-else class="px-1 text-foreground/40 text-xs">...</span>
               </template>
 
               <button
                 @click="changePage(currentPage + 1)"
                 :disabled="currentPage >= totalPages"
-                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-border rounded hover:bg-surface disabled:opacity-50 disabled:cursor-not-allowed bg-background text-foreground transition-colors"
               >
                 <ChevronRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
@@ -466,7 +466,7 @@
       />
     </div>
     <span
-      class="close-button bg-gray-500 hover:bg-gray-400"
+      class="close-button bg-secondary-800/80 hover:bg-secondary-800"
       @click="closeFullscreen"
       >&times;</span
     >
@@ -827,17 +827,18 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 .overflow-x-auto::-webkit-scrollbar-track,
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb,
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover,
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 
 /* 全屏预览样式 */

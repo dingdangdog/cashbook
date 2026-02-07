@@ -7,16 +7,16 @@
       @click="searchDrawer = false"
     >
       <div
-        class="w-80 h-full bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 p-2 md:p-4 overflow-y-auto"
+        class="w-80 h-full bg-surface shadow-xl border-l border-border p-2 md:p-4 overflow-y-auto"
         @click.stop
       >
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+          <h3 class="text-lg font-semibold text-foreground">
             时间筛选
           </h3>
           <button
             @click="searchDrawer = false"
-            class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+            class="p-2 text-muted hover:text-foreground transition-colors"
           >
             <svg
               class="w-5 h-5"
@@ -53,11 +53,11 @@
     </div>
 
     <div
-      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-gray-200 dark:border-gray-700 md:h-16 mb-4"
+      class="flex flex-col md:flex-row md:justify-between items-center w-full border-b border-border md:h-16 mb-4"
     >
       <div>
         <h4
-          class="hidden md:flex text-lg font-semibold text-green-950 dark:text-white my-2"
+          class="hidden md:flex text-lg font-semibold text-foreground my-2"
         >
           {{ title }}【{{ chartParam.flowType }}】
         </h4>
@@ -66,14 +66,14 @@
       <div class="flex space-x-2 pb-2 items-center">
         <button
           @click="searchDrawer = true"
-          class="px-2 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          class="px-2 py-1 md:px-4 md:py-2 bg-primary-600 text-white rounded-md shadow-sm hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
         >
           时间筛选
         </button>
         <div class="min-w-32">
           <select
             v-model="chartParam.flowType"
-            class="w-full px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-md bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-2 py-1 md:px-3 md:py-2 border border-border rounded-md shadow-md bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option
               v-for="type in FlowTypes"
@@ -108,13 +108,13 @@
     @click="showFlowTable = false"
   >
     <div
-      class="w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden"
+      class="w-full max-w-6xl max-h-[90vh] bg-surface rounded-lg shadow-xl overflow-hidden"
       @click.stop
     >
       <div
-        class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex justify-between items-center p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+        <h3 class="text-lg font-semibold text-foreground">
           流水详情
         </h3>
         <button

@@ -105,3 +105,41 @@ model TypeRelation {
   source String
   target String
 }
+
+model AIProvider {
+  id          String   @id @default(cuid()) @db.VarChar(36)
+  name        String   @db.VarChar(100) // 显示名称，如 "OpenAI GPT-4"、"DeepL Pro"
+  provider    String   @db.VarChar(50) // 服务商标识。一般是产品名，如 "openai", "deepseek", "gemini"
+  apiProtocol String   @db.VarChar(50) // API 协议，如 "openai", "gemini", "claude"
+  apiKey      String?  @db.VarChar(500) // API 密钥
+  apiEndpoint String?  @db.VarChar(500) // API 端点（可选，某些服务商需要自定义端点）
+  apiModel    String?  @db.VarChar(100) // 模型名称，如 "gpt-4", "gemini-2.0-flash", "claude-3.5-sonnet"
+  apiVersion  String?  @db.VarChar(100) // API 版本，如 "2024-02-15", "2024-06-01", "2024-07-01"
+  temperature Float?   @default(0.5) // 温度，如 0.5, 1.0, 2.0
+  maxTokens   Int?     @default(3000) // 最大令牌数，如 1000, 2000, 3000
+  timeout     Int      @default(30000) // 超时时间（毫秒），默认30秒
+  extraConfig String?  @db.Text // 额外配置（JSON格式），用于存储服务商特定的配置
+  isActive    Boolean  @default(true) // 是否启用
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([provider, isActive])
+  @@index([isActive])
+  @@map("translation_configs")
+}
+
+model Theme {
+  id        String   @id @default(cuid()) @db.VarChar(36)
+  code      String   @unique @db.VarChar(50)
+  name      String   @db.VarChar(100)
+  mode      String   @db.VarChar(20) // 'light' or 'dark'
+  colors    String   @db.Text // JSON 格式存储色彩配置
+  isActive  Boolean  @default(true)
+  isDefault Boolean  @default(false)
+  sortBy    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mode, isActive])
+  @@map("themes")
+}

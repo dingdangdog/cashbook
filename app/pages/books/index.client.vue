@@ -180,10 +180,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full">
+  <div class="p-2 md:p-4 bg-surface-muted min-h-full">
     <!-- 搜索和操作栏 -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-2 mb-2 md:mb-4"
+      class="bg-surface rounded-lg shadow-sm border border-border p-2 mb-2 md:mb-4"
     >
       <!-- 宽屏：左右布局，窄屏：分两行 -->
       <div class="flex flex-col lg:flex-row gap-2">
@@ -191,19 +191,19 @@ onMounted(() => {
         <div class="flex space-x-2">
           <div class="relative">
             <MagnifyingGlassIcon
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted"
             />
             <input
               v-model="query.name"
               type="text"
               placeholder="搜索账本名称..."
-              class="w-full max-w-60 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              class="w-full max-w-60 pl-10 pr-4 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
               @keyup.enter="getPages"
             />
           </div>
           <button
             @click="getPages"
-            class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+            class="px-3 py-1 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <MagnifyingGlassIcon class="h-4 w-4" />
             <span>查询</span>
@@ -214,14 +214,14 @@ onMounted(() => {
         <div class="flex-1 flex flex-wrap gap-2 lg:flex-nowrap">
           <button
             @click="getShare"
-            class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+            class="px-3 py-2 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <UsersIcon class="h-4 w-4" />
             添加共享账本
           </button>
           <button
             @click="addItem"
-            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <PlusIcon class="h-4 w-4" />
             新增账本
@@ -232,14 +232,14 @@ onMounted(() => {
 
     <!-- 数据表格容器 -->
     <div
-      class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+      class="bg-surface shadow-sm border border-border overflow-hidden"
     >
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center items-center py-12">
         <div
-          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
         ></div>
-        <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
+        <span class="ml-2 text-muted">加载中...</span>
       </div>
 
       <!-- 桌面端表格 -->
@@ -250,71 +250,71 @@ onMounted(() => {
         <table class="w-full">
           <thead>
             <tr
-              class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+              class="bg-surface-muted border-b border-border"
             >
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 ID
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 账本ID
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 账本名称
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 预算（每月）
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 创建时间
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 共享KEY
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 操作
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+          <tbody class="divide-y divide-border">
             <tr
               v-for="item in tabledata.data"
               :key="item.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              class="hover:bg-surface-muted transition-colors"
             >
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.id }}
               </td>
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.bookId }}
               </td>
               <td class="px-4 py-2 whitespace-nowrap">
                 <div
-                  class="text-sm font-medium text-green-950 dark:text-white max-w-52 text-ellipsis overflow-hidden"
+                  class="text-sm font-medium text-foreground max-w-52 text-ellipsis overflow-hidden"
                   :title="item.bookName"
                 >
                   {{ item.bookName }}
                 </div>
               </td>
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.budget || "-" }}
               </td>
@@ -326,19 +326,19 @@ onMounted(() => {
               <td class="px-4 py-2 whitespace-nowrap">
                 <div v-if="item.shareKey" class="flex items-center gap-2">
                   <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300"
                   >
                     {{ item.shareKey }}
                   </span>
                   <button
                     @click="copyShareKey(item.shareKey)"
-                    class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded p-1 transition-colors"
+                    class="text-accent-600 hover:text-accent-500 hover:bg-accent-50 dark:hover:bg-accent-900/20 rounded p-1 transition-colors"
                     title="复制分享Key"
                   >
                     <DocumentDuplicateIcon class="h-3 w-3" />
                   </button>
                 </div>
-                <span v-else class="text-gray-400 dark:text-gray-500 text-sm"
+                <span v-else class="text-muted text-sm"
                   >-</span
                 >
               </td>
@@ -346,7 +346,7 @@ onMounted(() => {
                 <div class="flex items-center gap-2">
                   <button
                     @click="editItemInfo(item)"
-                    class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                    class="text-primary-600 hover:text-primary-500 transition-colors"
                     title="编辑"
                   >
                     <PencilIcon class="h-4 w-4" />
@@ -354,7 +354,7 @@ onMounted(() => {
                   <button
                     v-if="!item.shareKey"
                     @click="toShare(item)"
-                    class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
+                    class="text-accent-600 hover:text-accent-500 transition-colors"
                     title="分享"
                   >
                     <ShareIcon class="h-4 w-4" />
@@ -381,12 +381,12 @@ onMounted(() => {
         <div
           v-for="item in tabledata.data"
           :key="item.id"
-          class="bg-gray-50 dark:bg-gray-800 p-3 space-y-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+          class="bg-surface-muted p-3 space-y-2 border-b border-border last:border-b-0"
         >
           <!-- 标题行：账本名称 + 删除按钮 -->
           <div class="flex justify-between items-center mb-2">
             <h3
-              class="text-base font-medium text-gray-900 dark:text-gray-100 flex-1 flex items-center pr-2"
+              class="text-base font-medium text-foreground flex-1 flex items-center pr-2"
             >
               <span class="font-medium">账本名称：</span>
               <span class="text-ellipsis overflow-hidden max-w-52">{{
@@ -407,7 +407,7 @@ onMounted(() => {
           </div>
 
           <!-- 详细信息 -->
-          <div class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <div class="space-y-1 text-sm text-muted">
             <div class="flex items-center justify-between">
               <p><span class="font-medium">ID:</span> {{ item.id }}</p>
               <p><span class="font-medium">账本ID:</span> {{ item.bookId }}</p>
@@ -422,17 +422,17 @@ onMounted(() => {
                 <span class="font-medium">分享KEY:</span>
                 <span
                   v-if="item.shareKey"
-                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
+                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-400"
                 >
                   {{ item.shareKey }}
                 </span>
-                <span v-else class="text-gray-400 dark:text-gray-500"
+                <span v-else class="text-muted"
                   >未分享</span
                 >
                 <button
                   v-if="item.shareKey"
                   @click="copyShareKey(item.shareKey)"
-                  class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                  class="p-1.5 bg-primary-600 hover:bg-primary-500 text-white rounded transition-colors"
                   title="复制分享Key"
                 >
                   <DocumentDuplicateIcon class="h-3 w-3" />
@@ -449,7 +449,7 @@ onMounted(() => {
               <div class="flex items-center gap-1">
                 <button
                   @click="editItemInfo(item)"
-                  class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                  class="p-1.5 bg-primary-600 hover:bg-primary-500 text-white rounded transition-colors"
                   title="编辑"
                 >
                   <PencilIcon class="h-3 w-3" />
@@ -457,7 +457,7 @@ onMounted(() => {
                 <button
                   v-if="!item.shareKey"
                   @click="toShare(item)"
-                  class="p-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors"
+                  class="p-1.5 bg-accent-600 hover:bg-accent-500 text-white rounded transition-colors"
                   title="分享"
                 >
                   <ShareIcon class="h-3 w-3" />
@@ -473,7 +473,7 @@ onMounted(() => {
         v-if="!loading && (!tabledata.data || tabledata.data.length === 0)"
         class="text-center py-12"
       >
-        <div class="text-gray-400 dark:text-gray-500 mb-4">
+        <div class="text-muted mb-4">
           <svg
             class="mx-auto h-12 w-12"
             fill="none"
@@ -488,15 +488,15 @@ onMounted(() => {
             />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+        <h3 class="text-lg font-medium text-foreground mb-2">
           暂无账本数据
         </h3>
-        <p class="text-gray-500 dark:text-gray-400 mb-4">
+        <p class="text-muted mb-4">
           开始创建您的第一个账本吧
         </p>
         <button
           @click="addItem"
-          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
         >
           <PlusIcon class="h-4 w-4" />
           创建账本
@@ -506,11 +506,11 @@ onMounted(() => {
       <!-- 分页组件 -->
       <div
         v-if="!loading && tabledata.data?.length && totalPages > 1"
-        class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
+        class="px-4 py-3 bg-surface-muted border-t border-border"
       >
         <div class="flex flex-col gap-4">
           <!-- 分页信息 -->
-          <div class="text-sm text-gray-700 dark:text-gray-300 text-center">
+          <div class="text-sm text-foreground text-center">
             显示第 {{ (pageQuery.pageNum - 1) * pageQuery.pageSize + 1 }} -
             {{
               Math.min(
@@ -527,7 +527,7 @@ onMounted(() => {
             <select
               v-model="pageQuery.pageSize"
               @change="changePageSize(pageQuery.pageSize)"
-              class="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-800 text-green-950 dark:text-white"
+              class="text-sm border border-border rounded px-2 py-1 bg-surface text-foreground"
             >
               <option value="10">10条/页</option>
               <option value="15">15条/页</option>
@@ -541,7 +541,7 @@ onMounted(() => {
               <button
                 @click="changePage(pageQuery.pageNum - 1)"
                 :disabled="pageQuery.pageNum <= 1"
-                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-border rounded hover:bg-surface-muted disabled:opacity-50 disabled:cursor-not-allowed bg-surface text-foreground transition-colors"
                 title="上一页"
               >
                 <ChevronLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
@@ -558,20 +558,20 @@ onMounted(() => {
                   :class="[
                     'h-7 w-7 sm:h-8 sm:w-8 text-center text-xs sm:text-sm border rounded transition-colors',
                     page === pageQuery.pageNum
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 bg-white dark:bg-gray-800 text-green-950 dark:text-white',
+                      ? 'bg-primary-600 text-white border-primary-600'
+                      : 'border-border hover:bg-surface-muted bg-surface text-foreground',
                   ]"
                 >
                   {{ page }}
                 </button>
-                <span v-else class="px-1 text-gray-500 text-xs">...</span>
+                <span v-else class="px-1 text-muted text-xs">...</span>
               </template>
 
               <!-- 下一页 -->
               <button
                 @click="changePage(pageQuery.pageNum + 1)"
                 :disabled="pageQuery.pageNum >= totalPages"
-                class="p-1.5 sm:p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-green-950 dark:text-white transition-colors"
+                class="p-1.5 sm:p-2 border border-border rounded hover:bg-surface-muted disabled:opacity-50 disabled:cursor-not-allowed bg-surface text-foreground transition-colors"
                 title="下一页"
               >
                 <ChevronRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
@@ -605,14 +605,14 @@ onMounted(() => {
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-surface-muted;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  @apply bg-border rounded-full;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  @apply bg-muted;
 }
 </style>

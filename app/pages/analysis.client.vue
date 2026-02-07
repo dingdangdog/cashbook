@@ -5,13 +5,13 @@
       <!-- Desktop & Tablet: Chart Carousel -->
       <div class="w-full" v-if="!loading">
         <div
-          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+          class="w-full bg-surface text-foreground rounded-lg shadow p-2 md:p-4 mb-4 border border-border"
         >
           <!-- Chart Container -->
           <div
             class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
           >
-            <div class="w-full border-b md:border-b-0 md:border-r">
+            <div class="w-full border-b md:border-b-0 md:border-r border-border">
               <DailyLineChart
                 title="每日流水曲线"
                 width="100%"
@@ -24,13 +24,13 @@
           </div>
         </div>
         <div
-          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+          class="w-full bg-surface text-foreground rounded-lg shadow p-2 md:p-4 mb-4 border border-border"
         >
           <!-- Chart Container -->
           <div
             class="flex justify-between items-center flex-col md:flex-row gap-2 md:gap-4 md:items-center w-full md:w-auto mb-4"
           >
-            <h3 class="min-w-20 text-base md:text-lg font-semibold text-green-950 dark:text-white">
+            <h3 class="min-w-20 text-base md:text-lg font-semibold">
               支出分析
             </h3>
             <!-- 时间筛选和图表类型切换 -->
@@ -42,7 +42,7 @@
                 class="text-sm md:text-base w-36 md:w-48"
                 clearable
               />
-              <span class="text-gray-500 dark:text-gray-400">至</span>
+              <span class="text-foreground/60">至</span>
               <UiDatePicker
                 v-model="expenseEndDay"
                 placeholder="结束日期"
@@ -52,14 +52,14 @@
               />
             </div>
             <!-- 图表类型切换 -->
-            <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+            <div class="flex bg-surface-muted rounded-lg p-1 border border-border">
               <button
                 @click="expenseChartType = 'pie'"
                 :class="[
                   'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                   expenseChartType === 'pie'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                    ? 'bg-primary-600 text-white'
+                    : 'text-foreground/70 hover:text-foreground',
                 ]"
               >
                 饼图
@@ -69,8 +69,8 @@
                 :class="[
                   'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                   expenseChartType === 'bar'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                    ? 'bg-primary-600 text-white'
+                    : 'text-foreground/70 hover:text-foreground',
                 ]"
               >
                 柱图
@@ -83,7 +83,7 @@
             v-if="expenseChartType === 'pie'"
             class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
           >
-            <div class="w-full border-b md:border-b-0 md:border-r">
+            <div class="w-full border-b md:border-b-0 md:border-r border-border">
               <ChartsCommonPie
                 title="支付方式分析"
                 width="100%"
@@ -97,7 +97,7 @@
                 :endDay="expenseEndDay || undefined"
               />
             </div>
-            <div class="w-full border-b md:border-b-0 md:border-r">
+            <div class="w-full border-b md:border-b-0 md:border-r border-border">
               <ChartsCommonPie
                 title="消费类型分析"
                 width="100%"
@@ -133,7 +133,7 @@
           v-if="expenseChartType === 'bar'"
           class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
         >
-          <div class="w-full border-b md:border-b-0 md:border-r">
+          <div class="w-full border-b md:border-b-0 md:border-r border-border">
             <ChartsCommonBar
               title="支付方式分析"
               width="100%"
@@ -147,7 +147,7 @@
               :endDay="expenseEndDay || undefined"
             />
           </div>
-          <div class="w-full border-b md:border-b-0 md:border-r">
+          <div class="w-full border-b md:border-b-0 md:border-r border-border">
             <ChartsCommonBar
               title="消费类型分析"
               width="100%"
@@ -178,14 +178,14 @@
         </div>
       </div>
       <div
-        class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+        class="w-full bg-surface text-foreground rounded-lg shadow p-2 md:p-4 mb-4 border border-border"
       >
         <!-- Chart Container -->
         <div
           class="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 md:items-center w-full md:w-auto mb-4"
         >
           <h3
-            class="min-w-20 text-base md:text-lg font-semibold text-green-950 dark:text-white"
+            class="min-w-20 text-base md:text-lg font-semibold"
           >
             收入分析
           </h3>
@@ -198,7 +198,7 @@
               class="text-sm md:text-base w-36 md:w-48"
               clearable
             />
-            <span class="text-gray-500 dark:text-gray-400">至</span>
+            <span class="text-foreground/60">至</span>
             <UiDatePicker
               v-model="incomeEndDay"
               placeholder="结束日期"
@@ -208,14 +208,14 @@
             />
           </div>
           <!-- 图表类型切换 -->
-          <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+          <div class="flex bg-surface-muted rounded-lg p-1 border border-border">
             <button
               @click="incomeChartType = 'pie'"
               :class="[
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 incomeChartType === 'pie'
-                  ? 'bg-green-600 text-white'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                  ? 'bg-primary-600 text-white'
+                  : 'text-foreground/70 hover:text-foreground',
               ]"
             >
               饼图
@@ -225,8 +225,8 @@
               :class="[
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 incomeChartType === 'bar'
-                  ? 'bg-green-600 text-white'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                  ? 'bg-primary-600 text-white'
+                  : 'text-foreground/70 hover:text-foreground',
               ]"
             >
               柱图
@@ -238,7 +238,7 @@
           v-if="incomeChartType === 'pie'"
           class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
         >
-          <div class="w-full border-b md:border-b-0 md:border-r">
+          <div class="w-full border-b md:border-b-0 md:border-r border-border">
             <ChartsCommonPie
               title="收款方式分析"
               width="100%"
@@ -252,7 +252,7 @@
               :endDay="incomeEndDay || undefined"
             />
           </div>
-          <div class="w-full border-b md:border-b-0 md:border-r">
+          <div class="w-full border-b md:border-b-0 md:border-r border-border">
             <ChartsCommonPie
               title="收入类型分析"
               width="100%"
@@ -287,7 +287,7 @@
           v-if="incomeChartType === 'bar'"
           class="w-full flex flex-col md:flex-row justify-between md:space-x-4 space-y-4 md:space-y-0 rounded-md p-2"
         >
-          <div class="w-full border-b md:border-b-0 md:border-r">
+          <div class="w-full border-b md:border-b-0 md:border-r border-border">
             <ChartsCommonBar
               title="收款方式分析"
               width="100%"
@@ -301,7 +301,7 @@
               :endDay="incomeEndDay || undefined"
             />
           </div>
-          <div class="w-full border-b md:border-b-0 md:border-r">
+          <div class="w-full border-b md:border-b-0 md:border-r border-border">
             <ChartsCommonBar
               title="收入类型分析"
               width="100%"

@@ -79,3 +79,13 @@ export type FixedFlow = Prisma.FixedFlowModel
  * 
  */
 export type TypeRelation = Prisma.TypeRelationModel
+/**
+ * Model AIProvider
+ * 
+ */
+export type AIProvider = Prisma.AIProviderModel
+/**
+ * Model Theme
+ * 
+ */
+export type Theme = Prisma.ThemeModel

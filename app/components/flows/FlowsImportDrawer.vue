@@ -2,23 +2,21 @@
   <!-- 导入导出抽屉 -->
   <div
     v-if="show"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-start z-50"
+    class="fixed inset-0 bg-black/50 flex justify-start z-50"
     @click="$emit('close')"
   >
     <div
-      class="bg-white dark:bg-gray-800 w-full max-w-md h-full flex flex-col shadow-xl transform transition-transform"
+      class="bg-surface text-foreground w-full max-w-md h-full flex flex-col shadow-xl transform transition-transform border-r border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-4 py-3 border-b border-border flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-          导入导出
-        </h3>
+        <h3 class="text-lg font-semibold">导入导出</h3>
         <button
           @click="$emit('close')"
-          class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+          class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
         >
           <svg
             class="w-4 h-4"
@@ -40,10 +38,10 @@
       <div class="flex-1 overflow-y-auto p-4 space-y-3">
         <!-- 账单导入 -->
         <div
-          class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800"
+          class="bg-surface-muted rounded-lg p-4 border border-border"
         >
           <h4
-            class="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-primary-700 mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -63,7 +61,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('importAlipay')"
-              class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -82,7 +80,7 @@
             </button>
             <button
               @click="$emit('importWechat')"
-              class="w-full px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -123,10 +121,10 @@
 
         <!-- 自定义导入 -->
         <div
-          class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800"
+          class="bg-surface-muted rounded-lg p-4 border border-border"
         >
           <h4
-            class="text-sm font-semibold text-purple-800 dark:text-purple-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-primary-700 mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -146,7 +144,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('customImport')"
-              class="w-full px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -165,7 +163,7 @@
             </button>
             <button
               @click="$emit('importJson')"
-              class="w-full px-3 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-secondary-800 hover:bg-secondary-900 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -187,10 +185,10 @@
 
         <!-- 数据导出 -->
         <div
-          class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800"
+          class="bg-surface-muted rounded-lg p-4 border border-border"
         >
           <h4
-            class="text-sm font-semibold text-green-800 dark:text-green-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-primary-700 mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -210,7 +208,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('exportCsv')"
-              class="w-full px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-secondary-800 hover:bg-secondary-900 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -229,7 +227,7 @@
             </button>
             <button
               @click="$emit('exportJson')"
-              class="w-full px-3 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-secondary-800 hover:bg-secondary-900 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -251,10 +249,10 @@
 
         <!-- 模板管理 -->
         <div
-          class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 border border-orange-200 dark:border-orange-800"
+          class="bg-surface-muted rounded-lg p-4 border border-border"
         >
           <h4
-            class="text-sm font-semibold text-orange-800 dark:text-orange-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-primary-700 mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -273,7 +271,7 @@
 
             <button
               @click="$emit('downloadTemplate')"
-              class="text-orange-600 rounded text-sm hover:underline font-medium transition-colors flex items-center gap-2"
+              class="text-primary-600 rounded text-sm hover:underline font-medium transition-colors flex items-center gap-2"
             >
               下载模板
             </button>
@@ -281,7 +279,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('importTemplate')"
-              class="w-full px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -304,9 +302,9 @@
 
       <!-- 说明文档 -->
       <div
-        class="px-4 py-3 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+        class="px-4 py-3 border-t border-border bg-surface-muted"
       >
-        <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+        <div class="text-xs text-foreground/70 space-y-1">
           <p class="flex items-center gap-1">
             <svg
               class="w-3 h-3 flex-shrink-0"
@@ -373,14 +371,15 @@ defineEmits<{
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 </style>

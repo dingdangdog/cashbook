@@ -2,7 +2,7 @@
   <div class="relative">
     <label
       v-if="label"
-      class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+      class="block text-sm font-semibold text-foreground/80 mb-2"
     >
       {{ label }}
     </label>
@@ -14,13 +14,13 @@
         :placeholder="placeholder"
         readonly
         @click="togglePicker"
-        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-green-950 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        class="w-full px-3 py-2 border border-border rounded-md shadow-sm bg-background text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
       />
       <div
         class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
       >
         <svg
-          class="w-5 h-5 text-gray-400"
+          class="w-5 h-5 text-foreground/40"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -35,7 +35,7 @@
       <button
         v-if="clearable && modelValue"
         @click.stop="clearDate"
-        class="absolute inset-y-0 right-8 flex items-center pr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        class="absolute inset-y-0 right-8 flex items-center pr-1 text-foreground/40 hover:text-foreground/70"
       >
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path
@@ -51,7 +51,7 @@
     <div
       v-if="showPicker"
       :class="[
-        'absolute z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg',
+        'absolute z-50 mt-1 bg-surface border border-border rounded-lg shadow-lg',
         props.position === 'right' ? 'right-0' : 'left-0',
       ]"
       @click.stop
@@ -63,7 +63,7 @@
         :month="calendarMonth"
         @dayclick="onDateSelect"
         @update:month="calendarMonth = $event"
-        :color="isDarkMode ? 'blue' : 'blue'"
+        :color="'green'"
         :is-dark="isDarkMode"
         class="border-0"
       />
@@ -110,7 +110,7 @@ const selectedDate = ref<Date | null>(null);
 const calendarMonth = ref<Date>(new Date());
 
 // 响应式获取主题状态
-const isDarkMode = computed(() => isDark.value);
+const isDarkMode = computed(() => Boolean((isDark as any)?.value ?? isDark));
 
 // 计算选中的日期属性，用于 VCalendar 显示
 const selectedAttributes = computed(() => {
@@ -120,7 +120,7 @@ const selectedAttributes = computed(() => {
       key: "selected",
       dates: selectedDate.value,
       highlight: {
-        color: "blue",
+        color: "green",
         fillMode: "solid",
       },
     },

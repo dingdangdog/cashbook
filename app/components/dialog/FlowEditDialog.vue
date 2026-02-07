@@ -2,23 +2,23 @@
   <!-- 流水编辑对话框 -->
   <div
     v-if="showFlowEditDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
     style="z-index: 999"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-md mx-auto border border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 class="text-lg font-semibold">
           {{ title }}
         </h3>
         <button
           @click="closeDialog"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="text-foreground/40 hover:text-foreground/70 transition-colors"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -29,7 +29,7 @@
         <!-- 日期选择 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             日期
           </label>
@@ -39,14 +39,14 @@
         <!-- 流水类型 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             流水类型
           </label>
           <select
             v-model="flowEdit.flowType"
             @change="changeFlowTypes"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="">请选择流水类型</option>
             <option
@@ -62,7 +62,7 @@
         <!-- 支出类型/收入类型 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             {{ industryTypeLabel }}
           </label>
@@ -80,7 +80,7 @@
               @blur="hideIndustryTypeDropdown"
               @keydown="onIndustryKeydown($event)"
               placeholder="输入或选择类型"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <!-- 下拉选项 -->
             <div
@@ -88,16 +88,16 @@
                 showIndustryTypeDropdown &&
                 filteredIndustryTypeOptions.length > 0
               "
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredIndustryTypeOptions"
                 :key="item"
                 @mousedown="selectIndustryType(item)"
                 :class="[
-                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
+                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground',
                   index === industryActiveIndex
-                    ? 'bg-gray-100 dark:bg-gray-600'
+                    ? 'bg-surface-muted'
                     : '',
                 ]"
               >
@@ -110,7 +110,7 @@
         <!-- 支付方式/收款方式 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             {{ payTypeLabel }}
           </label>
@@ -126,21 +126,21 @@
               @blur="hidePayTypeDropdown"
               @keydown="onPayTypeKeydown($event)"
               placeholder="输入或选择支付方式"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <!-- 下拉选项 -->
             <div
               v-if="showPayTypeDropdown && filteredPayTypeOptions.length > 0"
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredPayTypeOptions"
                 :key="item"
                 @mousedown="selectPayType(item)"
                 :class="[
-                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
+                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground',
                   index === payTypeActiveIndex
-                    ? 'bg-gray-100 dark:bg-gray-600'
+                    ? 'bg-surface-muted'
                     : '',
                 ]"
               >
@@ -153,7 +153,7 @@
         <!-- 金额 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             金额
           </label>
@@ -162,14 +162,14 @@
             type="number"
             step="0.01"
             placeholder="请输入金额"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
 
         <!-- 流水归属 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             流水归属
           </label>
@@ -187,21 +187,21 @@
               @blur="hideAttributionDropdown"
               @keydown="onAttributionKeydown($event)"
               placeholder="输入或选择归属"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <!-- 下拉选项 -->
             <div
               v-if="showAttributionDropdown && attributionList.length > 0"
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredAttributionList"
                 :key="item"
                 @mousedown="selectAttribution(item)"
                 :class="[
-                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white',
+                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground',
                   index === attributionActiveIndex
-                    ? 'bg-gray-100 dark:bg-gray-600'
+                    ? 'bg-surface-muted'
                     : '',
                 ]"
               >
@@ -214,7 +214,7 @@
         <!-- 流水名称 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             流水名称
           </label>
@@ -230,21 +230,21 @@
               @blur="hideNameDropdown"
               @keydown="onNameKeydown($event)"
               placeholder="输入或选择名称"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <!-- 下拉选项 -->
             <div
               v-if="showNameDropdown && nameList.length > 0"
-              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
             >
               <div
                 v-for="(item, index) in filteredNameList"
                 :key="item"
                 @mousedown="selectName(item)"
                 :class="[
-                  'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm text-gray-900 dark:text-white line-clamp-1',
+                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground line-clamp-1',
                   index === nameActiveIndex
-                    ? 'bg-gray-100 dark:bg-gray-600'
+                    ? 'bg-surface-muted'
                     : '',
                 ]"
               >
@@ -257,7 +257,7 @@
         <!-- 备注 -->
         <div>
           <label
-            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-semibold text-foreground/80 mb-1"
           >
             备注
           </label>
@@ -265,31 +265,31 @@
             v-model="flowEdit.description"
             rows="3"
             placeholder="请输入备注"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
           ></textarea>
         </div>
       </div>
 
       <!-- 操作按钮 -->
       <div
-        class="flex justify-center gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+        class="flex justify-center gap-3 p-4 border-t border-border bg-surface-muted"
       >
         <button
           @click="closeDialog"
-          class="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="px-4 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface transition-colors"
         >
           取消
         </button>
         <button
           @click="confirmForm(false)"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
         >
           确定
         </button>
         <button
           v-if="formTitle[0] === title"
           @click="confirmForm(true)"
-          class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          class="px-4 py-2 bg-secondary-800 text-white rounded-md hover:bg-secondary-900 transition-colors"
         >
           确定并继续
         </button>

@@ -2,7 +2,7 @@
   <div class="w-full overflow-hidden">
     <!-- Calendar Header -->
     <div
-      class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-950/80 dark:to-emerald-950/80 text-white"
+      class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 dark:from-primary-800 dark:to-primary-900 text-white"
     >
       <button
         @click="prevMonth"
@@ -33,31 +33,31 @@
 
     <!-- Weekday Headers -->
     <div
-      class="grid grid-cols-7 bg-green-50 dark:bg-transparent border-b border-green-200 dark:border-green-900/30"
+      class="grid grid-cols-7 bg-primary-50 dark:bg-transparent border-b border-primary-200 dark:border-primary-900/30"
     >
       <div
         v-for="day in weekdays"
         :key="day"
-        class="py-3 text-center text-xs font-semibold text-green-700 dark:text-green-500/50 uppercase tracking-wide"
+        class="py-3 text-center text-xs font-semibold text-primary-700 dark:text-primary-500/50 uppercase tracking-wide"
       >
         {{ day }}
       </div>
     </div>
 
     <!-- Calendar Grid -->
-    <div class="grid grid-cols-7 gap-px bg-green-200 dark:bg-black">
+    <div class="grid grid-cols-7 gap-px bg-primary-200 dark:bg-black">
       <div
         v-for="date in calendarDates"
         :key="date.key"
-        class="min-h-20 p-1 flex flex-col relative transition-all duration-200 hover:bg-green-50 dark:hover:bg-green-800/20 border border-green-50 dark:border-green-900"
+        class="min-h-20 p-1 flex flex-col relative transition-all duration-200 hover:bg-primary-50 dark:hover:bg-primary-800/20 border border-primary-50 dark:border-primary-900"
         :class="{
-          'bg-green-50 dark:bg-transparent text-gray-400 dark:text-green-700':
+          'bg-primary-50 dark:bg-transparent text-muted dark:text-primary-700':
             !date.isCurrentMonth,
-          'bg-green-100 dark:bg-green-950/50':
+          'bg-primary-100 dark:bg-primary-950/50':
             date.isCurrentMonth && !date.isWeekend && !date.isToday,
-          'bg-green-200 dark:bg-green-800/50 border-2 border-green-400 dark:border-green-700':
+          'bg-primary-200 dark:bg-primary-800/50 border-2 border-primary-400 dark:border-primary-700':
             date.isToday,
-          'bg-green-50/50 dark:bg-green-950/30':
+          'bg-primary-50/50 dark:bg-primary-950/30':
             date.isWeekend && date.isCurrentMonth,
         }"
       >
@@ -66,10 +66,10 @@
           <span
             class="text-xs font-medium"
             :class="{
-              'text-green-600 dark:text-green-500/60 font-bold': date.isToday,
-              'text-gray-900 dark:text-gray-100':
+              'text-primary-600 dark:text-primary-500/60 font-bold': date.isToday,
+              'text-foreground':
                 date.isCurrentMonth && !date.isToday,
-              'text-gray-400 dark:text-green-700/30': !date.isCurrentMonth,
+              'text-muted dark:text-primary-700/30': !date.isCurrentMonth,
             }"
           >
             {{ date.day }}
@@ -77,7 +77,7 @@
           <button
             v-if="date.isCurrentMonth"
             @click="addFlow(date)"
-            class="w-4 h-4 rounded-full bg-green-500 hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-600 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-70 hover:opacity-100"
+            class="w-4 h-4 rounded-full bg-primary-500 hover:bg-primary-600 dark:bg-primary-700 dark:hover:bg-primary-600 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-70 hover:opacity-100"
           >
             <PlusIcon class="w-3 h-3" />
           </button>
@@ -99,7 +99,7 @@
           <div
             v-if="getDateIncome(date.dateString)"
             @click="clickDay(date.dateString, '收入')"
-            class="flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-green-100 dark:bg-transparent dark:border dark:border-green-800/40 text-green-700 dark:text-green-500/60 hover:bg-green-200 dark:hover:bg-green-950/20"
+            class="flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-primary-100 dark:bg-transparent dark:border dark:border-primary-800/40 text-primary-700 dark:text-primary-500/60 hover:bg-primary-200 dark:hover:bg-primary-950/20"
           >
             <ArrowDownIcon class="w-2.5 h-2.5" />
             <span>{{ getDateIncome(date.dateString).toFixed(0) }}</span>
@@ -214,7 +214,7 @@ const getDateExpense = (dateString: string): number => {
 
 const getExpenseClass = (amount: number): string => {
   if (!amount || amount === 0) {
-    return "bg-green-100/50 dark:bg-transparent dark:border dark:border-green-800/30 text-gray-600 dark:text-green-500/50 hover:bg-green-100 dark:hover:bg-green-950/15";
+    return "bg-primary-100/50 dark:bg-transparent dark:border dark:border-primary-800/30 text-muted dark:text-primary-500/50 hover:bg-primary-100 dark:hover:bg-primary-950/15";
   } else if (amount >= 1000) {
     return "bg-red-500 dark:bg-red-950/50 dark:border dark:border-red-900/40 text-white hover:bg-red-600 dark:hover:bg-red-950/60 shadow-lg";
   } else if (amount >= 500) {

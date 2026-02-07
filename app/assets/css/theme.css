@@ -3,46 +3,18 @@
   This file contains global theme-related styles and variables
 */
 
+/* 主题色由 stores/theme 通过 CSS 变量注入，此处仅提供回退与工具类使用的别名 */
 :root {
-  /* Light theme variables */
-  --color-primary: theme('colors.green.600');
-  --color-primary-hover: theme('colors.green.500');
-  --color-secondary: theme('colors.indigo.600');
-  --color-secondary-hover: theme('colors.indigo.500');
-  --color-accent: theme('colors.purple.500');
-  --color-accent-hover: theme('colors.purple.400');
-  
-  --color-bg-primary: theme('colors.slate.50');
-  --color-bg-secondary: theme('colors.white');
-  --color-bg-accent: theme('colors.slate.100');
-  
-  --color-text-primary: theme('colors.slate.800');
-  --color-text-secondary: theme('colors.slate.600');
-  --color-text-accent: theme('colors.slate.500');
-  
-  --color-border: theme('colors.slate.200');
-  --color-shadow: theme('colors.slate.200');
-}
-
-.dark {
-  /* Dark theme variables */
-  --color-primary: theme('colors.blue.500');
-  --color-primary-hover: theme('colors.blue.400');
-  --color-secondary: theme('colors.indigo.500');
-  --color-secondary-hover: theme('colors.indigo.400');
-  --color-accent: theme('colors.purple.400');
-  --color-accent-hover: theme('colors.purple.300');
-  
-  --color-bg-primary: theme('colors.slate.900');
-  --color-bg-secondary: theme('colors.slate.800');
-  --color-bg-accent: theme('colors.slate.700');
-  
-  --color-text-primary: theme('colors.slate.200');
-  --color-text-secondary: theme('colors.slate.300');
-  --color-text-accent: theme('colors.slate.400');
-  
-  --color-border: theme('colors.slate.700');
-  --color-shadow: theme('colors.slate.900');
+  --color-primary: rgb(var(--color-primary-500));
+  --color-primary-hover: rgb(var(--color-primary-400));
+  --color-bg-primary: rgb(var(--color-surface-muted));
+  --color-bg-secondary: rgb(var(--color-surface));
+  --color-bg-accent: rgb(var(--color-surface-muted));
+  --color-text-primary: rgb(var(--color-foreground));
+  --color-text-secondary: rgb(var(--color-muted));
+  --color-text-accent: rgb(var(--color-muted));
+  --color-border: rgb(var(--color-border));
+  --color-shadow: rgb(var(--color-border));
 }
 
 /* Global transitions for theme changes */

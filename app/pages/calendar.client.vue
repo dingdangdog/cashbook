@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-green-50 dark:bg-green-950/10 p-0 md:p-4">
+  <div class="bg-surface-muted p-0 md:p-4">
     <!-- Header Section -->
     <div class="max-w-7xl mx-auto">
       <!-- Summary Cards -->
@@ -8,27 +8,27 @@
       >
         <!-- Income Card -->
         <div
-          class="bg-white dark:bg-green-900/10 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-green-100 dark:border-green-800 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
+          class="bg-surface rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-border cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
           @click="clickDay('', '收入')"
         >
           <div class="flex items-center flex-row space-x-2">
             <div class="flex-shrink-0 mb-0">
               <div
-                class="w-8 h-8 md:w-12 md:h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center"
+                class="w-8 h-8 md:w-12 md:h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center"
               >
                 <ArrowTrendingUpIcon
-                  class="w-4 h-4 md:w-6 md:h-6 text-green-700 dark:text-green-300"
+                  class="w-4 h-4 md:w-6 md:h-6 text-primary-700 dark:text-primary-300"
                 />
               </div>
             </div>
             <div class="md:ml-4 text-center md:text-left">
               <p
-                class="text-xs md:text-sm font-medium text-green-600 dark:text-green-400"
+                class="text-xs md:text-sm font-medium text-primary-600 dark:text-primary-400"
               >
                 总收入
               </p>
               <p
-                class="text-sm md:text-2xl font-bold text-green-700 dark:text-green-300"
+                class="text-sm md:text-2xl font-bold text-primary-700 dark:text-primary-300"
               >
                 {{ getInMonth().toFixed(2) }}
               </p>
@@ -38,7 +38,7 @@
 
         <!-- Expense Card -->
         <div
-          class="bg-white dark:bg-green-900/10 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-green-100 dark:border-green-800 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
+          class="bg-surface rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-border cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
           @click="clickDay('', '支出')"
         >
           <div class="flex items-center flex-row space-x-2">
@@ -53,7 +53,7 @@
             </div>
             <div class="md:ml-4 text-center md:text-left">
               <p
-                class="text-xs md:text-sm font-medium text-green-600 dark:text-green-400"
+                class="text-xs md:text-sm font-medium text-muted"
               >
                 总支出
               </p>
@@ -68,7 +68,7 @@
 
         <!-- Balance Card -->
         <div
-          class="bg-white dark:bg-green-900/10 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-green-100 dark:border-green-800"
+          class="bg-surface rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-border"
         >
           <div class="flex items-center flex-row space-x-2">
             <div class="flex-shrink-0 mb-0">
@@ -76,7 +76,7 @@
                 class="w-8 h-8 md:w-12 md:h-12 rounded-lg flex items-center justify-center"
                 :class="
                   balance >= 0
-                    ? 'bg-blue-100 dark:bg-blue-900'
+                    ? 'bg-primary-100 dark:bg-primary-900'
                     : 'bg-orange-100 dark:bg-orange-900'
                 "
               >
@@ -84,7 +84,7 @@
                   class="w-4 h-4 md:w-6 md:h-6"
                   :class="
                     balance >= 0
-                      ? 'text-blue-700 dark:text-blue-300'
+                      ? 'text-primary-700 dark:text-primary-300'
                       : 'text-orange-700 dark:text-orange-300'
                   "
                 />
@@ -92,7 +92,7 @@
             </div>
             <div class="md:ml-4 text-center md:text-left">
               <p
-                class="text-xs md:text-sm font-medium text-green-600 dark:text-green-400"
+                class="text-xs md:text-sm font-medium text-muted"
               >
                 结余
               </p>
@@ -100,7 +100,7 @@
                 class="text-sm md:text-2xl font-bold"
                 :class="
                   balance >= 0
-                    ? 'text-blue-700 dark:text-blue-300'
+                    ? 'text-primary-700 dark:text-primary-300'
                     : 'text-orange-700 dark:text-orange-300'
                 "
               >
@@ -113,7 +113,7 @@
 
       <!-- Calendar -->
       <div
-        class="bg-white dark:bg-green-800/10 border border-green-100 dark:border-green-800 w-full overflow-hidden"
+        class="bg-surface border border-border w-full overflow-hidden"
         :class="
           isMobile
             ? 'rounded-lg shadow-md'
@@ -155,23 +155,23 @@
       @click="monthAnalysisDialog = false"
     >
       <div
-        class="bg-white dark:bg-green-800/10 rounded-xl shadow-2xl max-w-2xl w-full"
+        class="bg-surface rounded-xl shadow-2xl max-w-2xl w-full"
         @click.stop
       >
         <div
-          class="flex items-center justify-between p-2 md:p-6 border-b border-green-100 dark:border-green-800"
+          class="flex items-center justify-between p-2 md:p-6 border-b border-border"
         >
           <div class="flex items-center gap-3">
-            <ChartBarIcon class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            <h3 class="text-lg font-semibold text-green-900 dark:text-green-100">
+            <ChartBarIcon class="w-6 h-6 text-primary-600 dark:text-primary-400" />
+            <h3 class="text-lg font-semibold text-foreground">
               {{ monthTitle }} 流水分析
             </h3>
           </div>
           <button
             @click="monthAnalysisDialog = false"
-            class="p-2 rounded-lg hover:bg-green-100 dark:hover:bg-green-700 transition-colors duration-200"
+            class="p-2 rounded-lg hover:bg-surface-muted transition-colors duration-200"
           >
-            <XMarkIcon class="w-5 h-5 text-green-500 dark:text-green-400" />
+            <XMarkIcon class="w-5 h-5 text-foreground" />
           </button>
         </div>
 
@@ -188,13 +188,13 @@
       @click="showFlowTable = false"
     >
       <div
-        class="bg-white dark:bg-green-800/10 rounded-xl shadow-2xl w-full max-w-6xl max-h-[80vh] overflow-hidden"
+        class="bg-surface rounded-xl shadow-2xl w-full max-w-6xl max-h-[80vh] overflow-hidden"
         @click.stop
       >
         <div
-          class="flex items-center justify-between p-2 md:p-3 border-b border-green-100 dark:border-green-800"
+          class="flex items-center justify-between p-2 md:p-3 border-b border-border"
         >
-          <h2 class="text-base font-bold text-green-900 dark:text-green-100">
+          <h2 class="text-base font-bold text-foreground">
             {{ query.startDay }} - {{ query.endDay }} - {{ query.flowType }}
           </h2>
           <button

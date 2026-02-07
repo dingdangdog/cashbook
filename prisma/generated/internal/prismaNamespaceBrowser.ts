@@ -58,7 +58,9 @@ export const ModelName = {
   Budget: 'Budget',
   Receivable: 'Receivable',
   FixedFlow: 'FixedFlow',
-  TypeRelation: 'TypeRelation'
+  TypeRelation: 'TypeRelation',
+  AIProvider: 'AIProvider',
+  Theme: 'Theme'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -192,6 +194,43 @@ export const TypeRelationScalarFieldEnum = {
 } as const
 
 export type TypeRelationScalarFieldEnum = (typeof TypeRelationScalarFieldEnum)[keyof typeof TypeRelationScalarFieldEnum]
+
+
+export const AIProviderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  apiProtocol: 'apiProtocol',
+  apiKey: 'apiKey',
+  apiEndpoint: 'apiEndpoint',
+  apiModel: 'apiModel',
+  apiVersion: 'apiVersion',
+  temperature: 'temperature',
+  maxTokens: 'maxTokens',
+  timeout: 'timeout',
+  extraConfig: 'extraConfig',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AIProviderScalarFieldEnum = (typeof AIProviderScalarFieldEnum)[keyof typeof AIProviderScalarFieldEnum]
+
+
+export const ThemeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  mode: 'mode',
+  colors: 'colors',
+  isActive: 'isActive',
+  isDefault: 'isDefault',
+  sortBy: 'sortBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ThemeScalarFieldEnum = (typeof ThemeScalarFieldEnum)[keyof typeof ThemeScalarFieldEnum]
 
 
 export const SortOrder = {

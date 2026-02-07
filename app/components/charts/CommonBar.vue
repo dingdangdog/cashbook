@@ -2,12 +2,12 @@
   <div class="w-full">
     <div class="md:h-16 mb-2 relative">
       <h4
-        class="hidden md:block text-center font-semibold text-green-950 dark:text-white my-2"
+        class="hidden md:block text-center font-semibold text-foreground my-2"
       >
         {{ title }}
       </h4>
       <span
-        class="absolute left-0 top-0 text-xs text-blue-500 dark:text-blue-400 hover:text-blue-700 cursor-pointer rounded-md shadow-sm transition-colors"
+        class="absolute left-0 top-0 text-xs text-primary-500 dark:text-primary-400 hover:text-primary-600 cursor-pointer rounded-md shadow-sm transition-colors"
         @click="toggleLegend()"
       >
         {{ showLegend ? "隐藏图例" : "显示图例" }}
@@ -41,7 +41,7 @@
       <div
         class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+        <h3 class="text-lg font-semibold text-foreground">
           流水详情
         </h3>
         <button

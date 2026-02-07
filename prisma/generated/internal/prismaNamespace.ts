@@ -391,7 +391,9 @@ export const ModelName = {
   Budget: 'Budget',
   Receivable: 'Receivable',
   FixedFlow: 'FixedFlow',
-  TypeRelation: 'TypeRelation'
+  TypeRelation: 'TypeRelation',
+  AIProvider: 'AIProvider',
+  Theme: 'Theme'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "systemSetting" | "user" | "book" | "flow" | "budget" | "receivable" | "fixedFlow" | "typeRelation"
+    modelProps: "systemSetting" | "user" | "book" | "flow" | "budget" | "receivable" | "fixedFlow" | "typeRelation" | "aIProvider" | "theme"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1005,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AIProvider: {
+      payload: Prisma.$AIProviderPayload<ExtArgs>
+      fields: Prisma.AIProviderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AIProviderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AIProviderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>
+        }
+        findFirst: {
+          args: Prisma.AIProviderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AIProviderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>
+        }
+        findMany: {
+          args: Prisma.AIProviderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>[]
+        }
+        create: {
+          args: Prisma.AIProviderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>
+        }
+        createMany: {
+          args: Prisma.AIProviderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AIProviderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>[]
+        }
+        delete: {
+          args: Prisma.AIProviderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>
+        }
+        update: {
+          args: Prisma.AIProviderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>
+        }
+        deleteMany: {
+          args: Prisma.AIProviderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AIProviderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AIProviderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>[]
+        }
+        upsert: {
+          args: Prisma.AIProviderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AIProviderPayload>
+        }
+        aggregate: {
+          args: Prisma.AIProviderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAIProvider>
+        }
+        groupBy: {
+          args: Prisma.AIProviderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AIProviderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AIProviderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AIProviderCountAggregateOutputType> | number
+        }
+      }
+    }
+    Theme: {
+      payload: Prisma.$ThemePayload<ExtArgs>
+      fields: Prisma.ThemeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ThemeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ThemeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>
+        }
+        findFirst: {
+          args: Prisma.ThemeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ThemeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>
+        }
+        findMany: {
+          args: Prisma.ThemeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>[]
+        }
+        create: {
+          args: Prisma.ThemeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>
+        }
+        createMany: {
+          args: Prisma.ThemeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ThemeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>[]
+        }
+        delete: {
+          args: Prisma.ThemeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>
+        }
+        update: {
+          args: Prisma.ThemeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>
+        }
+        deleteMany: {
+          args: Prisma.ThemeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ThemeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ThemeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>[]
+        }
+        upsert: {
+          args: Prisma.ThemeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThemePayload>
+        }
+        aggregate: {
+          args: Prisma.ThemeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTheme>
+        }
+        groupBy: {
+          args: Prisma.ThemeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ThemeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ThemeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ThemeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1157,6 +1307,43 @@ export const TypeRelationScalarFieldEnum = {
 } as const
 
 export type TypeRelationScalarFieldEnum = (typeof TypeRelationScalarFieldEnum)[keyof typeof TypeRelationScalarFieldEnum]
+
+
+export const AIProviderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  provider: 'provider',
+  apiProtocol: 'apiProtocol',
+  apiKey: 'apiKey',
+  apiEndpoint: 'apiEndpoint',
+  apiModel: 'apiModel',
+  apiVersion: 'apiVersion',
+  temperature: 'temperature',
+  maxTokens: 'maxTokens',
+  timeout: 'timeout',
+  extraConfig: 'extraConfig',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AIProviderScalarFieldEnum = (typeof AIProviderScalarFieldEnum)[keyof typeof AIProviderScalarFieldEnum]
+
+
+export const ThemeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  mode: 'mode',
+  colors: 'colors',
+  isActive: 'isActive',
+  isDefault: 'isDefault',
+  sortBy: 'sortBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ThemeScalarFieldEnum = (typeof ThemeScalarFieldEnum)[keyof typeof ThemeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1354,6 +1541,8 @@ export type GlobalOmitConfig = {
   receivable?: Prisma.ReceivableOmit
   fixedFlow?: Prisma.FixedFlowOmit
   typeRelation?: Prisma.TypeRelationOmit
+  aIProvider?: Prisma.AIProviderOmit
+  theme?: Prisma.ThemeOmit
 }
 
 /* Types for Logging */

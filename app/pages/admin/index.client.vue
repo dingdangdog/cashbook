@@ -51,6 +51,13 @@ definePageMeta({
           </div>
           <div
             class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
+            @click="navigateTo('/admin/theme')"
+          >
+            <div class="text-emerald-400 text-lg font-medium">主题管理</div>
+            <div class="text-gray-400 text-xs mt-1">管理系统主题色配置</div>
+          </div>
+          <div
+            class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
             @click="navigateTo('/admin/settings')"
           >
             <div class="text-orange-400 text-lg font-medium">系统设置</div>

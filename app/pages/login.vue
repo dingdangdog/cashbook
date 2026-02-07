@@ -14,7 +14,12 @@ import {
 import { SystemConfig } from "~/utils/store";
 import { checkSignIn } from "~/utils/common";
 
-const { isDark, toggleTheme } = useAppTheme();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
+
+const toggleTheme = () => {
+  themeStore.toggleTheme();
+};
 
 const openRegister = ref(false);
 const registerDialog = ref(false);
@@ -174,39 +179,22 @@ const toAdmin = () => {
     />
   </Head>
 
-  <div
-    :class="[
-      'h-screen p-2 transition-colors duration-300',
-      isDark
-        ? 'bg-gradient-to-br from-green-950 to-gray-800'
-        : 'bg-gradient-to-br from-green-50 to-emerald-100',
-    ]"
-  >
+  <div class="h-screen p-2 transition-colors duration-300 bg-background text-foreground">
     <!-- 右上角导航栏 -->
     <div class="fixed top-2 right-2 flex items-center gap-2 z-50">
       <!-- 主题切换按钮 - 移到最左侧 -->
       <button
         @click="toggleTheme()"
-        :class="[
-          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
-          isDark
-            ? 'bg-gray-800/80 text-green-400 hover:bg-gray-800'
-            : 'bg-white/80 text-green-600 hover:bg-white',
-        ]"
+        class="p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg bg-surface-muted text-foreground hover:bg-surface border border-border"
         title="切换主题"
       >
-        <SunIcon v-if="isDark" class="w-5 h-5" />
-        <MoonIcon v-else class="w-5 h-5" />
+        <SunIcon v-if="isDark" class="w-5 h-5 text-foreground" />
+        <MoonIcon v-else class="w-5 h-5 text-foreground" />
       </button>
 
       <button
         @click="toDocumentation()"
-        :class="[
-          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
-          isDark
-            ? 'bg-gray-800/80 text-gray-300 hover:bg-gray-800'
-            : 'bg-white/80 text-gray-600 hover:bg-white',
-        ]"
+        class="p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg bg-surface-muted text-foreground/70 hover:bg-surface border border-border"
         title="文档站"
       >
         <BookOpenIcon class="w-5 h-5" />
@@ -214,12 +202,7 @@ const toAdmin = () => {
 
       <button
         @click="toGithub()"
-        :class="[
-          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
-          isDark
-            ? 'bg-gray-800/80 text-gray-300 hover:bg-gray-800'
-            : 'bg-white/80 text-gray-600 hover:bg-white',
-        ]"
+        class="p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg bg-surface-muted text-foreground/70 hover:bg-surface border border-border"
         title="前往Github"
       >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -232,12 +215,7 @@ const toAdmin = () => {
       <!-- Admin入口按钮 -->
       <button
         @click="toAdmin()"
-        :class="[
-          'p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg',
-          isDark
-            ? 'bg-gray-800/80 text-orange-400 hover:bg-gray-800'
-            : 'bg-white/80 text-orange-600 hover:bg-white',
-        ]"
+        class="p-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg bg-surface-muted text-primary-700 hover:bg-surface border border-border"
         title="管理后台"
       >
         <svg
@@ -274,10 +252,7 @@ const toAdmin = () => {
           class="w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2 sm:mb-0 sm:mr-4"
         />
         <h1
-          :class="[
-            'text-xl sm:text-2xl lg:text-3xl font-bold',
-            isDark ? 'text-white' : 'text-gray-800',
-          ]"
+          class="text-xl sm:text-2xl lg:text-3xl font-bold"
         >
           欢迎使用{{ SystemConfig?.title }}
         </h1>
@@ -286,10 +261,7 @@ const toAdmin = () => {
       <!-- 登录表单 - 响应式调整 -->
       <div class="w-full max-w-[26rem]">
         <div
-          :class="[
-            'rounded-xl shadow-xl p-4 md:p-6 border',
-            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
-          ]"
+          class="rounded-xl shadow-xl p-4 md:p-6 border bg-surface border-border"
         >
           <form @submit.prevent="login" class="space-y-4">
             <!-- 用户名输入 -->
@@ -301,23 +273,14 @@ const toAdmin = () => {
                 name="username"
                 autocomplete="username"
                 :class="[
-                  'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
-                  loginFormErrors.username
-                    ? isDark
-                      ? 'border-red-500 bg-red-900/20'
-                      : 'border-red-500 bg-red-50'
-                    : isDark
-                    ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'
-                    : 'border-gray-300 bg-white text-green-950 placeholder-gray-500',
+                  'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-background text-foreground placeholder-foreground/40',
+                  loginFormErrors.username ? 'border-red-500 bg-red-900/10' : 'border-border',
                 ]"
                 placeholder="请输入账号"
               />
               <p
                 v-if="loginFormErrors.username"
-                :class="[
-                  'mt-1 text-sm',
-                  isDark ? 'text-red-400' : 'text-red-600',
-                ]"
+                class="mt-1 text-sm text-red-500"
               >
                 {{ loginFormErrors.username }}
               </p>
@@ -333,14 +296,8 @@ const toAdmin = () => {
                   name="password"
                   autocomplete="current-password"
                   :class="[
-                    'w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
-                    loginFormErrors.password
-                      ? isDark
-                        ? 'border-red-500 bg-red-900/20'
-                        : 'border-red-500 bg-red-50'
-                      : isDark
-                      ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'
-                      : 'border-gray-300 bg-white text-green-950 placeholder-gray-500',
+                    'w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-background text-foreground placeholder-foreground/40',
+                    loginFormErrors.password ? 'border-red-500 bg-red-900/10' : 'border-border',
                   ]"
                   placeholder="请输入密码"
                   @keyup.enter="login()"
@@ -348,12 +305,7 @@ const toAdmin = () => {
                 <button
                   type="button"
                   @click="lookLoginPS = !lookLoginPS"
-                  :class="[
-                    'absolute right-2 top-1/2 -translate-y-1/2 transition-colors',
-                    isDark
-                      ? 'text-gray-400 hover:text-gray-300'
-                      : 'text-gray-400 hover:text-gray-600',
-                  ]"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 transition-colors text-foreground/40 hover:text-foreground/70"
                 >
                   <EyeIcon v-if="!lookLoginPS" class="w-4 h-4" />
                   <EyeSlashIcon v-else class="w-4 h-4" />
@@ -361,10 +313,7 @@ const toAdmin = () => {
               </div>
               <p
                 v-if="loginFormErrors.password"
-                :class="[
-                  'mt-1 text-sm',
-                  isDark ? 'text-red-400' : 'text-red-600',
-                ]"
+                class="mt-1 text-sm text-red-500"
               >
                 {{ loginFormErrors.password }}
               </p>
@@ -374,7 +323,7 @@ const toAdmin = () => {
             <div>
               <button
                 type="submit"
-                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold mt-4 py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none"
+                class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold mt-4 py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none"
               >
                 登录
               </button>
@@ -385,12 +334,7 @@ const toAdmin = () => {
               <button
                 type="button"
                 @click="registerDialog = true"
-                :class="[
-                  'font-medium transition-colors duration-200',
-                  isDark
-                    ? 'text-green-400 hover:text-green-300'
-                    : 'text-green-600 hover:text-green-700',
-                ]"
+                class="font-medium transition-colors duration-200 text-primary-600 hover:text-primary-700"
               >
                 注册账号
               </button>
@@ -406,29 +350,18 @@ const toAdmin = () => {
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <div
-        :class="[
-          'rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto',
-          isDark ? 'bg-gray-800' : 'bg-white',
-        ]"
+        class="rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto bg-surface text-foreground border border-border"
       >
         <div class="p-2">
           <div class="flex justify-between items-center mb-6">
             <h3
-              :class="[
-                'text-xl font-semibold',
-                isDark ? 'text-white' : 'text-green-950',
-              ]"
+              class="text-xl font-semibold"
             >
               注册用户
             </h3>
             <button
               @click="registerDialog = false"
-              :class="[
-                'transition-colors',
-                isDark
-                  ? 'text-gray-400 hover:text-gray-300'
-                  : 'text-gray-400 hover:text-gray-600',
-              ]"
+              class="transition-colors text-foreground/40 hover:text-foreground/70"
             >
               <svg
                 class="w-6 h-6"
@@ -451,7 +384,7 @@ const toAdmin = () => {
             <div>
               <label
                 for="name"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground/80 mb-2"
               >
                 昵称
               </label>
@@ -460,7 +393,7 @@ const toAdmin = () => {
                 v-model="registerParam.name"
                 type="text"
                 name="name"
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
+                class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-background text-foreground placeholder-foreground/40 transition-colors duration-200"
                 placeholder="请输入昵称"
               />
             </div>
@@ -469,7 +402,7 @@ const toAdmin = () => {
             <div>
               <label
                 for="register-username"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground/80 mb-2"
               >
                 账号 *
               </label>
@@ -479,17 +412,16 @@ const toAdmin = () => {
                 type="text"
                 name="username"
                 :class="[
-                  'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
+                  'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-background text-foreground placeholder-foreground/40',
                   registerFormErrors.username
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700',
+                    ? 'border-red-500 bg-red-900/10'
+                    : 'border-border',
                 ]"
-                class="text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 placeholder="请输入账号"
               />
               <p
                 v-if="registerFormErrors.username"
-                class="mt-1 text-sm text-red-600 dark:text-red-400"
+                class="mt-1 text-sm text-red-500"
               >
                 {{ registerFormErrors.username }}
               </p>
@@ -499,7 +431,7 @@ const toAdmin = () => {
             <div>
               <label
                 for="register-password"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground/80 mb-2"
               >
                 密码 *
               </label>
@@ -510,18 +442,17 @@ const toAdmin = () => {
                   :type="lookRegisterPS ? 'text' : 'password'"
                   name="password"
                   :class="[
-                    'w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
+                    'w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-background text-foreground placeholder-foreground/40',
                     registerFormErrors.password
-                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700',
+                      ? 'border-red-500 bg-red-900/10'
+                      : 'border-border',
                   ]"
-                  class="text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="请输入密码"
                 />
                 <button
                   type="button"
                   @click="lookRegisterPS = !lookRegisterPS"
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground/70 transition-colors"
                 >
                   <EyeIcon v-if="!lookRegisterPS" class="w-5 h-5" />
                   <EyeSlashIcon v-else class="w-5 h-5" />
@@ -529,7 +460,7 @@ const toAdmin = () => {
               </div>
               <p
                 v-if="registerFormErrors.password"
-                class="mt-1 text-sm text-red-600 dark:text-red-400"
+                class="mt-1 text-sm text-red-500"
               >
                 {{ registerFormErrors.password }}
               </p>
@@ -539,7 +470,7 @@ const toAdmin = () => {
             <div>
               <label
                 for="confirm-password"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground/80 mb-2"
               >
                 确认密码 *
               </label>
@@ -550,18 +481,17 @@ const toAdmin = () => {
                   :type="lookRegisterAPS ? 'text' : 'password'"
                   name="confirmPassword"
                   :class="[
-                    'w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200',
+                    'w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-background text-foreground placeholder-foreground/40',
                     registerFormErrors.againPassword
-                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700',
+                      ? 'border-red-500 bg-red-900/10'
+                      : 'border-border',
                   ]"
-                  class="text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="请确认密码"
                 />
                 <button
                   type="button"
                   @click="lookRegisterAPS = !lookRegisterAPS"
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground/70 transition-colors"
                 >
                   <EyeIcon v-if="!lookRegisterAPS" class="w-5 h-5" />
                   <EyeSlashIcon v-else class="w-5 h-5" />
@@ -569,7 +499,7 @@ const toAdmin = () => {
               </div>
               <p
                 v-if="registerFormErrors.againPassword"
-                class="mt-1 text-sm text-red-600 dark:text-red-400"
+                class="mt-1 text-sm text-red-500"
               >
                 {{ registerFormErrors.againPassword }}
               </p>
@@ -579,13 +509,13 @@ const toAdmin = () => {
               <button
                 type="button"
                 @click="registerDialog = false"
-                class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                class="flex-1 px-4 py-3 border border-border rounded-lg text-foreground/80 hover:bg-surface-muted transition-colors duration-200"
               >
                 取消
               </button>
               <button
                 type="submit"
-                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+                class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
               >
                 注册
               </button>

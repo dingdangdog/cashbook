@@ -2,23 +2,21 @@
   <!-- 流水小票编辑对话框 -->
   <div
     v-if="showFlowEditInvoiceDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
     style="z-index: 999"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl mx-auto max-h-[90vh] overflow-y-auto"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-2xl mx-auto max-h-[90vh] overflow-y-auto border border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          上传小票
-        </h3>
+        <h3 class="text-lg font-semibold">上传小票</h3>
         <button
           @click="closeDialog"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="text-foreground/40 hover:text-foreground/70 transition-colors"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -28,7 +26,7 @@
       <div class="p-4 space-y-6">
         <!-- 现有小票 -->
         <div>
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-foreground/80 mb-3">
             现有小票
           </h4>
           <div class="flex flex-wrap gap-3">
@@ -37,7 +35,7 @@
               :key="index"
               @mouseover="isHovering = img"
               @mouseleave="isHovering = ''"
-              class="relative w-24 h-24 cursor-pointer group rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 hover:border-red-500 transition-colors"
+              class="relative w-24 h-24 cursor-pointer group rounded-lg overflow-hidden border-2 border-border hover:border-red-500 transition-colors"
               @click="removeInvoice(img)"
             >
               <img
@@ -55,9 +53,9 @@
             </div>
             <div
               v-if="invoices.length === 0"
-              class="text-sm text-gray-500 dark:text-gray-400 py-8 text-center w-full border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg"
+              class="text-sm text-foreground/60 py-8 text-center w-full border-2 border-dashed border-border rounded-lg bg-surface-muted"
             >
-              <DocumentIcon class="w-8 h-8 mx-auto mb-2 text-gray-400" />
+              <DocumentIcon class="w-8 h-8 mx-auto mb-2 text-foreground/40" />
               暂无小票
             </div>
           </div>
@@ -65,7 +63,7 @@
 
         <!-- 新小票上传 -->
         <div>
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-foreground/80 mb-3">
             新小票
           </h4>
           <div class="relative">
@@ -78,9 +76,9 @@
             />
             <button
               @click="() => fileInput?.click()"
-              class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
+              class="w-full px-4 py-3 border-2 border-dashed border-border rounded-lg bg-surface-muted hover:bg-surface transition-colors flex items-center justify-center gap-2"
             >
-              <PhotoIcon class="h-6 w-6 text-gray-400" />
+              <PhotoIcon class="h-6 w-6 text-foreground/40" />
               <span class="text-sm">
                 {{ newInvoice ? newInvoice.name : "点击选择小票图片" }}
               </span>
@@ -88,7 +86,7 @@
             <!-- 文件信息 -->
             <div
               v-if="newInvoice"
-              class="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded text-xs text-blue-800 dark:text-blue-300"
+              class="mt-2 p-2 bg-primary-500/10 border border-primary-500/20 rounded text-xs text-primary-700"
             >
               <div class="flex items-center gap-2">
                 <CheckCircleIcon class="h-4 w-4" />
@@ -105,12 +103,12 @@
 
       <!-- 操作按钮 -->
       <div
-        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-border bg-surface-muted"
       >
         <button
           type="button"
           @click="closeDialog"
-          class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="flex-1 px-4 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface transition-colors"
         >
           取消
         </button>
@@ -118,7 +116,7 @@
           type="button"
           @click="uploadInvoiceFile"
           :disabled="!newInvoice"
-          class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-secondary-400 disabled:cursor-not-allowed transition-colors"
         >
           上传
         </button>
@@ -129,21 +127,19 @@
   <!-- 删除确认对话框 -->
   <div
     v-if="deleteInvoiceConfirmDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
     style="z-index: 10000"
     @click.self="cancelDeleteInvoice"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-md mx-auto border border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          确定删除小票吗？
-        </h3>
+        <h3 class="text-lg font-semibold">确定删除小票吗？</h3>
       </div>
 
       <!-- 内容 -->
@@ -151,23 +147,23 @@
         <div class="flex justify-center mb-4">
           <img
             :src="invoiceImage[deleteInvoice]"
-            class="max-w-60 max-h-60 rounded-lg border border-gray-200 dark:border-gray-600"
+            class="max-w-60 max-h-60 rounded-lg border border-border"
             :alt="'要删除的小票'"
           />
         </div>
-        <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
+        <p class="text-sm text-foreground/60 text-center">
           删除后无法恢复，请确认是否删除此小票？
         </p>
       </div>
 
       <!-- 操作按钮 -->
       <div
-        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+        class="flex flex-col sm:flex-row gap-3 p-4 border-t border-border bg-surface-muted"
       >
         <button
           type="button"
           @click="cancelDeleteInvoice"
-          class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="flex-1 px-4 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface transition-colors"
         >
           取消
         </button>

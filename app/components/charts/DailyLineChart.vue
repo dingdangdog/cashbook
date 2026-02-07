@@ -5,7 +5,7 @@
     >
       <div v-if="title">
         <h4
-          class="text-lg text-center font-semibold text-green-950 dark:text-white my-2"
+          class="text-lg text-center font-semibold text-foreground my-2"
         >
           {{ title }}
         </h4>

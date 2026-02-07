@@ -1,8 +1,8 @@
 <template>
-  <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full">
+  <div class="p-2 md:p-4 bg-surface-muted min-h-full">
     <!-- 顶部操作栏 -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 mb-3"
+      class="bg-surface rounded-lg shadow-sm border border-border p-3 mb-3"
     >
       <div
         class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between"
@@ -12,7 +12,7 @@
             <select
               v-model="statusFilter"
               @change="loadData"
-              class="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="text-sm border border-border rounded-lg px-3 py-2 bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">全部状态</option>
               <option value="0">未收款</option>
@@ -25,21 +25,21 @@
               v-model="searchName"
               @input="debounceSearch"
               placeholder="搜索待收款名称"
-              class="w-full text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full text-sm border border-border rounded-lg px-3 py-2 bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
         </div>
         <div class="w-full flex gap-2 flex-wrap justify-end">
           <button
             @click="() => openReceivableDialog()"
-            class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
           >
             <PlusIcon class="h-4 w-4" />
             添加待收款
           </button>
           <button
             @click="loadData"
-            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
           >
             <ArrowPathIcon class="h-4 w-4" />
             刷新
@@ -64,13 +64,13 @@
           {{ formatCurrency(statistics.pendingAmount) }}
         </div>
       </div>
-      <div class="bg-green-600 text-white rounded-lg p-3 shadow-sm">
+      <div class="bg-primary-600 text-white rounded-lg p-3 shadow-sm">
         <div class="text-xs opacity-90 mb-1">已收款项</div>
         <div class="text-lg md:text-xl font-bold">
           {{ statistics.collected }}
         </div>
       </div>
-      <div class="bg-green-800 text-white rounded-lg p-3 shadow-sm">
+      <div class="bg-primary-700 text-white rounded-lg p-3 shadow-sm">
         <div class="text-xs opacity-90 mb-1">已收金额</div>
         <div class="text-lg md:text-xl font-bold">
           {{ formatCurrency(statistics.collectedAmount) }}
@@ -80,14 +80,14 @@
 
     <!-- 待收款列表 -->
     <div
-      class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg"
+      class="bg-surface shadow-sm border border-border overflow-hidden rounded-lg"
     >
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center items-center py-12">
         <div
-          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
         ></div>
-        <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
+        <span class="ml-2 text-muted">加载中...</span>
       </div>
 
       <!-- 桌面端表格 -->
@@ -98,87 +98,87 @@
         <table class="w-full">
           <thead>
             <tr
-              class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+              class="bg-surface-muted border-b border-border"
             >
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 名称
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 金额
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 发生日期
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 预期收款日
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 实际收款日
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 逾期状态
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 状态
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                class="px-4 py-2 text-left text-sm font-medium text-muted"
               >
                 操作
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+          <tbody class="divide-y divide-border">
             <tr
               v-for="item in receivables"
               :key="item.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              class="hover:bg-surface-muted transition-colors"
             >
               <td
-                class="px-4 py-2 text-sm font-medium text-green-950 dark:text-white"
+                class="px-4 py-2 text-sm font-medium text-foreground"
               >
                 <div class="flex flex-col">
                   <span>{{ item.name }}</span>
                   <span
                     v-if="item.description"
-                    class="text-xs text-gray-500 dark:text-gray-400"
+                    class="text-xs text-muted"
                     >{{ item.description }}</span
                   >
                 </div>
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm">
                 <span
-                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400"
                 >
                   {{ formatCurrency(item.money || 0) }}
                 </span>
               </td>
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.occurDay }}
               </td>
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.expectDay || "-" }}
               </td>
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.actualDay || "-" }}
               </td>
@@ -190,7 +190,7 @@
                 >
                   {{ getOverdueStatus(item).text }}
                 </span>
-                <span v-else class="text-gray-400 dark:text-gray-500 text-xs">
+                <span v-else class="text-muted text-xs">
                   -
                 </span>
               </td>
@@ -206,7 +206,7 @@
                 <div class="flex items-center gap-2">
                   <button
                     @click="openReceivableDialog(item)"
-                    class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                    class="text-primary-600 hover:text-primary-500 transition-colors"
                     title="编辑"
                   >
                     <PencilIcon class="h-4 w-4" />
@@ -214,7 +214,7 @@
                   <button
                     v-if="item.status === 0"
                     @click="openCollectDialog(item)"
-                    class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                    class="text-primary-600 hover:text-primary-500 transition-colors"
                     title="收款"
                   >
                     <CheckIcon class="h-4 w-4" />
@@ -222,7 +222,7 @@
                   <!-- <button
                     v-if="item.status === 1"
                     @click="openToFlowDialog(item)"
-                    class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
+                    class="text-accent-600 hover:text-accent-500 transition-colors"
                     title="转为流水"
                   >
                     <ArrowRightIcon class="h-4 w-4" />
@@ -249,16 +249,16 @@
         <div
           v-for="item in receivables"
           :key="item.id"
-          class="p-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+          class="p-2 border-b border-border last:border-b-0"
         >
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1">
-              <h3 class="text-sm font-medium text-green-950 dark:text-white">
+              <h3 class="text-sm font-medium text-foreground">
                 {{ item.name }}
               </h3>
               <p
                 v-if="item.description"
-                class="text-xs text-gray-600 dark:text-gray-400 mt-1"
+                class="text-xs text-muted mt-1"
               >
                 {{ item.description }}
               </p>
@@ -287,7 +287,7 @@
             </span>
           </div>
           <div
-            class="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400 mb-2"
+            class="grid grid-cols-2 gap-2 text-xs text-muted mb-2"
           >
             <p>
               <span class="font-medium">发生日期:</span> {{ item.occurDay }}
@@ -302,7 +302,7 @@
           <div class="flex justify-end gap-1">
             <button
               @click="openReceivableDialog(item)"
-              class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+              class="p-1.5 bg-primary-600 hover:bg-primary-500 text-white rounded transition-colors"
               title="编辑"
             >
               <PencilIcon class="h-3 w-3" />
@@ -310,7 +310,7 @@
             <button
               v-if="item.status === 0"
               @click="openCollectDialog(item)"
-              class="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+              class="p-1.5 bg-primary-600 hover:bg-primary-500 text-white rounded transition-colors"
               title="收款"
             >
               <CheckIcon class="h-3 w-3" />
@@ -318,7 +318,7 @@
             <!-- <button
               v-if="item.status === 1"
               @click="openToFlowDialog(item)"
-              class="p-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors"
+              class="p-1.5 bg-accent-600 hover:bg-accent-500 text-white rounded transition-colors"
               title="转为流水"
             >
               <ArrowRightIcon class="h-3 w-3" />
@@ -339,18 +339,18 @@
         v-if="!loading && (!receivables || receivables.length === 0)"
         class="text-center py-12"
       >
-        <div class="text-gray-400 dark:text-gray-500 mb-4">
+        <div class="text-muted mb-4">
           <CurrencyDollarIcon class="mx-auto h-12 w-12" />
         </div>
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+        <h3 class="text-lg font-medium text-foreground mb-2">
           暂无待收款
         </h3>
-        <p class="text-gray-500 dark:text-gray-400 mb-4">
+        <p class="text-muted mb-4">
           开始添加您的待收款记录吧
         </p>
         <button
           @click="() => openReceivableDialog()"
-          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
         >
           <PlusIcon class="h-4 w-4" />
           添加待收款
@@ -364,10 +364,10 @@
           receivables.length &&
           pagination.total > pagination.pageSize
         "
-        class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
+        class="px-4 py-3 bg-surface-muted border-t border-border"
       >
         <div class="flex justify-between items-center">
-          <div class="text-sm text-gray-700 dark:text-gray-300">
+          <div class="text-sm text-foreground">
             共 {{ pagination.total }} 条记录，第 {{ pagination.pageNum }} /
             {{ Math.ceil(pagination.total / pagination.pageSize) }} 页
           </div>
@@ -375,7 +375,7 @@
             <button
               @click="changePage(pagination.pageNum - 1)"
               :disabled="pagination.pageNum <= 1"
-              class="px-3 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="px-3 py-1 text-sm bg-surface border border-border rounded-lg hover:bg-surface-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               上一页
             </button>
@@ -385,7 +385,7 @@
                 pagination.pageNum >=
                 Math.ceil(pagination.total / pagination.pageSize)
               "
-              class="px-3 py-1 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="px-3 py-1 text-sm bg-surface border border-border rounded-lg hover:bg-surface-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               下一页
             </button>
@@ -400,10 +400,10 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        class="bg-surface rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
       >
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+        <div class="px-6 py-4 border-b border-border">
+          <h3 class="text-lg font-semibold text-foreground">
             {{ editedReceivable.id ? "编辑" : "添加" }}待收款
           </h3>
         </div>
@@ -411,19 +411,19 @@
           <div class="space-y-4">
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >待收款名称 <span class="text-red-500">*</span></label
               >
               <input
                 v-model="editedReceivable.name"
                 type="text"
                 placeholder="请输入待收款名称"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >金额 <span class="text-red-500">*</span></label
               >
               <input
@@ -431,12 +431,12 @@
                 type="number"
                 step="0.01"
                 placeholder="请输入金额"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >发生日期 <span class="text-red-500">*</span></label
               >
               <UiDatePicker
@@ -446,7 +446,7 @@
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >预期收款日期</label
               >
               <UiDatePicker
@@ -456,7 +456,7 @@
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >实际收款日期</label
               >
               <UiDatePicker
@@ -466,12 +466,12 @@
             </div>
             <div v-if="editedReceivable.id">
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >状态</label
               >
               <select
                 v-model="editedReceivable.status"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="0">未收款</option>
                 <option value="1">已收款</option>
@@ -482,30 +482,30 @@
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >备注</label
               >
               <textarea
                 v-model="editedReceivable.description"
                 rows="3"
                 placeholder="请输入备注信息"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
               ></textarea>
             </div>
           </div>
         </div>
         <div
-          class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end"
+          class="px-6 py-4 bg-surface-muted rounded-b-lg flex gap-3 justify-end"
         >
           <button
             @click="receivableDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
+            class="px-4 py-2 text-foreground hover:bg-surface-muted rounded-lg transition-colors"
           >
             取消
           </button>
           <button
             @click="saveReceivable"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors"
           >
             保存
           </button>
@@ -519,65 +519,65 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full"
+        class="bg-surface rounded-lg shadow-xl max-w-md w-full"
       >
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-border">
           <h3 class="text-lg font-semibold text-green-950 dark:text-white">
             确认收款
           </h3>
         </div>
         <div class="p-6">
           <div class="space-y-4">
-            <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <div class="text-sm text-muted mb-4">
               对待收款 "{{ selectedReceivable?.name }}" ({{
                 formatCurrency(selectedReceivable?.money || 0)
               }}) 进行收款确认
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >实际收款日期 <span class="text-red-500">*</span></label
               >
               <UiDatePicker v-model="collectData.actualDay" class="w-full" />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >名称</label
               >
               <input
                 v-model="collectData.name"
                 type="text"
                 placeholder="可修改收款名称"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >备注</label
               >
               <textarea
                 v-model="collectData.description"
                 rows="3"
                 placeholder="可添加收款备注"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
               ></textarea>
             </div>
           </div>
         </div>
         <div
-          class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end"
+          class="px-6 py-4 bg-surface-muted rounded-b-lg flex gap-3 justify-end"
         >
           <button
             @click="collectDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
+            class="px-4 py-2 text-foreground hover:bg-surface-muted rounded-lg transition-colors"
           >
             取消
           </button>
           <button
             @click="confirmCollect"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors"
           >
             确认收款
           </button>
@@ -591,35 +591,35 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full"
+        class="bg-surface rounded-lg shadow-xl max-w-md w-full"
       >
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-border">
           <h3 class="text-lg font-semibold text-green-950 dark:text-white">
             转为收入流水
           </h3>
         </div>
         <div class="p-6">
           <div class="space-y-4">
-            <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <div class="text-sm text-muted mb-4">
               将待收款 "{{ selectedReceivable?.name }}" ({{
                 formatCurrency(selectedReceivable?.money || 0)
               }}) 转换为收入流水
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >实际收款日期 <span class="text-red-500">*</span></label
               >
               <UiDatePicker v-model="toFlowData.actualDay" class="w-full" />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >收款方式</label
               >
               <select
                 v-model="toFlowData.payType"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="现金">现金</option>
                 <option value="支付宝">支付宝</option>
@@ -630,12 +630,12 @@
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >收入类型</label
               >
               <select
                 v-model="toFlowData.industryType"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="其他收入">其他收入</option>
                 <option value="工资收入">工资收入</option>
@@ -645,12 +645,12 @@
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-foreground mb-2"
                 >流水归属</label
               >
               <select
                 v-model="toFlowData.attribution"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">请选择归属</option>
                 <option
@@ -665,17 +665,17 @@
           </div>
         </div>
         <div
-          class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end"
+          class="px-6 py-4 bg-surface-muted rounded-b-lg flex gap-3 justify-end"
         >
           <button
             @click="toFlowDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
+            class="px-4 py-2 text-foreground hover:bg-surface-muted rounded-lg transition-colors"
           >
             取消
           </button>
           <button
             @click="convertToFlow"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors"
           >
             转换
           </button>
@@ -689,24 +689,24 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full"
+        class="bg-surface rounded-lg shadow-xl max-w-sm w-full"
       >
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-border">
           <h3 class="text-lg font-semibold text-red-600 dark:text-red-400">
             确认删除
           </h3>
         </div>
         <div class="p-6">
-          <p class="text-gray-700 dark:text-gray-300">
+          <p class="text-foreground">
             您确定要删除这个待收款记录吗？此操作不可撤销。
           </p>
         </div>
         <div
-          class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end"
+          class="px-6 py-4 bg-surface-muted rounded-b-lg flex gap-3 justify-end"
         >
           <button
             @click="confirmDeleteDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
+            class="px-4 py-2 text-foreground hover:bg-surface-muted rounded-lg transition-colors"
           >
             取消
           </button>
@@ -1104,15 +1104,15 @@ function getStatusStyle(status: number | undefined): string {
     case 0:
       return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
     case 1:
-      return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      return "bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400";
     case -1:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+      return "bg-secondary-100 text-secondary-800 dark:bg-secondary-900/30 dark:text-secondary-400";
     case -2:
       return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
     case -3:
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
+      return "bg-accent-100 text-accent-800 dark:bg-accent-900/30 dark:text-accent-400";
     default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+      return "bg-secondary-100 text-secondary-800 dark:bg-secondary-900/30 dark:text-secondary-400";
   }
 }
 
@@ -1144,7 +1144,7 @@ function getOverdueStatus(item: Receivable): { text: string; style: string } {
       return {
         text: "按时收款",
         style:
-          "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+          "bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400",
       };
     }
   }
@@ -1160,7 +1160,7 @@ function getOverdueStatus(item: Receivable): { text: string; style: string } {
       return {
         text: "未到期",
         style:
-          "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+          "bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400",
       };
     }
   }
@@ -1171,13 +1171,13 @@ function getOverdueStatus(item: Receivable): { text: string; style: string } {
       return {
         text: "已过期",
         style:
-          "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400",
+          "bg-secondary-100 text-secondary-800 dark:bg-secondary-900/30 dark:text-secondary-400",
       };
     } else {
       return {
         text: "未到期",
         style:
-          "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400",
+          "bg-secondary-100 text-secondary-800 dark:bg-secondary-900/30 dark:text-secondary-400",
       };
     }
   }
@@ -1193,14 +1193,14 @@ function getOverdueStatus(item: Receivable): { text: string; style: string } {
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-surface-muted;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  @apply bg-border rounded-full;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  @apply bg-muted;
 }
 </style>

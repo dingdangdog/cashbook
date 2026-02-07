@@ -2,37 +2,35 @@
   <!-- 自助平账对话框 -->
   <div
     v-if="showAutoMergeFlowsDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-[95vw] max-h-[90vh] flex flex-col transform transition-all"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-[95vw] max-h-[90vh] flex flex-col transform transition-all border border-border"
       @click.stop
     >
       <!-- 紧凑的标题栏 -->
       <div
-        class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-4 py-3 border-b border-border flex justify-between items-center"
       >
         <div
           class="w-full flex flex-col md:flex-row md:items-center justify-between gap-2"
         >
           <div class="flex-1 flex md:justify-between gap-2">
             <div>
-              <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-                自动平账候选数据
-              </h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">
+              <h3 class="text-lg font-semibold">自动平账候选数据</h3>
+              <p class="text-xs text-foreground/60">
                 一般用于清理支付后又退款等无效数据
               </p>
             </div>
             <div class="flex items-center gap-2">
               <span
-                class="hidden md:inline-flex items-center text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                class="hidden md:inline-flex items-center text-xs px-2 py-1 rounded bg-surface-muted text-foreground/70 border border-border"
               >
                 已选 {{ selectedCount }} 项
               </span>
               <button
                 @click="toggleSelectAll"
-                class="px-3 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 rounded text-sm font-medium transition-colors"
+                class="px-3 py-1 bg-surface hover:bg-surface-muted text-foreground/80 rounded text-sm font-medium transition-colors border border-border"
               >
                 {{ isAllSelected ? "取消全选" : "全选" }}
               </button>
@@ -42,7 +40,7 @@
             <button
               @click="fetchCandidates"
               :disabled="loading"
-              class="px-3 py-1 bg-green-600 disabled:opacity-50 hover:bg-green-700 text-white rounded text-xs md:text-sm font-medium transition-colors flex items-center gap-1"
+              class="px-3 py-1 bg-primary-600 disabled:opacity-50 hover:bg-primary-700 text-white rounded text-xs md:text-sm font-medium transition-colors flex items-center gap-1"
             >
               <ArrowPathIcon
                 class="w-4 h-4"
@@ -53,20 +51,20 @@
             <button
               @click="batchConfirmBalance"
               :disabled="selectedIds.length === 0 || loading"
-              class="px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors"
+              class="px-3 py-1 bg-primary-600 disabled:opacity-50 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors"
             >
               批量平账
             </button>
             <button
               @click="batchIgnoreBalance"
               :disabled="selectedIds.length === 0 || loading"
-              class="px-3 py-1 bg-orange-600 disabled:opacity-50 hover:bg-orange-700 text-white rounded text-sm font-medium transition-colors"
+              class="px-3 py-1 bg-secondary-800 disabled:opacity-50 hover:bg-secondary-900 text-white rounded text-sm font-medium transition-colors"
             >
               批量忽略
             </button>
             <button
               @click="ignoreAllBalance"
-              class="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-sm font-medium transition-colors"
+              class="px-3 py-1 bg-secondary-800 hover:bg-secondary-900 text-white rounded text-sm font-medium transition-colors"
             >
               忽略全部
             </button>
@@ -75,7 +73,7 @@
         <div>
           <button
             @click="closeDialog"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+            class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
           >
             <XMarkIcon class="w-4 h-4" />
           </button>
@@ -87,20 +85,20 @@
         <!-- 加载状态 -->
         <div v-if="loading" class="flex justify-center items-center py-20">
           <div
-            class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
           ></div>
-          <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
+          <span class="ml-2 text-foreground/60">加载中...</span>
         </div>
 
         <!-- 空状态 -->
         <div v-else-if="candidatePairs.length === 0" class="text-center py-20">
-          <div class="text-gray-400 dark:text-gray-500 mb-4">
+          <div class="text-foreground/40 mb-4">
             <AdjustmentsHorizontalIcon class="mx-auto h-12 w-12" />
           </div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+          <h3 class="text-lg font-medium mb-2">
             暂无平账候选数据
           </h3>
-          <p class="text-gray-500 dark:text-gray-400">
+          <p class="text-foreground/60">
             系统未发现可以自动平账的数据
           </p>
         </div>
@@ -108,27 +106,27 @@
         <!-- 桌面端表格 -->
         <div v-else class="hidden lg:block h-full max-h-[60vh] overflow-y-auto">
           <table
-            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+            class="min-w-full divide-y divide-border"
           >
-            <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
+            <thead class="bg-surface-muted sticky top-0 z-10">
               <tr>
                 <!-- 左侧数据列组 -->
                 <th
                   colspan="6"
-                  class="px-4 py-3 text-center text-lg font-bold text-gray-800 dark:text-gray-200 bg-blue-50 dark:bg-blue-900/20 border-b border-blue-200 dark:border-blue-800"
+                  class="px-4 py-3 text-center text-lg font-bold text-foreground bg-primary-500/10 border-b border-border"
                 >
                   左侧数据
                 </th>
                 <!-- 操作列 -->
                 <th
                   rowspan="2"
-                  class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600"
+                  class="px-4 py-3 text-center text-sm font-medium text-foreground/60 uppercase tracking-wider border-b border-border"
                 >
                   操作
                 </th>
                 <th
                   rowspan="2"
-                  class="py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600"
+                  class="py-3 text-center text-sm font-medium text-foreground/60 uppercase tracking-wider border-b border-border"
                 >
                   多选
                 </th>
@@ -136,7 +134,7 @@
                 <!-- 右侧数据列组 -->
                 <th
                   colspan="6"
-                  class="px-4 py-3 text-center text-lg font-bold text-gray-800 dark:text-gray-200 bg-purple-50 dark:bg-purple-900/20 border-b border-purple-200 dark:border-purple-800"
+                  class="px-4 py-3 text-center text-lg font-bold text-foreground bg-secondary-500/10 border-b border-border"
                 >
                   右侧数据
                 </th>
@@ -144,91 +142,91 @@
               <tr>
                 <!-- 左侧数据子列 -->
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-primary-500/10"
                 >
                   类型
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-primary-500/10"
                 >
                   金额
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-primary-500/10"
                 >
                   名称
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-primary-500/10"
                 >
                   支付方式
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-primary-500/10"
                 >
                   类别
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-primary-500/10"
                 >
                   日期
                 </th>
                 <!-- 右侧数据子列 -->
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-secondary-500/10"
                 >
                   日期
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-secondary-500/10"
                 >
                   类别
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-secondary-500/10"
                 >
                   支付方式
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-secondary-500/10"
                 >
                   名称
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-secondary-500/10"
                 >
                   金额
                 </th>
                 <th
-                  class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20"
+                  class="px-3 py-2 text-xs font-medium text-foreground/60 uppercase tracking-wider bg-secondary-500/10"
                 >
                   类型
                 </th>
               </tr>
             </thead>
             <tbody
-              class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+              class="bg-surface divide-y divide-border"
             >
               <tr
                 v-for="(pair, index) in candidatePairs"
                 :key="index"
                 :class="
                   index % 2 === 0
-                    ? 'bg-gray-50 dark:bg-gray-700/30'
-                    : 'bg-white dark:bg-gray-800'
+                    ? 'bg-surface-muted/50'
+                    : 'bg-surface'
                 "
-                class="hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                class="hover:bg-surface-muted transition-colors"
               >
                 <!-- 左侧数据 -->
                 <td class="px-3 py-3 text-center">
                   <span
                     :class="[
-                      'inline-flex px-2 py-1 text-xs font-medium rounded-full',
+                      'inline-flex px-2 py-1 text-xs font-medium rounded-full border',
                       pair.out.flowType === '支出'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.out.flowType === '收入'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ pair.out.flowType }}
@@ -237,35 +235,35 @@
                 <td class="px-3 py-3 text-center">
                   <span
                     :class="[
-                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
                       pair.out.flowType === '支出'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.out.flowType === '收入'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ Number(pair.out.money).toFixed(2) }}
                   </span>
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate text-center"
+                  class="px-3 py-3 text-sm max-w-32 truncate text-center"
                   :title="pair.out.name"
                 >
                   {{ pair.out.name }}
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                  class="px-3 py-3 text-sm text-center"
                 >
                   {{ pair.out.payType }}
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                  class="px-3 py-3 text-sm text-center"
                 >
                   {{ pair.out.industryType }}
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                  class="px-3 py-3 text-sm text-center"
                 >
                   {{ pair.out.day }}
                 </td>
@@ -274,14 +272,14 @@
                   <div class="flex flex-col gap-1 justify-center">
                     <button
                       @click="confirmBalance(pair)"
-                      class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
+                      class="px-2 py-1 bg-primary-600 hover:bg-primary-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
                     >
                       <CheckIcon class="w-3 h-3" />
                       平账
                     </button>
                     <button
                       @click="ignoreBalance(pair)"
-                      class="px-2 py-1 bg-orange-600 hover:bg-orange-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
+                      class="px-2 py-1 bg-secondary-800 hover:bg-secondary-900 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
                     >
                       <EyeSlashIcon class="w-3 h-3" />
                       忽略
@@ -292,29 +290,29 @@
                 <td class="px-3 py-3 text-center">
                   <input
                     type="checkbox"
-                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    class="w-4 h-4 rounded border-border text-primary-600 focus:ring-primary-500"
                     :value="pair.out.id"
                     v-model="selectedIds"
                   />
                 </td>
                 <!-- 右侧数据 -->
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                  class="px-3 py-3 text-sm text-center"
                 >
                   {{ pair.in.day }}
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                  class="px-3 py-3 text-sm text-center"
                 >
                   {{ pair.in.industryType }}
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 text-center"
+                  class="px-3 py-3 text-sm text-center"
                 >
                   {{ pair.in.payType }}
                 </td>
                 <td
-                  class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100 max-w-32 truncate text-center"
+                  class="px-3 py-3 text-sm max-w-32 truncate text-center"
                   :title="pair.in.name"
                 >
                   {{ pair.in.name }}
@@ -322,12 +320,12 @@
                 <td class="px-3 py-3 text-center">
                   <span
                     :class="[
-                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
                       pair.in.flowType === '支出'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.in.flowType === '收入'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ Number(pair.in.money).toFixed(2) }}
@@ -336,12 +334,12 @@
                 <td class="px-3 py-3 text-center">
                   <span
                     :class="[
-                      'inline-flex px-2 py-1 text-xs font-medium rounded-full',
+                      'inline-flex px-2 py-1 text-xs font-medium rounded-full border',
                       pair.in.flowType === '支出'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.in.flowType === '收入'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ pair.in.flowType }}
@@ -361,42 +359,37 @@
             <div
               v-for="(pair, index) in candidatePairs"
               :key="index"
-              class="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-3 border border-gray-200 dark:border-gray-600"
+              class="bg-surface rounded-lg p-2 md:p-3 border border-border"
             >
               <!-- 左右对比布局 -->
               <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2 flex items-center justify-between">
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
-                    选择
-                  </div>
+                  <div class="text-xs text-foreground/60">选择</div>
                   <input
                     type="checkbox"
-                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    class="w-4 h-4 rounded border-border text-primary-600 focus:ring-primary-500"
                     :value="pair.out.id"
                     v-model="selectedIds"
                   />
                 </div>
                 <!-- 支出卡片 -->
                 <div
-                  class="bg-red-50 dark:bg-red-900/20 rounded p-2 border border-red-200 dark:border-red-800"
+                  class="rounded p-2 border"
                   :class="{
-                    'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800':
+                    'bg-red-500/10 border-red-500/20':
                       pair.out.flowType === '支出',
-                    'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800':
+                    'bg-primary-500/10 border-primary-500/20':
                       pair.out.flowType === '收入',
-                    'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-600':
+                    'bg-surface-muted border-border':
                       pair.out.flowType === '不计收支',
                   }"
                 >
                   <div
                     class="text-xs font-semibold mb-1.5 flex items-center gap-1"
                     :class="{
-                      'text-red-800 dark:text-red-300':
-                        pair.out.flowType === '支出',
-                      'text-green-800 dark:text-green-300':
-                        pair.out.flowType === '收入',
-                      'text-gray-800 dark:text-gray-300':
-                        pair.out.flowType === '不计收支',
+                      'text-red-600': pair.out.flowType === '支出',
+                      'text-primary-700': pair.out.flowType === '收入',
+                      'text-foreground/70': pair.out.flowType === '不计收支',
                     }"
                   >
                     <MinusIcon
@@ -412,59 +405,48 @@
                   </div>
                   <div class="space-y-1 text-xs">
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >金额</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">金额</span>
                       <span
                         class="font-medium text-xs"
                         :class="{
-                          'text-red-600 dark:text-red-400':
-                            pair.out.flowType === '支出',
-                          'text-green-600 dark:text-green-400':
-                            pair.out.flowType === '收入',
-                          'text-gray-600 dark:text-gray-400':
-                            pair.out.flowType === '不计收支',
+                          'text-red-600': pair.out.flowType === '支出',
+                          'text-primary-600': pair.out.flowType === '收入',
+                          'text-foreground/70': pair.out.flowType === '不计收支',
                         }"
                         >{{ Number(pair.out.money).toFixed(2) }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >名称</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">名称</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         :title="pair.out.name"
                         >{{ pair.out.name }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >类型</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">类型</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         >{{ pair.out.industryType }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
                       <span
-                        class="text-gray-600 dark:text-gray-400 text-[10px]"
+                        class="text-foreground/60 text-[10px]"
                         >{{
                           pair.out.flowType === "收入" ? "收款" : "支付"
                         }}</span
                       >
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         >{{ pair.out.payType }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >日期</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">日期</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px]"
+                        class="text-[10px]"
                         >{{ pair.out.day }}</span
                       >
                     </div>
@@ -472,11 +454,9 @@
                       v-if="pair.out.description"
                       class="flex justify-between items-center"
                     >
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >备注</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">备注</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         :title="pair.out.description"
                         >{{ pair.out.description }}</span
                       >
@@ -488,23 +468,20 @@
                 <div
                   class="rounded p-2 border"
                   :class="{
-                    'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800':
+                    'bg-red-500/10 border-red-500/20':
                       pair.in.flowType === '支出',
-                    'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800':
+                    'bg-primary-500/10 border-primary-500/20':
                       pair.in.flowType === '收入',
-                    'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-600':
+                    'bg-surface-muted border-border':
                       pair.in.flowType === '不计收支',
                   }"
                 >
                   <div
                     class="text-xs font-semibold mb-1.5 flex items-center gap-1"
                     :class="{
-                      'text-red-800 dark:text-red-300':
-                        pair.in.flowType === '支出',
-                      'text-green-800 dark:text-green-300':
-                        pair.in.flowType === '收入',
-                      'text-gray-800 dark:text-gray-300':
-                        pair.in.flowType === '不计收支',
+                      'text-red-600': pair.in.flowType === '支出',
+                      'text-primary-700': pair.in.flowType === '收入',
+                      'text-foreground/70': pair.in.flowType === '不计收支',
                     }"
                   >
                     <MinusIcon
@@ -520,59 +497,48 @@
                   </div>
                   <div class="space-y-1 text-xs">
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >金额</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">金额</span>
                       <span
                         class="font-medium text-xs"
                         :class="{
-                          'text-red-600 dark:text-red-400':
-                            pair.in.flowType === '支出',
-                          'text-green-600 dark:text-green-400':
-                            pair.in.flowType === '收入',
-                          'text-gray-600 dark:text-gray-400':
-                            pair.in.flowType === '不计收支',
+                          'text-red-600': pair.in.flowType === '支出',
+                          'text-primary-600': pair.in.flowType === '收入',
+                          'text-foreground/70': pair.in.flowType === '不计收支',
                         }"
                         >{{ Number(pair.in.money).toFixed(2) }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >名称</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">名称</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         :title="pair.in.name"
                         >{{ pair.in.name }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >类型</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">类型</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         >{{ pair.in.industryType }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
                       <span
-                        class="text-gray-600 dark:text-gray-400 text-[10px]"
+                        class="text-foreground/60 text-[10px]"
                         >{{
                           pair.in.flowType === "收入" ? "收款" : "支付"
                         }}</span
                       >
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         >{{ pair.in.payType }}</span
                       >
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >日期</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">日期</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px]"
+                        class="text-[10px]"
                         >{{ pair.in.day }}</span
                       >
                     </div>
@@ -580,11 +546,9 @@
                       v-if="pair.in.description"
                       class="flex justify-between items-center"
                     >
-                      <span class="text-gray-600 dark:text-gray-400 text-[10px]"
-                        >备注</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">备注</span>
                       <span
-                        class="text-gray-900 dark:text-gray-100 text-[10px] truncate max-w-[60%]"
+                        class="text-[10px] truncate max-w-[60%]"
                         :title="pair.in.description"
                         >{{ pair.in.description }}</span
                       >
@@ -595,18 +559,18 @@
 
               <!-- 操作按钮 - 紧凑布局 -->
               <div
-                class="flex gap-2 mt-1 pt-1 border-t border-gray-200 dark:border-gray-600"
+                class="flex gap-2 mt-1 pt-1 border-t border-border"
               >
                 <button
                   @click="confirmBalance(pair)"
-                  class="flex-1 px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
+                  class="flex-1 px-2 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
                 >
                   <CheckIcon class="w-3 h-3" />
                   平账
                 </button>
                 <button
                   @click="ignoreBalance(pair)"
-                  class="flex-1 px-2 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
+                  class="flex-1 px-2 py-1.5 bg-secondary-800 hover:bg-secondary-900 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
                 >
                   <EyeSlashIcon class="w-3 h-3" />
                   忽略

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full">
+  <div class="p-2 md:p-4 bg-surface-muted min-h-full">
     <!-- 筛选抽屉 (全设备通用) -->
     <div
       v-if="searchPanelVisible"
@@ -7,16 +7,16 @@
       @click="searchPanelVisible = false"
     >
       <div
-        class="fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 p-2 md:p-4 overflow-y-auto"
+        class="fixed right-0 top-0 h-full w-full max-w-md bg-surface shadow-xl transform transition-transform duration-300 p-2 md:p-4 overflow-y-auto"
         @click.stop
       >
         <div class="flex justify-between items-center mb-6">
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+          <h3 class="text-lg font-semibold text-foreground">
             筛选条件
           </h3>
           <button
             @click="searchPanelVisible = false"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+            class="text-muted hover:text-foreground hover:bg-surface-muted p-2 rounded-lg transition-colors"
           >
             <svg
               class="w-5 h-5"
@@ -37,12 +37,12 @@
         <div class="space-y-6">
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
               >类型分类</label
             >
             <select
               v-model="typeQueryRef.type"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             >
               <option value="">全部</option>
               <option
@@ -57,30 +57,30 @@
 
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
               >类型名称</label
             >
             <input
               v-model="typeQueryRef.value"
               type="text"
               placeholder="请输入类型名称..."
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             />
           </div>
 
           <!-- 操作按钮 -->
           <div
-            class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-600"
+            class="flex gap-3 pt-4 border-t border-border"
           >
             <button
               @click="clearFilters"
-              class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded-lg transition-colors duration-200 font-medium"
+              class="flex-1 px-4 py-2 bg-secondary-200 hover:bg-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-500 text-foreground rounded-lg transition-colors duration-200 font-medium"
             >
               清空筛选
             </button>
             <button
               @click="searchPanelVisible = false"
-              class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+              class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 font-medium"
             >
               确定
             </button>
@@ -91,14 +91,14 @@
 
     <!-- 操作栏 -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-2 mb-2 md:mb-4"
+      class="bg-surface rounded-lg shadow-sm border border-border p-2 mb-2 md:mb-4"
     >
       <div class="flex flex-col sm:flex-row gap-2 justify-between">
         <!-- 左侧操作按钮 -->
         <div class="flex flex-wrap gap-2">
           <button
             @click="showConfig"
-            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <svg
               class="h-4 w-4"
@@ -141,7 +141,7 @@
         <div>
           <button
             @click="searchPanelVisible = !searchPanelVisible"
-            class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <svg
               class="h-4 w-4"
@@ -164,14 +164,14 @@
 
     <!-- 数据表格容器 -->
     <div
-      class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+      class="bg-surface shadow-sm border border-border overflow-hidden"
     >
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center items-center py-12">
         <div
-          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
         ></div>
-        <span class="ml-2 text-gray-600 dark:text-gray-400">加载中...</span>
+        <span class="ml-2 text-muted">加载中...</span>
       </div>
 
       <!-- 桌面端表格 -->
@@ -182,10 +182,10 @@
         <table class="w-full">
           <thead>
             <tr
-              class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+              class="bg-surface-muted border-b border-border"
             >
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 分类
               </th>
@@ -208,19 +208,19 @@
               class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.type }}
               </td>
               <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
               >
                 {{ item.value }}
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
                 <button
                   @click="openUpdateDialog(item)"
-                  class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                  class="text-primary-600 hover:text-primary-500 transition-colors"
                   title="编辑"
                 >
                   <svg
@@ -251,17 +251,17 @@
         <div
           v-for="item in types"
           :key="`${item.type}-${item.value}`"
-          class="p-3 border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="p-3 border-b border-border hover:bg-surface-muted transition-colors"
         >
           <!-- 标题行：类型信息 + 编辑按钮 -->
           <div class="flex justify-between items-center">
             <div class="flex-1">
               <h3
-                class="text-base font-medium text-green-950 dark:text-white mb-1"
+                class="text-base font-medium text-foreground mb-1"
               >
                 {{ item.value }}
               </h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400">
+              <p class="text-sm text-muted">
                 <span class="font-medium">分类:</span> {{ item.type }}
               </p>
             </div>
@@ -270,7 +270,7 @@
             <div class="flex items-center">
               <button
                 @click="openUpdateDialog(item)"
-                class="p-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 rounded transition-colors"
+                class="p-2 text-primary-600 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition-colors"
                 title="编辑"
               >
                 <svg
@@ -294,7 +294,7 @@
 
       <!-- 空状态 -->
       <div v-if="!loading && types.length === 0" class="text-center py-12">
-        <div class="text-gray-400 dark:text-gray-500 mb-4">
+        <div class="text-muted mb-4">
           <svg
             class="mx-auto h-12 w-12"
             fill="none"
@@ -309,10 +309,10 @@
             />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+        <h3 class="text-lg font-medium text-foreground mb-2">
           暂无类型数据
         </h3>
-        <p class="text-gray-500 dark:text-gray-400">
+        <p class="text-muted">
           请先添加一些流水记录，类型数据会自动生成
         </p>
       </div>
@@ -325,12 +325,12 @@
       @click="cancelEdit"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md transform transition-all"
+        class="bg-surface rounded-lg shadow-xl w-full max-w-md transform transition-all"
         @click.stop
       >
         <!-- 对话框标题 -->
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+        <div class="px-6 py-4 border-b border-border">
+          <h3 class="text-lg font-semibold text-foreground">
             {{ typeDialog.title }}
           </h3>
           <p class="text-sm text-pink-600 dark:text-pink-400 mt-1">
@@ -342,40 +342,40 @@
         <div class="px-6 py-4 space-y-4">
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
               >类型分类</label
             >
             <input
               v-model="editType.type"
               type="text"
               disabled
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+              class="w-full px-3 py-2 border border-border rounded-lg bg-surface-muted text-muted"
             />
           </div>
 
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
               >原类型名称</label
             >
             <input
               v-model="editType.oldValue"
               type="text"
               disabled
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+              class="w-full px-3 py-2 border border-border rounded-lg bg-surface-muted text-muted"
             />
           </div>
 
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground mb-2"
               >新类型名称</label
             >
             <input
               v-model="editType.value"
               type="text"
               autofocus
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               placeholder="请输入新的类型名称"
             />
           </div>
@@ -387,13 +387,13 @@
         >
           <button
             @click="cancelEdit"
-            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg transition-colors duration-200 font-medium"
+            class="px-4 py-2 bg-secondary-300 hover:bg-secondary-400 text-foreground rounded-lg transition-colors duration-200 font-medium"
           >
             取消
           </button>
           <button
             @click="confirmTypeChange()"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 font-medium"
           >
             确定
           </button>
@@ -569,15 +569,15 @@ const clearFilters = () => {
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-surface-muted;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  @apply bg-border rounded-full;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  @apply bg-muted;
 }
 
 .overflow-y-auto::-webkit-scrollbar {
@@ -585,14 +585,14 @@ const clearFilters = () => {
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-surface-muted;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  @apply bg-border rounded-full;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  @apply bg-muted;
 }
 </style>

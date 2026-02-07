@@ -1,25 +1,23 @@
 <template>
   <!-- 自定义流水导入对话框 -->
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl mx-auto max-h-[90vh] overflow-y-auto"
+    class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-6xl mx-auto max-h-[90vh] overflow-y-auto border border-border"
   >
     <!-- 标题栏 -->
     <div
-      class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+      class="flex items-center justify-between p-4 border-b border-border"
     >
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-        自定义流水导入
-      </h3>
+      <h3 class="text-lg font-semibold">自定义流水导入</h3>
       <button
         @click="closeDialog"
-        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        class="text-foreground/40 hover:text-foreground/70 transition-colors"
       >
         <XMarkIcon class="w-5 h-5" />
       </button>
     </div>
 
     <!-- 步骤导航 -->
-    <div class="border-b border-gray-200 dark:border-gray-700">
+    <div class="border-b border-border">
       <nav class="flex justify-center space-x-8 px-4" aria-label="步骤">
         <button
           v-for="step in steps"
@@ -28,8 +26,8 @@
           :class="[
             'py-4 px-2 border-b-2 font-medium text-sm transition-colors',
             tab === step.id
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-foreground/60 hover:text-foreground/80',
           ]"
         >
           <span class="flex items-center gap-2">
@@ -37,8 +35,8 @@
               :class="[
                 'flex items-center justify-center w-6 h-6 rounded-full text-xs',
                 tab === step.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400',
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-surface-muted text-foreground/60 border border-border',
               ]"
             >
               {{ step.id }}
@@ -57,13 +55,13 @@
           <!-- 文件格式 -->
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground/80 mb-2"
             >
               文件格式
             </label>
             <select
               v-model="fileType"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option v-for="type in fileTypes" :key="type" :value="type">
                 {{ type.toUpperCase() }}
@@ -74,13 +72,13 @@
           <!-- 文件编码 -->
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground/80 mb-2"
             >
               文件编码
             </label>
             <select
               v-model="fileEncoding"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option
                 v-for="encoding in fileEncodings"
@@ -95,7 +93,7 @@
           <!-- 标题行行数 -->
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-foreground/80 mb-2"
             >
               标题行行数
             </label>
@@ -103,7 +101,7 @@
               v-model.number="titleRowLine"
               type="number"
               min="1"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -111,7 +109,7 @@
         <div class="text-center pt-4">
           <button
             @click="toSecondTab"
-            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
           >
             下一步
           </button>
@@ -131,7 +129,7 @@
           />
           <button
             @click="importCsvTemplate"
-            class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2 mx-auto"
+            class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors flex items-center gap-2 mx-auto"
           >
             <DocumentArrowUpIcon class="h-5 w-5" />
             选择文件
@@ -147,19 +145,19 @@
         </div>
         <div
           v-else
-          class="max-h-96 overflow-y-auto bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border"
+          class="max-h-96 overflow-y-auto bg-surface-muted p-4 rounded-lg border border-border"
         >
           <div
             v-for="field in csvHeaders"
             :key="field"
-            class="mb-4 p-3 bg-white dark:bg-gray-800 rounded border"
+            class="mb-4 p-3 bg-surface rounded border border-border"
           >
-            <h4 class="font-medium text-gray-900 dark:text-white mb-2">
+            <h4 class="font-medium mb-2">
               {{ field }}
             </h4>
             <select
               v-model="targetFieldMapping[field]"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option value="">请选择目标字段</option>
               <option
@@ -176,13 +174,13 @@
         <div class="flex justify-center gap-4 pt-4">
           <button
             @click="toFirstTab"
-            class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            class="px-6 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface transition-colors"
           >
             上一步
           </button>
           <button
             @click="toLastTab"
-            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
           >
             下一步
           </button>
@@ -195,7 +193,7 @@
           <button
             @click="readCsvInfo"
             :disabled="!csvFile || Object.keys(targetFieldMapping).length === 0"
-            class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2 mx-auto"
+            class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-secondary-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2 mx-auto"
           >
             <MagnifyingGlassIcon class="h-5 w-5" />
             解析数据
@@ -211,17 +209,17 @@
         </div>
         <div
           v-else-if="showCsvTable"
-          class="max-h-96 overflow-auto border rounded-lg"
+          class="max-h-96 overflow-auto border border-border rounded-lg"
         >
           <div class="excel-table">
             <table ref="excelTable" class="min-w-full">
               <thead
                 ref="excelTableHead"
-                class="bg-gray-50 dark:bg-gray-700 sticky top-0"
+                class="bg-surface-muted sticky top-0"
               ></thead>
               <tbody
                 ref="excelTableBody"
-                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                class="bg-surface divide-y divide-border"
               ></tbody>
             </table>
           </div>
@@ -230,7 +228,7 @@
         <div class="text-center pt-4">
           <button
             @click="toSecondTab"
-            class="px-6 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            class="px-6 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface transition-colors"
           >
             上一步
           </button>
@@ -240,18 +238,18 @@
 
     <!-- 底部操作按钮 -->
     <div
-      class="flex flex-col sm:flex-row gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+      class="flex flex-col sm:flex-row gap-3 p-4 border-t border-border bg-surface-muted"
     >
       <button
         @click="closeDialog"
-        class="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        class="flex-1 px-4 py-2 text-foreground/80 border border-border rounded-md hover:bg-surface transition-colors"
       >
         关闭
       </button>
       <button
         @click="submitUpload"
         :disabled="csvFlows.length === 0 || uploading"
-        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+        class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-secondary-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
       >
         <div
           v-if="uploading"
@@ -265,23 +263,21 @@
   <!-- 全屏CSV表格对话框 -->
   <div
     v-if="showFlowExcelImportDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
     @click.self="closeCsvTableDialog"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl mx-auto max-h-[90vh] overflow-y-auto"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-7xl mx-auto max-h-[90vh] overflow-y-auto border border-border"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          CSV 流水导入
-        </h3>
+        <h3 class="text-lg font-semibold">CSV 流水导入</h3>
         <button
           @click="closeCsvTableDialog"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="text-foreground/40 hover:text-foreground/70 transition-colors"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -802,7 +798,7 @@ const renderTable = () => {
     const th = document.createElement("th");
     th.innerText = h;
     th.className =
-      "px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600";
+      "px-4 py-2 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider border-b border-border";
     th.title = h; // 添加title属性，方便鼠标悬停查看完整内容
     head.appendChild(th);
   }
@@ -812,7 +808,7 @@ const renderTable = () => {
   for (let row of csvDatas.value) {
     // 创建行元素
     const tr = document.createElement("tr");
-    tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700";
+    tr.className = "hover:bg-surface-muted";
 
     // 部分数据字段格式化，并回显
     for (let i = 0; i < row.length; i++) {
@@ -822,7 +818,7 @@ const renderTable = () => {
       const displayValue = cellValue !== undefined ? String(cellValue) : "";
       td.innerText = displayValue;
       td.className =
-        "px-4 py-2 text-sm text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600 max-w-32 truncate";
+        "px-4 py-2 text-sm text-foreground border-b border-border max-w-32 truncate";
       td.title = displayValue; // 添加title属性，方便鼠标悬停查看完整内容
       tr.appendChild(td);
     }
@@ -883,16 +879,17 @@ const toLastTab = () => {
 
 .overflow-y-auto::-webkit-scrollbar-track,
 .overflow-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb,
 .overflow-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover,
 .overflow-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 </style>

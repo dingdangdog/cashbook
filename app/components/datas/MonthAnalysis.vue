@@ -1,7 +1,7 @@
 <template>
   <div style="flex-direction: column" v-show="haveData">
     <div
-      class="border rounded-md m-2 bg-green-200/10 border-green-500"
+      class="border rounded-md m-2 bg-primary-200/10 border-primary-500"
       v-show="
         monthData?.maxIn && monthData.maxIn?.money && monthData.maxIn.money > 0
       "
@@ -10,7 +10,7 @@
         <p style="margin: 0.5rem 0">
           <b>总收入：</b>
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100"
           >
             {{ monthData?.inSum || 0 }}元
           </span>
@@ -21,13 +21,13 @@
         <p>
           <b>最高收入类型：</b>
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800 dark:bg-secondary-800 dark:text-secondary-100"
           >
             {{ monthData?.maxInType }}
           </span>
           <b> 收入额：</b>
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100"
           >
             {{ monthData?.maxInTypeSum }}元
           </span>
@@ -37,22 +37,22 @@
       <div class="text-block">
         <b>最大单笔收入：</b>
         <div class="text-block" v-if="monthData?.maxIn">
-          <p class="text-gray-800 dark:text-gray-200">
+          <p class="text-foreground">
             日期：{{ monthData?.maxIn.day }}
           </p>
-          <p class="text-gray-800 dark:text-gray-200">
+          <p class="text-foreground">
             收入类型：{{ monthData?.maxIn.industryType }}
           </p>
-          <p class="text-gray-800 dark:text-gray-200">
+          <p class="text-foreground">
             收款方式：{{ monthData?.maxIn.payType }}
           </p>
-          <p class="text-gray-800 dark:text-gray-200">
+          <p class="text-foreground">
             名称：{{ monthData?.maxIn.name }}
           </p>
-          <p class="text-gray-800 dark:text-gray-200">
+          <p class="text-foreground">
             金额：
             <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100"
             >
               {{ monthData?.maxIn.money }}元
             </span>
@@ -80,7 +80,7 @@
         <p>
           <b>最高支出类型：</b>
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800 dark:bg-secondary-800 dark:text-secondary-100"
           >
             {{ monthData?.maxOutType }}
           </span>
@@ -97,30 +97,30 @@
         <b>最大单笔支出：</b>
         <div class="text-block" v-if="monthData?.maxOut">
           <p
-            class="text-gray-800 dark:text-gray-200"
+            class="text-foreground"
             v-show="monthData?.maxOut.money && monthData.maxOut.money > 0"
           >
             日期：{{ monthData?.maxOut.day }}
           </p>
           <p
-            class="text-gray-800 dark:text-gray-200"
+            class="text-foreground"
             v-show="monthData?.maxOut.money && monthData.maxOut.money > 0"
           >
             支出类型：{{ monthData?.maxOut.industryType }}
           </p>
           <p
-            class="text-gray-800 dark:text-gray-200"
+            class="text-foreground"
             v-show="monthData?.maxOut.money && monthData.maxOut.money > 0"
           >
             支付方式：{{ monthData?.maxOut.payType }}
           </p>
-          <p class="text-gray-800 dark:text-gray-200">
+          <p class="text-foreground">
             名称：{{ monthData?.maxOut.name || "" }}，{{
               monthData?.maxOut.description || ""
             }}
           </p>
           <p
-            class="text-gray-800 dark:text-gray-200"
+            class="text-foreground"
             v-show="monthData?.maxOut.money && monthData.maxOut.money > 0"
           >
             金额：
@@ -134,12 +134,12 @@
       </div>
     </div>
 
-    <div class="border rounded-md m-2 bg-gray-200/10 border-gray-400">
+    <div class="border rounded-md m-2 bg-surface-muted border-border">
       <div class="text-block">
         <p style="margin: 0.5rem 0">
           <b>不计收支：</b>
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100"
           >
             {{ monthData?.zeroSum || 0 }}元
           </span>

@@ -64,22 +64,20 @@
     <!-- CSV流水导入对话框 -->
     <div
       v-if="showFlowExcelImportDialog"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       @click="closeCsvTableDialog"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col"
+        class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col border border-border"
         @click.stop
       >
         <div
-          class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+          class="px-4 py-3 border-b border-border flex justify-between items-center"
         >
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-            CSV流水导入
-          </h3>
+          <h3 class="text-lg font-semibold">CSV流水导入</h3>
           <button
             @click="closeCsvTableDialog"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+            class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
           >
             <svg
               class="w-4 h-4"
@@ -110,11 +108,11 @@
     <!-- 自定义导入对话框 -->
     <div
       v-if="showFlowCustomImportDialog"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       @click="closeCustomImport"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md flex flex-col"
+        class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-md flex flex-col border border-border"
         @click.stop
       >
         <FlowCustomImportDialog
@@ -133,22 +131,20 @@
     <!-- 批量修改类型对话框 -->
     <div
       v-if="showBatchChangeDialog"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       @click="closeBatchChangeDialog"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md flex flex-col"
+        class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-md flex flex-col border border-border"
         @click.stop
       >
         <div
-          class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+          class="px-4 py-3 border-b border-border flex justify-between items-center"
         >
-          <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-            批量修改类型
-          </h3>
+          <h3 class="text-lg font-semibold">批量修改类型</h3>
           <button
             @click="closeBatchChangeDialog"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+            class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
           >
             <svg
               class="w-4 h-4"
@@ -169,13 +165,13 @@
         <div class="p-4 space-y-4">
           <div class="space-y-2">
             <label
-              class="block text-sm font-medium text-gray-600 dark:text-gray-400"
+              class="block text-sm font-medium text-foreground/70"
             >
               流水类型
             </label>
             <select
               v-model="batchChange.flowType"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">不修改</option>
               <option value="支出">支出</option>
@@ -186,7 +182,7 @@
 
           <div class="space-y-2">
             <label
-              class="block text-sm font-medium text-gray-600 dark:text-gray-400"
+              class="block text-sm font-medium text-foreground/70"
             >
               支出/收入类型
             </label>
@@ -194,13 +190,13 @@
               v-model="batchChange.industryType"
               type="text"
               placeholder="不修改"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
 
           <div class="space-y-2">
             <label
-              class="block text-sm font-medium text-gray-600 dark:text-gray-400"
+              class="block text-sm font-medium text-foreground/70"
             >
               支付/收款方式
             </label>
@@ -208,13 +204,13 @@
               v-model="batchChange.payType"
               type="text"
               placeholder="不修改"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
 
           <div class="space-y-2">
             <label
-              class="block text-sm font-medium text-gray-600 dark:text-gray-400"
+              class="block text-sm font-medium text-foreground/70"
             >
               流水归属
             </label>
@@ -222,24 +218,24 @@
               v-model="batchChange.attribution"
               type="text"
               placeholder="不修改"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              class="w-full px-3 py-2 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
         </div>
 
         <div
-          class="px-4 py-3 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+          class="px-4 py-3 border-t border-border bg-surface-muted"
         >
           <div class="flex gap-2">
             <button
               @click="closeBatchChangeDialog"
-              class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded text-sm font-medium transition-colors"
+              class="flex-1 px-4 py-2 bg-surface hover:bg-surface-muted text-foreground/80 rounded text-sm font-medium transition-colors border border-border"
             >
               取消
             </button>
             <button
               @click="confirmBatchChange"
-              class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors"
+              class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors"
             >
               确认修改
             </button>

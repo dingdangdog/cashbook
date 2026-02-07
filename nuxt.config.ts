@@ -104,11 +104,7 @@ export default defineNuxtConfig({
     adminPassword: "",
   },
 
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "nuxt-echarts",
-    "nuxt-openapi-docs-module",
-  ],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-echarts", "nuxt-openapi-docs-module", "@pinia/nuxt"],
   // 动态引入echars图表
   echarts: {
     features: ["LabelLayout", "UniversalTransition"],

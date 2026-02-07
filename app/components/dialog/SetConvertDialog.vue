@@ -2,22 +2,20 @@
   <!-- CSV导入映射配置对话框 -->
   <div
     v-if="showSetConvertDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-3xl max-h-[85vh] flex flex-col transform transition-all"
+      class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-3xl max-h-[85vh] flex flex-col transform transition-all border border-border"
       @click.stop
     >
       <!-- 紧凑的标题栏 -->
       <div
-        class="px-3 py-2 md:px-4 md:py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-3 py-2 md:px-4 md:py-3 border-b border-border flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
-          CSV导入映射配置
-        </h3>
+        <h3 class="text-lg font-semibold">CSV导入映射配置</h3>
         <button
           @click="cancelTypeRelationChange"
-          class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+          class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
         >
           <svg
             class="w-4 h-4"
@@ -37,9 +35,9 @@
 
       <!-- 紧凑的说明 -->
       <div
-        class="px-3 py-2 md:px-4 md:py-2 bg-blue-50 dark:bg-blue-900/20 border-b border-gray-200 dark:border-gray-600"
+        class="px-3 py-2 md:px-4 md:py-2 bg-primary-500/10 border-b border-border"
       >
-        <p class="text-xs text-blue-700 dark:text-blue-300 flex items-center">
+        <p class="text-xs text-primary-700 flex items-center">
           <svg
             class="w-3 h-3 mr-1 flex-shrink-0"
             fill="none"
@@ -61,21 +59,21 @@
       <div class="flex-1 overflow-y-auto p-2 md:p-4">
         <div
           v-if="editRelations.length > 0"
-          class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden"
+          class="bg-surface border border-border rounded-lg overflow-hidden"
         >
           <!-- 表头 -->
           <div
-            class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+            class="bg-surface-muted border-b border-border"
           >
             <div class="flex items-center px-3 py-2">
               <div
-                class="flex-1 text-sm font-medium text-gray-600 dark:text-gray-400"
+                class="flex-1 text-sm font-medium text-foreground/70"
               >
                 原类型
               </div>
               <div class="w-8 flex justify-center">
                 <svg
-                  class="w-4 h-4 text-gray-400"
+                  class="w-4 h-4 text-foreground/40"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -89,12 +87,12 @@
                 </svg>
               </div>
               <div
-                class="flex-1 text-sm font-medium text-gray-600 dark:text-gray-400"
+                class="flex-1 text-sm font-medium text-foreground/70"
               >
                 导入类型
               </div>
               <div
-                class="w-10 text-sm font-medium text-gray-600 dark:text-gray-400 text-center"
+                class="w-10 text-sm font-medium text-foreground/70 text-center"
               >
                 操作
               </div>
@@ -102,11 +100,11 @@
           </div>
 
           <!-- 表格内容 -->
-          <div class="divide-y divide-gray-200 dark:divide-gray-600">
+          <div class="divide-y divide-border">
             <div
               v-for="(relation, index) in editRelations"
               :key="index"
-              class="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              class="flex items-center px-3 py-2 hover:bg-surface-muted"
             >
               <!-- 原类型输入框 -->
               <div class="flex-1 pr-2">
@@ -114,7 +112,7 @@
                   v-model="relation.source"
                   type="text"
                   placeholder="CSV中的类型..."
-                  class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent"
+                  class="w-full px-2 py-1 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                   :style="{ color: getItemColor(relation.target) }"
                 />
               </div>
@@ -122,7 +120,7 @@
               <!-- 箭头 -->
               <div class="w-8 flex justify-center">
                 <svg
-                  class="w-4 h-4 text-gray-400"
+                  class="w-4 h-4 text-foreground/40"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -142,7 +140,7 @@
                   v-model="relation.target"
                   type="text"
                   placeholder="导入类型..."
-                  class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                  class="w-full px-2 py-1 text-sm border border-border rounded bg-background text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                   :style="{ color: getItemColor(relation.target) }"
                 />
               </div>
@@ -151,7 +149,7 @@
               <div class="w-10 flex justify-center">
                 <button
                   @click="removePair(index)"
-                  class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                  class="p-1 text-red-600 hover:text-red-700 hover:bg-red-500/10 rounded transition-colors"
                   title="删除"
                 >
                   <svg
@@ -175,7 +173,7 @@
 
         <!-- 紧凑的空状态 -->
         <div v-else class="text-center py-8">
-          <div class="text-gray-400 dark:text-gray-500 mb-2">
+          <div class="text-foreground/40 mb-2">
             <svg
               class="mx-auto h-8 w-8"
               fill="none"
@@ -190,12 +188,12 @@
               />
             </svg>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          <p class="text-sm text-foreground/60 mb-3">
             暂无映射配置
           </p>
           <button
             @click="addPair"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors"
           >
             添加配置
           </button>
@@ -204,14 +202,14 @@
 
       <!-- 紧凑的操作栏 -->
       <div
-        class="px-4 py-3 rounded-b-lg border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+        class="px-4 py-3 rounded-b-lg border-t border-border bg-surface-muted"
       >
         <div class="flex justify-between items-center">
           <!-- 左侧：新增按钮 -->
           <button
             v-if="editRelations.length > 0"
             @click="addPair"
-            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-1"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-1"
           >
             <svg
               class="w-3 h-3"
@@ -234,13 +232,13 @@
           <div class="flex gap-2">
             <button
               @click="cancelTypeRelationChange"
-              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded text-sm font-medium transition-colors"
+              class="px-4 py-2 bg-surface hover:bg-surface-muted text-foreground/80 rounded text-sm font-medium transition-colors border border-border"
             >
               取消
             </button>
             <button
               @click="confirmTypeRelationChange"
-              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-1"
+              class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-1"
             >
               <svg
                 class="w-3 h-3"
@@ -372,14 +370,15 @@ const getItemColor = (text: string) => {
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  background-color: rgb(var(--color-surface-muted));
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: rgb(var(--color-secondary-300));
+  border-radius: 9999px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: rgb(var(--color-secondary-400));
 }
 </style>
