@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
       userId,
       bookId: body.bookId,
       name: flow.name,
-      day: flow.day,
+      day: new Date(flow.day),
       description: flow.description,
       flowType: flow.flowType,
       invoice: flow.invoice ? String(flow.invoice) : null,

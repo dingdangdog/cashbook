@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
   const flow = {
     userId: userId,
     bookId: String(body.bookId),
-    day: String(body.day || ""),
+    day: body.day ? new Date(body.day) : new Date(),
     flowType: String(body.flowType || ""), // 流水类型：收入、支出
     industryType: String(body.industryType || ""), // 行业分类 原 type（收入类型、支出类型）
     payType: String(body.payType || ""), // 支付方式

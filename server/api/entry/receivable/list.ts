@@ -84,14 +84,14 @@ export default defineEventHandler(async (event) => {
   if (startDay) {
     where.occurDay = {
       ...where.occurDay,
-      gte: startDay,
+      gte: new Date(startDay),
     };
   }
 
   if (endDay) {
     where.occurDay = {
       ...where.occurDay,
-      lte: endDay,
+      lte: new Date(endDay),
     };
   }
 

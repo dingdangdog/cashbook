@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
         name: flow.name || "借出款项",
         description: flow.description || `来自流水: ${flow.name}`,
         occurDay: flow.day,
-        expectDay: expectDay || null,
+        expectDay: expectDay ? new Date(expectDay) : null,
         money: flow.money || 0,
         occurId: flow.id,
         status: 0, // 未收款

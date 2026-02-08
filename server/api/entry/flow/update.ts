@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     return error("Not Find ID");
   }
   const flow = {
-    day: String(body.day || ""),
+    ...(body.day != null && body.day !== "" && { day: new Date(body.day) }),
     flowType: String(body.flowType || ""), // 流水类型：收入、支出
     industryType: String(body.industryType || ""), // 行业分类 原 type（收入类型、支出类型）
     payType: String(body.payType || ""), // 支付方式

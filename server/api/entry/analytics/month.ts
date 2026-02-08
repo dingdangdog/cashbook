@@ -53,16 +53,16 @@ export default defineEventHandler(async (event) => {
   }
   if (body.startDay && body.endDay) {
     where.day = {
-      gte: body.startDay,
-      lte: body.endDay,
+      gte: new Date(body.startDay),
+      lte: new Date(body.endDay),
     };
   } else if (body.startDay) {
     where.day = {
-      gte: body.startDay,
+      gte: new Date(body.startDay),
     };
   } else if (body.endDay) {
     where.day = {
-      lte: body.endDay,
+      lte: new Date(body.endDay),
     };
   }
 
@@ -103,8 +103,12 @@ export default defineEventHandler(async (event) => {
 
   // 按 day 分组，提取月份并合并数据到目标格式
   dayGroups.forEach((item) => {
-    // 从 day 字段提取月份（格式：YYYY-MM-DD -> YYYY-MM）
-    const month = item.day ? item.day.substring(0, 7) : "";
+    // 从 day 字段提取月份（day 为 Date 时取 YYYY-MM）
+    const month = item.day
+      ? (typeof item.day === "string"
+          ? item.day.slice(0, 7)
+          : new Date(item.day).toISOString().slice(0, 7))
+      : "";
     if (!month) return;
 
     const flowType = item.flowType;

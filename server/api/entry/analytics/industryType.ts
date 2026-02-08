@@ -52,16 +52,16 @@ export default defineEventHandler(async (event) => {
   }
   if (body.startDay && body.endDay) {
     where.day = {
-      gte: body.startDay,
-      lte: body.endDay,
+      gte: new Date(body.startDay),
+      lte: new Date(body.endDay),
     };
   } else if (body.startDay) {
     where.day = {
-      gte: body.startDay,
+      gte: new Date(body.startDay),
     };
   } else if (body.endDay) {
     where.day = {
-      lte: body.endDay,
+      lte: new Date(body.endDay),
     };
   }
 

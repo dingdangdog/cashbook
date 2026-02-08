@@ -73,11 +73,12 @@ export default defineEventHandler(async (event) => {
   // 开始事务处理
   const result = await prisma.$transaction(async (tx) => {
     // 创建收入流水
+    const actualDate = new Date(actualDay);
     const flow = await tx.flow.create({
       data: {
         bookId,
         userId,
-        day: actualDay,
+        day: actualDate,
         flowType: "收入",
         name: receivable.name || "待收款收入",
         description: receivable.description || `来自待收款: ${receivable.name}`,
@@ -94,7 +95,7 @@ export default defineEventHandler(async (event) => {
       where: { id: Number(id) },
       data: {
         status: 1, // 已收款
-        actualDay,
+        actualDay: actualDate,
         actualId: flow.id,
       },
     });

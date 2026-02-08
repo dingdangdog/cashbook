@@ -76,29 +76,30 @@ export default defineEventHandler(async (event) => {
       zeroSum: number;
     }
   > = {};
-  // 按 day 分组，合并数据到目标格式
+  // 按 day 分组，合并数据到目标格式（day 为 Date 时转为 YYYY-MM-DD 字符串作 key）
   dayGroups.reduce((acc, item) => {
-    const day = item.day;
+    const dayKey =
+      item.day instanceof Date
+        ? item.day.toISOString().slice(0, 10)
+        : String(item.day ?? "");
     const flowType = item.flowType;
     const moneySum = item._sum.money || 0; // 如果 money 为 null，默认值为 0
 
-    // 如果当前 day 不存在，则初始化
-    if (!acc[day]) {
-      acc[day] = {
-        type: day,
+    if (!acc[dayKey]) {
+      acc[dayKey] = {
+        type: dayKey,
         inSum: 0,
         outSum: 0,
         zeroSum: 0,
       };
     }
 
-    // 根据 flowType 填充对应的 sum
     if (flowType === "收入") {
-      acc[day].inSum += moneySum;
+      acc[dayKey].inSum += moneySum;
     } else if (flowType === "支出") {
-      acc[day].outSum += moneySum;
+      acc[dayKey].outSum += moneySum;
     } else if (flowType === "不计收支") {
-      acc[day].zeroSum += moneySum;
+      acc[dayKey].zeroSum += moneySum;
     }
 
     return acc;

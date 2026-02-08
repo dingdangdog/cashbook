@@ -88,7 +88,9 @@ export default defineEventHandler(async (event) => {
       let isSimilar =
         index !== i &&
         !processedIds.has(flow.id) &&
-        flow.day === current.day &&
+        (flow.day instanceof Date && current.day instanceof Date
+          ? flow.day.getTime() === current.day.getTime()
+          : flow.day === current.day) &&
         flow.money === current.money;
 
       // 如果基础条件不满足，直接返回false

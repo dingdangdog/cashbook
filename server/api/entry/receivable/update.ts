@@ -68,9 +68,9 @@ export default defineEventHandler(async (event) => {
 
   if (name !== undefined) updateData.name = name;
   if (description !== undefined) updateData.description = description || null;
-  if (occurDay !== undefined) updateData.occurDay = occurDay;
-  if (expectDay !== undefined) updateData.expectDay = expectDay || null;
-  if (actualDay !== undefined) updateData.actualDay = actualDay || null;
+  if (occurDay !== undefined) updateData.occurDay = new Date(occurDay);
+  if (expectDay !== undefined) updateData.expectDay = expectDay ? new Date(expectDay) : null;
+  if (actualDay !== undefined) updateData.actualDay = actualDay ? new Date(actualDay) : null;
   if (money !== undefined) updateData.money = Number(money);
   if (status !== undefined) updateData.status = Number(status);
   if (actualId !== undefined)

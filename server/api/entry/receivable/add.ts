@@ -67,8 +67,8 @@ export default defineEventHandler(async (event) => {
       userId,
       name,
       description: description || null,
-      occurDay,
-      expectDay: expectDay || null,
+      occurDay: new Date(occurDay),
+      expectDay: expectDay ? new Date(expectDay) : null,
       money: Number(money),
       occurId: occurId ? Number(occurId) : null,
       status: 0, // 默认状态为未收款
