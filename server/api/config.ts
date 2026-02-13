@@ -23,7 +23,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
-  const settings = await prisma.systemSetting.findUnique({
+  const row = await prisma.systemConfig.findUnique({
     select: {
       title: true,
       description: true,
@@ -31,9 +31,7 @@ export default defineEventHandler(async (event) => {
       version: true,
       openRegister: true,
     },
-    where: {
-      id: 1,
-    },
+    where: { id: 1 },
   });
-  return success(settings);
+  return success(row);
 });

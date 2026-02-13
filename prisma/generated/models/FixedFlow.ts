@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model FixedFlow
- * 
+ * 固定流水/周期性流水模板表
  */
 export type FixedFlowModel = runtime.Types.Result.DefaultSelection<Prisma.$FixedFlowPayload>
 
@@ -40,7 +40,6 @@ export type FixedFlowSumAggregateOutputType = {
 
 export type FixedFlowMinAggregateOutputType = {
   id: number | null
-  bookId: string | null
   userId: number | null
   month: string | null
   money: number | null
@@ -54,7 +53,6 @@ export type FixedFlowMinAggregateOutputType = {
 
 export type FixedFlowMaxAggregateOutputType = {
   id: number | null
-  bookId: string | null
   userId: number | null
   month: string | null
   money: number | null
@@ -68,7 +66,6 @@ export type FixedFlowMaxAggregateOutputType = {
 
 export type FixedFlowCountAggregateOutputType = {
   id: number
-  bookId: number
   userId: number
   month: number
   money: number
@@ -96,7 +93,6 @@ export type FixedFlowSumAggregateInputType = {
 
 export type FixedFlowMinAggregateInputType = {
   id?: true
-  bookId?: true
   userId?: true
   month?: true
   money?: true
@@ -110,7 +106,6 @@ export type FixedFlowMinAggregateInputType = {
 
 export type FixedFlowMaxAggregateInputType = {
   id?: true
-  bookId?: true
   userId?: true
   month?: true
   money?: true
@@ -124,7 +119,6 @@ export type FixedFlowMaxAggregateInputType = {
 
 export type FixedFlowCountAggregateInputType = {
   id?: true
-  bookId?: true
   userId?: true
   month?: true
   money?: true
@@ -225,7 +219,6 @@ export type FixedFlowGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type FixedFlowGroupByOutputType = {
   id: number
-  bookId: string
   userId: number
   month: string | null
   money: number | null
@@ -262,7 +255,6 @@ export type FixedFlowWhereInput = {
   OR?: Prisma.FixedFlowWhereInput[]
   NOT?: Prisma.FixedFlowWhereInput | Prisma.FixedFlowWhereInput[]
   id?: Prisma.IntFilter<"FixedFlow"> | number
-  bookId?: Prisma.StringFilter<"FixedFlow"> | string
   userId?: Prisma.IntFilter<"FixedFlow"> | number
   month?: Prisma.StringNullableFilter<"FixedFlow"> | string | null
   money?: Prisma.FloatNullableFilter<"FixedFlow"> | number | null
@@ -276,7 +268,6 @@ export type FixedFlowWhereInput = {
 
 export type FixedFlowOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   money?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -293,7 +284,6 @@ export type FixedFlowWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.FixedFlowWhereInput | Prisma.FixedFlowWhereInput[]
   OR?: Prisma.FixedFlowWhereInput[]
   NOT?: Prisma.FixedFlowWhereInput | Prisma.FixedFlowWhereInput[]
-  bookId?: Prisma.StringFilter<"FixedFlow"> | string
   userId?: Prisma.IntFilter<"FixedFlow"> | number
   month?: Prisma.StringNullableFilter<"FixedFlow"> | string | null
   money?: Prisma.FloatNullableFilter<"FixedFlow"> | number | null
@@ -307,7 +297,6 @@ export type FixedFlowWhereUniqueInput = Prisma.AtLeast<{
 
 export type FixedFlowOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   money?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -329,7 +318,6 @@ export type FixedFlowScalarWhereWithAggregatesInput = {
   OR?: Prisma.FixedFlowScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FixedFlowScalarWhereWithAggregatesInput | Prisma.FixedFlowScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"FixedFlow"> | number
-  bookId?: Prisma.StringWithAggregatesFilter<"FixedFlow"> | string
   userId?: Prisma.IntWithAggregatesFilter<"FixedFlow"> | number
   month?: Prisma.StringNullableWithAggregatesFilter<"FixedFlow"> | string | null
   money?: Prisma.FloatNullableWithAggregatesFilter<"FixedFlow"> | number | null
@@ -342,7 +330,6 @@ export type FixedFlowScalarWhereWithAggregatesInput = {
 }
 
 export type FixedFlowCreateInput = {
-  bookId: string
   userId: number
   month?: string | null
   money?: number | null
@@ -356,7 +343,6 @@ export type FixedFlowCreateInput = {
 
 export type FixedFlowUncheckedCreateInput = {
   id?: number
-  bookId: string
   userId: number
   month?: string | null
   money?: number | null
@@ -369,7 +355,6 @@ export type FixedFlowUncheckedCreateInput = {
 }
 
 export type FixedFlowUpdateInput = {
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -383,7 +368,6 @@ export type FixedFlowUpdateInput = {
 
 export type FixedFlowUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -397,7 +381,6 @@ export type FixedFlowUncheckedUpdateInput = {
 
 export type FixedFlowCreateManyInput = {
   id?: number
-  bookId: string
   userId: number
   month?: string | null
   money?: number | null
@@ -410,7 +393,6 @@ export type FixedFlowCreateManyInput = {
 }
 
 export type FixedFlowUpdateManyMutationInput = {
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -424,7 +406,6 @@ export type FixedFlowUpdateManyMutationInput = {
 
 export type FixedFlowUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -438,7 +419,6 @@ export type FixedFlowUncheckedUpdateManyInput = {
 
 export type FixedFlowCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   money?: Prisma.SortOrder
@@ -458,7 +438,6 @@ export type FixedFlowAvgOrderByAggregateInput = {
 
 export type FixedFlowMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   money?: Prisma.SortOrder
@@ -472,7 +451,6 @@ export type FixedFlowMaxOrderByAggregateInput = {
 
 export type FixedFlowMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   money?: Prisma.SortOrder
@@ -494,7 +472,6 @@ export type FixedFlowSumOrderByAggregateInput = {
 
 export type FixedFlowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   money?: boolean
@@ -508,7 +485,6 @@ export type FixedFlowSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type FixedFlowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   money?: boolean
@@ -522,7 +498,6 @@ export type FixedFlowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type FixedFlowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   money?: boolean
@@ -536,7 +511,6 @@ export type FixedFlowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type FixedFlowSelectScalar = {
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   money?: boolean
@@ -548,22 +522,51 @@ export type FixedFlowSelectScalar = {
   attribution?: boolean
 }
 
-export type FixedFlowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bookId" | "userId" | "month" | "money" | "name" | "description" | "flowType" | "industryType" | "payType" | "attribution", ExtArgs["result"]["fixedFlow"]>
+export type FixedFlowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "month" | "money" | "name" | "description" | "flowType" | "industryType" | "payType" | "attribution", ExtArgs["result"]["fixedFlow"]>
 
 export type $FixedFlowPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FixedFlow"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * 主键
+     */
     id: number
-    bookId: string
+    /**
+     * 用户 ID
+     */
     userId: number
+    /**
+     * 月份（格式 YYYY-MM），可选
+     */
     month: string | null
+    /**
+     * 金额
+     */
     money: number | null
+    /**
+     * 条目名称
+     */
     name: string | null
+    /**
+     * 说明
+     */
     description: string | null
+    /**
+     * 流水类型：收入、支出、不计收支
+     */
     flowType: string | null
+    /**
+     * 行业/分类（支出类型或收入类型）
+     */
     industryType: string | null
+    /**
+     * 支付方式或收款方式
+     */
     payType: string | null
+    /**
+     * 流水归属（谁的收入/支出）
+     */
     attribution: string | null
   }, ExtArgs["result"]["fixedFlow"]>
   composites: {}
@@ -989,7 +992,6 @@ export interface Prisma__FixedFlowClient<T, Null = never, ExtArgs extends runtim
  */
 export interface FixedFlowFieldRefs {
   readonly id: Prisma.FieldRef<"FixedFlow", 'Int'>
-  readonly bookId: Prisma.FieldRef<"FixedFlow", 'String'>
   readonly userId: Prisma.FieldRef<"FixedFlow", 'Int'>
   readonly month: Prisma.FieldRef<"FixedFlow", 'String'>
   readonly money: Prisma.FieldRef<"FixedFlow", 'Float'>

@@ -48,7 +48,7 @@ const showUserMenu = ref(false);
 
           <!-- Logo and brand -->
           <div class="items-center ml-2 md:ml-0 hidden sm:flex">
-            <img src="/logo.png" alt="Cashbook" class="h-8 w-8" />
+            <img src="/logo.webp" alt="Cashbook" class="h-8 w-8" />
             <span class="ml-2 text-xl font-bold text-primary-600">
               Cashbook
             </span>

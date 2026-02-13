@@ -135,7 +135,7 @@ const handleNavigate = (menu: Menu) => {
       <!-- Mobile header -->
       <div v-if="isMobile" class="flex items-center justify-between p-4 border-b border-border">
         <div class="flex items-center">
-          <img src="/logo.png" alt="Cashbook" class="h-8 w-8" />
+          <img src="/logo.webp" alt="Cashbook" class="h-8 w-8" />
           <span class="ml-2 text-lg font-bold text-primary-600">Cashbook</span>
         </div>
         <button @click="emit('close')" class="p-2 rounded-md text-foreground/70 hover:bg-surface">

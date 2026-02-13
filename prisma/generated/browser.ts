@@ -18,52 +18,82 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
- * Model SystemSetting
- * 
- */
-export type SystemSetting = Prisma.SystemSettingModel
-/**
  * Model User
- * 
+ * 用户表
  */
 export type User = Prisma.UserModel
 /**
- * Model Book
- * 
- */
-export type Book = Prisma.BookModel
-/**
  * Model Flow
- * 
+ * 流水/交易记录表
  */
 export type Flow = Prisma.FlowModel
 /**
  * Model Budget
- * 
+ * 预算/支出计划表（按月度）
  */
 export type Budget = Prisma.BudgetModel
 /**
+ * Model Liability
+ * 负债表（借款/欠款）
+ */
+export type Liability = Prisma.LiabilityModel
+/**
+ * Model LiabilityRepayPlan
+ * 负债还款计划表（根据方案自动生成）
+ */
+export type LiabilityRepayPlan = Prisma.LiabilityRepayPlanModel
+/**
+ * Model LiabilityRepayRecord
+ * 负债还款记录表
+ */
+export type LiabilityRepayRecord = Prisma.LiabilityRepayRecordModel
+/**
  * Model Receivable
- * 
+ * 借出表（借给他人/应收款，与负债反向）
  */
 export type Receivable = Prisma.ReceivableModel
 /**
+ * Model ReceivableCollectPlan
+ * 借出收款计划表（根据方案自动生成）
+ */
+export type ReceivableCollectPlan = Prisma.ReceivableCollectPlanModel
+/**
+ * Model ReceivableCollectRecord
+ * 借出收款记录表
+ */
+export type ReceivableCollectRecord = Prisma.ReceivableCollectRecordModel
+/**
+ * Model InvestmentProduct
+ * 投资统计表（按产品汇总）
+ */
+export type InvestmentProduct = Prisma.InvestmentProductModel
+/**
+ * Model InvestmentDetail
+ * 投资明细表（交易记录）
+ */
+export type InvestmentDetail = Prisma.InvestmentDetailModel
+/**
  * Model FixedFlow
- * 
+ * 固定流水/周期性流水模板表
  */
 export type FixedFlow = Prisma.FixedFlowModel
 /**
  * Model TypeRelation
- * 
+ * 类型映射/关联表（如行业类型与支付方式等映射）
  */
 export type TypeRelation = Prisma.TypeRelationModel
 /**
- * Model AIProvider
- * 
+ * Model SystemAIProvider
+ * AI 服务商配置表
  */
-export type AIProvider = Prisma.AIProviderModel
+export type SystemAIProvider = Prisma.SystemAIProviderModel
 /**
- * Model Theme
- * 
+ * Model SystemTheme
+ * 主题配置表
  */
-export type Theme = Prisma.ThemeModel
+export type SystemTheme = Prisma.SystemThemeModel
+/**
+ * Model SystemConfig
+ * 系统设置表
+ */
+export type SystemConfig = Prisma.SystemConfigModel

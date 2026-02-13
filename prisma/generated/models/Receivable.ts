@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model Receivable
- * 
+ * 借出表（借给他人/应收款，与负债反向）
  */
 export type ReceivableModel = runtime.Types.Result.DefaultSelection<Prisma.$ReceivablePayload>
 
@@ -28,130 +28,142 @@ export type AggregateReceivable = {
 
 export type ReceivableAvgAggregateOutputType = {
   id: number | null
-  occurId: number | null
-  actualId: number | null
   userId: number | null
   money: number | null
+  planType: number | null
+  interestRate: number | null
+  termCount: number | null
+  termAmount: number | null
   status: number | null
+  occurFlowId: number | null
 }
 
 export type ReceivableSumAggregateOutputType = {
   id: number | null
-  occurId: number | null
-  actualId: number | null
   userId: number | null
   money: number | null
+  planType: number | null
+  interestRate: number | null
+  termCount: number | null
+  termAmount: number | null
   status: number | null
+  occurFlowId: number | null
 }
 
 export type ReceivableMinAggregateOutputType = {
   id: number | null
-  occurId: number | null
-  actualId: number | null
-  bookId: string | null
   userId: number | null
   name: string | null
   description: string | null
-  occurDay: string | null
-  expectDay: string | null
-  actualDay: string | null
+  occurDay: Date | null
   money: number | null
+  planType: number | null
+  interestRate: number | null
+  termCount: number | null
+  termAmount: number | null
   status: number | null
+  occurFlowId: number | null
 }
 
 export type ReceivableMaxAggregateOutputType = {
   id: number | null
-  occurId: number | null
-  actualId: number | null
-  bookId: string | null
   userId: number | null
   name: string | null
   description: string | null
-  occurDay: string | null
-  expectDay: string | null
-  actualDay: string | null
+  occurDay: Date | null
   money: number | null
+  planType: number | null
+  interestRate: number | null
+  termCount: number | null
+  termAmount: number | null
   status: number | null
+  occurFlowId: number | null
 }
 
 export type ReceivableCountAggregateOutputType = {
   id: number
-  occurId: number
-  actualId: number
-  bookId: number
   userId: number
   name: number
   description: number
   occurDay: number
-  expectDay: number
-  actualDay: number
   money: number
+  planType: number
+  interestRate: number
+  termCount: number
+  termAmount: number
   status: number
+  occurFlowId: number
   _all: number
 }
 
 
 export type ReceivableAvgAggregateInputType = {
   id?: true
-  occurId?: true
-  actualId?: true
   userId?: true
   money?: true
+  planType?: true
+  interestRate?: true
+  termCount?: true
+  termAmount?: true
   status?: true
+  occurFlowId?: true
 }
 
 export type ReceivableSumAggregateInputType = {
   id?: true
-  occurId?: true
-  actualId?: true
   userId?: true
   money?: true
+  planType?: true
+  interestRate?: true
+  termCount?: true
+  termAmount?: true
   status?: true
+  occurFlowId?: true
 }
 
 export type ReceivableMinAggregateInputType = {
   id?: true
-  occurId?: true
-  actualId?: true
-  bookId?: true
   userId?: true
   name?: true
   description?: true
   occurDay?: true
-  expectDay?: true
-  actualDay?: true
   money?: true
+  planType?: true
+  interestRate?: true
+  termCount?: true
+  termAmount?: true
   status?: true
+  occurFlowId?: true
 }
 
 export type ReceivableMaxAggregateInputType = {
   id?: true
-  occurId?: true
-  actualId?: true
-  bookId?: true
   userId?: true
   name?: true
   description?: true
   occurDay?: true
-  expectDay?: true
-  actualDay?: true
   money?: true
+  planType?: true
+  interestRate?: true
+  termCount?: true
+  termAmount?: true
   status?: true
+  occurFlowId?: true
 }
 
 export type ReceivableCountAggregateInputType = {
   id?: true
-  occurId?: true
-  actualId?: true
-  bookId?: true
   userId?: true
   name?: true
   description?: true
   occurDay?: true
-  expectDay?: true
-  actualDay?: true
   money?: true
+  planType?: true
+  interestRate?: true
+  termCount?: true
+  termAmount?: true
   status?: true
+  occurFlowId?: true
   _all?: true
 }
 
@@ -243,17 +255,17 @@ export type ReceivableGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 
 export type ReceivableGroupByOutputType = {
   id: number
-  occurId: number | null
-  actualId: number | null
-  bookId: string
   userId: number
-  name: string | null
+  name: string
   description: string | null
-  occurDay: string
-  expectDay: string | null
-  actualDay: string | null
-  money: number | null
+  occurDay: Date
+  money: number
+  planType: number
+  interestRate: number | null
+  termCount: number | null
+  termAmount: number | null
   status: number
+  occurFlowId: number | null
   _count: ReceivableCountAggregateOutputType | null
   _avg: ReceivableAvgAggregateOutputType | null
   _sum: ReceivableSumAggregateOutputType | null
@@ -281,32 +293,32 @@ export type ReceivableWhereInput = {
   OR?: Prisma.ReceivableWhereInput[]
   NOT?: Prisma.ReceivableWhereInput | Prisma.ReceivableWhereInput[]
   id?: Prisma.IntFilter<"Receivable"> | number
-  occurId?: Prisma.IntNullableFilter<"Receivable"> | number | null
-  actualId?: Prisma.IntNullableFilter<"Receivable"> | number | null
-  bookId?: Prisma.StringFilter<"Receivable"> | string
   userId?: Prisma.IntFilter<"Receivable"> | number
-  name?: Prisma.StringNullableFilter<"Receivable"> | string | null
+  name?: Prisma.StringFilter<"Receivable"> | string
   description?: Prisma.StringNullableFilter<"Receivable"> | string | null
-  occurDay?: Prisma.StringFilter<"Receivable"> | string
-  expectDay?: Prisma.StringNullableFilter<"Receivable"> | string | null
-  actualDay?: Prisma.StringNullableFilter<"Receivable"> | string | null
-  money?: Prisma.FloatNullableFilter<"Receivable"> | number | null
+  occurDay?: Prisma.DateTimeFilter<"Receivable"> | Date | string
+  money?: Prisma.FloatFilter<"Receivable"> | number
+  planType?: Prisma.IntFilter<"Receivable"> | number
+  interestRate?: Prisma.FloatNullableFilter<"Receivable"> | number | null
+  termCount?: Prisma.IntNullableFilter<"Receivable"> | number | null
+  termAmount?: Prisma.FloatNullableFilter<"Receivable"> | number | null
   status?: Prisma.IntFilter<"Receivable"> | number
+  occurFlowId?: Prisma.IntNullableFilter<"Receivable"> | number | null
 }
 
 export type ReceivableOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualId?: Prisma.SortOrderInput | Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   occurDay?: Prisma.SortOrder
-  expectDay?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualDay?: Prisma.SortOrderInput | Prisma.SortOrder
-  money?: Prisma.SortOrderInput | Prisma.SortOrder
+  money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  termCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  termAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type ReceivableWhereUniqueInput = Prisma.AtLeast<{
@@ -314,32 +326,32 @@ export type ReceivableWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ReceivableWhereInput | Prisma.ReceivableWhereInput[]
   OR?: Prisma.ReceivableWhereInput[]
   NOT?: Prisma.ReceivableWhereInput | Prisma.ReceivableWhereInput[]
-  occurId?: Prisma.IntNullableFilter<"Receivable"> | number | null
-  actualId?: Prisma.IntNullableFilter<"Receivable"> | number | null
-  bookId?: Prisma.StringFilter<"Receivable"> | string
   userId?: Prisma.IntFilter<"Receivable"> | number
-  name?: Prisma.StringNullableFilter<"Receivable"> | string | null
+  name?: Prisma.StringFilter<"Receivable"> | string
   description?: Prisma.StringNullableFilter<"Receivable"> | string | null
-  occurDay?: Prisma.StringFilter<"Receivable"> | string
-  expectDay?: Prisma.StringNullableFilter<"Receivable"> | string | null
-  actualDay?: Prisma.StringNullableFilter<"Receivable"> | string | null
-  money?: Prisma.FloatNullableFilter<"Receivable"> | number | null
+  occurDay?: Prisma.DateTimeFilter<"Receivable"> | Date | string
+  money?: Prisma.FloatFilter<"Receivable"> | number
+  planType?: Prisma.IntFilter<"Receivable"> | number
+  interestRate?: Prisma.FloatNullableFilter<"Receivable"> | number | null
+  termCount?: Prisma.IntNullableFilter<"Receivable"> | number | null
+  termAmount?: Prisma.FloatNullableFilter<"Receivable"> | number | null
   status?: Prisma.IntFilter<"Receivable"> | number
+  occurFlowId?: Prisma.IntNullableFilter<"Receivable"> | number | null
 }, "id">
 
 export type ReceivableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualId?: Prisma.SortOrderInput | Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   occurDay?: Prisma.SortOrder
-  expectDay?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualDay?: Prisma.SortOrderInput | Prisma.SortOrder
-  money?: Prisma.SortOrderInput | Prisma.SortOrder
+  money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  termCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  termAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ReceivableCountOrderByAggregateInput
   _avg?: Prisma.ReceivableAvgOrderByAggregateInput
   _max?: Prisma.ReceivableMaxOrderByAggregateInput
@@ -352,264 +364,306 @@ export type ReceivableScalarWhereWithAggregatesInput = {
   OR?: Prisma.ReceivableScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ReceivableScalarWhereWithAggregatesInput | Prisma.ReceivableScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Receivable"> | number
-  occurId?: Prisma.IntNullableWithAggregatesFilter<"Receivable"> | number | null
-  actualId?: Prisma.IntNullableWithAggregatesFilter<"Receivable"> | number | null
-  bookId?: Prisma.StringWithAggregatesFilter<"Receivable"> | string
   userId?: Prisma.IntWithAggregatesFilter<"Receivable"> | number
-  name?: Prisma.StringNullableWithAggregatesFilter<"Receivable"> | string | null
+  name?: Prisma.StringWithAggregatesFilter<"Receivable"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Receivable"> | string | null
-  occurDay?: Prisma.StringWithAggregatesFilter<"Receivable"> | string
-  expectDay?: Prisma.StringNullableWithAggregatesFilter<"Receivable"> | string | null
-  actualDay?: Prisma.StringNullableWithAggregatesFilter<"Receivable"> | string | null
-  money?: Prisma.FloatNullableWithAggregatesFilter<"Receivable"> | number | null
+  occurDay?: Prisma.DateTimeWithAggregatesFilter<"Receivable"> | Date | string
+  money?: Prisma.FloatWithAggregatesFilter<"Receivable"> | number
+  planType?: Prisma.IntWithAggregatesFilter<"Receivable"> | number
+  interestRate?: Prisma.FloatNullableWithAggregatesFilter<"Receivable"> | number | null
+  termCount?: Prisma.IntNullableWithAggregatesFilter<"Receivable"> | number | null
+  termAmount?: Prisma.FloatNullableWithAggregatesFilter<"Receivable"> | number | null
   status?: Prisma.IntWithAggregatesFilter<"Receivable"> | number
+  occurFlowId?: Prisma.IntNullableWithAggregatesFilter<"Receivable"> | number | null
 }
 
 export type ReceivableCreateInput = {
-  occurId?: number | null
-  actualId?: number | null
-  bookId: string
   userId: number
-  name?: string | null
+  name: string
   description?: string | null
-  occurDay: string
-  expectDay?: string | null
-  actualDay?: string | null
-  money?: number | null
+  occurDay: Date | string
+  money: number
+  planType?: number
+  interestRate?: number | null
+  termCount?: number | null
+  termAmount?: number | null
   status?: number
+  occurFlowId?: number | null
 }
 
 export type ReceivableUncheckedCreateInput = {
   id?: number
-  occurId?: number | null
-  actualId?: number | null
-  bookId: string
   userId: number
-  name?: string | null
+  name: string
   description?: string | null
-  occurDay: string
-  expectDay?: string | null
-  actualDay?: string | null
-  money?: number | null
+  occurDay: Date | string
+  money: number
+  planType?: number
+  interestRate?: number | null
+  termCount?: number | null
+  termAmount?: number | null
   status?: number
+  occurFlowId?: number | null
 }
 
 export type ReceivableUpdateInput = {
-  occurId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  actualId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  occurDay?: Prisma.StringFieldUpdateOperationsInput | string
-  expectDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  occurDay?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  money?: Prisma.FloatFieldUpdateOperationsInput | number
+  planType?: Prisma.IntFieldUpdateOperationsInput | number
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  termCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  termAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.IntFieldUpdateOperationsInput | number
+  occurFlowId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ReceivableUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  occurId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  actualId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  occurDay?: Prisma.StringFieldUpdateOperationsInput | string
-  expectDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  occurDay?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  money?: Prisma.FloatFieldUpdateOperationsInput | number
+  planType?: Prisma.IntFieldUpdateOperationsInput | number
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  termCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  termAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.IntFieldUpdateOperationsInput | number
+  occurFlowId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ReceivableCreateManyInput = {
   id?: number
-  occurId?: number | null
-  actualId?: number | null
-  bookId: string
   userId: number
-  name?: string | null
+  name: string
   description?: string | null
-  occurDay: string
-  expectDay?: string | null
-  actualDay?: string | null
-  money?: number | null
+  occurDay: Date | string
+  money: number
+  planType?: number
+  interestRate?: number | null
+  termCount?: number | null
+  termAmount?: number | null
   status?: number
+  occurFlowId?: number | null
 }
 
 export type ReceivableUpdateManyMutationInput = {
-  occurId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  actualId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  occurDay?: Prisma.StringFieldUpdateOperationsInput | string
-  expectDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  occurDay?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  money?: Prisma.FloatFieldUpdateOperationsInput | number
+  planType?: Prisma.IntFieldUpdateOperationsInput | number
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  termCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  termAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.IntFieldUpdateOperationsInput | number
+  occurFlowId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ReceivableUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  occurId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  actualId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  occurDay?: Prisma.StringFieldUpdateOperationsInput | string
-  expectDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualDay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  occurDay?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  money?: Prisma.FloatFieldUpdateOperationsInput | number
+  planType?: Prisma.IntFieldUpdateOperationsInput | number
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  termCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  termAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.IntFieldUpdateOperationsInput | number
+  occurFlowId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ReceivableCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrder
-  actualId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   occurDay?: Prisma.SortOrder
-  expectDay?: Prisma.SortOrder
-  actualDay?: Prisma.SortOrder
   money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrder
+  termCount?: Prisma.SortOrder
+  termAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrder
 }
 
 export type ReceivableAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrder
-  actualId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrder
+  termCount?: Prisma.SortOrder
+  termAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrder
 }
 
 export type ReceivableMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrder
-  actualId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   occurDay?: Prisma.SortOrder
-  expectDay?: Prisma.SortOrder
-  actualDay?: Prisma.SortOrder
   money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrder
+  termCount?: Prisma.SortOrder
+  termAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrder
 }
 
 export type ReceivableMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrder
-  actualId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   occurDay?: Prisma.SortOrder
-  expectDay?: Prisma.SortOrder
-  actualDay?: Prisma.SortOrder
   money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrder
+  termCount?: Prisma.SortOrder
+  termAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrder
 }
 
 export type ReceivableSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  occurId?: Prisma.SortOrder
-  actualId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   money?: Prisma.SortOrder
+  planType?: Prisma.SortOrder
+  interestRate?: Prisma.SortOrder
+  termCount?: Prisma.SortOrder
+  termAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  occurFlowId?: Prisma.SortOrder
 }
 
 
 
 export type ReceivableSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  occurId?: boolean
-  actualId?: boolean
-  bookId?: boolean
   userId?: boolean
   name?: boolean
   description?: boolean
   occurDay?: boolean
-  expectDay?: boolean
-  actualDay?: boolean
   money?: boolean
+  planType?: boolean
+  interestRate?: boolean
+  termCount?: boolean
+  termAmount?: boolean
   status?: boolean
+  occurFlowId?: boolean
 }, ExtArgs["result"]["receivable"]>
 
 export type ReceivableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  occurId?: boolean
-  actualId?: boolean
-  bookId?: boolean
   userId?: boolean
   name?: boolean
   description?: boolean
   occurDay?: boolean
-  expectDay?: boolean
-  actualDay?: boolean
   money?: boolean
+  planType?: boolean
+  interestRate?: boolean
+  termCount?: boolean
+  termAmount?: boolean
   status?: boolean
+  occurFlowId?: boolean
 }, ExtArgs["result"]["receivable"]>
 
 export type ReceivableSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  occurId?: boolean
-  actualId?: boolean
-  bookId?: boolean
   userId?: boolean
   name?: boolean
   description?: boolean
   occurDay?: boolean
-  expectDay?: boolean
-  actualDay?: boolean
   money?: boolean
+  planType?: boolean
+  interestRate?: boolean
+  termCount?: boolean
+  termAmount?: boolean
   status?: boolean
+  occurFlowId?: boolean
 }, ExtArgs["result"]["receivable"]>
 
 export type ReceivableSelectScalar = {
   id?: boolean
-  occurId?: boolean
-  actualId?: boolean
-  bookId?: boolean
   userId?: boolean
   name?: boolean
   description?: boolean
   occurDay?: boolean
-  expectDay?: boolean
-  actualDay?: boolean
   money?: boolean
+  planType?: boolean
+  interestRate?: boolean
+  termCount?: boolean
+  termAmount?: boolean
   status?: boolean
+  occurFlowId?: boolean
 }
 
-export type ReceivableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "occurId" | "actualId" | "bookId" | "userId" | "name" | "description" | "occurDay" | "expectDay" | "actualDay" | "money" | "status", ExtArgs["result"]["receivable"]>
+export type ReceivableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "description" | "occurDay" | "money" | "planType" | "interestRate" | "termCount" | "termAmount" | "status" | "occurFlowId", ExtArgs["result"]["receivable"]>
 
 export type $ReceivablePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Receivable"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * 主键
+     */
     id: number
-    occurId: number | null
-    actualId: number | null
-    bookId: string
+    /**
+     * 用户 ID
+     */
     userId: number
-    name: string | null
+    /**
+     * 借出对象/事项名称
+     */
+    name: string
+    /**
+     * 说明
+     */
     description: string | null
-    occurDay: string
-    expectDay: string | null
-    actualDay: string | null
-    money: number | null
+    /**
+     * 借出日
+     */
+    occurDay: Date
+    /**
+     * 借出金额（本金）
+     */
+    money: number
+    /**
+     * 收款方式：0 一次性，1 分期-等额本息，2 分期-等额本金，3 分期-自定义
+     */
+    planType: number
+    /**
+     * 年化利率（如 0.05 表示 5%）
+     */
+    interestRate: number | null
+    /**
+     * 分期期数（分期时必填）
+     */
+    termCount: number | null
+    /**
+     * 每期金额（等额本息时可为空；自定义时必填）
+     */
+    termAmount: number | null
+    /**
+     * 状态：0 未收清，1 已收清，-1 不要了，-2 已放弃，-3 不可抗力
+     */
     status: number
+    /**
+     * 关联的借出流水 ID
+     */
+    occurFlowId: number | null
   }, ExtArgs["result"]["receivable"]>
   composites: {}
 }
@@ -1034,17 +1088,17 @@ export interface Prisma__ReceivableClient<T, Null = never, ExtArgs extends runti
  */
 export interface ReceivableFieldRefs {
   readonly id: Prisma.FieldRef<"Receivable", 'Int'>
-  readonly occurId: Prisma.FieldRef<"Receivable", 'Int'>
-  readonly actualId: Prisma.FieldRef<"Receivable", 'Int'>
-  readonly bookId: Prisma.FieldRef<"Receivable", 'String'>
   readonly userId: Prisma.FieldRef<"Receivable", 'Int'>
   readonly name: Prisma.FieldRef<"Receivable", 'String'>
   readonly description: Prisma.FieldRef<"Receivable", 'String'>
-  readonly occurDay: Prisma.FieldRef<"Receivable", 'String'>
-  readonly expectDay: Prisma.FieldRef<"Receivable", 'String'>
-  readonly actualDay: Prisma.FieldRef<"Receivable", 'String'>
+  readonly occurDay: Prisma.FieldRef<"Receivable", 'DateTime'>
   readonly money: Prisma.FieldRef<"Receivable", 'Float'>
+  readonly planType: Prisma.FieldRef<"Receivable", 'Int'>
+  readonly interestRate: Prisma.FieldRef<"Receivable", 'Float'>
+  readonly termCount: Prisma.FieldRef<"Receivable", 'Int'>
+  readonly termAmount: Prisma.FieldRef<"Receivable", 'Float'>
   readonly status: Prisma.FieldRef<"Receivable", 'Int'>
+  readonly occurFlowId: Prisma.FieldRef<"Receivable", 'Int'>
 }
     
 

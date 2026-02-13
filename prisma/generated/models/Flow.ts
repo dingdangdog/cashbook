@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model Flow
- * 
+ * 流水/交易记录表
  */
 export type FlowModel = runtime.Types.Result.DefaultSelection<Prisma.$FlowPayload>
 
@@ -42,9 +42,9 @@ export type FlowSumAggregateOutputType = {
 
 export type FlowMinAggregateOutputType = {
   id: number | null
+  flowNo: string | null
   userId: number | null
-  bookId: string | null
-  day: string | null
+  day: Date | null
   flowType: string | null
   industryType: string | null
   payType: string | null
@@ -59,9 +59,9 @@ export type FlowMinAggregateOutputType = {
 
 export type FlowMaxAggregateOutputType = {
   id: number | null
+  flowNo: string | null
   userId: number | null
-  bookId: string | null
-  day: string | null
+  day: Date | null
   flowType: string | null
   industryType: string | null
   payType: string | null
@@ -76,8 +76,8 @@ export type FlowMaxAggregateOutputType = {
 
 export type FlowCountAggregateOutputType = {
   id: number
+  flowNo: number
   userId: number
-  bookId: number
   day: number
   flowType: number
   industryType: number
@@ -109,8 +109,8 @@ export type FlowSumAggregateInputType = {
 
 export type FlowMinAggregateInputType = {
   id?: true
+  flowNo?: true
   userId?: true
-  bookId?: true
   day?: true
   flowType?: true
   industryType?: true
@@ -126,8 +126,8 @@ export type FlowMinAggregateInputType = {
 
 export type FlowMaxAggregateInputType = {
   id?: true
+  flowNo?: true
   userId?: true
-  bookId?: true
   day?: true
   flowType?: true
   industryType?: true
@@ -143,8 +143,8 @@ export type FlowMaxAggregateInputType = {
 
 export type FlowCountAggregateInputType = {
   id?: true
+  flowNo?: true
   userId?: true
-  bookId?: true
   day?: true
   flowType?: true
   industryType?: true
@@ -247,9 +247,9 @@ export type FlowGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type FlowGroupByOutputType = {
   id: number
+  flowNo: string
   userId: number
-  bookId: string
-  day: string
+  day: Date
   flowType: string | null
   industryType: string | null
   payType: string | null
@@ -287,9 +287,9 @@ export type FlowWhereInput = {
   OR?: Prisma.FlowWhereInput[]
   NOT?: Prisma.FlowWhereInput | Prisma.FlowWhereInput[]
   id?: Prisma.IntFilter<"Flow"> | number
+  flowNo?: Prisma.StringFilter<"Flow"> | string
   userId?: Prisma.IntFilter<"Flow"> | number
-  bookId?: Prisma.StringFilter<"Flow"> | string
-  day?: Prisma.StringFilter<"Flow"> | string
+  day?: Prisma.DateTimeFilter<"Flow"> | Date | string
   flowType?: Prisma.StringNullableFilter<"Flow"> | string | null
   industryType?: Prisma.StringNullableFilter<"Flow"> | string | null
   payType?: Prisma.StringNullableFilter<"Flow"> | string | null
@@ -304,8 +304,8 @@ export type FlowWhereInput = {
 
 export type FlowOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrderInput | Prisma.SortOrder
   industryType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -321,12 +321,12 @@ export type FlowOrderByWithRelationInput = {
 
 export type FlowWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  flowNo?: string
   AND?: Prisma.FlowWhereInput | Prisma.FlowWhereInput[]
   OR?: Prisma.FlowWhereInput[]
   NOT?: Prisma.FlowWhereInput | Prisma.FlowWhereInput[]
   userId?: Prisma.IntFilter<"Flow"> | number
-  bookId?: Prisma.StringFilter<"Flow"> | string
-  day?: Prisma.StringFilter<"Flow"> | string
+  day?: Prisma.DateTimeFilter<"Flow"> | Date | string
   flowType?: Prisma.StringNullableFilter<"Flow"> | string | null
   industryType?: Prisma.StringNullableFilter<"Flow"> | string | null
   payType?: Prisma.StringNullableFilter<"Flow"> | string | null
@@ -337,12 +337,12 @@ export type FlowWhereUniqueInput = Prisma.AtLeast<{
   origin?: Prisma.StringNullableFilter<"Flow"> | string | null
   attribution?: Prisma.StringNullableFilter<"Flow"> | string | null
   eliminate?: Prisma.IntNullableFilter<"Flow"> | number | null
-}, "id">
+}, "id" | "flowNo">
 
 export type FlowOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrderInput | Prisma.SortOrder
   industryType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -366,9 +366,9 @@ export type FlowScalarWhereWithAggregatesInput = {
   OR?: Prisma.FlowScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FlowScalarWhereWithAggregatesInput | Prisma.FlowScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Flow"> | number
+  flowNo?: Prisma.StringWithAggregatesFilter<"Flow"> | string
   userId?: Prisma.IntWithAggregatesFilter<"Flow"> | number
-  bookId?: Prisma.StringWithAggregatesFilter<"Flow"> | string
-  day?: Prisma.StringWithAggregatesFilter<"Flow"> | string
+  day?: Prisma.DateTimeWithAggregatesFilter<"Flow"> | Date | string
   flowType?: Prisma.StringNullableWithAggregatesFilter<"Flow"> | string | null
   industryType?: Prisma.StringNullableWithAggregatesFilter<"Flow"> | string | null
   payType?: Prisma.StringNullableWithAggregatesFilter<"Flow"> | string | null
@@ -382,9 +382,9 @@ export type FlowScalarWhereWithAggregatesInput = {
 }
 
 export type FlowCreateInput = {
+  flowNo: string
   userId: number
-  bookId: string
-  day: string
+  day: Date | string
   flowType?: string | null
   industryType?: string | null
   payType?: string | null
@@ -399,9 +399,9 @@ export type FlowCreateInput = {
 
 export type FlowUncheckedCreateInput = {
   id?: number
+  flowNo: string
   userId: number
-  bookId: string
-  day: string
+  day: Date | string
   flowType?: string | null
   industryType?: string | null
   payType?: string | null
@@ -415,9 +415,9 @@ export type FlowUncheckedCreateInput = {
 }
 
 export type FlowUpdateInput = {
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.StringFieldUpdateOperationsInput | string
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -432,9 +432,9 @@ export type FlowUpdateInput = {
 
 export type FlowUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.StringFieldUpdateOperationsInput | string
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -449,9 +449,9 @@ export type FlowUncheckedUpdateInput = {
 
 export type FlowCreateManyInput = {
   id?: number
+  flowNo: string
   userId: number
-  bookId: string
-  day: string
+  day: Date | string
   flowType?: string | null
   industryType?: string | null
   payType?: string | null
@@ -465,9 +465,9 @@ export type FlowCreateManyInput = {
 }
 
 export type FlowUpdateManyMutationInput = {
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.StringFieldUpdateOperationsInput | string
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -482,9 +482,9 @@ export type FlowUpdateManyMutationInput = {
 
 export type FlowUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.StringFieldUpdateOperationsInput | string
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -499,8 +499,8 @@ export type FlowUncheckedUpdateManyInput = {
 
 export type FlowCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrder
   industryType?: Prisma.SortOrder
@@ -523,8 +523,8 @@ export type FlowAvgOrderByAggregateInput = {
 
 export type FlowMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrder
   industryType?: Prisma.SortOrder
@@ -540,8 +540,8 @@ export type FlowMaxOrderByAggregateInput = {
 
 export type FlowMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrder
   industryType?: Prisma.SortOrder
@@ -562,6 +562,14 @@ export type FlowSumOrderByAggregateInput = {
   eliminate?: Prisma.SortOrder
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -574,8 +582,8 @@ export type NullableIntFieldUpdateOperationsInput = {
 
 export type FlowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  flowNo?: boolean
   userId?: boolean
-  bookId?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -591,8 +599,8 @@ export type FlowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type FlowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  flowNo?: boolean
   userId?: boolean
-  bookId?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -608,8 +616,8 @@ export type FlowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type FlowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  flowNo?: boolean
   userId?: boolean
-  bookId?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -625,8 +633,8 @@ export type FlowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type FlowSelectScalar = {
   id?: boolean
+  flowNo?: boolean
   userId?: boolean
-  bookId?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -640,25 +648,67 @@ export type FlowSelectScalar = {
   eliminate?: boolean
 }
 
-export type FlowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bookId" | "day" | "flowType" | "industryType" | "payType" | "money" | "name" | "description" | "invoice" | "origin" | "attribution" | "eliminate", ExtArgs["result"]["flow"]>
+export type FlowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "flowNo" | "userId" | "day" | "flowType" | "industryType" | "payType" | "money" | "name" | "description" | "invoice" | "origin" | "attribution" | "eliminate", ExtArgs["result"]["flow"]>
 
 export type $FlowPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Flow"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * 主键
+     */
     id: number
+    /**
+     * 流水编号-唯一
+     */
+    flowNo: string
+    /**
+     * 所属用户 ID
+     */
     userId: number
-    bookId: string
-    day: string
+    /**
+     * 交易日期
+     */
+    day: Date
+    /**
+     * 流水类型：收入、支出、不计收支
+     */
     flowType: string | null
+    /**
+     * 行业/分类（支出类型或收入类型）
+     */
     industryType: string | null
+    /**
+     * 支付方式或收款方式
+     */
     payType: string | null
+    /**
+     * 金额
+     */
     money: number | null
+    /**
+     * 条目名称/摘要
+     */
     name: string | null
+    /**
+     * 备注说明
+     */
     description: string | null
+    /**
+     * 票据信息，一般是图片路径
+     */
     invoice: string | null
+    /**
+     * 流水来源（如：某某-支付宝导入、手动录入）
+     */
     origin: string | null
+    /**
+     * 流水归属（谁的收入/支出）
+     */
     attribution: string | null
+    /**
+     * 平账标志：0 未平账，1 已平账，-1 忽略平账
+     */
     eliminate: number | null
   }, ExtArgs["result"]["flow"]>
   composites: {}
@@ -1084,9 +1134,9 @@ export interface Prisma__FlowClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface FlowFieldRefs {
   readonly id: Prisma.FieldRef<"Flow", 'Int'>
+  readonly flowNo: Prisma.FieldRef<"Flow", 'String'>
   readonly userId: Prisma.FieldRef<"Flow", 'Int'>
-  readonly bookId: Prisma.FieldRef<"Flow", 'String'>
-  readonly day: Prisma.FieldRef<"Flow", 'String'>
+  readonly day: Prisma.FieldRef<"Flow", 'DateTime'>
   readonly flowType: Prisma.FieldRef<"Flow", 'String'>
   readonly industryType: Prisma.FieldRef<"Flow", 'String'>
   readonly payType: Prisma.FieldRef<"Flow", 'String'>

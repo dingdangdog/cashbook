@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model Budget
- * 
+ * 预算/支出计划表（按月度）
  */
 export type BudgetModel = runtime.Types.Result.DefaultSelection<Prisma.$BudgetPayload>
 
@@ -42,7 +42,6 @@ export type BudgetSumAggregateOutputType = {
 
 export type BudgetMinAggregateOutputType = {
   id: number | null
-  bookId: string | null
   userId: number | null
   month: string | null
   budget: number | null
@@ -51,7 +50,6 @@ export type BudgetMinAggregateOutputType = {
 
 export type BudgetMaxAggregateOutputType = {
   id: number | null
-  bookId: string | null
   userId: number | null
   month: string | null
   budget: number | null
@@ -60,7 +58,6 @@ export type BudgetMaxAggregateOutputType = {
 
 export type BudgetCountAggregateOutputType = {
   id: number
-  bookId: number
   userId: number
   month: number
   budget: number
@@ -85,7 +82,6 @@ export type BudgetSumAggregateInputType = {
 
 export type BudgetMinAggregateInputType = {
   id?: true
-  bookId?: true
   userId?: true
   month?: true
   budget?: true
@@ -94,7 +90,6 @@ export type BudgetMinAggregateInputType = {
 
 export type BudgetMaxAggregateInputType = {
   id?: true
-  bookId?: true
   userId?: true
   month?: true
   budget?: true
@@ -103,7 +98,6 @@ export type BudgetMaxAggregateInputType = {
 
 export type BudgetCountAggregateInputType = {
   id?: true
-  bookId?: true
   userId?: true
   month?: true
   budget?: true
@@ -199,7 +193,6 @@ export type BudgetGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type BudgetGroupByOutputType = {
   id: number
-  bookId: string
   userId: number
   month: string
   budget: number | null
@@ -231,7 +224,6 @@ export type BudgetWhereInput = {
   OR?: Prisma.BudgetWhereInput[]
   NOT?: Prisma.BudgetWhereInput | Prisma.BudgetWhereInput[]
   id?: Prisma.IntFilter<"Budget"> | number
-  bookId?: Prisma.StringFilter<"Budget"> | string
   userId?: Prisma.IntFilter<"Budget"> | number
   month?: Prisma.StringFilter<"Budget"> | string
   budget?: Prisma.FloatNullableFilter<"Budget"> | number | null
@@ -240,7 +232,6 @@ export type BudgetWhereInput = {
 
 export type BudgetOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -252,7 +243,6 @@ export type BudgetWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BudgetWhereInput | Prisma.BudgetWhereInput[]
   OR?: Prisma.BudgetWhereInput[]
   NOT?: Prisma.BudgetWhereInput | Prisma.BudgetWhereInput[]
-  bookId?: Prisma.StringFilter<"Budget"> | string
   userId?: Prisma.IntFilter<"Budget"> | number
   month?: Prisma.StringFilter<"Budget"> | string
   budget?: Prisma.FloatNullableFilter<"Budget"> | number | null
@@ -261,7 +251,6 @@ export type BudgetWhereUniqueInput = Prisma.AtLeast<{
 
 export type BudgetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -278,7 +267,6 @@ export type BudgetScalarWhereWithAggregatesInput = {
   OR?: Prisma.BudgetScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BudgetScalarWhereWithAggregatesInput | Prisma.BudgetScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Budget"> | number
-  bookId?: Prisma.StringWithAggregatesFilter<"Budget"> | string
   userId?: Prisma.IntWithAggregatesFilter<"Budget"> | number
   month?: Prisma.StringWithAggregatesFilter<"Budget"> | string
   budget?: Prisma.FloatNullableWithAggregatesFilter<"Budget"> | number | null
@@ -286,7 +274,6 @@ export type BudgetScalarWhereWithAggregatesInput = {
 }
 
 export type BudgetCreateInput = {
-  bookId: string
   userId: number
   month: string
   budget?: number | null
@@ -295,7 +282,6 @@ export type BudgetCreateInput = {
 
 export type BudgetUncheckedCreateInput = {
   id?: number
-  bookId: string
   userId: number
   month: string
   budget?: number | null
@@ -303,7 +289,6 @@ export type BudgetUncheckedCreateInput = {
 }
 
 export type BudgetUpdateInput = {
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -312,7 +297,6 @@ export type BudgetUpdateInput = {
 
 export type BudgetUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -321,7 +305,6 @@ export type BudgetUncheckedUpdateInput = {
 
 export type BudgetCreateManyInput = {
   id?: number
-  bookId: string
   userId: number
   month: string
   budget?: number | null
@@ -329,7 +312,6 @@ export type BudgetCreateManyInput = {
 }
 
 export type BudgetUpdateManyMutationInput = {
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -338,7 +320,6 @@ export type BudgetUpdateManyMutationInput = {
 
 export type BudgetUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -347,7 +328,6 @@ export type BudgetUncheckedUpdateManyInput = {
 
 export type BudgetCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   budget?: Prisma.SortOrder
@@ -363,7 +343,6 @@ export type BudgetAvgOrderByAggregateInput = {
 
 export type BudgetMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   budget?: Prisma.SortOrder
@@ -372,7 +351,6 @@ export type BudgetMaxOrderByAggregateInput = {
 
 export type BudgetMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   budget?: Prisma.SortOrder
@@ -390,7 +368,6 @@ export type BudgetSumOrderByAggregateInput = {
 
 export type BudgetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   budget?: boolean
@@ -399,7 +376,6 @@ export type BudgetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type BudgetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   budget?: boolean
@@ -408,7 +384,6 @@ export type BudgetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type BudgetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   budget?: boolean
@@ -417,24 +392,37 @@ export type BudgetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type BudgetSelectScalar = {
   id?: boolean
-  bookId?: boolean
   userId?: boolean
   month?: boolean
   budget?: boolean
   used?: boolean
 }
 
-export type BudgetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bookId" | "userId" | "month" | "budget" | "used", ExtArgs["result"]["budget"]>
+export type BudgetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "month" | "budget" | "used", ExtArgs["result"]["budget"]>
 
 export type $BudgetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Budget"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * 主键
+     */
     id: number
-    bookId: string
+    /**
+     * 用户 ID
+     */
     userId: number
+    /**
+     * 月份（格式 YYYY-MM）
+     */
     month: string
+    /**
+     * 预算金额
+     */
     budget: number | null
+    /**
+     * 已使用金额
+     */
     used: number | null
   }, ExtArgs["result"]["budget"]>
   composites: {}
@@ -860,7 +848,6 @@ export interface Prisma__BudgetClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface BudgetFieldRefs {
   readonly id: Prisma.FieldRef<"Budget", 'Int'>
-  readonly bookId: Prisma.FieldRef<"Budget", 'String'>
   readonly userId: Prisma.FieldRef<"Budget", 'Int'>
   readonly month: Prisma.FieldRef<"Budget", 'String'>
   readonly budget: Prisma.FieldRef<"Budget", 'Float'>

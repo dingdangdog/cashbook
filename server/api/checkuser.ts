@@ -19,7 +19,7 @@ import prisma from "~~/server/lib/prisma";
  *                   id: 用户ID,
  *                   name: 用户姓名,
  *                   username: 用户名,
- *                   createDate: 创建日期
+ *                   createAt: 创建日期
  *                 }
  *               }
  */
@@ -31,11 +31,13 @@ export default defineEventHandler(async (event) => {
       id: true,
       name: true,
       username: true,
-      createDate: true,
+      email: true,
+      roles: true,
+      createAt: true,
+      lightTheme: true,
+      darkTheme: true,
     },
-    where: {
-      id: userId,
-    },
+    where: { id: userId },
   });
 
   if (!user) {

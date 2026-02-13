@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model User
- * 
+ * 用户表
  */
 export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayload>
 
@@ -40,7 +40,10 @@ export type UserMinAggregateOutputType = {
   password: string | null
   name: string | null
   email: string | null
-  createDate: Date | null
+  roles: string | null
+  createAt: Date | null
+  lightTheme: string | null
+  darkTheme: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -49,7 +52,10 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   name: string | null
   email: string | null
-  createDate: Date | null
+  roles: string | null
+  createAt: Date | null
+  lightTheme: string | null
+  darkTheme: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -58,7 +64,10 @@ export type UserCountAggregateOutputType = {
   password: number
   name: number
   email: number
-  createDate: number
+  roles: number
+  createAt: number
+  lightTheme: number
+  darkTheme: number
   _all: number
 }
 
@@ -77,7 +86,10 @@ export type UserMinAggregateInputType = {
   password?: true
   name?: true
   email?: true
-  createDate?: true
+  roles?: true
+  createAt?: true
+  lightTheme?: true
+  darkTheme?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -86,7 +98,10 @@ export type UserMaxAggregateInputType = {
   password?: true
   name?: true
   email?: true
-  createDate?: true
+  roles?: true
+  createAt?: true
+  lightTheme?: true
+  darkTheme?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -95,7 +110,10 @@ export type UserCountAggregateInputType = {
   password?: true
   name?: true
   email?: true
-  createDate?: true
+  roles?: true
+  createAt?: true
+  lightTheme?: true
+  darkTheme?: true
   _all?: true
 }
 
@@ -189,9 +207,12 @@ export type UserGroupByOutputType = {
   id: number
   username: string
   password: string
-  name: string | null
+  name: string
   email: string | null
-  createDate: Date
+  roles: string | null
+  createAt: Date
+  lightTheme: string | null
+  darkTheme: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -221,18 +242,24 @@ export type UserWhereInput = {
   id?: Prisma.IntFilter<"User"> | number
   username?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
-  name?: Prisma.StringNullableFilter<"User"> | string | null
+  name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringNullableFilter<"User"> | string | null
-  createDate?: Prisma.DateTimeFilter<"User"> | Date | string
+  roles?: Prisma.StringNullableFilter<"User"> | string | null
+  createAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lightTheme?: Prisma.StringNullableFilter<"User"> | string | null
+  darkTheme?: Prisma.StringNullableFilter<"User"> | string | null
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
-  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  name?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
-  createDate?: Prisma.SortOrder
+  roles?: Prisma.SortOrderInput | Prisma.SortOrder
+  createAt?: Prisma.SortOrder
+  lightTheme?: Prisma.SortOrderInput | Prisma.SortOrder
+  darkTheme?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -242,18 +269,24 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   username?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
-  name?: Prisma.StringNullableFilter<"User"> | string | null
+  name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringNullableFilter<"User"> | string | null
-  createDate?: Prisma.DateTimeFilter<"User"> | Date | string
+  roles?: Prisma.StringNullableFilter<"User"> | string | null
+  createAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lightTheme?: Prisma.StringNullableFilter<"User"> | string | null
+  darkTheme?: Prisma.StringNullableFilter<"User"> | string | null
 }, "id">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
-  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  name?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
-  createDate?: Prisma.SortOrder
+  roles?: Prisma.SortOrderInput | Prisma.SortOrder
+  createAt?: Prisma.SortOrder
+  lightTheme?: Prisma.SortOrderInput | Prisma.SortOrder
+  darkTheme?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -268,69 +301,93 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"User"> | number
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
-  name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  createDate?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  roles?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  createAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  lightTheme?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  darkTheme?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
   username: string
   password: string
-  name?: string | null
+  name?: string
   email?: string | null
-  createDate?: Date | string
+  roles?: string | null
+  createAt?: Date | string
+  lightTheme?: string | null
+  darkTheme?: string | null
 }
 
 export type UserUncheckedCreateInput = {
   id?: number
   username: string
   password: string
-  name?: string | null
+  name?: string
   email?: string | null
-  createDate?: Date | string
+  roles?: string | null
+  createAt?: Date | string
+  lightTheme?: string | null
+  darkTheme?: string | null
 }
 
 export type UserUpdateInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lightTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  darkTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lightTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  darkTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCreateManyInput = {
   id?: number
   username: string
   password: string
-  name?: string | null
+  name?: string
   email?: string | null
-  createDate?: Date | string
+  roles?: string | null
+  createAt?: Date | string
+  lightTheme?: string | null
+  darkTheme?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lightTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  darkTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lightTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  darkTheme?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -339,7 +396,10 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  createDate?: Prisma.SortOrder
+  roles?: Prisma.SortOrder
+  createAt?: Prisma.SortOrder
+  lightTheme?: Prisma.SortOrder
+  darkTheme?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -352,7 +412,10 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  createDate?: Prisma.SortOrder
+  roles?: Prisma.SortOrder
+  createAt?: Prisma.SortOrder
+  lightTheme?: Prisma.SortOrder
+  darkTheme?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -361,7 +424,10 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  createDate?: Prisma.SortOrder
+  roles?: Prisma.SortOrder
+  createAt?: Prisma.SortOrder
+  lightTheme?: Prisma.SortOrder
+  darkTheme?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -372,6 +438,22 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -380,7 +462,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   name?: boolean
   email?: boolean
-  createDate?: boolean
+  roles?: boolean
+  createAt?: boolean
+  lightTheme?: boolean
+  darkTheme?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -389,7 +474,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   name?: boolean
   email?: boolean
-  createDate?: boolean
+  roles?: boolean
+  createAt?: boolean
+  lightTheme?: boolean
+  darkTheme?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -398,7 +486,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   name?: boolean
   email?: boolean
-  createDate?: boolean
+  roles?: boolean
+  createAt?: boolean
+  lightTheme?: boolean
+  darkTheme?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -407,21 +498,54 @@ export type UserSelectScalar = {
   password?: boolean
   name?: boolean
   email?: boolean
-  createDate?: boolean
+  roles?: boolean
+  createAt?: boolean
+  lightTheme?: boolean
+  darkTheme?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "name" | "email" | "createDate", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "name" | "email" | "roles" | "createAt" | "lightTheme" | "darkTheme", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * 主键
+     */
     id: number
+    /**
+     * 登录用户名
+     */
     username: string
+    /**
+     * 密码（存储加密后的值，建议 255 以兼容多种算法）
+     */
     password: string
-    name: string | null
+    /**
+     * 显示名称/昵称
+     */
+    name: string
+    /**
+     * 邮箱
+     */
     email: string | null
-    createDate: Date
+    /**
+     * 角色 admin:管理员, user:普通用户（多角色逗号分隔）
+     */
+    roles: string | null
+    /**
+     * 创建时间
+     */
+    createAt: Date
+    /**
+     * 浅色主题编号
+     */
+    lightTheme: string | null
+    /**
+     * 深色主题编号
+     */
+    darkTheme: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -850,7 +974,10 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly createDate: Prisma.FieldRef<"User", 'DateTime'>
+  readonly roles: Prisma.FieldRef<"User", 'String'>
+  readonly createAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly lightTheme: Prisma.FieldRef<"User", 'String'>
+  readonly darkTheme: Prisma.FieldRef<"User", 'String'>
 }
     
 

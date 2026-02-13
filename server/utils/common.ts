@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import type { Result } from "./model";
 
 // EncryptBySHA256 使用 SHA-256 算法加密字符串
 export const encryptBySHA256 = (userName: string, password: string) => {
@@ -7,7 +8,7 @@ export const encryptBySHA256 = (userName: string, password: string) => {
   return hash.digest("hex");
 };
 
-export const success = (data?: any): Result<any> => {
+export const success = <T>(data?: T): Result<T> => {
   return {
     c: 200,
     m: "",
@@ -15,7 +16,7 @@ export const success = (data?: any): Result<any> => {
   };
 };
 
-export const error = (m: any, d?: any): Result<any> => {
+export const error = <T>(m: string, d?: T): Result<T> => {
   return {
     c: 500,
     m: m,
@@ -23,39 +24,61 @@ export const error = (m: any, d?: any): Result<any> => {
   };
 };
 
-export const noPermissions = (message?: string): Result<any> => {
+export const noPermissions = <T>(message?: string): Result<T> => {
   return {
     c: 400,
     m: message || "NO Permissions",
-    d: "",
   };
 };
 
 import jwt from "jsonwebtoken";
 
+/** JWT 解码后的 payload 结构 */
+export interface AuthPayload {
+  id: number;
+  username: string;
+  name?: string;
+  email?: string | null;
+  roles?: string | null;
+}
+
+/** 从 Authorization header 或 Cookie 解析并验证 JWT，返回完整 payload */
+export const getAuthPayload = (event: any): AuthPayload | null => {
+  let token =
+    getHeader(event, "Authorization") || getCookie(event, "Authorization");
+  if (token?.startsWith("Bearer ")) token = token.slice(7);
+  const secretKey = useRuntimeConfig().authSecret;
+  if (!token) return null;
+  try {
+    const decoded = jwt.verify(token, secretKey) as AuthPayload & {
+      iat?: number;
+      exp?: number;
+    };
+    return {
+      id: Number(decoded?.id || 0),
+      username: decoded?.username || "",
+      name: decoded?.name,
+      email: decoded?.email,
+      roles: decoded?.roles ?? null,
+    };
+  } catch {
+    return null;
+  }
+};
+
+/** 是否具有 admin 角色 */
+export const hasAdminRole = (roles: string | null | undefined): boolean => {
+  if (!roles) return false;
+  return roles
+    .split(",")
+    .map((r) => r.trim())
+    .includes("admin");
+};
+
 export const getUserId = async (
   // @ts-ignore
-  event: H3Event<EventHandlerRequest>
+  event: H3Event<EventHandlerRequest>,
 ): Promise<number> => {
-  const token = getHeader(event, "Authorization");
-  const secretKey = useRuntimeConfig().authSecret;
-
-  if (!token) {
-    return 0; //  Token 不存在，返回 null 表示未认证
-  }
-
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secretKey, (err, decoded: any) => {
-      if (err) {
-        //  Token 验证失败
-        console.error("JWT verification failed:", err.message); // 记录错误信息 (可选)
-        return resolve(0); // 返回 null 表示验证失败，获取不到 userId
-        // 或者，你也可以 reject(err)  并让调用者处理错误，取决于你的错误处理策略
-      }
-
-      // Token 验证成功
-      const userId = Number(decoded?.id || 0); // 提取 userId，并确保是数字类型
-      resolve(userId);
-    });
-  });
+  const payload = getAuthPayload(event);
+  return payload?.id ?? 0;
 };

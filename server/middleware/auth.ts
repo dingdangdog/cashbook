@@ -1,40 +1,35 @@
-import { noPermissions } from "../utils/common";
-import jwt from "jsonwebtoken";
+import { noPermissions, getAuthPayload, hasAdminRole } from "../utils/common";
+
+/** 无需认证的 admin 路径（登录、登出、工具类） */
+const ADMIN_PUBLIC_PATHS = ["/api/admin/login", "/api/admin/logout"];
+
+const isAdminPublicPath = (pathname: string) =>
+  ADMIN_PUBLIC_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + "/"),
+  );
 
 export default defineEventHandler(async (event) => {
   const url = getRequestURL(event);
+  const pathname = url.pathname;
 
-  // 校验 API 请求
-  if (url.pathname.startsWith("/api/entry")) {
-    const token = getHeader(event, "Authorization");
-
-    if (!token) {
-      // Token is missing, return 401 Unauthorized
-      return noPermissions("No Authorization");
+  // 普通业务接口：需有效 JWT
+  if (pathname.startsWith("/api/entry")) {
+    const payload = getAuthPayload(event);
+    if (!payload?.id) {
+      return noPermissions("未授权或 token 无效");
     }
-    const secretKey = useRuntimeConfig().authSecret;
-
-    // 验证 JWT
-    try {
-      jwt.verify(token, secretKey);
-    } catch (err) {
-      return noPermissions("Forbidden: Invalid or expired token");
+  }
+  // 管理后台接口：需有效 JWT 且 roles 含 admin
+  else if (pathname.startsWith("/api/admin")) {
+    if (isAdminPublicPath(pathname)) {
+      return; // 登录、登出、getPassword 放行
     }
-  } else if (url.pathname.startsWith("/api/admin/entry")) {
-    // 后台管理接口
-    const Admin = getHeader(event, "Admin");
-    if (!Admin) {
-      console.error(new Date().toLocaleDateString() + " No Admin");
-      return noPermissions();
+    const payload = getAuthPayload(event);
+    if (!payload?.id) {
+      return noPermissions("未授权或 token 无效");
     }
-    const runtimeConfig = useRuntimeConfig();
-    if (
-      Admin !=
-      encryptBySHA256(runtimeConfig.adminUsername, runtimeConfig.adminPassword)
-    ) {
-      console.error(new Date().toLocaleDateString() + " Admin is Wrong!");
-      deleteCookie(event, "Admin");
-      return noPermissions();
+    if (!hasAdminRole(payload.roles)) {
+      return noPermissions("需要管理员权限");
     }
   }
 });

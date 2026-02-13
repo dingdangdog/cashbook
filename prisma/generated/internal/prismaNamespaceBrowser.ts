@@ -51,16 +51,22 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  SystemSetting: 'SystemSetting',
   User: 'User',
-  Book: 'Book',
   Flow: 'Flow',
   Budget: 'Budget',
+  Liability: 'Liability',
+  LiabilityRepayPlan: 'LiabilityRepayPlan',
+  LiabilityRepayRecord: 'LiabilityRepayRecord',
   Receivable: 'Receivable',
+  ReceivableCollectPlan: 'ReceivableCollectPlan',
+  ReceivableCollectRecord: 'ReceivableCollectRecord',
+  InvestmentProduct: 'InvestmentProduct',
+  InvestmentDetail: 'InvestmentDetail',
   FixedFlow: 'FixedFlow',
   TypeRelation: 'TypeRelation',
-  AIProvider: 'AIProvider',
-  Theme: 'Theme'
+  SystemAIProvider: 'SystemAIProvider',
+  SystemTheme: 'SystemTheme',
+  SystemConfig: 'SystemConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,49 +85,25 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const SystemSettingScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  keywords: 'keywords',
-  version: 'version',
-  openRegister: 'openRegister',
-  createDate: 'createDate',
-  updateBy: 'updateBy'
-} as const
-
-export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
-
-
 export const UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
   password: 'password',
   name: 'name',
   email: 'email',
-  createDate: 'createDate'
+  roles: 'roles',
+  createAt: 'createAt',
+  lightTheme: 'lightTheme',
+  darkTheme: 'darkTheme'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const BookScalarFieldEnum = {
-  id: 'id',
-  bookId: 'bookId',
-  bookName: 'bookName',
-  shareKey: 'shareKey',
-  userId: 'userId',
-  budget: 'budget',
-  createDate: 'createDate'
-} as const
-
-export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
-
-
 export const FlowScalarFieldEnum = {
   id: 'id',
+  flowNo: 'flowNo',
   userId: 'userId',
-  bookId: 'bookId',
   day: 'day',
   flowType: 'flowType',
   industryType: 'industryType',
@@ -140,7 +122,6 @@ export type FlowScalarFieldEnum = (typeof FlowScalarFieldEnum)[keyof typeof Flow
 
 export const BudgetScalarFieldEnum = {
   id: 'id',
-  bookId: 'bookId',
   userId: 'userId',
   month: 'month',
   budget: 'budget',
@@ -150,27 +131,129 @@ export const BudgetScalarFieldEnum = {
 export type BudgetScalarFieldEnum = (typeof BudgetScalarFieldEnum)[keyof typeof BudgetScalarFieldEnum]
 
 
-export const ReceivableScalarFieldEnum = {
+export const LiabilityScalarFieldEnum = {
   id: 'id',
-  occurId: 'occurId',
-  actualId: 'actualId',
-  bookId: 'bookId',
   userId: 'userId',
   name: 'name',
   description: 'description',
   occurDay: 'occurDay',
-  expectDay: 'expectDay',
-  actualDay: 'actualDay',
   money: 'money',
+  planType: 'planType',
+  interestRate: 'interestRate',
+  termCount: 'termCount',
+  termAmount: 'termAmount',
+  status: 'status',
+  occurFlowId: 'occurFlowId'
+} as const
+
+export type LiabilityScalarFieldEnum = (typeof LiabilityScalarFieldEnum)[keyof typeof LiabilityScalarFieldEnum]
+
+
+export const LiabilityRepayPlanScalarFieldEnum = {
+  id: 'id',
+  liabilityId: 'liabilityId',
+  termNo: 'termNo',
+  planDay: 'planDay',
+  planAmount: 'planAmount',
+  principal: 'principal',
+  interest: 'interest',
   status: 'status'
+} as const
+
+export type LiabilityRepayPlanScalarFieldEnum = (typeof LiabilityRepayPlanScalarFieldEnum)[keyof typeof LiabilityRepayPlanScalarFieldEnum]
+
+
+export const LiabilityRepayRecordScalarFieldEnum = {
+  id: 'id',
+  liabilityId: 'liabilityId',
+  planId: 'planId',
+  repayDay: 'repayDay',
+  repayAmount: 'repayAmount',
+  flowId: 'flowId',
+  description: 'description'
+} as const
+
+export type LiabilityRepayRecordScalarFieldEnum = (typeof LiabilityRepayRecordScalarFieldEnum)[keyof typeof LiabilityRepayRecordScalarFieldEnum]
+
+
+export const ReceivableScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  occurDay: 'occurDay',
+  money: 'money',
+  planType: 'planType',
+  interestRate: 'interestRate',
+  termCount: 'termCount',
+  termAmount: 'termAmount',
+  status: 'status',
+  occurFlowId: 'occurFlowId'
 } as const
 
 export type ReceivableScalarFieldEnum = (typeof ReceivableScalarFieldEnum)[keyof typeof ReceivableScalarFieldEnum]
 
 
+export const ReceivableCollectPlanScalarFieldEnum = {
+  id: 'id',
+  receivableId: 'receivableId',
+  termNo: 'termNo',
+  planDay: 'planDay',
+  planAmount: 'planAmount',
+  principal: 'principal',
+  interest: 'interest',
+  status: 'status'
+} as const
+
+export type ReceivableCollectPlanScalarFieldEnum = (typeof ReceivableCollectPlanScalarFieldEnum)[keyof typeof ReceivableCollectPlanScalarFieldEnum]
+
+
+export const ReceivableCollectRecordScalarFieldEnum = {
+  id: 'id',
+  receivableId: 'receivableId',
+  planId: 'planId',
+  collectDay: 'collectDay',
+  collectAmount: 'collectAmount',
+  flowId: 'flowId',
+  description: 'description'
+} as const
+
+export type ReceivableCollectRecordScalarFieldEnum = (typeof ReceivableCollectRecordScalarFieldEnum)[keyof typeof ReceivableCollectRecordScalarFieldEnum]
+
+
+export const InvestmentProductScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productName: 'productName',
+  productType: 'productType',
+  totalInvested: 'totalInvested',
+  totalReturn: 'totalReturn',
+  currentValue: 'currentValue',
+  status: 'status'
+} as const
+
+export type InvestmentProductScalarFieldEnum = (typeof InvestmentProductScalarFieldEnum)[keyof typeof InvestmentProductScalarFieldEnum]
+
+
+export const InvestmentDetailScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  userId: 'userId',
+  tradeType: 'tradeType',
+  tradeDay: 'tradeDay',
+  amount: 'amount',
+  quantity: 'quantity',
+  price: 'price',
+  fee: 'fee',
+  description: 'description',
+  flowId: 'flowId'
+} as const
+
+export type InvestmentDetailScalarFieldEnum = (typeof InvestmentDetailScalarFieldEnum)[keyof typeof InvestmentDetailScalarFieldEnum]
+
+
 export const FixedFlowScalarFieldEnum = {
   id: 'id',
-  bookId: 'bookId',
   userId: 'userId',
   month: 'month',
   money: 'money',
@@ -188,7 +271,6 @@ export type FixedFlowScalarFieldEnum = (typeof FixedFlowScalarFieldEnum)[keyof t
 export const TypeRelationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  bookId: 'bookId',
   source: 'source',
   target: 'target'
 } as const
@@ -196,13 +278,13 @@ export const TypeRelationScalarFieldEnum = {
 export type TypeRelationScalarFieldEnum = (typeof TypeRelationScalarFieldEnum)[keyof typeof TypeRelationScalarFieldEnum]
 
 
-export const AIProviderScalarFieldEnum = {
+export const SystemAIProviderScalarFieldEnum = {
   id: 'id',
-  name: 'name',
   provider: 'provider',
   apiProtocol: 'apiProtocol',
   apiKey: 'apiKey',
   apiEndpoint: 'apiEndpoint',
+  name: 'name',
   apiModel: 'apiModel',
   apiVersion: 'apiVersion',
   temperature: 'temperature',
@@ -214,10 +296,10 @@ export const AIProviderScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type AIProviderScalarFieldEnum = (typeof AIProviderScalarFieldEnum)[keyof typeof AIProviderScalarFieldEnum]
+export type SystemAIProviderScalarFieldEnum = (typeof SystemAIProviderScalarFieldEnum)[keyof typeof SystemAIProviderScalarFieldEnum]
 
 
-export const ThemeScalarFieldEnum = {
+export const SystemThemeScalarFieldEnum = {
   id: 'id',
   code: 'code',
   name: 'name',
@@ -230,7 +312,21 @@ export const ThemeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type ThemeScalarFieldEnum = (typeof ThemeScalarFieldEnum)[keyof typeof ThemeScalarFieldEnum]
+export type SystemThemeScalarFieldEnum = (typeof SystemThemeScalarFieldEnum)[keyof typeof SystemThemeScalarFieldEnum]
+
+
+export const SystemConfigScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  keywords: 'keywords',
+  version: 'version',
+  openRegister: 'openRegister',
+  createAt: 'createAt',
+  updateAt: 'updateAt'
+} as const
+
+export type SystemConfigScalarFieldEnum = (typeof SystemConfigScalarFieldEnum)[keyof typeof SystemConfigScalarFieldEnum]
 
 
 export const SortOrder = {

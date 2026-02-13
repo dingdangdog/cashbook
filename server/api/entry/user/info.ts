@@ -19,23 +19,23 @@ import prisma from "~~/server/lib/prisma";
  *                   id: 用户ID,
  *                   name: 用户姓名,
  *                   username: 用户名,
- *                   createDate: 创建日期
+ *                   createAt: 创建日期
  */
 export default defineEventHandler(async (event) => {
   const userId = await getUserId(event);
-
-  const where: any = {
-    id: userId,
-  };
 
   const user = await prisma.user.findUnique({
     select: {
       id: true,
       name: true,
       username: true,
-      createDate: true,
+      email: true,
+      roles: true,
+      createAt: true,
+      lightTheme: true,
+      darkTheme: true,
     },
-    where, // 使用条件查询
+    where: { id: userId },
   });
 
   return success(user);

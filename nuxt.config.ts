@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   ssr: false,
   css: ["~/assets/css/main.css"],
@@ -22,7 +22,7 @@ export default defineNuxtConfig({
         { property: "og:title", content: "Cashbook" },
         { property: "og:description", content: "Cashbook, 快速记账!" },
         { property: "og:type", content: "website" },
-        { property: "og:image", content: "/logo.png" },
+        { property: "og:image", content: "/logo.webp" },
       ],
       link: [
         {
@@ -31,11 +31,11 @@ export default defineNuxtConfig({
         },
         {
           rel: "shortcut icon",
-          href: "/logo.png",
+          href: "/logo.webp",
         },
         {
           rel: "icon",
-          href: "/logo.png",
+          href: "/logo.webp",
         },
         {
           rel: "apple-touch-icon",
@@ -104,7 +104,12 @@ export default defineNuxtConfig({
     adminPassword: "",
   },
 
-  modules: ["@nuxtjs/tailwindcss", "nuxt-echarts", "nuxt-openapi-docs-module", "@pinia/nuxt"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "nuxt-echarts",
+    "nuxt-openapi-docs-module",
+    "@pinia/nuxt",
+  ],
   // 动态引入echars图表
   echarts: {
     features: ["LabelLayout", "UniversalTransition"],

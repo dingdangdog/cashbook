@@ -1,5 +1,5 @@
 {
-  "name": "cashbookv5",
+  "name": "cashbook5",
   "type": "module",
   "private": true,
   "scripts": {
@@ -21,7 +21,8 @@
     "jszip": "3.10.1",
     "nuxt": "4.3.0",
     "nuxt-echarts": "1.0.1",
-    "nuxt-openapi-docs-module": "5.3.1",
+    "nuxt-openapi-docs-module": "5.3.2",
+    "openai": "^6.21.0",
     "pinia": "^3.0.4",
     "v-calendar": "3.1.2",
     "vue": "3.5.27",

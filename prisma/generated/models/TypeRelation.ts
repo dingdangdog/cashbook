@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model TypeRelation
- * 
+ * 类型映射/关联表（如行业类型与支付方式等映射）
  */
 export type TypeRelationModel = runtime.Types.Result.DefaultSelection<Prisma.$TypeRelationPayload>
 
@@ -39,7 +39,6 @@ export type TypeRelationSumAggregateOutputType = {
 export type TypeRelationMinAggregateOutputType = {
   id: number | null
   userId: number | null
-  bookId: string | null
   source: string | null
   target: string | null
 }
@@ -47,7 +46,6 @@ export type TypeRelationMinAggregateOutputType = {
 export type TypeRelationMaxAggregateOutputType = {
   id: number | null
   userId: number | null
-  bookId: string | null
   source: string | null
   target: string | null
 }
@@ -55,7 +53,6 @@ export type TypeRelationMaxAggregateOutputType = {
 export type TypeRelationCountAggregateOutputType = {
   id: number
   userId: number
-  bookId: number
   source: number
   target: number
   _all: number
@@ -75,7 +72,6 @@ export type TypeRelationSumAggregateInputType = {
 export type TypeRelationMinAggregateInputType = {
   id?: true
   userId?: true
-  bookId?: true
   source?: true
   target?: true
 }
@@ -83,7 +79,6 @@ export type TypeRelationMinAggregateInputType = {
 export type TypeRelationMaxAggregateInputType = {
   id?: true
   userId?: true
-  bookId?: true
   source?: true
   target?: true
 }
@@ -91,7 +86,6 @@ export type TypeRelationMaxAggregateInputType = {
 export type TypeRelationCountAggregateInputType = {
   id?: true
   userId?: true
-  bookId?: true
   source?: true
   target?: true
   _all?: true
@@ -186,7 +180,6 @@ export type TypeRelationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type TypeRelationGroupByOutputType = {
   id: number
   userId: number
-  bookId: string
   source: string
   target: string
   _count: TypeRelationCountAggregateOutputType | null
@@ -217,7 +210,6 @@ export type TypeRelationWhereInput = {
   NOT?: Prisma.TypeRelationWhereInput | Prisma.TypeRelationWhereInput[]
   id?: Prisma.IntFilter<"TypeRelation"> | number
   userId?: Prisma.IntFilter<"TypeRelation"> | number
-  bookId?: Prisma.StringFilter<"TypeRelation"> | string
   source?: Prisma.StringFilter<"TypeRelation"> | string
   target?: Prisma.StringFilter<"TypeRelation"> | string
 }
@@ -225,7 +217,6 @@ export type TypeRelationWhereInput = {
 export type TypeRelationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   source?: Prisma.SortOrder
   target?: Prisma.SortOrder
 }
@@ -236,7 +227,6 @@ export type TypeRelationWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.TypeRelationWhereInput[]
   NOT?: Prisma.TypeRelationWhereInput | Prisma.TypeRelationWhereInput[]
   userId?: Prisma.IntFilter<"TypeRelation"> | number
-  bookId?: Prisma.StringFilter<"TypeRelation"> | string
   source?: Prisma.StringFilter<"TypeRelation"> | string
   target?: Prisma.StringFilter<"TypeRelation"> | string
 }, "id">
@@ -244,7 +234,6 @@ export type TypeRelationWhereUniqueInput = Prisma.AtLeast<{
 export type TypeRelationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   source?: Prisma.SortOrder
   target?: Prisma.SortOrder
   _count?: Prisma.TypeRelationCountOrderByAggregateInput
@@ -260,14 +249,12 @@ export type TypeRelationScalarWhereWithAggregatesInput = {
   NOT?: Prisma.TypeRelationScalarWhereWithAggregatesInput | Prisma.TypeRelationScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"TypeRelation"> | number
   userId?: Prisma.IntWithAggregatesFilter<"TypeRelation"> | number
-  bookId?: Prisma.StringWithAggregatesFilter<"TypeRelation"> | string
   source?: Prisma.StringWithAggregatesFilter<"TypeRelation"> | string
   target?: Prisma.StringWithAggregatesFilter<"TypeRelation"> | string
 }
 
 export type TypeRelationCreateInput = {
   userId: number
-  bookId: string
   source: string
   target: string
 }
@@ -275,14 +262,12 @@ export type TypeRelationCreateInput = {
 export type TypeRelationUncheckedCreateInput = {
   id?: number
   userId: number
-  bookId: string
   source: string
   target: string
 }
 
 export type TypeRelationUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   target?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -290,7 +275,6 @@ export type TypeRelationUpdateInput = {
 export type TypeRelationUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   target?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -298,14 +282,12 @@ export type TypeRelationUncheckedUpdateInput = {
 export type TypeRelationCreateManyInput = {
   id?: number
   userId: number
-  bookId: string
   source: string
   target: string
 }
 
 export type TypeRelationUpdateManyMutationInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   target?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -313,7 +295,6 @@ export type TypeRelationUpdateManyMutationInput = {
 export type TypeRelationUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  bookId?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   target?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -321,7 +302,6 @@ export type TypeRelationUncheckedUpdateManyInput = {
 export type TypeRelationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   source?: Prisma.SortOrder
   target?: Prisma.SortOrder
 }
@@ -334,7 +314,6 @@ export type TypeRelationAvgOrderByAggregateInput = {
 export type TypeRelationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   source?: Prisma.SortOrder
   target?: Prisma.SortOrder
 }
@@ -342,7 +321,6 @@ export type TypeRelationMaxOrderByAggregateInput = {
 export type TypeRelationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  bookId?: Prisma.SortOrder
   source?: Prisma.SortOrder
   target?: Prisma.SortOrder
 }
@@ -357,7 +335,6 @@ export type TypeRelationSumOrderByAggregateInput = {
 export type TypeRelationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  bookId?: boolean
   source?: boolean
   target?: boolean
 }, ExtArgs["result"]["typeRelation"]>
@@ -365,7 +342,6 @@ export type TypeRelationSelect<ExtArgs extends runtime.Types.Extensions.Internal
 export type TypeRelationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  bookId?: boolean
   source?: boolean
   target?: boolean
 }, ExtArgs["result"]["typeRelation"]>
@@ -373,7 +349,6 @@ export type TypeRelationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
 export type TypeRelationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  bookId?: boolean
   source?: boolean
   target?: boolean
 }, ExtArgs["result"]["typeRelation"]>
@@ -381,21 +356,31 @@ export type TypeRelationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type TypeRelationSelectScalar = {
   id?: boolean
   userId?: boolean
-  bookId?: boolean
   source?: boolean
   target?: boolean
 }
 
-export type TypeRelationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bookId" | "source" | "target", ExtArgs["result"]["typeRelation"]>
+export type TypeRelationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "source" | "target", ExtArgs["result"]["typeRelation"]>
 
 export type $TypeRelationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TypeRelation"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    /**
+     * 主键
+     */
     id: number
+    /**
+     * 用户 ID
+     */
     userId: number
-    bookId: string
+    /**
+     * 源类型标识
+     */
     source: string
+    /**
+     * 目标类型标识
+     */
     target: string
   }, ExtArgs["result"]["typeRelation"]>
   composites: {}
@@ -822,7 +807,6 @@ export interface Prisma__TypeRelationClient<T, Null = never, ExtArgs extends run
 export interface TypeRelationFieldRefs {
   readonly id: Prisma.FieldRef<"TypeRelation", 'Int'>
   readonly userId: Prisma.FieldRef<"TypeRelation", 'Int'>
-  readonly bookId: Prisma.FieldRef<"TypeRelation", 'String'>
   readonly source: Prisma.FieldRef<"TypeRelation", 'String'>
   readonly target: Prisma.FieldRef<"TypeRelation", 'String'>
 }

@@ -11,253 +11,264 @@ datasource db {
   provider = "postgresql"
 }
 
-/// 系统设置表
-model SystemSetting {
-  /// 主键
-  id           Int      @id
-  /// 站点标题
-  title        String?  @db.VarChar(200)
-  /// 站点描述
-  description  String?  @db.VarChar(500)
-  /// SEO 关键词
-  keywords     String?  @db.VarChar(500)
-  /// 系统版本号
-  version      String?  @db.VarChar(50)
-  /// 是否开放注册
-  openRegister Boolean  @default(false)
-  /// 创建时间
-  createDate   DateTime @default(now())
-  /// 最后更新时间（建议应用层在每次更新时写入）
-  updateBy     DateTime @default(now())
-
-  @@map("system_settings")
-}
-
 /// 用户表
 model User {
-  /// 主键
-  id         Int      @id @default(autoincrement())
-  /// 登录用户名
-  username   String   @db.VarChar(50)
-  /// 密码（存储加密后的值，建议 255 以兼容多种算法）
-  password   String   @db.VarChar(255)
-  /// 显示名称/昵称
-  name       String?  @db.VarChar(100)
-  /// 邮箱
-  email      String?  @db.VarChar(255)
-  /// 注册时间
-  createDate DateTime @default(now())
+  id         Int      @id @default(autoincrement()) /// 主键
+  username   String   @db.VarChar(50) /// 登录用户名
+  password   String   @db.VarChar(255) /// 密码（存储加密后的值，建议 255 以兼容多种算法）
+  name       String   @default("User") @db.VarChar(100) /// 显示名称/昵称
+  email      String?  @db.VarChar(255) /// 邮箱
+  roles      String?  @db.VarChar(50) /// 角色 admin:管理员, user:普通用户（多角色逗号分隔）
+  createAt   DateTime @default(now()) /// 创建时间
+  lightTheme String?  @db.VarChar(50) /// 浅色主题编号
+  darkTheme  String?  @db.VarChar(50) /// 深色主题编号
 
   @@map("users")
 }
 
-/// 账本表
-model Book {
-  /// 主键
-  id         Int      @id @default(autoincrement())
-  /// 账本业务 ID（对外标识，如分享、协作）
-  bookId     String   @db.VarChar(50)
-  /// 账本名称
-  bookName   String   @db.VarChar(100)
-  /// 分享密钥，用于协作/分享
-  shareKey   String?  @db.VarChar(100)
-  /// 所属用户 ID
-  userId     Int
-  /// 账本预算金额
-  budget     Float?
-  /// 创建时间
-  createDate DateTime @default(now())
-
-  @@map("books")
-}
-
 /// 流水/交易记录表
 model Flow {
-  /// 主键
-  id           Int      @id @default(autoincrement())
-  /// 所属用户 ID
-  userId       Int
-  /// 所属账本 ID
-  bookId       String   @db.VarChar(50)
-  /// 交易日期（仅日期，无时间；PostgreSQL date 类型）
-  day          DateTime
-  /// 流水类型：收入、支出、不计收支
-  flowType     String?  @db.VarChar(20)
-  /// 行业/分类（支出类型或收入类型）
-  industryType String?  @db.VarChar(50)
-  /// 支付方式或收款方式
-  payType      String?  @db.VarChar(50)
-  /// 金额
-  money        Float?
-  /// 条目名称/摘要
-  name         String?  @db.VarChar(200)
-  /// 备注说明
-  description  String?  @db.VarChar(500)
-  /// 发票信息
-  invoice      String?  @db.VarChar(200)
-  /// 流水来源（如：某某-支付宝导入、手动录入）
-  origin       String?  @db.VarChar(200)
-  /// 流水归属（谁的收入/支出）
-  attribution  String?  @db.VarChar(100)
-  /// 平账标志：0 未平账，1 已平账，-1 忽略平账
-  eliminate    Int?     @default(0)
+  id           Int      @id @default(autoincrement()) /// 主键
+  flowNo       String   @unique @db.VarChar(50) /// 流水编号-唯一
+  userId       Int /// 所属用户 ID
+  day          DateTime /// 交易日期
+  flowType     String?  @db.VarChar(20) /// 流水类型：收入、支出、不计收支
+  industryType String?  @db.VarChar(50) /// 行业/分类（支出类型或收入类型）
+  payType      String?  @db.VarChar(50) /// 支付方式或收款方式
+  money        Float? /// 金额
+  name         String?  @db.VarChar(200) /// 条目名称/摘要
+  description  String?  @db.VarChar(500) /// 备注说明
+  invoice      String?  @db.VarChar(200) /// 票据信息，一般是图片路径
+  origin       String?  @db.VarChar(200) /// 流水来源（如：某某-支付宝导入、手动录入）
+  attribution  String?  @db.VarChar(100) /// 流水归属（谁的收入/支出）
+  eliminate    Int?     @default(0) /// 平账标志：0 未平账，1 已平账，-1 忽略平账
 
-  @@map("flows")
+  @@map("user_flows")
 }
 
 /// 预算/支出计划表（按月度）
 model Budget {
-  /// 主键
-  id     Int    @id @default(autoincrement())
-  /// 账本 ID
-  bookId String @db.VarChar(50)
-  /// 用户 ID
-  userId Int
-  /// 月份（格式 YYYY-MM）
-  month  String @db.VarChar(7)
-  /// 预算金额
-  budget Float?
-  /// 已使用金额
-  used   Float?
+  id     Int    @id @default(autoincrement()) /// 主键
+  userId Int /// 用户 ID
+  month  String @db.VarChar(7) /// 月份（格式 YYYY-MM）
+  budget Float? /// 预算金额
+  used   Float? /// 已使用金额
 
   @@map("budgets")
 }
 
-/// 应收/借出记录表
-model Receivable {
-  /// 主键
-  id          Int       @id @default(autoincrement())
-  /// 关联的借出流水 ID
-  occurId     Int?
-  /// 关联的收款流水 ID
-  actualId    Int?
-  /// 账本 ID
-  bookId      String    @db.VarChar(50)
-  /// 用户 ID
-  userId      Int
-  /// 借出对象/事项名称
-  name        String?   @db.VarChar(200)
-  /// 说明
-  description String?   @db.VarChar(500)
-  /// 发生日/借出日（仅日期；PostgreSQL date 类型）
-  occurDay    DateTime
-  /// 预计收款日（仅日期；PostgreSQL date 类型）
-  expectDay   DateTime?
-  /// 实际收款日（仅日期；PostgreSQL date 类型）
-  actualDay   DateTime?
-  /// 金额
-  money       Float?
-  /// 状态：0 未收款，1 已收款，-1 不要了，-2 已放弃，-3 不可抗力
-  status      Int       @default(0)
+/// 负债表（借款/欠款）
+model Liability {
+  id           Int      @id @default(autoincrement()) /// 主键
+  userId       Int /// 用户 ID
+  name         String   @db.VarChar(200) /// 债权人/事项名称
+  description  String?  @db.VarChar(500) /// 说明
+  occurDay     DateTime /// 借款日
+  money        Float /// 借款金额（本金）
+  planType     Int      @default(0) /// 还款方式：0 一次性，1 分期-等额本息，2 分期-等额本金，3 分期-自定义
+  interestRate Float? /// 年化利率（如 0.05 表示 5%）
+  termCount    Int? /// 分期期数（分期时必填）
+  termAmount   Float? /// 每期金额（等额本息时可为空由系统计算；自定义时必填）
+  status       Int      @default(0) /// 状态：0 未还清，1 已还清，-1 已豁免
+  occurFlowId  Int? /// 关联的借款流水 ID
 
-  @@map("receivables")
+  @@index([userId])
+  @@map("user_liabilities")
+}
+
+/// 负债还款计划表（根据方案自动生成）
+model LiabilityRepayPlan {
+  id          Int      @id @default(autoincrement()) /// 主键
+  liabilityId Int /// 负债 ID
+  termNo      Int /// 期号（从 1 开始）
+  planDay     DateTime /// 计划还款日
+  planAmount  Float /// 计划还款金额（本期应还总额）
+  principal   Float /// 本期本金
+  interest    Float    @default(0) /// 本期利息
+  status      Int      @default(0) /// 状态：0 待还款，1 已还款
+
+  @@unique([liabilityId, termNo])
+  @@index([liabilityId])
+  @@map("user_liability_repay_plans")
+}
+
+/// 负债还款记录表
+model LiabilityRepayRecord {
+  id          Int      @id @default(autoincrement()) /// 主键
+  liabilityId Int /// 负债 ID
+  planId      Int? /// 关联的还款计划 ID（可为空，表示计划外还款）
+  repayDay    DateTime /// 实际还款日
+  repayAmount Float /// 还款金额
+  flowId      Int? /// 关联的还款流水 ID
+  description String?  @db.VarChar(500) /// 备注
+
+  @@index([liabilityId])
+  @@index([planId])
+  @@map("user_liability_repay_records")
+}
+
+/// 借出表（借给他人/应收款，与负债反向）
+model Receivable {
+  id           Int      @id @default(autoincrement()) /// 主键
+  userId       Int /// 用户 ID
+  name         String   @db.VarChar(200) /// 借出对象/事项名称
+  description  String?  @db.VarChar(500) /// 说明
+  occurDay     DateTime /// 借出日
+  money        Float /// 借出金额（本金）
+  planType     Int      @default(0) /// 收款方式：0 一次性，1 分期-等额本息，2 分期-等额本金，3 分期-自定义
+  interestRate Float? /// 年化利率（如 0.05 表示 5%）
+  termCount    Int? /// 分期期数（分期时必填）
+  termAmount   Float? /// 每期金额（等额本息时可为空；自定义时必填）
+  status       Int      @default(0) /// 状态：0 未收清，1 已收清，-1 不要了，-2 已放弃，-3 不可抗力
+  occurFlowId  Int? /// 关联的借出流水 ID
+
+  @@index([userId])
+  @@map("user_receivables")
+}
+
+/// 借出收款计划表（根据方案自动生成）
+model ReceivableCollectPlan {
+  id           Int      @id @default(autoincrement()) /// 主键
+  receivableId Int /// 借出 ID
+  termNo       Int /// 期号（从 1 开始）
+  planDay      DateTime /// 计划收款日
+  planAmount   Float /// 计划收款金额
+  principal    Float /// 本期本金
+  interest     Float    @default(0) /// 本期利息
+  status       Int      @default(0) /// 状态：0 待收款，1 已收款
+
+  @@unique([receivableId, termNo])
+  @@index([receivableId])
+  @@map("user_receivable_collect_plans")
+}
+
+/// 借出收款记录表
+model ReceivableCollectRecord {
+  id            Int      @id @default(autoincrement()) /// 主键
+  receivableId  Int /// 借出 ID
+  planId        Int? /// 关联的收款计划 ID（可为空，表示计划外收款）
+  collectDay    DateTime /// 实际收款日
+  collectAmount Float /// 收款金额
+  flowId        Int? /// 关联的收款流水 ID
+  description   String?  @db.VarChar(500) /// 备注
+
+  @@index([receivableId])
+  @@index([planId])
+  @@map("user_receivable_collect_records")
+}
+
+/// 投资统计表（按产品汇总）
+model InvestmentProduct {
+  id            Int     @id @default(autoincrement()) /// 主键
+  userId        Int /// 用户 ID
+  productName   String  @db.VarChar(200) /// 投资产品名称（如：某基金、某股票）
+  productType   String? @db.VarChar(50) /// 产品类型（基金、股票、理财、其他）
+  totalInvested Float   @default(0) /// 累计投入金额
+  totalReturn   Float   @default(0) /// 累计收益（含已赎回/分红）
+  currentValue  Float? /// 当前估值（可选，手动或接口更新）
+  status        Int     @default(0) /// 状态：0 持有中，1 已清仓
+
+  @@index([userId])
+  @@map("user_investment_products")
+}
+
+/// 投资明细表（交易记录）
+model InvestmentDetail {
+  id          Int      @id @default(autoincrement()) /// 主键
+  productId   Int /// 投资产品 ID
+  userId      Int /// 用户 ID
+  tradeType   String   @db.VarChar(20) /// 交易类型：买入、卖出、分红、赎回、定投
+  tradeDay    DateTime /// 交易日期
+  amount      Float /// 金额（正数为流入如分红，负数为流出如买入）
+  quantity    Float? /// 数量/份额（买入卖出时）
+  price       Float? /// 单价（买入卖出时）
+  fee         Float?   @default(0) /// 手续费
+  description String?  @db.VarChar(500) /// 备注
+  flowId      Int? /// 关联流水 ID
+
+  @@index([productId])
+  @@index([userId])
+  @@index([tradeDay])
+  @@map("user_investment_details")
 }
 
 /// 固定流水/周期性流水模板表
 model FixedFlow {
-  /// 主键
-  id           Int     @id @default(autoincrement())
-  /// 账本 ID
-  bookId       String  @db.VarChar(50)
-  /// 用户 ID
-  userId       Int
-  /// 月份（格式 YYYY-MM），可选
-  month        String? @db.VarChar(7)
-  /// 金额
-  money        Float?
-  /// 条目名称
-  name         String? @db.VarChar(200)
-  /// 说明
-  description  String? @db.VarChar(500)
-  /// 流水类型：收入、支出、不计收支
-  flowType     String? @db.VarChar(20)
-  /// 行业/分类（支出类型或收入类型）
-  industryType String? @db.VarChar(50)
-  /// 支付方式或收款方式
-  payType      String? @db.VarChar(50)
-  /// 流水归属（谁的收入/支出）
-  attribution  String? @db.VarChar(100)
+  id           Int     @id @default(autoincrement()) /// 主键
+  userId       Int /// 用户 ID
+  month        String? @db.VarChar(7) /// 月份（格式 YYYY-MM），可选
+  money        Float? /// 金额
+  name         String? @db.VarChar(200) /// 条目名称
+  description  String? @db.VarChar(500) /// 说明
+  flowType     String? @db.VarChar(20) /// 流水类型：收入、支出、不计收支
+  industryType String? @db.VarChar(50) /// 行业/分类（支出类型或收入类型）
+  payType      String? @db.VarChar(50) /// 支付方式或收款方式
+  attribution  String? @db.VarChar(100) /// 流水归属（谁的收入/支出）
 
-  @@map("fixed_flows")
+  @@map("user_fixed_flows")
 }
 
 /// 类型映射/关联表（如行业类型与支付方式等映射）
 model TypeRelation {
-  /// 主键
-  id     Int    @id @default(autoincrement())
-  /// 用户 ID
-  userId Int
-  /// 账本 ID
-  bookId String @db.VarChar(50)
-  /// 源类型标识
-  source String @db.VarChar(100)
-  /// 目标类型标识
-  target String @db.VarChar(100)
+  id     Int    @id @default(autoincrement()) /// 主键
+  userId Int /// 用户 ID
+  source String @db.VarChar(100) /// 源类型标识
+  target String @db.VarChar(100) /// 目标类型标识
 
-  @@map("type_relations")
+  @@map("user_type_relations")
 }
 
 /// AI 服务商配置表
-model AIProvider {
-  id          String   @id @default(cuid()) @db.VarChar(36)
-  /// 用户 ID
-  userId      Int
-  /// 显示名称，如 "OpenAI GPT-4"、"DeepL Pro"
-  name        String   @db.VarChar(100)
-  /// 服务商标识，如 "openai", "deepseek", "gemini"
-  provider    String   @db.VarChar(50)
-  /// API 协议，如 "openai", "gemini", "claude"
-  apiProtocol String   @db.VarChar(50)
-  /// API 密钥
-  apiKey      String?  @db.VarChar(500)
-  /// API 端点（可选，某些服务商需自定义端点）
-  apiEndpoint String?  @db.VarChar(500)
-  /// 模型名称，如 "gpt-4", "gemini-2.0-flash"
-  apiModel    String?  @db.VarChar(100)
-  /// API 版本，如 "2024-02-15"
-  apiVersion  String?  @db.VarChar(100)
-  /// 温度参数，如 0.5, 1.0, 2.0
-  temperature Float?   @default(0.5)
-  /// 最大令牌数，如 1000, 3000
-  maxTokens   Int?     @default(3000)
-  /// 超时时间（毫秒），默认 30 秒
-  timeout     Int      @default(30000)
-  /// 额外配置（JSON 格式），服务商特定配置
-  extraConfig String?  @db.Text
-  /// 是否启用
-  isActive    Boolean  @default(true)
-  /// 创建时间
-  createdAt   DateTime @default(now())
-  /// 更新时间
-  updatedAt   DateTime @updatedAt
+model SystemAIProvider {
+  id          String   @id @default(cuid()) @db.VarChar(36) /// 主键
+  provider    String   @db.VarChar(50) /// 服务商标识，如 "openai", "deepseek", "gemini"
+  apiProtocol String   @db.VarChar(50) /// API 协议，如 "openai", "gemini", "claude"
+  apiKey      String?  @db.VarChar(500) /// API 密钥
+  apiEndpoint String?  @db.VarChar(500) /// API 端点（可选，某些服务商需自定义端点）
+  name        String   @db.VarChar(100) /// 显示名称，如 "OpenAI GPT-4"、"DeepL Pro"
+  apiModel    String?  @db.VarChar(100) /// 模型名称，如 "gpt-4", "gemini-2.0-flash"
+  apiVersion  String?  @db.VarChar(100) /// API 版本，如 "2024-02-15"
+  temperature Float?   @default(0.5) /// 温度参数，如 0.5, 1.0, 2.0
+  maxTokens   Int?     @default(3000) /// 最大令牌数，如 1000, 3000
+  timeout     Int      @default(30000) /// 超时时间（毫秒），默认 30 秒
+  extraConfig String?  @db.Text /// 额外配置（JSON 格式），服务商特定配置
+  isActive    Boolean  @default(true) /// 是否启用
+  createdAt   DateTime @default(now()) /// 创建时间
+  updatedAt   DateTime @updatedAt /// 更新时间
 
   @@index([provider, isActive])
   @@index([isActive])
-  @@map("ai_providers")
+  @@map("system_ai_providers")
 }
 
 /// 主题配置表
-model Theme {
-  id        String   @id @default(cuid()) @db.VarChar(36)
-  /// 主题唯一编码
-  code      String   @unique @db.VarChar(50)
-  /// 主题名称
-  name      String   @db.VarChar(100)
-  /// 模式：'light' 或 'dark'
-  mode      String   @db.VarChar(20)
-  /// 色彩配置（JSON 格式）
-  colors    String   @db.Text
-  /// 是否启用
-  isActive  Boolean  @default(true)
-  /// 是否默认主题
-  isDefault Boolean  @default(false)
-  /// 排序权重，数值越小越靠前
-  sortBy    Int      @default(0)
-  /// 创建时间
-  createdAt DateTime @default(now())
-  /// 更新时间
-  updatedAt DateTime @updatedAt
+model SystemTheme {
+  id        String   @id @default(cuid()) @db.VarChar(36) /// 主键
+  code      String   @unique @db.VarChar(50) /// 主题唯一编码
+  name      String   @db.VarChar(100) /// 主题名称
+  mode      String   @db.VarChar(20) /// 模式：'light' 或 'dark'
+  colors    String   @db.Text /// 色彩配置（JSON 格式）
+  isActive  Boolean  @default(true) /// 是否启用
+  isDefault Boolean  @default(false) /// 是否默认主题
+  sortBy    Int      @default(0) /// 排序权重，数值越小越靠前
+  createdAt DateTime @default(now()) /// 创建时间
+  updatedAt DateTime @updatedAt /// 更新时间
 
-  @@index([mode, isActive])
-  @@map("themes")
+  @@index([isActive])
+  @@index([isDefault])
+  @@map("system_themes")
+}
+
+/// 系统设置表
+model SystemConfig {
+  id           Int      @id /// 主键
+  title        String?  @db.VarChar(200) /// 站点标题
+  description  String?  @db.VarChar(500) /// 站点描述
+  keywords     String?  @db.VarChar(500) /// SEO 关键词
+  version      String?  @db.VarChar(50) /// 系统版本号
+  openRegister Boolean  @default(false) /// 是否开放注册
+  createAt     DateTime @default(now()) /// 创建时间
+  updateAt     DateTime @updatedAt /// 最后更新时间
+
+  @@map("system_configs")
 }

@@ -33,7 +33,7 @@
 
     <!-- Logo 和标题 - 响应式调整 -->
     <div class="flex flex-col sm:flex-row items-center mb-4 sm:mb-6 text-center sm:text-left">
-      <img src="/logo.png" class="w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2 sm:mb-0 sm:mr-4" />
+      <img src="/logo.webp" class="w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2 sm:mb-0 sm:mr-4" />
       <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
         {{ SystemConfig?.title }} - 管理后台
       </h1>

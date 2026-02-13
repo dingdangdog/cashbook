@@ -2,7 +2,7 @@ const prefiex = "api/admin/entry/users";
 
 export const page = (
   page: PageParam,
-  param: User
+  param: User,
 ): Promise<{ total: number; data: User[] }> => {
   return doApi.post(`${prefiex}/page`, { ...page, ...param });
 };

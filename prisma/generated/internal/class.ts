@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  // provider = env(\"DATEBASE_PROVIDER\")\n  provider = \"postgresql\"\n}\n\nmodel SystemSetting {\n  id           Int      @id\n  title        String?\n  description  String?\n  keywords     String?\n  version      String?\n  openRegister Boolean  @default(false)\n  createDate   DateTime @default(now())\n  updateBy     DateTime @default(now())\n}\n\n// 用户表\nmodel User {\n  id         Int      @id @default(autoincrement())\n  username   String\n  password   String\n  name       String?\n  email      String?\n  createDate DateTime @default(now())\n}\n\nmodel Book {\n  id         Int      @id @default(autoincrement())\n  bookId     String\n  bookName   String\n  shareKey   String? // 分享key\n  userId     Int\n  budget     Float? // 账本预算\n  createDate DateTime @default(now())\n}\n\nmodel Flow {\n  id           Int     @id @default(autoincrement())\n  userId       Int\n  bookId       String\n  day          String\n  flowType     String? // 流水类型：收入、支出、不计收支\n  industryType String? // 行业分类（支出类型/收入类型）\n  payType      String? // 支付方式/收款方式\n  money        Float?\n  name         String?\n  description  String?\n  invoice      String?\n  origin       String? // 流水来源：谁谁-支付宝导入；谁谁手动输出\n  attribution  String? // 流水归属（谁的收入/支出）\n  eliminate    Int?    @default(0) // 平账标志，0未平账；1已平账，-1忽略平账\n}\n\n// Budget 支出计划\nmodel Budget {\n  id     Int    @id @default(autoincrement())\n  bookId String\n  userId Int\n  month  String\n  budget Float?\n  used   Float?\n}\n\nmodel Receivable {\n  id          Int     @id @default(autoincrement())\n  occurId     Int? // 关联的借出流水id\n  actualId    Int? // 关联的收款流水id\n  bookId      String\n  userId      Int\n  name        String?\n  description String?\n  occurDay    String // 发生日(借出日)\n  expectDay   String? // 预计收款日\n  actualDay   String? // 实际收款日\n  money       Float?\n  status      Int     @default(0) // 状态：0未收款；1已收款；-1不要了；-2已放弃；-3不可抗力\n}\n\nmodel FixedFlow {\n  id           Int     @id @default(autoincrement())\n  bookId       String\n  userId       Int\n  month        String?\n  money        Float?\n  name         String?\n  description  String?\n  flowType     String? // 流水类型：收入、支出、不计收支\n  industryType String? // 行业分类（支出类型/收入类型）\n  payType      String? // 支付方式/收款方式\n  attribution  String? // 流水归属（谁的收入/支出）\n}\n\nmodel TypeRelation {\n  id     Int    @id @default(autoincrement())\n  userId Int\n  bookId String\n  source String\n  target String\n}\n\nmodel AIProvider {\n  id          String   @id @default(cuid()) @db.VarChar(36)\n  name        String   @db.VarChar(100) // 显示名称，如 \"OpenAI GPT-4\"、\"DeepL Pro\"\n  provider    String   @db.VarChar(50) // 服务商标识。一般是产品名，如 \"openai\", \"deepseek\", \"gemini\"\n  apiProtocol String   @db.VarChar(50) // API 协议，如 \"openai\", \"gemini\", \"claude\"\n  apiKey      String?  @db.VarChar(500) // API 密钥\n  apiEndpoint String?  @db.VarChar(500) // API 端点（可选，某些服务商需要自定义端点）\n  apiModel    String?  @db.VarChar(100) // 模型名称，如 \"gpt-4\", \"gemini-2.0-flash\", \"claude-3.5-sonnet\"\n  apiVersion  String?  @db.VarChar(100) // API 版本，如 \"2024-02-15\", \"2024-06-01\", \"2024-07-01\"\n  temperature Float?   @default(0.5) // 温度，如 0.5, 1.0, 2.0\n  maxTokens   Int?     @default(3000) // 最大令牌数，如 1000, 2000, 3000\n  timeout     Int      @default(30000) // 超时时间（毫秒），默认30秒\n  extraConfig String?  @db.Text // 额外配置（JSON格式），用于存储服务商特定的配置\n  isActive    Boolean  @default(true) // 是否启用\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n\n  @@index([provider, isActive])\n  @@index([isActive])\n  @@map(\"translation_configs\")\n}\n\nmodel Theme {\n  id        String   @id @default(cuid()) @db.VarChar(36)\n  code      String   @unique @db.VarChar(50)\n  name      String   @db.VarChar(100)\n  mode      String   @db.VarChar(20) // 'light' or 'dark'\n  colors    String   @db.Text // JSON 格式存储色彩配置\n  isActive  Boolean  @default(true)\n  isDefault Boolean  @default(false)\n  sortBy    Int      @default(0)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([mode, isActive])\n  @@map(\"themes\")\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  // provider = env(\"DATEBASE_PROVIDER\")\n  provider = \"postgresql\"\n}\n\n/// 用户表\nmodel User {\n  id         Int      @id @default(autoincrement()) /// 主键\n  username   String   @db.VarChar(50) /// 登录用户名\n  password   String   @db.VarChar(255) /// 密码（存储加密后的值，建议 255 以兼容多种算法）\n  name       String   @default(\"User\") @db.VarChar(100) /// 显示名称/昵称\n  email      String?  @db.VarChar(255) /// 邮箱\n  roles      String?  @db.VarChar(50) /// 角色 admin:管理员, user:普通用户（多角色逗号分隔）\n  createAt   DateTime @default(now()) /// 创建时间\n  lightTheme String?  @db.VarChar(50) /// 浅色主题编号\n  darkTheme  String?  @db.VarChar(50) /// 深色主题编号\n\n  @@map(\"users\")\n}\n\n/// 流水/交易记录表\nmodel Flow {\n  id           Int      @id @default(autoincrement()) /// 主键\n  flowNo       String   @unique @db.VarChar(50) /// 流水编号-唯一\n  userId       Int /// 所属用户 ID\n  day          DateTime /// 交易日期\n  flowType     String?  @db.VarChar(20) /// 流水类型：收入、支出、不计收支\n  industryType String?  @db.VarChar(50) /// 行业/分类（支出类型或收入类型）\n  payType      String?  @db.VarChar(50) /// 支付方式或收款方式\n  money        Float? /// 金额\n  name         String?  @db.VarChar(200) /// 条目名称/摘要\n  description  String?  @db.VarChar(500) /// 备注说明\n  invoice      String?  @db.VarChar(200) /// 票据信息，一般是图片路径\n  origin       String?  @db.VarChar(200) /// 流水来源（如：某某-支付宝导入、手动录入）\n  attribution  String?  @db.VarChar(100) /// 流水归属（谁的收入/支出）\n  eliminate    Int?     @default(0) /// 平账标志：0 未平账，1 已平账，-1 忽略平账\n\n  @@map(\"user_flows\")\n}\n\n/// 预算/支出计划表（按月度）\nmodel Budget {\n  id     Int    @id @default(autoincrement()) /// 主键\n  userId Int /// 用户 ID\n  month  String @db.VarChar(7) /// 月份（格式 YYYY-MM）\n  budget Float? /// 预算金额\n  used   Float? /// 已使用金额\n\n  @@map(\"budgets\")\n}\n\n/// 负债表（借款/欠款）\nmodel Liability {\n  id           Int      @id @default(autoincrement()) /// 主键\n  userId       Int /// 用户 ID\n  name         String   @db.VarChar(200) /// 债权人/事项名称\n  description  String?  @db.VarChar(500) /// 说明\n  occurDay     DateTime /// 借款日\n  money        Float /// 借款金额（本金）\n  planType     Int      @default(0) /// 还款方式：0 一次性，1 分期-等额本息，2 分期-等额本金，3 分期-自定义\n  interestRate Float? /// 年化利率（如 0.05 表示 5%）\n  termCount    Int? /// 分期期数（分期时必填）\n  termAmount   Float? /// 每期金额（等额本息时可为空由系统计算；自定义时必填）\n  status       Int      @default(0) /// 状态：0 未还清，1 已还清，-1 已豁免\n  occurFlowId  Int? /// 关联的借款流水 ID\n\n  @@index([userId])\n  @@map(\"user_liabilities\")\n}\n\n/// 负债还款计划表（根据方案自动生成）\nmodel LiabilityRepayPlan {\n  id          Int      @id @default(autoincrement()) /// 主键\n  liabilityId Int /// 负债 ID\n  termNo      Int /// 期号（从 1 开始）\n  planDay     DateTime /// 计划还款日\n  planAmount  Float /// 计划还款金额（本期应还总额）\n  principal   Float /// 本期本金\n  interest    Float    @default(0) /// 本期利息\n  status      Int      @default(0) /// 状态：0 待还款，1 已还款\n\n  @@unique([liabilityId, termNo])\n  @@index([liabilityId])\n  @@map(\"user_liability_repay_plans\")\n}\n\n/// 负债还款记录表\nmodel LiabilityRepayRecord {\n  id          Int      @id @default(autoincrement()) /// 主键\n  liabilityId Int /// 负债 ID\n  planId      Int? /// 关联的还款计划 ID（可为空，表示计划外还款）\n  repayDay    DateTime /// 实际还款日\n  repayAmount Float /// 还款金额\n  flowId      Int? /// 关联的还款流水 ID\n  description String?  @db.VarChar(500) /// 备注\n\n  @@index([liabilityId])\n  @@index([planId])\n  @@map(\"user_liability_repay_records\")\n}\n\n/// 借出表（借给他人/应收款，与负债反向）\nmodel Receivable {\n  id           Int      @id @default(autoincrement()) /// 主键\n  userId       Int /// 用户 ID\n  name         String   @db.VarChar(200) /// 借出对象/事项名称\n  description  String?  @db.VarChar(500) /// 说明\n  occurDay     DateTime /// 借出日\n  money        Float /// 借出金额（本金）\n  planType     Int      @default(0) /// 收款方式：0 一次性，1 分期-等额本息，2 分期-等额本金，3 分期-自定义\n  interestRate Float? /// 年化利率（如 0.05 表示 5%）\n  termCount    Int? /// 分期期数（分期时必填）\n  termAmount   Float? /// 每期金额（等额本息时可为空；自定义时必填）\n  status       Int      @default(0) /// 状态：0 未收清，1 已收清，-1 不要了，-2 已放弃，-3 不可抗力\n  occurFlowId  Int? /// 关联的借出流水 ID\n\n  @@index([userId])\n  @@map(\"user_receivables\")\n}\n\n/// 借出收款计划表（根据方案自动生成）\nmodel ReceivableCollectPlan {\n  id           Int      @id @default(autoincrement()) /// 主键\n  receivableId Int /// 借出 ID\n  termNo       Int /// 期号（从 1 开始）\n  planDay      DateTime /// 计划收款日\n  planAmount   Float /// 计划收款金额\n  principal    Float /// 本期本金\n  interest     Float    @default(0) /// 本期利息\n  status       Int      @default(0) /// 状态：0 待收款，1 已收款\n\n  @@unique([receivableId, termNo])\n  @@index([receivableId])\n  @@map(\"user_receivable_collect_plans\")\n}\n\n/// 借出收款记录表\nmodel ReceivableCollectRecord {\n  id            Int      @id @default(autoincrement()) /// 主键\n  receivableId  Int /// 借出 ID\n  planId        Int? /// 关联的收款计划 ID（可为空，表示计划外收款）\n  collectDay    DateTime /// 实际收款日\n  collectAmount Float /// 收款金额\n  flowId        Int? /// 关联的收款流水 ID\n  description   String?  @db.VarChar(500) /// 备注\n\n  @@index([receivableId])\n  @@index([planId])\n  @@map(\"user_receivable_collect_records\")\n}\n\n/// 投资统计表（按产品汇总）\nmodel InvestmentProduct {\n  id            Int     @id @default(autoincrement()) /// 主键\n  userId        Int /// 用户 ID\n  productName   String  @db.VarChar(200) /// 投资产品名称（如：某基金、某股票）\n  productType   String? @db.VarChar(50) /// 产品类型（基金、股票、理财、其他）\n  totalInvested Float   @default(0) /// 累计投入金额\n  totalReturn   Float   @default(0) /// 累计收益（含已赎回/分红）\n  currentValue  Float? /// 当前估值（可选，手动或接口更新）\n  status        Int     @default(0) /// 状态：0 持有中，1 已清仓\n\n  @@index([userId])\n  @@map(\"user_investment_products\")\n}\n\n/// 投资明细表（交易记录）\nmodel InvestmentDetail {\n  id          Int      @id @default(autoincrement()) /// 主键\n  productId   Int /// 投资产品 ID\n  userId      Int /// 用户 ID\n  tradeType   String   @db.VarChar(20) /// 交易类型：买入、卖出、分红、赎回、定投\n  tradeDay    DateTime /// 交易日期\n  amount      Float /// 金额（正数为流入如分红，负数为流出如买入）\n  quantity    Float? /// 数量/份额（买入卖出时）\n  price       Float? /// 单价（买入卖出时）\n  fee         Float?   @default(0) /// 手续费\n  description String?  @db.VarChar(500) /// 备注\n  flowId      Int? /// 关联流水 ID\n\n  @@index([productId])\n  @@index([userId])\n  @@index([tradeDay])\n  @@map(\"user_investment_details\")\n}\n\n/// 固定流水/周期性流水模板表\nmodel FixedFlow {\n  id           Int     @id @default(autoincrement()) /// 主键\n  userId       Int /// 用户 ID\n  month        String? @db.VarChar(7) /// 月份（格式 YYYY-MM），可选\n  money        Float? /// 金额\n  name         String? @db.VarChar(200) /// 条目名称\n  description  String? @db.VarChar(500) /// 说明\n  flowType     String? @db.VarChar(20) /// 流水类型：收入、支出、不计收支\n  industryType String? @db.VarChar(50) /// 行业/分类（支出类型或收入类型）\n  payType      String? @db.VarChar(50) /// 支付方式或收款方式\n  attribution  String? @db.VarChar(100) /// 流水归属（谁的收入/支出）\n\n  @@map(\"user_fixed_flows\")\n}\n\n/// 类型映射/关联表（如行业类型与支付方式等映射）\nmodel TypeRelation {\n  id     Int    @id @default(autoincrement()) /// 主键\n  userId Int /// 用户 ID\n  source String @db.VarChar(100) /// 源类型标识\n  target String @db.VarChar(100) /// 目标类型标识\n\n  @@map(\"user_type_relations\")\n}\n\n/// AI 服务商配置表\nmodel SystemAIProvider {\n  id          String   @id @default(cuid()) @db.VarChar(36) /// 主键\n  provider    String   @db.VarChar(50) /// 服务商标识，如 \"openai\", \"deepseek\", \"gemini\"\n  apiProtocol String   @db.VarChar(50) /// API 协议，如 \"openai\", \"gemini\", \"claude\"\n  apiKey      String?  @db.VarChar(500) /// API 密钥\n  apiEndpoint String?  @db.VarChar(500) /// API 端点（可选，某些服务商需自定义端点）\n  name        String   @db.VarChar(100) /// 显示名称，如 \"OpenAI GPT-4\"、\"DeepL Pro\"\n  apiModel    String?  @db.VarChar(100) /// 模型名称，如 \"gpt-4\", \"gemini-2.0-flash\"\n  apiVersion  String?  @db.VarChar(100) /// API 版本，如 \"2024-02-15\"\n  temperature Float?   @default(0.5) /// 温度参数，如 0.5, 1.0, 2.0\n  maxTokens   Int?     @default(3000) /// 最大令牌数，如 1000, 3000\n  timeout     Int      @default(30000) /// 超时时间（毫秒），默认 30 秒\n  extraConfig String?  @db.Text /// 额外配置（JSON 格式），服务商特定配置\n  isActive    Boolean  @default(true) /// 是否启用\n  createdAt   DateTime @default(now()) /// 创建时间\n  updatedAt   DateTime @updatedAt /// 更新时间\n\n  @@index([provider, isActive])\n  @@index([isActive])\n  @@map(\"system_ai_providers\")\n}\n\n/// 主题配置表\nmodel SystemTheme {\n  id        String   @id @default(cuid()) @db.VarChar(36) /// 主键\n  code      String   @unique @db.VarChar(50) /// 主题唯一编码\n  name      String   @db.VarChar(100) /// 主题名称\n  mode      String   @db.VarChar(20) /// 模式：'light' 或 'dark'\n  colors    String   @db.Text /// 色彩配置（JSON 格式）\n  isActive  Boolean  @default(true) /// 是否启用\n  isDefault Boolean  @default(false) /// 是否默认主题\n  sortBy    Int      @default(0) /// 排序权重，数值越小越靠前\n  createdAt DateTime @default(now()) /// 创建时间\n  updatedAt DateTime @updatedAt /// 更新时间\n\n  @@index([isActive])\n  @@index([isDefault])\n  @@map(\"system_themes\")\n}\n\n/// 系统设置表\nmodel SystemConfig {\n  id           Int      @id /// 主键\n  title        String?  @db.VarChar(200) /// 站点标题\n  description  String?  @db.VarChar(500) /// 站点描述\n  keywords     String?  @db.VarChar(500) /// SEO 关键词\n  version      String?  @db.VarChar(50) /// 系统版本号\n  openRegister Boolean  @default(false) /// 是否开放注册\n  createAt     DateTime @default(now()) /// 创建时间\n  updateAt     DateTime @updatedAt /// 最后更新时间\n\n  @@map(\"system_configs\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"SystemSetting\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"keywords\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"version\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"openRegister\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updateBy\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Book\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bookName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shareKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"budget\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"createDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Flow\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"day\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flowType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industryType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"invoice\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"origin\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attribution\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"eliminate\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"Budget\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"month\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"budget\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"used\",\"kind\":\"scalar\",\"type\":\"Float\"}],\"dbName\":null},\"Receivable\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"occurId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"actualId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"occurDay\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expectDay\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actualDay\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"FixedFlow\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"month\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flowType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industryType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attribution\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"TypeRelation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"target\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"AIProvider\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiProtocol\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiEndpoint\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiModel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiVersion\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"temperature\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"maxTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeout\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"extraConfig\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"translation_configs\"},\"Theme\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"colors\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isDefault\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"sortBy\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"themes\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roles\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lightTheme\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"darkTheme\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"users\"},\"Flow\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"flowNo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"day\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"flowType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industryType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"invoice\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"origin\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attribution\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"eliminate\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_flows\"},\"Budget\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"month\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"budget\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"used\",\"kind\":\"scalar\",\"type\":\"Float\"}],\"dbName\":\"budgets\"},\"Liability\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"occurDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"planType\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"interestRate\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"termCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"termAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"occurFlowId\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_liabilities\"},\"LiabilityRepayPlan\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"liabilityId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"termNo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"planDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"planAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"principal\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"interest\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_liability_repay_plans\"},\"LiabilityRepayRecord\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"liabilityId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"planId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"repayDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"repayAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"flowId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"user_liability_repay_records\"},\"Receivable\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"occurDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"planType\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"interestRate\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"termCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"termAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"occurFlowId\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_receivables\"},\"ReceivableCollectPlan\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"receivableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"termNo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"planDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"planAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"principal\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"interest\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_receivable_collect_plans\"},\"ReceivableCollectRecord\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"receivableId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"planId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"collectDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"collectAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"flowId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"user_receivable_collect_records\"},\"InvestmentProduct\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"productName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"productType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"totalInvested\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"totalReturn\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"currentValue\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_investment_products\"},\"InvestmentDetail\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"productId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tradeType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tradeDay\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"fee\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flowId\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":\"user_investment_details\"},\"FixedFlow\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"month\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"money\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flowType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industryType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attribution\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"user_fixed_flows\"},\"TypeRelation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"target\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"user_type_relations\"},\"SystemAIProvider\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiProtocol\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiEndpoint\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiModel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apiVersion\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"temperature\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"maxTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeout\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"extraConfig\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"system_ai_providers\"},\"SystemTheme\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"colors\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isDefault\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"sortBy\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"system_themes\"},\"SystemConfig\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"keywords\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"version\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"openRegister\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updateAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"system_configs\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -60,8 +60,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more SystemSettings
-   * const systemSettings = await prisma.systemSetting.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -82,8 +82,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more SystemSettings
- * const systemSettings = await prisma.systemSetting.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -177,16 +177,6 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.systemSetting`: Exposes CRUD operations for the **SystemSetting** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more SystemSettings
-    * const systemSettings = await prisma.systemSetting.findMany()
-    * ```
-    */
-  get systemSetting(): Prisma.SystemSettingDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -195,16 +185,6 @@ export interface PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.book`: Exposes CRUD operations for the **Book** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Books
-    * const books = await prisma.book.findMany()
-    * ```
-    */
-  get book(): Prisma.BookDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
    * `prisma.flow`: Exposes CRUD operations for the **Flow** model.
@@ -227,6 +207,36 @@ export interface PrismaClient<
   get budget(): Prisma.BudgetDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
+   * `prisma.liability`: Exposes CRUD operations for the **Liability** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Liabilities
+    * const liabilities = await prisma.liability.findMany()
+    * ```
+    */
+  get liability(): Prisma.LiabilityDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.liabilityRepayPlan`: Exposes CRUD operations for the **LiabilityRepayPlan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LiabilityRepayPlans
+    * const liabilityRepayPlans = await prisma.liabilityRepayPlan.findMany()
+    * ```
+    */
+  get liabilityRepayPlan(): Prisma.LiabilityRepayPlanDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.liabilityRepayRecord`: Exposes CRUD operations for the **LiabilityRepayRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LiabilityRepayRecords
+    * const liabilityRepayRecords = await prisma.liabilityRepayRecord.findMany()
+    * ```
+    */
+  get liabilityRepayRecord(): Prisma.LiabilityRepayRecordDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.receivable`: Exposes CRUD operations for the **Receivable** model.
     * Example usage:
     * ```ts
@@ -235,6 +245,46 @@ export interface PrismaClient<
     * ```
     */
   get receivable(): Prisma.ReceivableDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.receivableCollectPlan`: Exposes CRUD operations for the **ReceivableCollectPlan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReceivableCollectPlans
+    * const receivableCollectPlans = await prisma.receivableCollectPlan.findMany()
+    * ```
+    */
+  get receivableCollectPlan(): Prisma.ReceivableCollectPlanDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.receivableCollectRecord`: Exposes CRUD operations for the **ReceivableCollectRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReceivableCollectRecords
+    * const receivableCollectRecords = await prisma.receivableCollectRecord.findMany()
+    * ```
+    */
+  get receivableCollectRecord(): Prisma.ReceivableCollectRecordDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.investmentProduct`: Exposes CRUD operations for the **InvestmentProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InvestmentProducts
+    * const investmentProducts = await prisma.investmentProduct.findMany()
+    * ```
+    */
+  get investmentProduct(): Prisma.InvestmentProductDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.investmentDetail`: Exposes CRUD operations for the **InvestmentDetail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InvestmentDetails
+    * const investmentDetails = await prisma.investmentDetail.findMany()
+    * ```
+    */
+  get investmentDetail(): Prisma.InvestmentDetailDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
    * `prisma.fixedFlow`: Exposes CRUD operations for the **FixedFlow** model.
@@ -257,24 +307,34 @@ export interface PrismaClient<
   get typeRelation(): Prisma.TypeRelationDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.aIProvider`: Exposes CRUD operations for the **AIProvider** model.
+   * `prisma.systemAIProvider`: Exposes CRUD operations for the **SystemAIProvider** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more AIProviders
-    * const aIProviders = await prisma.aIProvider.findMany()
+    * // Fetch zero or more SystemAIProviders
+    * const systemAIProviders = await prisma.systemAIProvider.findMany()
     * ```
     */
-  get aIProvider(): Prisma.AIProviderDelegate<ExtArgs, { omit: OmitOpts }>;
+  get systemAIProvider(): Prisma.SystemAIProviderDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.theme`: Exposes CRUD operations for the **Theme** model.
+   * `prisma.systemTheme`: Exposes CRUD operations for the **SystemTheme** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Themes
-    * const themes = await prisma.theme.findMany()
+    * // Fetch zero or more SystemThemes
+    * const systemThemes = await prisma.systemTheme.findMany()
     * ```
     */
-  get theme(): Prisma.ThemeDelegate<ExtArgs, { omit: OmitOpts }>;
+  get systemTheme(): Prisma.SystemThemeDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.systemConfig`: Exposes CRUD operations for the **SystemConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SystemConfigs
+    * const systemConfigs = await prisma.systemConfig.findMany()
+    * ```
+    */
+  get systemConfig(): Prisma.SystemConfigDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

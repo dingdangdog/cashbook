@@ -1,5 +1,5 @@
 <div align="center" style="display:flex;align-items:center;justify-content:center;">
-<img src="/public/logo.png" width="80px" alt="cashbook" />
+<img src="/public/logo.webp" width="80px" alt="cashbook" />
 <h1>Cashbook</h1>
 </div>
 

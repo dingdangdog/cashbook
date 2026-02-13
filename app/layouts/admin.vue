@@ -32,8 +32,9 @@ const items = ref<Menu[]>([
   { title: "用户", path: "users", icon: "user" },
   { title: "账本", path: "books", icon: "book-open" },
   { title: "映射管理", path: "typeRelations", icon: "arrows-right-left" },
-  { title: "主题", path: "theme", icon: "paint-brush" },
-  { title: "系统设置", path: "settings", icon: "cog-6-tooth" },
+  { title: "主题", path: "themes", icon: "paint-brush" },
+  { title: "系统配置", path: "config", icon: "cog-6-tooth" },
+  { title: "AI 服务商", path: "ais", icon: "cpu" },
   { title: "文档站", path: "documentation", icon: "document-text" },
   { title: "Github", path: "github", icon: "code-bracket" },
 ]);
@@ -88,6 +89,7 @@ const getIconComponent = (iconName: string) => {
       "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0v.75a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75v-.75z",
     "code-bracket":
       "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",
+    cpu: "M8.25 3v1.5M4.5 3v1.5M3 18.75V16.5m0-2.25v-1.5M3 12h1.5m12 0h1.5M3 7.5V6m0 2.25v1.5M21 18.75V16.5m0-2.25v-1.5M21 12h-1.5m-12 0H3m15 4.5v1.5m0 2.25V18M15 7.5v-1.5m0 2.25V6M7.5 21H9m-1.5 0h-3m12 0h1.5m-12 0H6m12 3v-1.5m0 2.25V15m0 2.25v1.5M15 21v-1.5m0-2.25V15m0 2.25v1.5M9 21v-1.5M9 18H6m12 0h3",
   };
   return icons[iconName as keyof typeof icons] || icons.home;
 };
@@ -134,7 +136,7 @@ const getIconComponent = (iconName: string) => {
             @click="toIndex"
             class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
-            <img src="/logo.png" class="w-8 h-8 rounded-full" alt="logo" />
+            <img src="/logo.webp" class="w-8 h-8 rounded-full" alt="logo" />
             <span class="text-white font-semibold text-lg hidden sm:block">
               {{ SystemConfig?.title }} - 管理
             </span>

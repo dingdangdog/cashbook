@@ -17,7 +17,7 @@ definePageMeta({
           <div
             class="w-20 h-20 pl-2 pt-1 bg-green-200 rounded-full flex items-center justify-center mx-auto"
           >
-            <img src="/logo.png" class="w-16 h-16" />
+            <img src="/logo.webp" class="w-16 h-16" />
           </div>
         </div>
 
@@ -51,19 +51,24 @@ definePageMeta({
           </div>
           <div
             class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
-            @click="navigateTo('/admin/theme')"
+            @click="navigateTo('/admin/themes')"
           >
             <div class="text-emerald-400 text-lg font-medium">主题管理</div>
             <div class="text-gray-400 text-xs mt-1">管理系统主题色配置</div>
           </div>
           <div
             class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
-            @click="navigateTo('/admin/settings')"
+            @click="navigateTo('/admin/config')"
           >
-            <div class="text-orange-400 text-lg font-medium">系统设置</div>
-            <div class="text-gray-400 text-xs mt-1">
-              系统配置管理，备份与恢复数据
-            </div>
+            <div class="text-orange-400 text-lg font-medium">系统配置</div>
+            <div class="text-gray-400 text-xs mt-1">站点标题、描述、注册开关</div>
+          </div>
+          <div
+            class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
+            @click="navigateTo('/admin/ais')"
+          >
+            <div class="text-amber-400 text-lg font-medium">AI 服务商</div>
+            <div class="text-gray-400 text-xs mt-1">AI 接口配置管理</div>
           </div>
           <a
             class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 cursor-pointer hover:bg-gray-700"
