@@ -3,10 +3,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "build": "node scripts/run-nuxt.mjs build",
+    "dev": "node scripts/run-nuxt.mjs dev",
+    "generate": "node scripts/run-nuxt.mjs generate",
+    "preview": "node scripts/run-nuxt.mjs preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

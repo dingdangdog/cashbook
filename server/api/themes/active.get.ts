@@ -4,7 +4,7 @@ import { success, error } from "~~/server/utils/common";
 type ThemeMode = "light" | "dark";
 
 const pickActiveTheme = async (mode: ThemeMode) => {
-  const defaultTheme = await prisma.theme.findFirst({
+  const defaultTheme = await prisma.systemTheme.findFirst({
     where: { mode, isActive: true, isDefault: true },
     orderBy: [{ sortBy: "asc" }, { createdAt: "asc" }],
   });
@@ -12,7 +12,7 @@ const pickActiveTheme = async (mode: ThemeMode) => {
     return defaultTheme;
   }
 
-  return prisma.theme.findFirst({
+  return prisma.systemTheme.findFirst({
     where: { mode, isActive: true },
     orderBy: [{ sortBy: "asc" }, { createdAt: "asc" }],
   });
@@ -31,4 +31,3 @@ export default defineEventHandler(async () => {
     return error("获取激活主题失败", err?.message);
   }
 });
-

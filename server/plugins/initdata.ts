@@ -5,9 +5,9 @@ export default defineNitroPlugin((nitroApp) => {
   // 只执行一次的Hook，初始化数据库
   nitroApp.hooks.hookOnce("request", async () => {
     // 初始化系统设置
-    const nums = await prisma.systemSetting.count();
+    const nums = await prisma.systemConfig.count();
     if (nums < 1) {
-      await prisma.systemSetting.create({
+      await prisma.systemConfig.create({
         data: {
           id: 1,
           title: "Cashbook",
@@ -17,7 +17,7 @@ export default defineNitroPlugin((nitroApp) => {
       });
       console.log("Init System Settings");
     }
-    await prisma.systemSetting.update({
+    await prisma.systemConfig.update({
       data: { version: String(useRuntimeConfig().appVersion) },
       where: {
         id: 1,
@@ -25,7 +25,7 @@ export default defineNitroPlugin((nitroApp) => {
     });
 
     // 初始化主题（仅在数据库无任何主题时创建默认主题；避免覆盖用户自定义）
-    const themeCount = await prisma.theme.count();
+    const themeCount = await prisma.systemTheme.count();
     if (themeCount < 1) {
       const lightColors = {
         background: "255 255 255",
@@ -99,7 +99,7 @@ export default defineNitroPlugin((nitroApp) => {
       };
 
       await prisma.$transaction([
-        prisma.theme.create({
+        prisma.systemTheme.create({
           data: {
             code: "light-green",
             name: "亮色-白绿",
@@ -110,7 +110,7 @@ export default defineNitroPlugin((nitroApp) => {
             sortBy: 1,
           },
         }),
-        prisma.theme.create({
+        prisma.systemTheme.create({
           data: {
             code: "dark-green",
             name: "暗色-黑绿",
@@ -126,18 +126,18 @@ export default defineNitroPlugin((nitroApp) => {
     } else {
       // 若已有主题但没有默认主题，则为每个模式补一个默认主题（不改颜色）
       for (const mode of ["light", "dark"] as const) {
-        const hasDefault = await prisma.theme.count({
+        const hasDefault = await prisma.systemTheme.count({
           where: { mode, isActive: true, isDefault: true },
         });
         if (hasDefault > 0) {
           continue;
         }
-        const firstActive = await prisma.theme.findFirst({
+        const firstActive = await prisma.systemTheme.findFirst({
           where: { mode, isActive: true },
           orderBy: [{ sortBy: "asc" }, { createdAt: "asc" }],
         });
         if (firstActive) {
-          await prisma.theme.update({
+          await prisma.systemTheme.update({
             where: { id: firstActive.id },
             data: { isDefault: true },
           });
