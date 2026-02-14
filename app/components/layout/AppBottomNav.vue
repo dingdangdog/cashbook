@@ -25,33 +25,33 @@ const emit = defineEmits<{
 const bottomNavItems: NavItem[] = [
   {
     title: "预算",
-    path: "budget",
+    path: "/user/budget",
     icon: ExclamationTriangleIcon,
     color: "text-red-500",
   },
   {
     title: "分析",
-    path: "analysis",
+    path: "/user/analysis",
     icon: ChartBarIcon,
     color: "text-purple-500",
   },
   {
     title: "日历",
-    path: "calendar",
+    path: "/user/calendar",
     icon: CalendarDaysIcon,
     color: "text-blue-500",
   },
   {
     title: "流水",
-    path: "flows",
+    path: "/user/flows",
     icon: CurrencyDollarIcon,
     color: "text-green-500",
   },
 ];
 
 const handleNavigate = (path: string) => {
-  emit("navigate", path);
-  // navigateTo({ path: `/${path}` });
+  // emit("navigate", path);
+  navigateTo(path);
 };
 </script>
 

@@ -5,31 +5,31 @@
       <div
         class="bg-surface text-foreground rounded-lg p-1.5 md:p-2 border border-border"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row items-center justify-between">
           <p class="text-xs md:text-sm font-base text-foreground/70">总收入</p>
           <p class="text-xs md:text-lg font-medium text-primary-600">
             {{ Number(statistics?.totalIn || 0).toFixed(2) }}
           </p>
-          <PlusIcon class="w-4 h-4 md:w-8 md:h-8 text-primary-500" />
+          <PlusIcon class="w-4 h-4 md:w-8 md:h-8 text-primary-500 hidden md:block" />
         </div>
       </div>
 
       <div
         class="bg-surface text-foreground rounded-lg p-1.5 md:p-2 border border-border"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row items-center justify-between">
           <p class="text-xs md:text-sm font-base text-foreground/70">总支出</p>
           <p class="text-xs md:text-lg font-medium text-red-500">
             {{ Number(statistics?.totalOut || 0).toFixed(2) }}
           </p>
-          <MinusIcon class="w-4 h-4 md:w-8 md:h-8 text-red-500" />
+          <MinusIcon class="w-4 h-4 md:w-8 md:h-8 text-red-500 hidden md:block" />
         </div>
       </div>
 
       <div
         class="bg-surface text-foreground rounded-lg p-1.5 md:p-2 border border-border"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row items-center justify-between">
           <p class="text-xs md:text-sm font-base text-foreground/70">净收入</p>
           <p class="text-xs md:text-lg font-medium text-primary-600">
             {{
@@ -38,21 +38,21 @@
               ).toFixed(2)
             }}
           </p>
-          <ScaleIcon class="w-4 h-4 md:w-8 md:h-8 text-primary-500" />
+          <ScaleIcon class="w-4 h-4 md:w-8 md:h-8 text-primary-500 hidden md:block" />
         </div>
       </div>
 
       <div
         class="bg-surface text-foreground rounded-lg p-1.5 md:p-2 border border-border"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row items-center justify-between">
           <p class="text-xs md:text-sm font-base text-foreground/70">
             不计收支
           </p>
           <p class="text-xs md:text-lg font-medium text-foreground/70">
             {{ Number(statistics?.notInOut || 0).toFixed(2) }}
           </p>
-          <MinusCircleIcon class="w-4 h-4 md:w-8 md:h-8 text-foreground/40" />
+          <MinusCircleIcon class="w-4 h-4 md:w-8 md:h-8 text-foreground/40 hidden md:block" />
         </div>
       </div>
     </div>

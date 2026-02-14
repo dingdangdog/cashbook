@@ -46,7 +46,48 @@ const toggleTheme = () => {
   themeStore.toggleTheme();
 };
 
-const allItems: Menu[] = [
+/** 普通用户菜单 */
+const userMenuItems: Menu[] = [
+  {
+    title: "账本日历",
+    path: "/user/calendar",
+    icon: CalendarDaysIcon,
+    color: "text-green-500",
+  },
+  {
+    title: "流水管理",
+    path: "/user/flows",
+    icon: CurrencyDollarIcon,
+    color: "text-green-500",
+  },
+  {
+    title: "待收款",
+    path: "/user/receivable",
+    icon: BanknotesIcon,
+    color: "text-green-500",
+  },
+  {
+    title: "预算管理",
+    path: "/user/budget",
+    icon: ExclamationTriangleIcon,
+    color: "text-red-500",
+  },
+  {
+    title: "数据分析",
+    path: "/user/analysis",
+    icon: ChartBarIcon,
+    color: "text-purple-500",
+  },
+  {
+    title: "类型管理",
+    path: "/user/types",
+    icon: Squares2X2Icon,
+    color: "text-pink-500",
+  },
+];
+
+/** 管理员菜单（仅管理员可见） */
+const adminMenuItems: Menu[] = [
   {
     title: "用户管理",
     path: "/admin/users",
@@ -71,42 +112,10 @@ const allItems: Menu[] = [
     icon: Cog6ToothIcon,
     color: "text-indigo-500",
   },
-  {
-    title: "账本日历",
-    path: "/user/calendar",
-    icon: CalendarDaysIcon,
-    color: "text-green-500",
-  },
-  {
-    title: "数据分析",
-    path: "/user/analysis",
-    icon: ChartBarIcon,
-    color: "text-purple-500",
-  },
-  {
-    title: "流水管理",
-    path: "/user/flows",
-    icon: CurrencyDollarIcon,
-    color: "text-green-500",
-  },
-  {
-    title: "待收款",
-    path: "/user/receivable",
-    icon: BanknotesIcon,
-    color: "text-green-500",
-  },
-  {
-    title: "预算管理",
-    path: "/user/budget",
-    icon: ExclamationTriangleIcon,
-    color: "text-red-500",
-  },
-  {
-    title: "类型管理",
-    path: "/user/types",
-    icon: Squares2X2Icon,
-    color: "text-pink-500",
-  },
+];
+
+/** 辅助菜单（文档、外链等） */
+const auxiliaryMenuItems: Menu[] = [
   {
     title: "文档站",
     path: "documentation",
@@ -127,14 +136,7 @@ const allItems: Menu[] = [
   },
 ];
 
-/** 根据 path 与用户角色过滤：非管理员隐藏 /admin 相关菜单 */
-const items = computed(() => {
-  const isAdmin = userStore.isAdmin;
-  return allItems.filter((item) => {
-    if (item.path?.startsWith("/admin")) return isAdmin;
-    return true;
-  });
-});
+const isAdmin = computed(() => userStore.isAdmin);
 
 const handleNavigate = (menu: Menu) => {
   if (menu.path === "github") {
@@ -193,37 +195,124 @@ const handleNavigate = (menu: Menu) => {
       </div>
 
       <!-- Navigation -->
-      <nav class="flex-1 p-4 space-y-2">
-        <button
-          v-for="item in items"
-          :key="item.path"
-          @click="handleNavigate(item)"
-          :class="[
-            'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
-            currentPath === item.path
-              ? 'bg-surface text-primary-700 border border-border'
-              : 'text-foreground/80 hover:bg-surface',
-          ]"
+      <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+        <!-- 普通用户菜单 -->
+        <p
+          class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50"
         >
-          <component
-            v-if="item.icon !== 'string'"
-            :is="item.icon"
+          主要功能
+        </p>
+        <div class="space-y-0.5">
+          <button
+            v-for="item in userMenuItems"
+            :key="item.path"
+            @click="handleNavigate(item)"
             :class="[
-              'h-5 w-5 mr-3 shrink-0',
-              currentPath === item.path ? 'text-primary-600' : 'text-muted',
+              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
+              currentPath === item.path
+                ? 'bg-surface text-primary-700 border border-border'
+                : 'text-foreground/80 hover:bg-surface',
             ]"
           >
-          </component>
-          <i
-            v-else
+            <component
+              v-if="item.icon !== 'string'"
+              :is="item.icon"
+              :class="[
+                'h-5 w-5 mr-3 shrink-0',
+                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+              ]"
+            />
+            <i
+              v-else
+              :class="[
+                item.icon,
+                'text-base mr-3 shrink-0',
+                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+              ]"
+            ></i>
+            <span class="font-medium">{{ item.title }}</span>
+          </button>
+        </div>
+
+        <!-- 管理员菜单 -->
+        <template v-if="isAdmin">
+          <div class="my-3 border-t border-border"></div>
+          <p
+            class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50"
+          >
+            系统管理
+          </p>
+          <div class="space-y-0.5">
+            <button
+              v-for="item in adminMenuItems"
+              :key="item.path"
+              @click="handleNavigate(item)"
+              :class="[
+                'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
+                currentPath === item.path
+                  ? 'bg-surface text-primary-700 border border-border'
+                  : 'text-foreground/80 hover:bg-surface',
+              ]"
+            >
+              <component
+                v-if="item.icon !== 'string'"
+                :is="item.icon"
+                :class="[
+                  'h-5 w-5 mr-3 shrink-0',
+                  currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                ]"
+              />
+              <i
+                v-else
+                :class="[
+                  item.icon,
+                  'text-base mr-3 shrink-0',
+                  currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                ]"
+              ></i>
+              <span class="font-medium">{{ item.title }}</span>
+            </button>
+          </div>
+        </template>
+
+        <!-- 辅助菜单 -->
+        <div class="my-3 border-t border-border"></div>
+        <p
+          class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50"
+        >
+          其他
+        </p>
+        <div class="space-y-0.5">
+          <button
+            v-for="item in auxiliaryMenuItems"
+            :key="item.path"
+            @click="handleNavigate(item)"
             :class="[
-              item.icon,
-              'text-base mr-3 shrink-0',
-              currentPath === item.path ? 'text-primary-600' : 'text-muted',
+              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
+              currentPath === item.path
+                ? 'bg-surface text-primary-700 border border-border'
+                : 'text-foreground/80 hover:bg-surface',
             ]"
-          ></i>
-          <span class="font-medium">{{ item.title }}</span>
-        </button>
+          >
+            <component
+              v-if="item.icon !== 'string'"
+              :is="item.icon"
+              :class="[
+                'h-5 w-5 mr-3 shrink-0',
+                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+              ]"
+            />
+            <i
+              v-else
+              :class="[
+                item.icon,
+                'text-base mr-3 shrink-0',
+                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+              ]"
+            ></i>
+            <span class="font-medium">{{ item.title }}</span>
+          </button>
+        </div>
       </nav>
 
       <!-- Theme toggle -->
