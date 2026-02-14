@@ -138,7 +138,7 @@
                   v-for="(img, index) in getInvoiceImages(item.invoice)"
                   :key="index"
                   class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-border hover:border-primary-500 transition-colors"
-                  @click="openFullscreen(invoiceImageMap[img])"
+                  @click="openFullscreen(invoiceImageMap[img] || '')"
                 >
                   <img
                     :src="invoiceImageMap[img]"
@@ -258,7 +258,7 @@
                 v-for="(img, index) in getInvoiceImages(item.invoice)"
                 :key="index"
                 class="relative w-6 h-6 cursor-pointer group rounded overflow-hidden border border-border hover:border-primary-500 transition-colors"
-                @click="openFullscreen(invoiceImageMap[img])"
+                @click="openFullscreen(invoiceImageMap[img] || '')"
               >
                 <img
                   :src="invoiceImageMap[img]"

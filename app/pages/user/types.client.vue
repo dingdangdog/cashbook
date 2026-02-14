@@ -11,9 +11,7 @@
         @click.stop
       >
         <div class="flex justify-between items-center mb-6">
-          <h3 class="text-lg font-semibold text-foreground">
-            筛选条件
-          </h3>
+          <h3 class="text-lg font-semibold text-foreground">筛选条件</h3>
           <button
             @click="searchPanelVisible = false"
             class="text-muted hover:text-foreground hover:bg-surface-muted p-2 rounded-lg transition-colors"
@@ -36,8 +34,7 @@
 
         <div class="space-y-6">
           <div>
-            <label
-              class="block text-sm font-medium text-foreground mb-2"
+            <label class="block text-sm font-medium text-foreground mb-2"
               >类型分类</label
             >
             <select
@@ -56,8 +53,7 @@
           </div>
 
           <div>
-            <label
-              class="block text-sm font-medium text-foreground mb-2"
+            <label class="block text-sm font-medium text-foreground mb-2"
               >类型名称</label
             >
             <input
@@ -69,9 +65,7 @@
           </div>
 
           <!-- 操作按钮 -->
-          <div
-            class="flex gap-3 pt-4 border-t border-border"
-          >
+          <div class="flex gap-3 pt-4 border-t border-border">
             <button
               @click="clearFilters"
               class="flex-1 px-4 py-2 bg-secondary-200 hover:bg-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-500 text-foreground rounded-lg transition-colors duration-200 font-medium"
@@ -162,9 +156,9 @@
       </div>
     </div>
 
-    <!-- 数据表格容器 -->
+    <!-- 数据分组展示 -->
     <div
-      class="bg-surface shadow-sm border border-border overflow-hidden"
+      class="bg-surface shadow-sm border border-border overflow-hidden rounded-lg"
     >
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center items-center py-12">
@@ -174,120 +168,72 @@
         <span class="ml-2 text-muted">加载中...</span>
       </div>
 
-      <!-- 桌面端表格 -->
+      <!-- 两组 Tag 展示 -->
       <div
         v-if="!loading && types.length"
-        class="hidden lg:block max-h-[80vh] overflow-y-auto"
+        class="p-4 md:p-6 space-y-8 max-h-[80vh] overflow-y-auto"
       >
-        <table class="w-full">
-          <thead>
-            <tr
-              class="bg-surface-muted border-b border-border"
-            >
-              <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
-              >
-                分类
-              </th>
-              <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-              >
-                名称
-              </th>
-              <th
-                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-              >
-                操作
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
-            <tr
-              v-for="item in types"
+        <!-- 第一组：收入类型/支出类型 -->
+        <div>
+          <h3 class="text-sm font-medium text-muted mb-3">
+            收入类型 / 支出类型
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="item in typeGroupFlow"
               :key="`${item.type}-${item.value}`"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              type="button"
+              @click="openUpdateDialog(item)"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-800/50 transition-colors border border-primary-200 dark:border-primary-700/50"
+              title="点击编辑"
             >
-              <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
+              <span>{{ item.value }}</span>
+              <svg
+                class="w-3.5 h-3.5 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {{ item.type }}
-              </td>
-              <td
-                class="px-4 py-2 whitespace-nowrap text-sm text-foreground"
-              >
-                {{ item.value }}
-              </td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                <button
-                  @click="openUpdateDialog(item)"
-                  class="text-primary-600 hover:text-primary-500 transition-colors"
-                  title="编辑"
-                >
-                  <svg
-                    class="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    ></path>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-      <!-- 移动端卡片 -->
-      <div
-        v-if="!loading && types.length"
-        class="lg:hidden max-h-[70vh] overflow-y-auto"
-      >
-        <div
-          v-for="item in types"
-          :key="`${item.type}-${item.value}`"
-          class="p-3 border-b border-border hover:bg-surface-muted transition-colors"
-        >
-          <!-- 标题行：类型信息 + 编辑按钮 -->
-          <div class="flex justify-between items-center">
-            <div class="flex-1">
-              <h3
-                class="text-base font-medium text-foreground mb-1"
+        <!-- 第二组：支付方式/收款方式 -->
+        <div>
+          <h3 class="text-sm font-medium text-muted mb-3">
+            支付方式 / 收款方式
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="item in typeGroupPay"
+              :key="`${item.type}-${item.value}`"
+              type="button"
+              @click="openUpdateDialog(item)"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-secondary-100 text-secondary-700 dark:bg-secondary-900/40 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-800/50 transition-colors border border-secondary-200 dark:border-secondary-700/50"
+              title="点击编辑"
+            >
+              <span>{{ item.value }}</span>
+              <svg
+                class="w-3.5 h-3.5 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {{ item.value }}
-              </h3>
-              <p class="text-sm text-muted">
-                <span class="font-medium">分类:</span> {{ item.type }}
-              </p>
-            </div>
-
-            <!-- 编辑按钮 -->
-            <div class="flex items-center">
-              <button
-                @click="openUpdateDialog(item)"
-                class="p-2 text-primary-600 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition-colors"
-                title="编辑"
-              >
-                <svg
-                  class="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -309,12 +255,8 @@
             />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-foreground mb-2">
-          暂无类型数据
-        </h3>
-        <p class="text-muted">
-          请先添加一些流水记录，类型数据会自动生成
-        </p>
+        <h3 class="text-lg font-medium text-foreground mb-2">暂无类型数据</h3>
+        <p class="text-muted">请先添加一些流水记录，类型数据会自动生成</p>
       </div>
     </div>
 
@@ -341,8 +283,7 @@
         <!-- 对话框内容 -->
         <div class="px-6 py-4 space-y-4">
           <div>
-            <label
-              class="block text-sm font-medium text-foreground mb-2"
+            <label class="block text-sm font-medium text-foreground mb-2"
               >类型分类</label
             >
             <input
@@ -354,8 +295,7 @@
           </div>
 
           <div>
-            <label
-              class="block text-sm font-medium text-foreground mb-2"
+            <label class="block text-sm font-medium text-foreground mb-2"
               >原类型名称</label
             >
             <input
@@ -367,8 +307,7 @@
           </div>
 
           <div>
-            <label
-              class="block text-sm font-medium text-foreground mb-2"
+            <label class="block text-sm font-medium text-foreground mb-2"
               >新类型名称</label
             >
             <input
@@ -423,6 +362,16 @@ const typerOptions = ref<string[]>(["支出类型/收入类型", "支付方式/�
 const types = ref<Typer[]>([]);
 const allTypes = ref<Typer[]>([]);
 
+// 分组：收入/支出类型 与 支付/收款方式
+const TYPE_FLOW = "支出类型/收入类型";
+const TYPE_PAY = "支付方式/收款方式";
+const typeGroupFlow = computed(() =>
+  types.value.filter((t) => t.type === TYPE_FLOW),
+);
+const typeGroupPay = computed(() =>
+  types.value.filter((t) => t.type === TYPE_PAY),
+);
+
 const typeQueryRef = ref<Typer>({
   value: "",
 });
@@ -475,7 +424,6 @@ const doQuery = () => {
   doApi
     .post<Typer[]>("api/entry/flow/type/getAll", {
       ...typeQueryRef.value,
-      
     })
     .then((res) => {
       // console.log(res);
@@ -514,7 +462,7 @@ const hisFlowTypeConvert = async () => {
   console.log(typeRelationStore.value);
   for (let i = 0; i < types.value.length; i++) {
     let t = types.value[i];
-    if (t.type === "支出类型/收入类型") {
+    if (t && t.type === "支出类型/收入类型") {
       t.oldValue = t.value;
       console.log(t.value);
       const newValue = typeConvert(t.value);
@@ -525,7 +473,6 @@ const hisFlowTypeConvert = async () => {
         doConvert += `【${t.oldValue}】-->【${t.value}】`;
         const res = await doApi.post<any>("api/entry/flow/type/update", {
           ...t,
-          
         });
 
         if (res && res.count > 0) {
@@ -560,37 +507,4 @@ const clearFilters = () => {
 };
 </script>
 
-<style scoped>
-/* 自定义滚动条样式 */
-.overflow-x-auto::-webkit-scrollbar {
-  height: 6px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-  @apply bg-surface-muted;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted;
-}
-
-.overflow-y-auto::-webkit-scrollbar {
-  width: 6px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-  @apply bg-surface-muted;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted;
-}
-</style>
+<style scoped></style>
