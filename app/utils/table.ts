@@ -9,14 +9,15 @@ export interface SystemSetting {
   updateBy: Date;
 }
 
-// 用户表
+// 用户表（与 Prisma users 表一致）
 export interface User {
   id: number;
   username: string;
-  password: string;
+  password?: string;
   name?: string;
-  email: string;
-  createDate: Date;
+  email?: string | null;
+  roles?: string | null;
+  createAt: Date;
 }
 
 export interface Book {

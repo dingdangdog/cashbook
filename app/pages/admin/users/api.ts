@@ -1,28 +1,24 @@
-const prefiex = "api/admin/entry/users";
+const prefix = "api/admin/users";
 
 export const page = (
-  page: PageParam,
-  param: User,
+  pageParam: PageParam,
+  param: User | Record<string, unknown>,
 ): Promise<{ total: number; data: User[] }> => {
-  return doApi.post(`${prefiex}/page`, { ...page, ...param });
+  return doApi.post(`${prefix}/page`, { ...pageParam, ...param });
 };
 
-export const add = (data: User): Promise<string> => {
-  return doApi.post(`${prefiex}/add`, data);
+export const add = (data: { username: string; password: string; name?: string; email?: string; roles?: string }): Promise<User> => {
+  return doApi.post(`${prefix}/add`, data);
 };
 
 export const del = (id: number): Promise<string> => {
-  return doApi.post(`${prefiex}/del`, { id });
+  return doApi.post(`${prefix}/del`, { id });
 };
 
-export const update = (data: User): Promise<string> => {
-  return doApi.post(`${prefiex}/update`, data);
+export const update = (data: { id: number; name?: string; email?: string; roles?: string }): Promise<string> => {
+  return doApi.post(`${prefix}/update`, data);
 };
 
-export const list = (data: User): Promise<User[]> => {
-  return doApi.post(`${prefiex}/list`, data);
-};
-
-export const all = (): Promise<User[]> => {
-  return doApi.post(`${prefiex}/all`, {});
+export const changePassword = (userId: number, newPassword: string): Promise<string> => {
+  return doApi.post(`${prefix}/changePassword`, { userId, newPassword });
 };

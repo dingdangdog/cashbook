@@ -7,11 +7,13 @@ definePageMeta({
 import { del, page } from "./api";
 import { editInfoFlag } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
+import ChangePasswordDialog from "./ChangePasswordDialog.vue";
 import { generateMobileFriendlyPageNumbers } from "~/utils/common";
 import {
   PencilIcon,
   TrashIcon,
   PlusIcon,
+  KeyIcon,
   MagnifyingGlassIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -24,6 +26,8 @@ const loading = ref(false);
 
 const editItem = ref<User | any>();
 const editDialogTitle = ref("Title");
+const changePasswordUser = ref<User | null>(null);
+const showChangePassword = ref(false);
 
 const addItem = () => {
   editDialogTitle.value = "添加用户";
@@ -35,6 +39,11 @@ const editItemInfo = (item: User) => {
   editDialogTitle.value = "编辑用户";
   editItem.value = item;
   editInfoFlag.value = true;
+};
+
+const openChangePassword = (item: User) => {
+  changePasswordUser.value = item;
+  showChangePassword.value = true;
 };
 
 const cancelEdit = () => {};
@@ -211,7 +220,7 @@ onMounted(() => getPages());
                 {{ item.email || "-" }}
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
-                {{ formatDate(item.createDate) }}
+                {{ formatDate(item.createAt) }}
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
                 <div class="flex items-center gap-2">
@@ -221,6 +230,13 @@ onMounted(() => getPages());
                     title="编辑"
                   >
                     <PencilIcon class="h-4 w-4" />
+                  </button>
+                  <button
+                    @click="openChangePassword(item)"
+                    class="text-amber-600 hover:text-amber-500 transition-colors"
+                    title="改密码"
+                  >
+                    <KeyIcon class="h-4 w-4" />
                   </button>
                   <button
                     @click="toDelete(item)"
@@ -259,6 +275,13 @@ onMounted(() => getPages());
                 <PencilIcon class="h-3 w-3" />
               </button>
               <button
+                @click="openChangePassword(item)"
+                class="p-1.5 text-amber-600 hover:text-amber-500 rounded transition-colors"
+                title="改密码"
+              >
+                <KeyIcon class="h-3 w-3" />
+              </button>
+              <button
                 @click="toDelete(item)"
                 class="p-1.5 text-red-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                 title="删除"
@@ -269,7 +292,7 @@ onMounted(() => getPages());
           </div>
           <div class="space-y-1 text-sm text-muted">
             <p>ID: {{ item.id }} · Email: {{ item.email || "-" }}</p>
-            <p>创建时间: {{ formatDate(item.createDate) }}</p>
+            <p>创建时间: {{ formatDate(item.createAt) }}</p>
           </div>
         </div>
       </div>
@@ -377,6 +400,12 @@ onMounted(() => getPages());
       :title="editDialogTitle"
       @success="getPages"
       @cancel="cancelEdit"
+    />
+    <ChangePasswordDialog
+      :visible="showChangePassword"
+      :user="changePasswordUser"
+      @success="showChangePassword = false; changePasswordUser = null"
+      @cancel="showChangePassword = false; changePasswordUser = null"
     />
   </div>
 </template>
