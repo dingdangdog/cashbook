@@ -32,14 +32,11 @@ import prisma from "~~/server/lib/prisma";
  *           application/json:
  *             schema:
  *               Error: {
- *                 message: "请先选择账本" | "不支持的分组字段"
+ *                 message: "不支持的分组字段"
  *               }
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
-  if (!body.bookId) {
-    return error("请先选择账本");
-  }
 
   // 验证分组字段
   const allowedGroupFields = ["payType", "industryType", "attribution"];

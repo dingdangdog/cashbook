@@ -21,15 +21,20 @@ export interface PageParam {
   pageNum: number;
   pageSize: number;
 }
+/** 用户信息（与 Prisma User 对齐，含登录返回扩展） */
 export interface UserInfo {
   id: number;
   name: string;
   username: string;
-  createDate?: Date;
   createAt?: Date;
+  createDate?: Date; // 兼容旧字段
   email?: string | null;
   /** 角色，逗号分隔，如 "admin,user" */
   roles?: string | null;
+  /** 浅色主题编号 */
+  lightTheme?: string | null;
+  /** 深色主题编号 */
+  darkTheme?: string | null;
   /** 登录接口返回的 JWT，仅登录时存在 */
   token?: string;
 }
@@ -49,37 +54,47 @@ export interface MonthAnalysis {
 }
 
 /**
- * 创建流水的传输实体
+ * 创建流水的传输实体（与 Prisma Flow 字段对齐）
  */
 export interface CreateFlowDto {
   day?: string;
   flowType?: string;
-  bookId?: number | string;
-  type?: string;
+  industryType?: string;
   payType?: string;
   money?: number;
   name?: string;
   description?: string;
+  invoice?: string;
+  origin?: string;
+  attribution?: string;
+  eliminate?: number;
 }
 
 /**
- * 更新流水的传输实体
+ * 更新流水的传输实体（与 Prisma Flow 字段对齐）
  */
 export interface UpdateFlowDto {
   day?: string;
-  bookId?: number | string;
   flowType?: string;
-  type?: string;
+  industryType?: string;
   payType?: string;
   money?: number;
   name?: string;
   description?: string;
+  invoice?: string;
+  origin?: string;
+  attribution?: string;
+  eliminate?: number;
+  /** 兼容旧 API */
+  bookId?: number | string;
 }
 
+/** 流水分页/筛选查询（与 Prisma Flow 查询对齐，含扩展筛选） */
 export class FlowQuery {
   pageNum?: number = 1;
   pageSize?: number = 20;
   id?: string | number;
+  /** 兼容多账本 API */
   bookId?: string | number;
   startDay?: string;
   endDay?: string;
@@ -90,6 +105,8 @@ export class FlowQuery {
   attribution?: string;
   description?: string;
   moneySort?: string;
+  minMoney?: number;
+  maxMoney?: number;
 }
 
 export interface Server {

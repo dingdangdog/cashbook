@@ -31,20 +31,12 @@ import prisma from "~~/server/lib/prisma";
  *           application/json:
  *             schema:
  *               Error: {
- *                 message: "请先选择账本"
+ *                 message: "不支持的分组字段"
  *               }
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
-  if (!body.bookId) {
-    return error("请先选择账本");
-  }
-
-  const where: any = {
-    bookId: {
-      equals: body.bookId,
-    },
-  };
+  const where: any = {};
   if (body.flowType) {
     where.flowType = {
       equals: body.flowType,

@@ -33,14 +33,9 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
-  const { bookId, flowType } = await readBody(event); // 获取查询参数
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+  const { flowType } = await readBody(event); // 获取查询参数
 
-  const where: any = {
-    bookId,
-  }; // 条件查询
+  const where: any = {}; // 条件查询
 
   if (flowType) {
     where.flowType = {
@@ -110,7 +105,7 @@ export default defineEventHandler(async (event) => {
     groupedByDay[day].inSum = parseFloat(groupedByDay[day].inSum.toFixed(2));
     groupedByDay[day].outSum = parseFloat(groupedByDay[day].outSum.toFixed(2));
     groupedByDay[day].zeroSum = parseFloat(
-      groupedByDay[day].zeroSum.toFixed(2)
+      groupedByDay[day].zeroSum.toFixed(2),
     );
     datas.push(groupedByDay[day]);
   }

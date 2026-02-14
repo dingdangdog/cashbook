@@ -36,9 +36,6 @@ import prisma from "~~/server/lib/prisma";
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
-  if (!body.bookId) {
-    return error("请先选择账本");
-  }
 
   const where: any = {
     bookId: {

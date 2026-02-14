@@ -1,75 +1,66 @@
 <template>
-  <div class="w-full overflow-hidden">
-    <!-- Calendar Header -->
+  <div class="w-full overflow-hidden text-foreground">
+    <!-- Calendar Header：主题主色 -->
     <div
-      class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 dark:from-primary-800 dark:to-primary-900 text-white"
+      class="flex items-center justify-between px-4 py-3 bg-primary-600 dark:bg-primary-800 text-white rounded-t-lg"
     >
       <button
         @click="prevMonth"
-        class="p-1.5 rounded-md hover:bg-white/10 transition-colors duration-200"
+        class="p-1.5 rounded-md hover:bg-white/15 transition-colors duration-200"
       >
         <ChevronLeftIcon class="w-5 h-5" />
       </button>
-
       <h2 class="text-sm font-semibold flex-1 text-center">
         {{ currentMonthText }}
       </h2>
-
       <button
         @click="nextMonth"
-        class="p-1.5 rounded-md hover:bg-white/10 transition-colors duration-200"
+        class="p-1.5 rounded-md hover:bg-white/15 transition-colors duration-200"
       >
         <ChevronRightIcon class="w-5 h-5" />
       </button>
-
       <button
         @click="showAnalysis"
-        class="flex items-center gap-1 px-2.5 py-1.5 ml-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors duration-200"
+        class="flex items-center gap-1 px-2.5 py-1.5 ml-2 rounded-md bg-white/15 hover:bg-white/25 transition-colors duration-200"
       >
         <ChartBarIcon class="w-4 h-4" />
         <span class="text-xs font-medium">分析</span>
       </button>
     </div>
 
-    <!-- Weekday Headers -->
+    <!-- Weekday Headers：表面色 + 边框 -->
     <div
-      class="grid grid-cols-7 bg-primary-50 dark:bg-transparent border-b border-primary-200 dark:border-primary-900/30"
+      class="grid grid-cols-7 bg-surface-muted border-b border-border"
     >
       <div
         v-for="day in weekdays"
         :key="day"
-        class="py-3 text-center text-xs font-semibold text-primary-700 dark:text-primary-500/50 uppercase tracking-wide"
+        class="py-3 text-center text-xs font-semibold text-muted uppercase tracking-wide"
       >
         {{ day }}
       </div>
     </div>
 
-    <!-- Calendar Grid -->
-    <div class="grid grid-cols-7 gap-px bg-primary-200 dark:bg-black">
+    <!-- Calendar Grid：语义色与主题主色 -->
+    <div class="grid grid-cols-7 gap-px bg-border">
       <div
         v-for="date in calendarDates"
         :key="date.key"
-        class="min-h-20 p-1 flex flex-col relative transition-all duration-200 hover:bg-primary-50 dark:hover:bg-primary-800/20 border border-primary-50 dark:border-primary-900"
+        class="min-h-20 p-1 flex flex-col relative transition-all duration-200 border border-border hover:bg-surface-muted/80"
         :class="{
-          'bg-primary-50 dark:bg-transparent text-muted dark:text-primary-700':
-            !date.isCurrentMonth,
-          'bg-primary-100 dark:bg-primary-950/50':
-            date.isCurrentMonth && !date.isWeekend && !date.isToday,
-          'bg-primary-200 dark:bg-primary-800/50 border-2 border-primary-400 dark:border-primary-700':
-            date.isToday,
-          'bg-primary-50/50 dark:bg-primary-950/30':
-            date.isWeekend && date.isCurrentMonth,
+          'bg-surface-muted/70 text-muted': !date.isCurrentMonth,
+          'bg-surface': date.isCurrentMonth && !date.isWeekend && !date.isToday,
+          'bg-primary-50 dark:bg-primary-950/40 ring-2 ring-primary-500 ring-inset': date.isToday,
+          'bg-surface-muted/50': date.isWeekend && date.isCurrentMonth,
         }"
       >
-        <!-- Date and Add Button -->
         <div class="flex justify-between items-start mb-1">
           <span
             class="text-xs font-medium"
             :class="{
-              'text-primary-600 dark:text-primary-500/60 font-bold': date.isToday,
-              'text-foreground':
-                date.isCurrentMonth && !date.isToday,
-              'text-muted dark:text-primary-700/30': !date.isCurrentMonth,
+              'text-primary-600 dark:text-primary-400 font-bold': date.isToday,
+              'text-foreground': date.isCurrentMonth && !date.isToday,
+              'text-muted': !date.isCurrentMonth,
             }"
           >
             {{ date.day }}
@@ -77,15 +68,13 @@
           <button
             v-if="date.isCurrentMonth"
             @click="addFlow(date)"
-            class="w-4 h-4 rounded-full bg-primary-500 hover:bg-primary-600 dark:bg-primary-700 dark:hover:bg-primary-600 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-70 hover:opacity-100"
+            class="w-4 h-4 rounded-full bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-500 text-white flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
           >
             <PlusIcon class="w-3 h-3" />
           </button>
         </div>
 
-        <!-- Flow Data -->
         <div v-if="date.isCurrentMonth" class="flex flex-col gap-0.5 flex-1">
-          <!-- Expense -->
           <div
             v-if="getDateExpense(date.dateString)"
             @click="clickDay(date.dateString, '支出')"
@@ -95,11 +84,10 @@
             <ArrowUpIcon class="w-2.5 h-2.5" />
             <span>{{ getDateExpense(date.dateString).toFixed(0) }}</span>
           </div>
-          <!-- Income -->
           <div
             v-if="getDateIncome(date.dateString)"
             @click="clickDay(date.dateString, '收入')"
-            class="flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md bg-primary-100 dark:bg-transparent dark:border dark:border-primary-800/40 text-primary-700 dark:text-primary-500/60 hover:bg-primary-200 dark:hover:bg-primary-950/20"
+            class="flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium cursor-pointer transition-all duration-200 hover:-translate-y-0.5 border border-primary-200 dark:border-primary-700/50 bg-primary-100/80 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 hover:bg-primary-200/80 dark:hover:bg-primary-800/50"
           >
             <ArrowDownIcon class="w-2.5 h-2.5" />
             <span>{{ getDateIncome(date.dateString).toFixed(0) }}</span>
@@ -214,14 +202,15 @@ const getDateExpense = (dateString: string): number => {
 
 const getExpenseClass = (amount: number): string => {
   if (!amount || amount === 0) {
-    return "bg-primary-100/50 dark:bg-transparent dark:border dark:border-primary-800/30 text-muted dark:text-primary-500/50 hover:bg-primary-100 dark:hover:bg-primary-950/15";
-  } else if (amount >= 1000) {
-    return "bg-red-500 dark:bg-red-950/50 dark:border dark:border-red-900/40 text-white hover:bg-red-600 dark:hover:bg-red-950/60 shadow-lg";
-  } else if (amount >= 500) {
-    return "bg-orange-500 dark:bg-orange-950/50 dark:border dark:border-orange-900/40 text-white hover:bg-orange-600 dark:hover:bg-orange-950/60 shadow-lg";
-  } else {
-    return "bg-yellow-500 dark:bg-yellow-950/50 dark:border dark:border-yellow-900/40 text-white hover:bg-yellow-600 dark:hover:bg-yellow-950/60 shadow-lg";
+    return "bg-surface-muted border border-border text-muted hover:bg-surface-muted/80";
   }
+  if (amount >= 1000) {
+    return "bg-red-500 dark:bg-red-600/90 border border-red-400 dark:border-red-500/60 text-white hover:bg-red-600 dark:hover:bg-red-500/90";
+  }
+  if (amount >= 500) {
+    return "bg-orange-500 dark:bg-orange-600/90 border border-orange-400 dark:border-orange-500/60 text-white hover:bg-orange-600 dark:hover:bg-orange-500/90";
+  }
+  return "bg-amber-500 dark:bg-amber-600/90 border border-amber-400 dark:border-amber-500/60 text-white hover:bg-amber-600 dark:hover:bg-amber-500/90";
 };
 
 const prevMonth = () => {
