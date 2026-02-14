@@ -124,7 +124,7 @@ const auxiliaryMenuItems: Menu[] = [
   },
   {
     title: "接口文档",
-    path: "/api-docs",
+    path: "api-docs",
     icon: DocumentMagnifyingGlassIcon,
     color: "text-indigo-500",
   },
@@ -154,6 +154,10 @@ const handleNavigate = (menu: Menu) => {
   } else if (menu.path === "documentation") {
     // 打开文档站，可以根据需要修改为实际的文档URL
     window.open("https://doc.cashbook.oldmoon.top", "_blank");
+    return;
+  } else if (menu.path === "api-docs") {
+    // 打开文档站，可以根据需要修改为实际的文档URL
+    window.open("https://doc.cashbook.oldmoon.top/api-docs", "_blank");
     return;
   }
   // emit("navigate", menu.path || "calendar");
@@ -228,7 +232,9 @@ const handleNavigate = (menu: Menu) => {
               :is="item.icon"
               :class="[
                 'h-5 w-5 mr-3 shrink-0',
-                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
+                isActive(item.path)
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-muted',
               ]"
             />
             <i
@@ -236,10 +242,15 @@ const handleNavigate = (menu: Menu) => {
               :class="[
                 item.icon,
                 'text-base mr-3 shrink-0',
-                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
+                isActive(item.path)
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-muted',
               ]"
             ></i>
-            <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
+            <span
+              :class="isActive(item.path) ? 'font-semibold' : 'font-medium'"
+              >{{ item.title }}</span
+            >
           </button>
         </div>
 
@@ -268,7 +279,9 @@ const handleNavigate = (menu: Menu) => {
                 :is="item.icon"
                 :class="[
                   'h-5 w-5 mr-3 shrink-0',
-                  isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
+                  isActive(item.path)
+                    ? 'text-primary-600 dark:text-primary-400'
+                    : 'text-muted',
                 ]"
               />
               <i
@@ -276,10 +289,15 @@ const handleNavigate = (menu: Menu) => {
                 :class="[
                   item.icon,
                   'text-base mr-3 shrink-0',
-                  isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
+                  isActive(item.path)
+                    ? 'text-primary-600 dark:text-primary-400'
+                    : 'text-muted',
                 ]"
               ></i>
-              <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
+              <span
+                :class="isActive(item.path) ? 'font-semibold' : 'font-medium'"
+                >{{ item.title }}</span
+              >
             </button>
           </div>
         </template>
@@ -308,7 +326,9 @@ const handleNavigate = (menu: Menu) => {
               :is="item.icon"
               :class="[
                 'h-5 w-5 mr-3 shrink-0',
-                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
+                isActive(item.path)
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-muted',
               ]"
             />
             <i
@@ -316,10 +336,15 @@ const handleNavigate = (menu: Menu) => {
               :class="[
                 item.icon,
                 'text-base mr-3 shrink-0',
-                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
+                isActive(item.path)
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-muted',
               ]"
             ></i>
-            <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
+            <span
+              :class="isActive(item.path) ? 'font-semibold' : 'font-medium'"
+              >{{ item.title }}</span
+            >
           </button>
         </div>
       </nav>
