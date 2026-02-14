@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: "admin",
+  layout: "public",
   middleware: ["admin"],
 });
 
@@ -36,8 +36,8 @@ onMounted(() => load());
     <div
       class="bg-surface rounded-lg shadow-sm border border-border overflow-hidden"
     >
-      <div class="px-4 py-3 border-b border-border">
-        <h2 class="text-lg font-medium text-foreground">系统配置</h2>
+      <div class="px-4 py-3 border-b border-border bg-surface-muted/50">
+        <h2 class="text-lg font-semibold text-foreground">系统配置</h2>
         <p class="text-sm text-muted mt-0.5">站点标题、描述、注册开关等</p>
       </div>
 
@@ -56,7 +56,7 @@ onMounted(() => load());
           <input
             v-model="settings.title"
             type="text"
-            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             placeholder="请输入站点标题"
           />
         </div>
@@ -67,7 +67,7 @@ onMounted(() => load());
           <textarea
             v-model="settings.description"
             rows="3"
-            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none transition-colors"
             placeholder="请输入站点描述"
           />
         </div>
@@ -78,7 +78,7 @@ onMounted(() => load());
           <textarea
             v-model="settings.keywords"
             rows="2"
-            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none transition-colors"
             placeholder="关键词，逗号分隔"
           />
         </div>
@@ -89,7 +89,7 @@ onMounted(() => load());
           <input
             v-model="settings.version"
             type="text"
-            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             placeholder="如 1.0.0"
           />
         </div>
@@ -99,7 +99,7 @@ onMounted(() => load());
           </label>
           <select
             v-model="settings.openRegister"
-            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           >
             <option :value="true">开放</option>
             <option :value="false">不开放</option>
@@ -111,11 +111,11 @@ onMounted(() => load());
         >
           最后更新：{{ formatDate(settings.updateAt) }}
         </div>
-        <div class="flex justify-end pt-4">
+        <div class="flex justify-end pt-4 border-t border-border">
           <button
             @click="save"
             :disabled="saving"
-            class="px-4 py-2 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-2"
+            class="px-4 py-2 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white rounded-lg transition-colors duration-200 font-medium flex items-center gap-2"
           >
             <span
               v-if="saving"

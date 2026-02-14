@@ -145,7 +145,8 @@ const handleNavigate = (menu: Menu) => {
     window.open("https://doc.cashbook.oldmoon.top", "_blank");
     return;
   }
-  emit("navigate", menu.path || "calendar");
+  // emit("navigate", menu.path || "calendar");
+  navigateTo(menu.path || "/");
   // navigateTo({ path: `/${menu.path}` });
   if (props.isMobile) {
     emit("close");

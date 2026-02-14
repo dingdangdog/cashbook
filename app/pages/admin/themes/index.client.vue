@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: "admin",
+  layout: "public",
   middleware: ["admin"],
 });
 
@@ -114,8 +114,8 @@ onMounted(() => getPages());
     <div
       class="bg-surface rounded-lg shadow-sm border border-border p-2 mb-2 md:mb-4"
     >
-      <div class="flex flex-col lg:flex-row gap-2">
-        <div class="flex space-x-2">
+      <div class="flex flex-col sm:flex-row gap-2 justify-between">
+        <div class="flex flex-wrap gap-2">
           <div class="relative">
             <MagnifyingGlassIcon
               class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted"
@@ -124,7 +124,7 @@ onMounted(() => getPages());
               v-model="query.code"
               type="text"
               placeholder="编码..."
-              class="w-full max-w-40 pl-10 pr-4 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+              class="w-full max-w-40 pl-10 pr-4 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
               @keyup.enter="getPages"
             />
           </div>
@@ -132,12 +132,12 @@ onMounted(() => getPages());
             v-model="query.name"
             type="text"
             placeholder="名称..."
-            class="w-full max-w-40 px-4 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500"
+            class="w-full max-w-40 px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
             @keyup.enter="getPages"
           />
           <select
             v-model="query.mode"
-            class="px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:ring-2 focus:ring-primary-500"
+            class="px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
           >
             <option value="">全部模式</option>
             <option value="light">light</option>
@@ -145,7 +145,7 @@ onMounted(() => getPages());
           </select>
           <select
             v-model="query.isActive"
-            class="px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:ring-2 focus:ring-primary-500"
+            class="px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
           >
             <option value="">启用状态</option>
             <option value="true">启用</option>
@@ -153,16 +153,16 @@ onMounted(() => getPages());
           </select>
           <button
             @click="getPages"
-            class="px-3 py-1 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <MagnifyingGlassIcon class="h-4 w-4" />
             查询
           </button>
         </div>
-        <div class="flex flex-wrap gap-2 lg:flex-nowrap">
+        <div class="flex flex-wrap gap-2">
           <button
             @click="addItem"
-            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
             <PlusIcon class="h-4 w-4" />
             新增主题
@@ -181,7 +181,7 @@ onMounted(() => getPages());
 
       <div
         v-if="!loading && tabledata.data?.length"
-        class="hidden lg:block max-h-[70vh] overflow-y-auto"
+        class="hidden lg:block max-h-[80vh] overflow-y-auto"
       >
         <table class="w-full">
           <thead>
@@ -192,47 +192,47 @@ onMounted(() => getPages());
                 编码
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 名称
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 模式
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 启用
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 默认
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 排序
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 创建时间
               </th>
               <th
-                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 操作
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-border">
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
             <tr
               v-for="item in tabledata.data"
               :key="item.id"
-              class="hover:bg-surface-muted transition-colors"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
                 {{ item.code }}
@@ -289,12 +289,12 @@ onMounted(() => getPages());
 
       <div
         v-if="!loading && tabledata.data?.length"
-        class="lg:hidden max-h-[60vh] overflow-y-auto"
+        class="lg:hidden max-h-[70vh] overflow-y-auto"
       >
         <div
           v-for="item in tabledata.data"
           :key="item.id"
-          class="bg-surface-muted p-3 space-y-2 border-b border-border last:border-b-0"
+          class="p-3 border-b border-border hover:bg-surface-muted transition-colors last:border-b-0"
         >
           <div class="flex justify-between items-center mb-2">
             <h3 class="text-base font-medium text-foreground flex-1">
@@ -342,9 +342,10 @@ onMounted(() => getPages());
           </svg>
         </div>
         <h3 class="text-lg font-medium text-foreground mb-2">暂无主题数据</h3>
+        <p class="text-muted mb-4">添加主题后可在此管理</p>
         <button
           @click="addItem"
-          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors inline-flex items-center gap-2"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 font-medium inline-flex items-center gap-2"
         >
           <PlusIcon class="h-4 w-4" />
           添加主题
@@ -425,3 +426,18 @@ onMounted(() => getPages());
     />
   </div>
 </template>
+
+<style scoped>
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  @apply bg-surface-muted;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted;
+}
+</style>

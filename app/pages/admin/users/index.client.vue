@@ -1,15 +1,23 @@
 <script setup lang="ts">
-// 需要登录
 definePageMeta({
-  layout: "admin",
+  layout: "public",
   middleware: ["admin"],
 });
 
 import { del, page } from "./api";
 import { editInfoFlag } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
+import { generateMobileFriendlyPageNumbers } from "~/utils/common";
+import {
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/vue/24/outline";
 
-const pageQuery = ref<PageParam>({ pageSize: 10, pageNum: 1 });
+const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
 const query = ref<User | any>({});
 const tabledata = ref<{ total?: number; data?: User[] }>({});
 const loading = ref(false);
@@ -17,24 +25,19 @@ const loading = ref(false);
 const editItem = ref<User | any>();
 const editDialogTitle = ref("Title");
 
-// 新增
 const addItem = () => {
   editDialogTitle.value = "添加用户";
   editItem.value = {};
   editInfoFlag.value = true;
 };
 
-// 编辑基本信息
 const editItemInfo = (item: User) => {
   editDialogTitle.value = "编辑用户";
   editItem.value = item;
   editInfoFlag.value = true;
 };
 
-// 取消编辑的回调
-const cancelEdit = () => {
-  // cancel hook
-};
+const cancelEdit = () => {};
 
 const toDelete = (item: User) => {
   Confirm.open({
@@ -42,268 +45,189 @@ const toDelete = (item: User) => {
     content: `确定要删除用户【${item.name || item.username}】吗？`,
     confirm: () => {
       del(item.id)
-        .then((res) => {
+        .then(() => {
           Alert.success("删除成功");
           getPages();
         })
-        .catch(() => {
-          Alert.error("删除失败");
-        });
+        .catch(() => Alert.error("删除失败"));
     },
-    cancel: () => {
-      Alert.info("取消删除");
-    },
+    cancel: () => Alert.info("取消删除"),
   });
 };
 
 const getPages = () => {
   loading.value = true;
-  page(pageQuery.value, query.value).then((res) => {
-    tabledata.value = res;
-    loading.value = false;
-  });
+  page(pageQuery.value, query.value)
+    .then((res) => (tabledata.value = res))
+    .finally(() => (loading.value = false));
 };
 
-const changePage = (newPage: number) => {
-  pageQuery.value.pageNum = newPage;
+const changePage = (pageNum: number) => {
+  pageQuery.value.pageNum = pageNum;
   getPages();
 };
 
-const changePageSize = (newSize: number) => {
-  pageQuery.value.pageSize = newSize;
+const changePageSize = (pageSize: number | string) => {
+  pageQuery.value.pageSize = Number(pageSize);
   pageQuery.value.pageNum = 1;
   getPages();
 };
 
-// 计算分页信息
-const totalPages = computed(() => {
-  return Math.ceil((tabledata.value.total || 0) / pageQuery.value.pageSize);
-});
+const totalPages = computed(() =>
+  Math.ceil((tabledata.value?.total || 0) / pageQuery.value.pageSize)
+);
+const mobileFriendlyPageNumbers = computed(() =>
+  generateMobileFriendlyPageNumbers(
+    pageQuery.value.pageNum,
+    totalPages.value,
+    3
+  )
+);
 
-const startItem = computed(() => {
-  return (pageQuery.value.pageNum - 1) * pageQuery.value.pageSize + 1;
-});
-
-const endItem = computed(() => {
-  const end = pageQuery.value.pageNum * pageQuery.value.pageSize;
-  return Math.min(end, tabledata.value.total || 0);
-});
-
-// 初始化
-onMounted(() => {
-  getPages();
-});
+onMounted(() => getPages());
 </script>
 
 <template>
-  <div class="space-y-4">
-    <!-- 搜索区域 -->
+  <div class="p-2 md:p-4 bg-surface-muted min-h-full">
+    <!-- 操作栏 -->
     <div
-      class="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-gray-700 px-4 py-2"
+      class="bg-surface rounded-lg shadow-sm border border-border p-2 mb-2 md:mb-4"
     >
-      <div class="flex flex-col lg:flex-row gap-4 items-end">
-        <!-- 搜索输入框 -->
-        <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input
-            v-model="query.id"
-            type="text"
-            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="用户ID"
-          />
+      <div class="flex flex-col sm:flex-row gap-2 justify-between">
+        <div class="flex flex-wrap gap-2">
+          <div class="relative">
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted"
+            />
+            <input
+              v-model="query.id"
+              type="text"
+              placeholder="用户ID..."
+              class="w-full max-w-32 pl-10 pr-4 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+              @keyup.enter="getPages"
+            />
+          </div>
           <input
             v-model="query.name"
             type="text"
-            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="用户名称"
+            placeholder="用户名称..."
+            class="w-full max-w-36 px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+            @keyup.enter="getPages"
           />
           <input
             v-model="query.username"
             type="text"
-            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="账号"
+            placeholder="账号..."
+            class="w-full max-w-36 px-3 py-2 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+            @keyup.enter="getPages"
           />
-        </div>
-
-        <!-- 操作按钮 -->
-        <div class="flex gap-3">
           <button
             @click="getPages"
-            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
-            <span>查询</span>
+            <MagnifyingGlassIcon class="h-4 w-4" />
+            查询
           </button>
+        </div>
+        <div class="flex flex-wrap gap-2">
           <button
-            @click="addItem()"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center space-x-2"
+            @click="addItem"
+            class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
           >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              ></path>
-            </svg>
-            <span>新增用户</span>
+            <PlusIcon class="h-4 w-4" />
+            新增用户
           </button>
         </div>
       </div>
     </div>
 
-    <!-- 数据表格 -->
+    <!-- 数据表格容器 -->
     <div
-      class="bg-gray-800/60 backdrop-blur-sm rounded-lg border border-gray-700 overflow-hidden"
+      class="bg-surface shadow-sm border border-border overflow-hidden"
     >
-      <!-- 表格头部 -->
-      <div class="px-6 py-4 border-b border-gray-700">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-white">用户列表</h3>
-          <div class="text-sm text-gray-400">
-            共 {{ tabledata.total || 0 }} 条记录
-          </div>
-        </div>
+      <div v-if="loading" class="flex justify-center items-center py-12">
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"
+        ></div>
+        <span class="ml-2 text-muted">加载中...</span>
       </div>
 
-      <!-- 加载状态 -->
-      <div v-if="loading" class="flex items-center justify-center py-12">
-        <div class="flex items-center space-x-2 text-gray-400">
-          <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <span>加载中...</span>
-        </div>
-      </div>
-
-      <!-- 表格内容 -->
+      <!-- 桌面端表格 -->
       <div
-        v-else-if="tabledata.data && tabledata.data.length > 0"
-        class="overflow-x-auto"
+        v-if="!loading && tabledata.data?.length"
+        class="hidden lg:block max-h-[80vh] overflow-y-auto"
       >
         <table class="w-full">
-          <thead class="bg-gray-700/50">
-            <tr>
+          <thead>
+            <tr class="bg-surface-muted border-b border-border">
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-muted uppercase tracking-wider"
               >
                 用户ID
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 用户昵称
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 用户账号
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 Email
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 创建时间
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                class="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 操作
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-700">
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
             <tr
               v-for="item in tabledata.data"
               :key="item.id"
-              class="hover:bg-gray-700/30 transition-colors"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
                 {{ item.id }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
                 {{ item.name || "-" }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
                 {{ item.username }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
                 {{ item.email || "-" }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-foreground">
                 {{ formatDate(item.createDate) }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex items-center space-x-2">
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center gap-2">
                   <button
                     @click="editItemInfo(item)"
-                    class="text-blue-400 hover:text-blue-300 transition-colors"
+                    class="text-primary-600 hover:text-primary-500 transition-colors"
                     title="编辑"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      ></path>
-                    </svg>
+                    <PencilIcon class="h-4 w-4" />
                   </button>
                   <button
                     @click="toDelete(item)"
-                    class="text-red-400 hover:text-red-300 transition-colors"
+                    class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                     title="删除"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      ></path>
-                    </svg>
+                    <TrashIcon class="h-4 w-4" />
                   </button>
                 </div>
               </td>
@@ -312,102 +236,162 @@ onMounted(() => {
         </table>
       </div>
 
-      <!-- 空状态 -->
-      <div v-else class="flex flex-col items-center justify-center py-12">
-        <svg
-          class="w-12 h-12 text-gray-500 mb-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      <!-- 移动端卡片 -->
+      <div
+        v-if="!loading && tabledata.data?.length"
+        class="lg:hidden max-h-[70vh] overflow-y-auto"
+      >
+        <div
+          v-for="item in tabledata.data"
+          :key="item.id"
+          class="p-3 border-b border-border hover:bg-surface-muted transition-colors last:border-b-0"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-          ></path>
-        </svg>
-        <p class="text-gray-400 text-lg mb-2">暂无数据</p>
-        <p class="text-gray-500 text-sm">没有找到符合条件的用户</p>
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-base font-medium text-foreground flex-1">
+              {{ item.name || item.username }} ({{ item.username }})
+            </h3>
+            <div class="flex items-center gap-1">
+              <button
+                @click="editItemInfo(item)"
+                class="p-1.5 text-primary-600 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition-colors"
+                title="编辑"
+              >
+                <PencilIcon class="h-3 w-3" />
+              </button>
+              <button
+                @click="toDelete(item)"
+                class="p-1.5 text-red-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                title="删除"
+              >
+                <TrashIcon class="h-3 w-3" />
+              </button>
+            </div>
+          </div>
+          <div class="space-y-1 text-sm text-muted">
+            <p>ID: {{ item.id }} · Email: {{ item.email || "-" }}</p>
+            <p>创建时间: {{ formatDate(item.createDate) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 空状态 -->
+      <div
+        v-if="!loading && (!tabledata.data || tabledata.data.length === 0)"
+        class="text-center py-12"
+      >
+        <div class="text-muted mb-4">
+          <svg
+            class="mx-auto h-12 w-12"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-foreground mb-2">暂无用户数据</h3>
+        <p class="text-muted mb-4">没有找到符合条件的用户</p>
+        <button
+          @click="addItem"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 font-medium inline-flex items-center gap-2"
+        >
+          <PlusIcon class="h-4 w-4" />
+          新增用户
+        </button>
       </div>
 
       <!-- 分页 -->
       <div
-        v-if="tabledata.data && tabledata.data.length > 0"
-        class="px-6 py-4 border-t border-gray-700"
+        v-if="!loading && tabledata.data?.length && totalPages > 1"
+        class="px-4 py-3 bg-surface-muted border-t border-border"
       >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span class="text-sm text-gray-400">每页显示</span>
-            <select
-              :value="pageQuery.pageSize"
-              @change="
-                changePageSize(
-                  parseInt(($event.target as HTMLSelectElement).value)
-                )
-              "
-              class="px-2 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
-            <span class="text-sm text-gray-400"
-              >条，共 {{ tabledata.total }} 条</span
-            >
+        <div class="flex flex-col gap-4">
+          <div class="text-sm text-foreground text-center">
+            显示第 {{ (pageQuery.pageNum - 1) * pageQuery.pageSize + 1 }} -
+            {{
+              Math.min(
+                pageQuery.pageNum * pageQuery.pageSize,
+                tabledata.total || 0
+              )
+            }}
+            条，共 {{ tabledata.total || 0 }} 条
           </div>
-
-          <div class="flex items-center space-x-2">
-            <span class="text-sm text-gray-400">
-              第 {{ startItem }}-{{ endItem }} 条，共 {{ totalPages }} 页
-            </span>
-            <div class="flex items-center space-x-1">
-              <button
-                @click="changePage(1)"
-                :disabled="pageQuery.pageNum === 1"
-                class="px-2 py-1 text-sm bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded transition-colors"
-              >
-                首页
-              </button>
+          <div class="flex items-center justify-center gap-4">
+            <select
+              v-model="pageQuery.pageSize"
+              @change="changePageSize(pageQuery.pageSize)"
+              class="text-sm border border-border rounded px-2 py-1 bg-surface text-foreground"
+            >
+              <option value="10">10条/页</option>
+              <option value="15">15条/页</option>
+              <option value="20">20条/页</option>
+              <option value="50">50条/页</option>
+            </select>
+            <div class="flex items-center gap-1">
               <button
                 @click="changePage(pageQuery.pageNum - 1)"
-                :disabled="pageQuery.pageNum === 1"
-                class="px-2 py-1 text-sm bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded transition-colors"
+                :disabled="pageQuery.pageNum <= 1"
+                class="p-1.5 sm:p-2 border border-border rounded hover:bg-surface-muted disabled:opacity-50 bg-surface text-foreground"
               >
-                上一页
+                <ChevronLeftIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
-              <span class="px-3 py-1 text-sm bg-blue-600 text-white rounded">
-                {{ pageQuery.pageNum }}
-              </span>
+              <template
+                v-for="(p, index) in mobileFriendlyPageNumbers"
+                :key="index"
+              >
+                <button
+                  v-if="p !== '...'"
+                  @click="changePage(Number(p))"
+                  :class="[
+                    'h-7 w-7 sm:h-8 sm:w-8 text-center text-xs sm:text-sm border rounded',
+                    p === pageQuery.pageNum
+                      ? 'bg-primary-600 text-white border-primary-600'
+                      : 'border-border hover:bg-surface-muted bg-surface text-foreground',
+                  ]"
+                >
+                  {{ p }}
+                </button>
+                <span v-else class="px-1 text-muted text-xs">...</span>
+              </template>
               <button
                 @click="changePage(pageQuery.pageNum + 1)"
-                :disabled="pageQuery.pageNum === totalPages"
-                class="px-2 py-1 text-sm bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded transition-colors"
+                :disabled="pageQuery.pageNum >= totalPages"
+                class="p-1.5 sm:p-2 border border-border rounded hover:bg-surface-muted disabled:opacity-50 bg-surface text-foreground"
               >
-                下一页
-              </button>
-              <button
-                @click="changePage(totalPages)"
-                :disabled="pageQuery.pageNum === totalPages"
-                class="px-2 py-1 text-sm bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded transition-colors"
-              >
-                尾页
+                <ChevronRightIcon class="h-3 w-3 sm:h-4 sm:w-4" />
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <EditInfoDialog
-    :item="editItem"
-    :title="editDialogTitle"
-    @success="getPages"
-    @cancel="cancelEdit"
-    v-if="editInfoFlag"
-  />
+    <EditInfoDialog
+      v-if="editInfoFlag"
+      :item="editItem"
+      :title="editDialogTitle"
+      @success="getPages"
+      @cancel="cancelEdit"
+    />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  @apply bg-surface-muted;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted;
+}
+</style>
