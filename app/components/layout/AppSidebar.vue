@@ -138,6 +138,15 @@ const auxiliaryMenuItems: Menu[] = [
 
 const isAdmin = computed(() => userStore.isAdmin);
 
+/** 规范化当前路径（父组件可能传 "user/flows" 或 "/user/flows"），与 item.path 统一比较 */
+const normalizedCurrentPath = computed(() => {
+  const p = props.currentPath?.trim() || "";
+  return p.startsWith("/") ? p : p ? `/${p}` : "";
+});
+
+const isActive = (itemPath: string | undefined) =>
+  itemPath ? normalizedCurrentPath.value === itemPath : false;
+
 const handleNavigate = (menu: Menu) => {
   if (menu.path === "github") {
     window.open("https://github.com/dingdangdog/cashbook", "_blank");
@@ -208,10 +217,10 @@ const handleNavigate = (menu: Menu) => {
             :key="item.path"
             @click="handleNavigate(item)"
             :class="[
-              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
-              currentPath === item.path
-                ? 'bg-surface text-primary-700 border border-border'
-                : 'text-foreground/80 hover:bg-surface',
+              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+              isActive(item.path)
+                ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
+                : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
             ]"
           >
             <component
@@ -219,7 +228,7 @@ const handleNavigate = (menu: Menu) => {
               :is="item.icon"
               :class="[
                 'h-5 w-5 mr-3 shrink-0',
-                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
               ]"
             />
             <i
@@ -227,10 +236,10 @@ const handleNavigate = (menu: Menu) => {
               :class="[
                 item.icon,
                 'text-base mr-3 shrink-0',
-                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
               ]"
             ></i>
-            <span class="font-medium">{{ item.title }}</span>
+            <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
           </button>
         </div>
 
@@ -248,10 +257,10 @@ const handleNavigate = (menu: Menu) => {
               :key="item.path"
               @click="handleNavigate(item)"
               :class="[
-                'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
-                currentPath === item.path
-                  ? 'bg-surface text-primary-700 border border-border'
-                  : 'text-foreground/80 hover:bg-surface',
+                'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+                isActive(item.path)
+                  ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
+                  : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
               ]"
             >
               <component
@@ -259,7 +268,7 @@ const handleNavigate = (menu: Menu) => {
                 :is="item.icon"
                 :class="[
                   'h-5 w-5 mr-3 shrink-0',
-                  currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                  isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
                 ]"
               />
               <i
@@ -267,10 +276,10 @@ const handleNavigate = (menu: Menu) => {
                 :class="[
                   item.icon,
                   'text-base mr-3 shrink-0',
-                  currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                  isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
                 ]"
               ></i>
-              <span class="font-medium">{{ item.title }}</span>
+              <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
             </button>
           </div>
         </template>
@@ -288,10 +297,10 @@ const handleNavigate = (menu: Menu) => {
             :key="item.path"
             @click="handleNavigate(item)"
             :class="[
-              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors duration-200 outline-none',
-              currentPath === item.path
-                ? 'bg-surface text-primary-700 border border-border'
-                : 'text-foreground/80 hover:bg-surface',
+              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+              isActive(item.path)
+                ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
+                : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
             ]"
           >
             <component
@@ -299,7 +308,7 @@ const handleNavigate = (menu: Menu) => {
               :is="item.icon"
               :class="[
                 'h-5 w-5 mr-3 shrink-0',
-                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
               ]"
             />
             <i
@@ -307,10 +316,10 @@ const handleNavigate = (menu: Menu) => {
               :class="[
                 item.icon,
                 'text-base mr-3 shrink-0',
-                currentPath === item.path ? 'text-primary-600' : 'text-muted',
+                isActive(item.path) ? 'text-primary-600 dark:text-primary-400' : 'text-muted',
               ]"
             ></i>
-            <span class="font-medium">{{ item.title }}</span>
+            <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
           </button>
         </div>
       </nav>

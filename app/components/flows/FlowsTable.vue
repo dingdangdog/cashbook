@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface text-foreground shadow-sm border border-border overflow-hidden rounded-md md:rounded-lg"
+    class="bg-surface text-foreground shadow-sm border border-border overflow-hidden rounded-sm"
   >
     <!-- 桌面端表格 -->
     <div class="hidden md:block max-h-[68vh] overflow-y-auto">
