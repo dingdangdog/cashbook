@@ -17,7 +17,9 @@
         >
           <div class="flex-1 flex md:justify-between gap-2">
             <div>
-              <h3 class="text-lg font-semibold">自动平账候选数据</h3>
+              <h3 class="text-base md:text-lg font-semibold">
+                自动平账候选数据
+              </h3>
               <p class="text-xs text-foreground/60">
                 一般用于清理支付后又退款等无效数据
               </p>
@@ -95,19 +97,13 @@
           <div class="text-foreground/40 mb-4">
             <AdjustmentsHorizontalIcon class="mx-auto h-12 w-12" />
           </div>
-          <h3 class="text-lg font-medium mb-2">
-            暂无平账候选数据
-          </h3>
-          <p class="text-foreground/60">
-            系统未发现可以自动平账的数据
-          </p>
+          <h3 class="text-lg font-medium mb-2">暂无平账候选数据</h3>
+          <p class="text-foreground/60">系统未发现可以自动平账的数据</p>
         </div>
 
         <!-- 桌面端表格 -->
         <div v-else class="hidden lg:block h-full max-h-[60vh] overflow-y-auto">
-          <table
-            class="min-w-full divide-y divide-border"
-          >
+          <table class="min-w-full divide-y divide-border">
             <thead class="bg-surface-muted sticky top-0 z-10">
               <tr>
                 <!-- 左侧数据列组 -->
@@ -204,17 +200,11 @@
                 </th>
               </tr>
             </thead>
-            <tbody
-              class="bg-surface divide-y divide-border"
-            >
+            <tbody class="bg-surface divide-y divide-border">
               <tr
                 v-for="(pair, index) in candidatePairs"
                 :key="index"
-                :class="
-                  index % 2 === 0
-                    ? 'bg-surface-muted/50'
-                    : 'bg-surface'
-                "
+                :class="index % 2 === 0 ? 'bg-surface-muted/50' : 'bg-surface'"
                 class="hover:bg-surface-muted transition-colors"
               >
                 <!-- 左侧数据 -->
@@ -225,8 +215,8 @@
                       pair.out.flowType === '支出'
                         ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.out.flowType === '收入'
-                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                        : 'bg-surface-muted text-foreground/70 border-border',
+                          ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                          : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ pair.out.flowType }}
@@ -239,8 +229,8 @@
                       pair.out.flowType === '支出'
                         ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.out.flowType === '收入'
-                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                        : 'bg-surface-muted text-foreground/70 border-border',
+                          ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                          : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ Number(pair.out.money).toFixed(2) }}
@@ -252,20 +242,14 @@
                 >
                   {{ pair.out.name }}
                 </td>
-                <td
-                  class="px-3 py-3 text-sm text-center"
-                >
+                <td class="px-3 py-3 text-sm text-center">
                   {{ pair.out.payType }}
                 </td>
-                <td
-                  class="px-3 py-3 text-sm text-center"
-                >
+                <td class="px-3 py-3 text-sm text-center">
                   {{ pair.out.industryType }}
                 </td>
-                <td
-                  class="px-3 py-3 text-sm text-center"
-                >
-                  {{ pair.out.day }}
+                <td class="px-3 py-3 text-sm text-center">
+                  {{ formatDay(pair.out.day) }}
                 </td>
                 <!-- 操作列 -->
                 <td class="px-3 py-3 text-center">
@@ -296,19 +280,13 @@
                   />
                 </td>
                 <!-- 右侧数据 -->
-                <td
-                  class="px-3 py-3 text-sm text-center"
-                >
-                  {{ pair.in.day }}
+                <td class="px-3 py-3 text-sm text-center">
+                  {{ formatDay(pair.in.day) }}
                 </td>
-                <td
-                  class="px-3 py-3 text-sm text-center"
-                >
+                <td class="px-3 py-3 text-sm text-center">
                   {{ pair.in.industryType }}
                 </td>
-                <td
-                  class="px-3 py-3 text-sm text-center"
-                >
+                <td class="px-3 py-3 text-sm text-center">
                   {{ pair.in.payType }}
                 </td>
                 <td
@@ -324,8 +302,8 @@
                       pair.in.flowType === '支出'
                         ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.in.flowType === '收入'
-                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                        : 'bg-surface-muted text-foreground/70 border-border',
+                          ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                          : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ Number(pair.in.money).toFixed(2) }}
@@ -338,8 +316,8 @@
                       pair.in.flowType === '支出'
                         ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : pair.in.flowType === '收入'
-                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                        : 'bg-surface-muted text-foreground/70 border-border',
+                          ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                          : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ pair.in.flowType }}
@@ -411,7 +389,8 @@
                         :class="{
                           'text-red-600': pair.out.flowType === '支出',
                           'text-primary-600': pair.out.flowType === '收入',
-                          'text-foreground/70': pair.out.flowType === '不计收支',
+                          'text-foreground/70':
+                            pair.out.flowType === '不计收支',
                         }"
                         >{{ Number(pair.out.money).toFixed(2) }}</span
                       >
@@ -426,29 +405,23 @@
                     </div>
                     <div class="flex justify-between items-center">
                       <span class="text-foreground/60 text-[10px]">类型</span>
-                      <span
-                        class="text-[10px] truncate max-w-[60%]"
-                        >{{ pair.out.industryType }}</span
-                      >
+                      <span class="text-[10px] truncate max-w-[60%]">{{
+                        pair.out.industryType
+                      }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                      <span
-                        class="text-foreground/60 text-[10px]"
-                        >{{
-                          pair.out.flowType === "收入" ? "收款" : "支付"
-                        }}</span
-                      >
-                      <span
-                        class="text-[10px] truncate max-w-[60%]"
-                        >{{ pair.out.payType }}</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">{{
+                        pair.out.flowType === "收入" ? "收款" : "支付"
+                      }}</span>
+                      <span class="text-[10px] truncate max-w-[60%]">{{
+                        pair.out.payType
+                      }}</span>
                     </div>
                     <div class="flex justify-between items-center">
                       <span class="text-foreground/60 text-[10px]">日期</span>
-                      <span
-                        class="text-[10px]"
-                        >{{ pair.out.day }}</span
-                      >
+                      <span class="text-[10px]">{{
+                        formatDay(pair.out.day)
+                      }}</span>
                     </div>
                     <div
                       v-if="pair.out.description"
@@ -518,29 +491,23 @@
                     </div>
                     <div class="flex justify-between items-center">
                       <span class="text-foreground/60 text-[10px]">类型</span>
-                      <span
-                        class="text-[10px] truncate max-w-[60%]"
-                        >{{ pair.in.industryType }}</span
-                      >
+                      <span class="text-[10px] truncate max-w-[60%]">{{
+                        pair.in.industryType
+                      }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                      <span
-                        class="text-foreground/60 text-[10px]"
-                        >{{
-                          pair.in.flowType === "收入" ? "收款" : "支付"
-                        }}</span
-                      >
-                      <span
-                        class="text-[10px] truncate max-w-[60%]"
-                        >{{ pair.in.payType }}</span
-                      >
+                      <span class="text-foreground/60 text-[10px]">{{
+                        pair.in.flowType === "收入" ? "收款" : "支付"
+                      }}</span>
+                      <span class="text-[10px] truncate max-w-[60%]">{{
+                        pair.in.payType
+                      }}</span>
                     </div>
                     <div class="flex justify-between items-center">
                       <span class="text-foreground/60 text-[10px]">日期</span>
-                      <span
-                        class="text-[10px]"
-                        >{{ pair.in.day }}</span
-                      >
+                      <span class="text-[10px]">{{
+                        formatDay(pair.in.day)
+                      }}</span>
                     </div>
                     <div
                       v-if="pair.in.description"
@@ -558,9 +525,7 @@
               </div>
 
               <!-- 操作按钮 - 紧凑布局 -->
-              <div
-                class="flex gap-2 mt-1 pt-1 border-t border-border"
-              >
+              <div class="flex gap-2 mt-1 pt-1 border-t border-border">
                 <button
                   @click="confirmBalance(pair)"
                   class="flex-1 px-2 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs rounded transition-colors flex items-center justify-center gap-1"
@@ -598,6 +563,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import { showAutoMergeFlowsDialog } from "~/utils/flag";
 import { Alert } from "~/utils/alert";
+import { formatDay } from "~/utils/common";
 
 // ESC键监听
 useEscapeKey(() => {
@@ -630,9 +596,7 @@ const isAllSelected = computed(() => {
 const fetchCandidates = () => {
   loading.value = true;
   doApi
-    .post<CandidatePair[]>("api/entry/flow/condidate/autos", {
-      
-    })
+    .post<CandidatePair[]>("api/entry/flow/condidate/autos", {})
     .then((res) => {
       candidatePairs.value = res;
       selectedIds.value = [];
@@ -660,7 +624,6 @@ const confirmBalance = (pair: CandidatePair) => {
         .post("api/entry/flow/condidate/confirm", {
           outId: pair.out.id,
           inIds: [pair.in.id],
-          
         })
         .then((res) => {
           Alert.success("平账成功");
@@ -679,7 +642,6 @@ const ignoreBalance = (pair: CandidatePair) => {
   doApi
     .post("api/entry/flow/condidate/ignore", {
       id: pair.out.id,
-      
     })
     .then((res) => {
       Alert.warning("已忽略");
@@ -703,7 +665,6 @@ const ignoreAllBalance = () => {
     confirm: () => {
       doApi
         .post("api/entry/flow/condidate/ignoreAll", {
-          
           ids: candidatePairs.value.map((p) => p.out.id),
         })
         .then((res) => {
@@ -740,7 +701,6 @@ const batchIgnoreBalance = () => {
       loading.value = true;
       doApi
         .post("api/entry/flow/condidate/patchignore", {
-          
           ids: selectedIds.value,
         })
         .then(() => {
@@ -764,7 +724,7 @@ const batchConfirmBalance = () => {
     return;
   }
   const selectedPairs = candidatePairs.value.filter((p) =>
-    selectedIds.value.includes(Number(p.out.id))
+    selectedIds.value.includes(Number(p.out.id)),
   );
   const items = selectedPairs.map((pair) => ({
     outId: Number(pair.out.id),
@@ -777,7 +737,6 @@ const batchConfirmBalance = () => {
       loading.value = true;
       doApi
         .post("api/entry/flow/condidate/patchcomfirm", {
-          
           items,
         })
         .then(() => {

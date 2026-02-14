@@ -12,7 +12,7 @@
       <div
         class="px-3 py-2 md:px-4 md:py-3 border-b border-border flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold">CSV导入映射配置</h3>
+        <h3 class="text-base md:text-lg font-semibold">CSV导入映射配置</h3>
         <button
           @click="cancelTypeRelationChange"
           class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"

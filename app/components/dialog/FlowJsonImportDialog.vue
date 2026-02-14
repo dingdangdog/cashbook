@@ -10,9 +10,9 @@
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-border"
+        class="flex items-center justify-between p-2 md:p-4 border-b border-border"
       >
-        <h3 class="text-lg font-semibold">JSON 流水导入</h3>
+        <h3 class="text-base md:text-lg font-semibold">JSON 流水导入</h3>
         <button
           @click="closeDialog"
           class="text-foreground/40 hover:text-foreground/70 transition-colors"

@@ -107,7 +107,7 @@ const adminMenuItems: Menu[] = [
     color: "text-indigo-500",
   },
   {
-    title: "系统管理",
+    title: "系统设置",
     path: "/admin/config",
     icon: Cog6ToothIcon,
     color: "text-indigo-500",
@@ -180,7 +180,7 @@ const handleNavigate = (menu: Menu) => {
       <!-- Mobile header -->
       <div
         v-if="isMobile"
-        class="flex items-center justify-between p-4 border-b border-border"
+        class="flex items-center justify-between p-2 md:p-4 border-b border-border"
       >
         <div class="flex items-center">
           <img src="/logo.webp" alt="Cashbook" class="h-8 w-8" />

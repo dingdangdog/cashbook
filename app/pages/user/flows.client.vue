@@ -74,7 +74,7 @@
         <div
           class="px-4 py-3 border-b border-border flex justify-between items-center"
         >
-          <h3 class="text-lg font-semibold">CSV流水导入</h3>
+          <h3 class="text-base md:text-lg font-semibold">CSV流水导入</h3>
           <button
             @click="closeCsvTableDialog"
             class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"
@@ -141,7 +141,7 @@
         <div
           class="px-4 py-3 border-b border-border flex justify-between items-center"
         >
-          <h3 class="text-lg font-semibold">批量修改类型</h3>
+          <h3 class="text-base md:text-lg font-semibold">批量修改类型</h3>
           <button
             @click="closeBatchChangeDialog"
             class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"

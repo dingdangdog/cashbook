@@ -3,9 +3,7 @@
     class="bg-surface text-foreground shadow-sm border border-border overflow-hidden rounded-lg"
   >
     <!-- 查询条件显示 -->
-    <div
-      class="px-2 py-1 bg-surface-muted border-b border-border"
-    >
+    <div class="px-2 py-1 bg-surface-muted border-b border-border">
       <div class="flex flex-wrap gap-2 text-sm">
         <span
           v-if="flowQuery.startDay"
@@ -43,10 +41,7 @@
         >
           {{ flowQuery.attribution }}
         </span>
-        <span
-          v-if="!hasFilters"
-          class="text-foreground/60 text-xs"
-        >
+        <span v-if="!hasFilters" class="text-foreground/60 text-xs">
           显示全部数据
         </span>
       </div>
@@ -105,9 +100,7 @@
               </th>
             </tr>
           </thead>
-          <tbody
-            class="divide-y divide-border overflow-y-auto"
-          >
+          <tbody class="divide-y divide-border overflow-y-auto">
             <tr v-if="flowPageRef.data.length === 0">
               <td
                 :colspan="headers.length"
@@ -122,14 +115,10 @@
               :key="item.id"
               class="hover:bg-surface-muted transition-colors"
             >
-              <td
-                class="px-3 py-2 text-sm whitespace-nowrap"
-              >
-                {{ item.day }}
+              <td class="px-3 py-2 text-sm whitespace-nowrap">
+                {{ formatDay(item.day) }}
               </td>
-              <td
-                class="px-3 py-2 text-sm whitespace-nowrap"
-              >
+              <td class="px-3 py-2 text-sm whitespace-nowrap">
                 {{ item.flowType }}
               </td>
               <td
@@ -235,7 +224,7 @@
       >
         <div
           v-if="flowPageRef.data.length === 0"
-        class="p-8 text-center text-foreground/60"
+          class="p-8 text-center text-foreground/60"
         >
           暂无数据
         </div>
@@ -243,7 +232,7 @@
           v-else
           v-for="item in flowPageRef.data"
           :key="item.id"
-        class="p-2 border-b border-border last:border-b-0 hover:bg-surface-muted transition-colors"
+          class="p-2 border-b border-border last:border-b-0 hover:bg-surface-muted transition-colors"
         >
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1">
@@ -251,7 +240,7 @@
                 {{ item.name }}
               </h3>
               <p class="text-xs text-foreground/60 mt-1">
-                {{ item.day }}
+                {{ formatDay(item.day) }}
               </p>
             </div>
             <span
@@ -386,7 +375,7 @@
             {{
               Math.min(
                 currentPage * (flowQuery.pageSize || 20),
-                flowPageRef.total
+                flowPageRef.total,
               )
             }}
             条， 共 {{ flowPageRef.total }} 条记录
@@ -485,7 +474,7 @@ import {
   TrashIcon,
   EyeIcon,
 } from "@heroicons/vue/24/outline";
-import { generateMobileFriendlyPageNumbers } from "~/utils/common";
+import { formatDay, generateMobileFriendlyPageNumbers } from "~/utils/common";
 import FlowEditInvoiceDialog from "~/components/dialog/FlowEditInvoiceDialog.vue";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
@@ -578,7 +567,7 @@ const flowPageRef = ref<Page<Flow>>({
 // 计算属性
 const currentPage = computed(() => flowQuery.value.pageNum || 1);
 const totalPages = computed(() =>
-  Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20))
+  Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20)),
 );
 
 const hasFilters = computed(() => {
@@ -597,7 +586,7 @@ const mobileFriendlyPageNumbers = computed(() => {
   return generateMobileFriendlyPageNumbers(
     currentPage.value,
     totalPages.value,
-    3
+    3,
   );
 });
 
@@ -631,7 +620,6 @@ const doQuery = () => {
   doApi
     .post<Page<Flow>>("api/entry/flow/page", {
       ...flowQuery.value,
-      
     })
     .then((res) => {
       flowPageRef.value = res;
@@ -685,7 +673,6 @@ const deleteFlow = (item: Flow) => {
       doApi
         .post("api/entry/flow/del", {
           id: item.id,
-          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -790,7 +777,7 @@ watch(
       processAllInvoices();
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // 全屏展示小票

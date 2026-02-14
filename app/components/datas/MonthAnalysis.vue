@@ -1,7 +1,7 @@
 <template>
-  <div style="flex-direction: column" v-show="haveData">
+  <div style="flex-direction: column" v-show="haveData" class="space-y-2">
     <div
-      class="border rounded-md m-2 bg-primary-200/10 border-primary-500"
+      class="border rounded-md bg-primary-200/10 border-primary-500"
       v-show="
         monthData?.maxIn && monthData.maxIn?.money && monthData.maxIn.money > 0
       "
@@ -38,7 +38,7 @@
         <b>最大单笔收入：</b>
         <div class="text-block" v-if="monthData?.maxIn">
           <p class="text-foreground">
-            日期：{{ monthData?.maxIn.day }}
+            日期：{{ formatDay(monthData?.maxIn.day) }}
           </p>
           <p class="text-foreground">
             收入类型：{{ monthData?.maxIn.industryType }}
@@ -46,9 +46,7 @@
           <p class="text-foreground">
             收款方式：{{ monthData?.maxIn.payType }}
           </p>
-          <p class="text-foreground">
-            名称：{{ monthData?.maxIn.name }}
-          </p>
+          <p class="text-foreground">名称：{{ monthData?.maxIn.name }}</p>
           <p class="text-foreground">
             金额：
             <span
@@ -61,7 +59,7 @@
       </div>
     </div>
 
-    <div class="border rounded-md m-2 bg-red-200/10 border-red-400">
+    <div class="border rounded-md bg-red-200/10 border-red-400">
       <div
         class="text-block"
         v-show="monthData?.outSum && Number(monthData.outSum) > 0"
@@ -134,7 +132,7 @@
       </div>
     </div>
 
-    <div class="border rounded-md m-2 bg-surface-muted border-border">
+    <div class="border rounded-md bg-surface-muted border-border">
       <div class="text-block">
         <p style="margin: 0.5rem 0">
           <b>不计收支：</b>
@@ -151,6 +149,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { formatDay } from "~/utils/common";
 
 // 使用 props 来接收外部传入的参数
 const { data } = defineProps(["data"]);

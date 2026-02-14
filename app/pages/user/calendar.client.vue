@@ -166,7 +166,7 @@
         @click.stop
       >
         <div
-          class="flex items-center justify-between p-4 border-b border-border"
+          class="flex items-center justify-between p-2 md:p-4 border-b border-border"
         >
           <div class="flex items-center gap-3">
             <ChartBarIcon
@@ -183,7 +183,7 @@
             <XMarkIcon class="w-5 h-5 text-foreground" />
           </button>
         </div>
-        <div class="p-4 max-h-[70vh] overflow-y-auto">
+        <div class="p-2 md:p-4 max-h-[70vh] overflow-y-auto">
           <DatasMonthAnalysis :data="monthAnalysisData" />
         </div>
       </div>
@@ -240,7 +240,7 @@
         <div
           class="px-4 py-3 border-b border-border flex justify-between items-center"
         >
-          <h3 class="text-lg font-semibold">CSV流水导入</h3>
+          <h3 class="text-base md:text-lg font-semibold">CSV流水导入</h3>
           <button
             @click="closeCsvTableDialog"
             class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"

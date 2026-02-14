@@ -20,6 +20,25 @@ export const getUUID = (num: number) => {
   return uuid;
 };
 
+export const formatDay = (time?: number | Date | string): string => {
+  let date;
+  if (!time) {
+    date = new Date();
+  } else if (time instanceof Date) {
+    date = time;
+  } else {
+    date = new Date(time);
+  }
+
+  const pad = (num: number) => String(num).padStart(2, "0");
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // 月份从 0 开始，需要加 1
+  const day = pad(date.getDate());
+
+  return `${year}-${month}-${day}`;
+};
+
 export const formatDate = (time?: number | Date | string): string => {
   let date;
   if (!time) {
@@ -74,7 +93,7 @@ export const dateFormater = (format: string, date: string | Date) => {
         ret[1],
         ret[1].length == 1
           ? dataItem[index]
-          : dataItem[index].padStart(ret[1].length, "0")
+          : dataItem[index].padStart(ret[1].length, "0"),
       );
     }
   }
@@ -99,7 +118,7 @@ export const toDocumentation = () => {
 export const generateMobileFriendlyPageNumbers = (
   currentPage: number,
   totalPages: number,
-  maxVisiblePages: number = 3
+  maxVisiblePages: number = 3,
 ): (number | string)[] => {
   if (totalPages <= maxVisiblePages) {
     // 如果总页数不超过最大可见页数，直接返回所有页码
@@ -141,7 +160,7 @@ export const generateMobileFriendlyPageNumbers = (
 
   return pages.filter((page, index, arr) => {
     // 去除重复的页码和多余的省略号
-    if (typeof page === 'number') {
+    if (typeof page === "number") {
       return page >= 1 && page <= totalPages && arr.indexOf(page) === index;
     }
     // 确保省略号不重复

@@ -13,7 +13,7 @@
       <div
         class="px-4 py-3 border-b border-border flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold">筛选条件</h3>
+        <h3 class="text-base md:text-lg font-semibold">筛选条件</h3>
         <button
           @click="$emit('close')"
           class="text-foreground/50 hover:text-foreground/80 hover:bg-surface-muted p-1 rounded transition-colors"

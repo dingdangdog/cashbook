@@ -9,6 +9,7 @@ import {
 import { showAutoDeduplicationFlowsDialog } from "~/utils/flag";
 import { Alert } from "~/utils/alert";
 import { Confirm } from "~/utils/confirm";
+import { formatDay } from "~/utils/common";
 
 // ESC键监听
 useEscapeKey(() => {
@@ -46,7 +47,7 @@ const selectedCount = computed(() => selectedIds.value.length);
 const isAllSelected = computed(() => {
   const total = duplicateData.value.duplicateGroups.reduce(
     (sum, group) => sum + group.length,
-    0
+    0,
   );
   if (total === 0) return false;
   return selectedIds.value.length > 0 && selectedIds.value.length === total;
@@ -57,7 +58,6 @@ const fetchDuplicates = () => {
   loading.value = true;
   doApi
     .post<DuplicateData>("api/entry/flow/deduplication/autos", {
-      
       criteria: deduplicationCriteria.value, // 传递检测条件
     })
     .then((res) => {
@@ -86,7 +86,6 @@ const deleteFlow = (item: Flow) => {
       doApi
         .post("api/entry/flow/del", {
           id: item.id,
-          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -133,7 +132,6 @@ const batchDeleteFlows = () => {
       doApi
         .post("api/entry/flow/dels", {
           ids: selectedIds.value,
-          
         })
         .then(() => {
           Alert.success(`成功删除 ${selectedIds.value.length} 条记录`);
@@ -154,12 +152,6 @@ const batchDeleteFlows = () => {
 // 关闭对话框
 const closeDialog = () => {
   showAutoDeduplicationFlowsDialog.value = false;
-};
-
-// 格式化日期显示
-const formatDate = (dateStr: string) => {
-  if (!dateStr) return "";
-  return dateStr;
 };
 </script>
 
@@ -213,9 +205,7 @@ const formatDate = (dateStr: string) => {
       </div>
 
       <!-- 检测条件选择器 -->
-      <div
-        class="px-2 md:px-6 py-2 bg-surface-muted border-b border-border"
-      >
+      <div class="px-2 md:px-6 py-2 bg-surface-muted border-b border-border">
         <div
           class="flex flex-col lg:flex-row items-start lg:items-center gap-2 md:gap-4"
         >
@@ -292,12 +282,8 @@ const formatDate = (dateStr: string) => {
           <div class="text-foreground/40 mb-4">
             <DocumentDuplicateIcon class="mx-auto h-16 w-16" />
           </div>
-          <h3 class="text-xl font-medium mb-2">
-            未发现疑似重复数据
-          </h3>
-          <p class="text-foreground/60">
-            系统未发现符合条件的重复流水数据
-          </p>
+          <h3 class="text-xl font-medium mb-2">未发现疑似重复数据</h3>
+          <p class="text-foreground/60">系统未发现符合条件的重复流水数据</p>
         </div>
 
         <!-- 重复数据组列表 -->
@@ -311,19 +297,15 @@ const formatDate = (dateStr: string) => {
             class="bg-surface border border-border rounded-lg overflow-hidden"
           >
             <!-- 组标题 -->
-            <div
-              class="bg-surface-muted px-2 py-1 border-b border-border"
-            >
+            <div class="bg-surface-muted px-2 py-1 border-b border-border">
               <div
                 class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2"
               >
-                <span
-                  class="text-base md:text-lg font-semibold"
-                >
+                <span class="text-base md:text-lg font-semibold">
                   疑似重复组 #{{ groupIndex + 1 }}-{{ group.length }}条
                 </span>
                 <div class="text-sm text-foreground/60">
-                  {{ formatDate(group[0]?.day) }} | {{ group[0]?.flowType }} |
+                  {{ formatDay(group[0]?.day) }} | {{ group[0]?.flowType }} |
                   {{ group[0]?.money?.toFixed(2) }}元
                 </div>
               </div>
@@ -331,9 +313,7 @@ const formatDate = (dateStr: string) => {
 
             <!-- 桌面端表格 -->
             <div class="hidden md:block overflow-x-auto">
-              <table
-                class="min-w-full divide-y divide-border"
-              >
+              <table class="min-w-full divide-y divide-border">
                 <thead class="bg-surface">
                   <tr>
                     <th
@@ -383,16 +363,12 @@ const formatDate = (dateStr: string) => {
                     </th>
                   </tr>
                 </thead>
-                <tbody
-                  class="bg-surface divide-y divide-border"
-                >
+                <tbody class="bg-surface divide-y divide-border">
                   <tr
                     v-for="(item, itemIndex) in group"
                     :key="item.id"
                     :class="
-                      itemIndex % 2 === 0
-                        ? 'bg-surface-muted/50'
-                        : 'bg-surface'
+                      itemIndex % 2 === 0 ? 'bg-surface-muted/50' : 'bg-surface'
                     "
                     class="hover:bg-surface-muted transition-colors"
                   >
@@ -403,8 +379,8 @@ const formatDate = (dateStr: string) => {
                           item.flowType === '支出'
                             ? 'bg-red-500/10 text-red-600 border-red-500/20'
                             : item.flowType === '收入'
-                            ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                            : 'bg-surface-muted text-foreground/70 border-border',
+                              ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                              : 'bg-surface-muted text-foreground/70 border-border',
                         ]"
                       >
                         {{ item.flowType }}
@@ -428,19 +404,13 @@ const formatDate = (dateStr: string) => {
                         {{ Number(item.money).toFixed(2) }}
                       </span>
                     </td>
-                    <td
-                      class="px-2 py-1 text-sm"
-                    >
-                      {{ formatDate(item.day) }}
+                    <td class="px-2 py-1 text-sm">
+                      {{ formatDay(item.day) }}
                     </td>
-                    <td
-                      class="px-2 py-1 text-sm"
-                    >
+                    <td class="px-2 py-1 text-sm">
                       {{ item.payType }}
                     </td>
-                    <td
-                      class="px-2 py-1 text-sm"
-                    >
+                    <td class="px-2 py-1 text-sm">
                       {{ item.industryType }}
                     </td>
                     <td
@@ -478,9 +448,7 @@ const formatDate = (dateStr: string) => {
                 :key="item.id"
                 class="p-2 border-b border-border last:border-b-0"
                 :class="
-                  itemIndex % 2 === 0
-                    ? 'bg-surface-muted/50'
-                    : 'bg-surface'
+                  itemIndex % 2 === 0 ? 'bg-surface-muted/50' : 'bg-surface'
                 "
               >
                 <!-- 选择框 -->
@@ -501,8 +469,8 @@ const formatDate = (dateStr: string) => {
                       item.flowType === '支出'
                         ? 'bg-red-500/10 text-red-600 border-red-500/20'
                         : item.flowType === '收入'
-                        ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
-                        : 'bg-surface-muted text-foreground/70 border-border',
+                          ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                          : 'bg-surface-muted text-foreground/70 border-border',
                     ]"
                   >
                     {{ item.flowType }}
@@ -540,7 +508,7 @@ const formatDate = (dateStr: string) => {
                   </div>
                   <div class="flex justify-between">
                     <span class="text-foreground/60">日期:</span>
-                    <span>{{ formatDate(item.day) }}</span>
+                    <span>{{ formatDay(item.day) }}</span>
                   </div>
                   <div class="flex justify-between">
                     <span class="text-foreground/60">备注:</span>
@@ -554,9 +522,7 @@ const formatDate = (dateStr: string) => {
                 </div>
 
                 <!-- 操作按钮 -->
-                <div
-                  class="mt-2 pt-2 border-t border-border flex gap-2"
-                >
+                <div class="mt-2 pt-2 border-t border-border flex gap-2">
                   <button
                     @click="deleteFlow(item)"
                     class="flex-1 px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -572,9 +538,7 @@ const formatDate = (dateStr: string) => {
       </div>
 
       <!-- 底部操作栏 -->
-      <div
-        class="px-6 py-4 border-t border-border bg-surface-muted"
-      >
+      <div class="px-6 py-4 border-t border-border bg-surface-muted">
         <div class="flex justify-center gap-4">
           <button
             @click="fetchDuplicates"

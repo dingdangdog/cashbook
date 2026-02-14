@@ -29,9 +29,7 @@
     </div>
 
     <!-- Weekday Headers：表面色 + 边框 -->
-    <div
-      class="grid grid-cols-7 bg-surface-muted border-b border-border"
-    >
+    <div class="grid grid-cols-7 bg-surface-muted border-b border-border">
       <div
         v-for="day in weekdays"
         :key="day"
@@ -50,7 +48,8 @@
         :class="{
           'bg-surface-muted/70 text-muted': !date.isCurrentMonth,
           'bg-surface': date.isCurrentMonth && !date.isWeekend && !date.isToday,
-          'bg-primary-50 dark:bg-primary-950/40 ring-2 ring-primary-500 ring-inset': date.isToday,
+          'bg-primary-50 dark:bg-primary-950/40 ring-2 ring-primary-500 ring-inset':
+            date.isToday,
           'bg-surface-muted/50': date.isWeekend && date.isCurrentMonth,
         }"
       >
@@ -108,6 +107,7 @@ import {
   ArrowUpIcon,
   ChartBarIcon,
 } from "@heroicons/vue/24/outline";
+import { formatDay } from "~/utils/common";
 
 interface CalendarDate {
   date: Date;
@@ -217,7 +217,7 @@ const prevMonth = () => {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() - 1,
-    1
+    1,
   );
   emit("month-change", currentDate.value);
 };
@@ -226,7 +226,7 @@ const nextMonth = () => {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() + 1,
-    1
+    1,
   );
   emit("month-change", currentDate.value);
 };
@@ -248,6 +248,6 @@ watch(
   () => props.currentDate,
   (newDate) => {
     currentDate.value = new Date(newDate);
-  }
+  },
 );
 </script>

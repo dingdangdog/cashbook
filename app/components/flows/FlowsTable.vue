@@ -69,14 +69,9 @@
             </th>
           </tr>
         </thead>
-        <tbody
-          class="bg-surface divide-y divide-border"
-        >
+        <tbody class="bg-surface divide-y divide-border">
           <tr v-if="loading" class="hover:bg-surface-muted">
-            <td
-              colspan="10"
-              class="px-4 py-8 text-center text-foreground/60"
-            >
+            <td colspan="10" class="px-4 py-8 text-center text-foreground/60">
               <div class="flex items-center justify-center gap-2">
                 <div
                   class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"
@@ -85,14 +80,8 @@
               </div>
             </td>
           </tr>
-          <tr
-            v-else-if="flows.length === 0"
-            class="hover:bg-surface-muted"
-          >
-            <td
-              colspan="10"
-              class="px-4 py-8 text-center text-foreground/60"
-            >
+          <tr v-else-if="flows.length === 0" class="hover:bg-surface-muted">
+            <td colspan="10" class="px-4 py-8 text-center text-foreground/60">
               暂无数据
             </td>
           </tr>
@@ -110,24 +99,16 @@
                 class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border rounded"
               />
             </td>
-            <td
-              class="px-2 py-1 whitespace-nowrap text-sm"
-            >
-              {{ item.day }}
+            <td class="px-2 py-1 whitespace-nowrap text-sm">
+              {{ formatDay(item.day) }}
             </td>
-            <td
-              class="px-2 py-1 whitespace-nowrap text-sm"
-            >
+            <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.flowType }}
             </td>
-            <td
-              class="px-2 py-1 whitespace-nowrap text-sm"
-            >
+            <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.industryType }}
             </td>
-            <td
-              class="px-2 py-1 whitespace-nowrap text-sm"
-            >
+            <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.payType }}
             </td>
             <td class="px-2 py-1 whitespace-nowrap text-sm">
@@ -137,17 +118,14 @@
                   item.flowType === '收入'
                     ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
                     : item.flowType === '支出'
-                    ? 'bg-red-500/10 text-red-600 border-red-500/20'
-                    : 'bg-surface-muted text-foreground/70 border-border',
+                      ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                      : 'bg-surface-muted text-foreground/70 border-border',
                 ]"
               >
                 {{ Number(item.money || 0).toFixed(2) }}
               </span>
             </td>
-            <td
-              class="px-2 py-1 text-sm max-w-32 truncate"
-              :title="item.name"
-            >
+            <td class="px-2 py-1 text-sm max-w-32 truncate" :title="item.name">
               {{ item.name }}
             </td>
             <td class="px-2 py-1 text-sm">
@@ -183,9 +161,7 @@
             >
               {{ item.description }}
             </td>
-            <td
-              class="px-2 py-1 whitespace-nowrap text-sm"
-            >
+            <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.attribution }}
             </td>
             <td class="px-2 py-1 whitespace-nowrap text-sm font-medium">
@@ -220,10 +196,7 @@
 
     <!-- 移动端卡片 -->
     <div class="md:hidden">
-      <div
-        v-if="loading"
-        class="p-8 text-center text-foreground/60"
-      >
+      <div v-if="loading" class="p-8 text-center text-foreground/60">
         <div class="flex items-center justify-center gap-2">
           <div
             class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"
@@ -253,7 +226,7 @@
                 class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border rounded"
               />
               <span class="text-xs text-foreground/60">{{
-                item.day
+                formatDay(item.day)
               }}</span>
             </div>
             <div class="flex items-center">
@@ -269,9 +242,7 @@
 
           <!-- 中间内容 -->
           <div class="space-y-1">
-            <div
-              class="text-sm font-medium line-clamp-1"
-            >
+            <div class="text-sm font-medium line-clamp-1">
               {{ item.name }}
             </div>
             <div class="text-xs text-foreground/60 line-clamp-1">
@@ -348,8 +319,8 @@
                     item.flowType === '收入'
                       ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
                       : item.flowType === '支出'
-                      ? 'bg-red-500/10 text-red-600 border-red-500/20'
-                      : 'bg-surface-muted text-foreground/70 border-border',
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                   ]"
                 >
                   {{ Number(item.money || 0).toFixed(2) }}
@@ -383,9 +354,7 @@
     >
       <div class="flex items-center justify-center gap-2">
         <!-- 分页信息 -->
-        <div
-          class="text-sm text-foreground/70 text-center hidden md:block"
-        >
+        <div class="text-sm text-foreground/70 text-center hidden md:block">
           共 {{ total }} 条记录
         </div>
 
@@ -397,7 +366,7 @@
             @change="
               $emit(
                 'changePageSize',
-                ($event.target as HTMLSelectElement).value
+                ($event.target as HTMLSelectElement).value,
               )
             "
             class="text-sm border border-border rounded px-2 py-1 bg-background text-foreground"
@@ -480,7 +449,7 @@ import {
   TrashIcon,
   EyeIcon,
 } from "@heroicons/vue/24/outline";
-import { generateMobileFriendlyPageNumbers } from "~/utils/common";
+import { formatDay, generateMobileFriendlyPageNumbers } from "~/utils/common";
 import { doApi } from "~/utils/api";
 
 interface FlowItem {
@@ -515,7 +484,7 @@ const mobileFriendlyPageNumbers = computed(() => {
   return generateMobileFriendlyPageNumbers(
     props.currentPage,
     props.totalPages,
-    3
+    3,
   );
 });
 
@@ -621,7 +590,7 @@ watch(
       processAllInvoices();
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // 全屏展示小票
