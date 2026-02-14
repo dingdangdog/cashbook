@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             flowType: string 流水类型（可选）
  *             startDay: string 开始日期（可选）
  *             endDay: string 结束日期（可选）

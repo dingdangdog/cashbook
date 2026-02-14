@@ -12,8 +12,7 @@ import prisma from "~~/server/lib/prisma";
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             bookId: string 账本ID
+ *           schema: {}
  *     responses:
  *       200:
  *         description: 固定流水列表获取成功
@@ -22,20 +21,9 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] #[FixedFlow 固定流水信息数组]
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
-  const datas = await prisma.fixedFlow.findMany({ where: { bookId } });
+  const userId = await getUserId(event);
+  const datas = await prisma.fixedFlow.findMany({ where: { userId } });
   return success(datas);
 });

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             groupBy: string 分组字段（payType/industryType/attribution）
  *             flowType: string 流水类型（可选）
  *             startDay: string 开始日期（可选）
@@ -44,11 +43,7 @@ export default defineEventHandler(async (event) => {
     return error("不支持的分组字段");
   }
 
-  const where: any = {
-    bookId: {
-      equals: body.bookId,
-    },
-  };
+  const where: any = {};
 
   if (body.flowType) {
     where.flowType = {

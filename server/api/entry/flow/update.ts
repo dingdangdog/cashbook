@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 流水ID
  *             day: string 日期
  *             flowType: string 流水类型（收入、支出）
@@ -40,8 +39,6 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (!body.id) {

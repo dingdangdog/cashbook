@@ -85,8 +85,6 @@ export interface UpdateFlowDto {
   origin?: string;
   attribution?: string;
   eliminate?: number;
-  /** 兼容旧 API */
-  bookId?: number | string;
 }
 
 /** 流水分页/筛选查询（与 Prisma Flow 查询对齐，含扩展筛选） */
@@ -94,8 +92,6 @@ export class FlowQuery {
   pageNum?: number = 1;
   pageSize?: number = 20;
   id?: string | number;
-  /** 兼容多账本 API */
-  bookId?: string | number;
   startDay?: string;
   endDay?: string;
   flowType?: string;
@@ -121,7 +117,6 @@ export interface AdminLogin {
 }
 
 export interface CommonChartQuery {
-  bookId?: string;
   flowType?: string;
   startDay?: string;
   endDay?: string;
@@ -135,7 +130,6 @@ export interface CommonChartData {
 }
 
 export interface Typer {
-  bookId?: string;
   flowType?: string;
   type?: string;
   value?: string;

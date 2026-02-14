@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             month: string 月份（YYYY-MM格式）
  *             flowType: string 流水类型（可选）
  *     responses:
@@ -42,25 +41,25 @@ import prisma from "~~/server/lib/prisma";
  *         content:
  *           application/json:
  *             schema:
- *               Error: {
- *                 message: 错误信息（"请先选择账本" | "Not Find Month" | "暂无数据"）
- *               }
  */
 export default defineEventHandler(async (event) => {
-  const { bookId, flowType, month } = await readBody(event); // 获取查询参数
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+  const userId = await getUserId(event);
+  const { flowType, month } = await readBody(event);
   if (!month) {
     return error("Not Find Month");
   }
 
+  const monthStart = new Date(month + "-01");
+  const monthEnd = new Date(monthStart);
+  monthEnd.setMonth(monthEnd.getMonth() + 1);
+
   const where: any = {
-    bookId,
+    userId,
     day: {
-      startsWith: month,
+      gte: monthStart,
+      lt: monthEnd,
     },
-  }; // 条件查询
+  };
 
   if (flowType) {
     where.flowType = {

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 固定流水ID（可选）
  *             month: string 月份（可选）
  *     responses:
@@ -24,26 +23,13 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] #[FixedFlow固定流水列表数组]
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const userId = await getUserId(event);
 
-  const where: any = {
-    bookId,
-  }; // 条件查询
+  const where: any = { userId };
 
-  // 添加条件：如果 `name` 存在，则根据 `name` 查询
   if (body.id) {
     // equals 等于查询
     // contains 模糊查询（pgsql和mongo中，可以增加额外参数限制忽略大小写 mode: 'insensitive'）

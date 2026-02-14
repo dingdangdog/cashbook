@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             pageNum: number 页码（可选，默认1）
  *             pageSize: number 每页数量（可选，默认20）
  *             name: string 名称模糊查询（可选）
@@ -33,20 +32,10 @@ import prisma from "~~/server/lib/prisma";
  *                   pageNum: number,
  *                   pageSize: number
  *                 }
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const userId = await getUserId(event);
   const {
     pageNum = 1,
     pageSize = 20,
@@ -56,9 +45,7 @@ export default defineEventHandler(async (event) => {
     endDay,
   } = body;
 
-  const where: any = {
-    bookId,
-  }; // 条件查询
+  const where: any = { userId };
 
   // 添加条件查询
   if (body.id) {

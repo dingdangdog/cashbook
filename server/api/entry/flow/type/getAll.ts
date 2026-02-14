@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             flowType: string 流水类型（可选）
  *     responses:
  *       200:
@@ -23,24 +22,11 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] # { type: 类型分类（"支出类型/收入类型" | "支付方式/收款方式"）, flowType: 流水类型, value: 类型值 }
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const flowType = body.flowType;
-  const where: any = {
-    bookId,
-  }; // 条件查询
+  const where: any = {};
 
   if (flowType) {
     where.flowType = {

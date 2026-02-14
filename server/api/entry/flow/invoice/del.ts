@@ -15,7 +15,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 流水ID
  *             invoice: string 发票文件名
  *     responses:
@@ -35,12 +34,9 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find ID" | "Not Find ImageName" | "流水信息不存在" | "小票删除失败"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const id = body.id;
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const invoice = body.invoice;
 
   if (!id) {
@@ -62,10 +58,7 @@ export default defineEventHandler(async (event) => {
     const imagePath = path.join(dataPath, "images", String(invoice));
 
     const flow = await prisma.flow.findUnique({
-      where: {
-        id: Number(id),
-        bookId,
-      },
+      where: { id: Number(id) },
     });
     // 校验图片是否存在
     if (!fs.existsSync(imagePath)) {
@@ -83,10 +76,7 @@ export default defineEventHandler(async (event) => {
 
     // 更新流水信息
     await prisma.flow.update({
-      where: {
-        id: Number(id),
-        bookId,
-      },
+      where: { id: Number(id) },
       data: {
         invoice: newInvoices.join(","),
       },

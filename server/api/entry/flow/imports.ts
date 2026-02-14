@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             mode: string 导入模式（add-追加，overwrite-覆盖）
  *             flows: [] #[Flow流水记录数组]
  *     responses:
@@ -28,32 +27,21 @@ import prisma from "~~/server/lib/prisma";
  *         description: 导入失败
  *         content:
  *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
-
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
   const mode = String(body.mode);
   const flows: any[] = body.flows;
   const userId = await getUserId(event);
 
   if (mode == "overwrite") {
-    await prisma.flow.deleteMany({
-      where: { bookId },
-    });
+    await prisma.flow.deleteMany({});
   }
   const datas: any[] = [];
   flows.forEach((flow) => {
     datas.push({
       userId,
-      bookId,
       name: flow.name,
       day: new Date(flow.day),
       description: flow.description,

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             ids: number[] 流水ID数组
  *             flowType: string 流水类型（可选）
  *             industryType: string 行业分类（可选）
@@ -36,12 +35,9 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const ids = body.ids;
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const { flowType, industryType, payType, attribution } = body;
 
   if (!ids) {

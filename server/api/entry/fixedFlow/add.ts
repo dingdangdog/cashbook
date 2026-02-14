@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             startMonth: string 开始月份（YYYY-MM格式）
  *             endMonth: string 结束月份（YYYY-MM格式）
  *             money: number 金额
@@ -40,11 +39,8 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const {
     startMonth,
     endMonth,
@@ -63,13 +59,11 @@ export default defineEventHandler(async (event) => {
   const end = new Date(endMonth);
   const createdRecords = [];
 
-  // 遍历每个月份并新增固定支出记录
   for (let month = start; month <= end; month.setMonth(month.getMonth() + 1)) {
-    const monthString = month.toISOString().slice(0, 7); // 格式化为 YYYY-MM
+    const monthString = month.toISOString().slice(0, 7);
 
     const created = await prisma.fixedFlow.create({
       data: {
-        bookId,
         userId,
         month: monthString,
         money: Number(money || 0),

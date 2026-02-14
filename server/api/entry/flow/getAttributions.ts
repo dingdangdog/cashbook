@@ -12,8 +12,7 @@ import prisma from "~~/server/lib/prisma";
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             bookId: string 账本ID
+ *           schema: {}
  *     responses:
  *       200:
  *         description: 流水归属列表获取成功
@@ -22,25 +21,8 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] #[string归属名称数组]
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
-
-  const where: any = {
-    bookId,
-  };
-
   const flows = await prisma.flow.findMany({
     distinct: ["attribution"],
     select: {
@@ -51,7 +33,6 @@ export default defineEventHandler(async (event) => {
         attribution: "asc",
       },
     ],
-    where,
   });
 
   // 提取 attribution 属性并返回集合

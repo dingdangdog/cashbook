@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 待收款ID
  *     responses:
  *       200:
@@ -32,11 +31,8 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find ID"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const id = body.id;
 
   if (!id) {
@@ -44,7 +40,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const deleted = await prisma.receivable.delete({
-    where: { id: Number(id), bookId },
+    where: { id: Number(id) },
   });
 
   return success(deleted);

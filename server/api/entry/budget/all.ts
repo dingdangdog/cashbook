@@ -12,8 +12,7 @@ import prisma from "~~/server/lib/prisma";
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             bookId: string 账本ID
+ *           schema: {}
  *     responses:
  *       200:
  *         description: 预算列表获取成功

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             day: string 日期
  *             flowType: string 流水类型（收入、支出）
  *             industryType: string 行业分类
@@ -31,16 +30,12 @@ import prisma from "~~/server/lib/prisma";
  *               Result:
  *                 d: Flow 流水记录信息
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
 
   const userId = await getUserId(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const flow = {
     userId: userId,
-    bookId,
     day: body.day ? new Date(body.day) : new Date(),
     flowType: String(body.flowType || ""), // 流水类型：收入、支出
     industryType: String(body.industryType || ""), // 行业分类 原 type（收入类型、支出类型）

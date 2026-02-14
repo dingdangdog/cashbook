@@ -13,8 +13,7 @@ import { initTypeRelation } from "~~/server/utils/data";
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             bookId: string 账本ID
+ *           schema: {}
  *     responses:
  *       200:
  *         description: 类型关系列表获取成功
@@ -24,17 +23,8 @@ import { initTypeRelation } from "~~/server/utils/data";
  *               Result:
  *                 d: [] #[TypeRelation类型关系列表数组]
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
-  const where: any = {
-    bookId,
-  }; // 条件查询
-
   const relations = await prisma.typeRelation.findMany({
-    where, // 使用条件查询
     orderBy: [
       {
         target: "asc",
@@ -42,16 +32,10 @@ export default defineEventHandler(async (event) => {
     ],
   });
 
-  // const datas: Record<string, string> = {};
-  // relations.forEach((l) => {
-  //   datas[l.source] = l.target;
-  // });
-
   if (relations.length <= 0) {
-    await initTypeRelation(bookId);
+    await initTypeRelation();
 
     const newRelations = await prisma.typeRelation.findMany({
-      where, // 使用条件查询
       orderBy: [
         {
           target: "asc",

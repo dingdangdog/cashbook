@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             criteria:
  *               name: boolean 是否检查名称相同
  *               description: boolean 是否检查描述相同
@@ -36,15 +35,9 @@ import prisma from "~~/server/lib/prisma";
  *         content:
  *           application/json:
  *             schema:
- *               Error: {
- *                 message: "No Find bookid"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
   const criteria = body.criteria || {
     name: true,
@@ -55,10 +48,6 @@ export default defineEventHandler(async (event) => {
   };
 
   const allFlows = await prisma.flow.findMany({
-    where: {
-      bookId,
-      // 可以根据需要添加其他过滤条件，如时间范围等
-    },
     orderBy: [
       {
         day: "desc",

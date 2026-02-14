@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             flowType: string 流水类型（可选）
  *             startDay: string 开始日期（可选）
  *             endDay: string 结束日期（可选）
@@ -25,26 +24,11 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] #[CommonChartData图表通用数据结构：支付类型分析数据数组]
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取查询参数
-  if (!body.bookId) {
-    return error("请先选择账本");
-  }
+  const body = await readBody(event);
 
-  const where: any = {
-    bookId: {
-      equals: body.bookId,
-    },
-  };
+  const where: any = {};
   if (body.flowType) {
     where.flowType = {
       equals: body.flowType,

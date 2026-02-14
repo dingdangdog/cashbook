@@ -25,25 +25,12 @@ export interface User {
   darkTheme?: string | null;
 }
 
-/** 账本（当前 Prisma schema 未包含，保留供前端/API 兼容） */
-export interface Book {
-  id: number;
-  bookId: string;
-  bookName: string;
-  shareKey: string;
-  userId: number;
-  budget: number;
-  createDate: Date;
-}
-
 /** 流水/交易记录（与 Prisma Flow 一致） */
 export interface Flow {
   id?: number;
   /** 流水编号-唯一 */
   flowNo?: string;
   userId?: number;
-  /** API 兼容，部分接口仍传 bookId */
-  bookId?: string;
   /** 交易日期（API 常用 string YYYY-MM-DD） */
   day?: string;
   flowType?: string; // 收入、支出、不计收支
@@ -62,8 +49,6 @@ export interface Flow {
 export interface Budget {
   id?: number;
   userId?: number;
-  /** API 兼容 */
-  bookId?: string;
   /** 月份 YYYY-MM */
   month?: string;
   budget?: number;
@@ -74,8 +59,6 @@ export interface Budget {
 export interface Receivable {
   id?: number;
   userId?: number;
-  /** API 兼容 */
-  bookId?: string;
   name?: string;
   description?: string | null;
   /** 借出日 */
@@ -101,8 +84,6 @@ export interface Receivable {
 export interface FixedFlow {
   id?: number;
   userId?: number;
-  /** API 兼容 */
-  bookId?: string;
   /** 月份 YYYY-MM（模板可选） */
   month?: string;
   money?: number;
@@ -123,8 +104,4 @@ export interface TypeRelation {
   userId: number;
   source: string;
   target: string;
-  /** 以下为展示用，非表字段 */
-  bookName?: string;
-  bookDbId?: number;
-  bookId?: string;
 }

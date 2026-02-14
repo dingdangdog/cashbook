@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             status: number 状态过滤（可选）
  *     responses:
  *       200:
@@ -23,23 +22,13 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] #[Receivable待收款信息数组]
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const userId = await getUserId(event);
   const status = body.status;
 
-  const where: any = { bookId };
+  const where: any = { userId };
 
   // 如果指定了状态，则按状态过滤
   if (status !== undefined && status !== null) {

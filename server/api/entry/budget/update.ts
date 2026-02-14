@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 预算ID
  *             month: string 月份
  *             budget: number 预算金额
@@ -34,11 +33,8 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find ID" | "Not Find Month"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const { id, budget, month } = body;
 
   if (!id) {
@@ -48,7 +44,7 @@ export default defineEventHandler(async (event) => {
     return error("Not Find Month");
   }
   const updated = await prisma.budget.update({
-    where: { id, bookId, month },
+    where: { id },
     data: {
       budget: Number(budget || 0),
     },

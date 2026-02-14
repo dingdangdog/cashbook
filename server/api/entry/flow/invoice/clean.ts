@@ -15,7 +15,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 流水ID
  *     responses:
  *       200:
@@ -34,12 +33,9 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"Not Find ID" | "Not Find BookID" | "小票清空失败"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const id = body.id;
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
   if (!id) {
     return error("Not Find ID");
@@ -47,10 +43,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const flow = await prisma.flow.findUnique({
-      where: {
-        id: Number(id),
-        bookId,
-      },
+      where: { id: Number(id) },
     });
 
     if (!flow) {
@@ -78,10 +71,7 @@ export default defineEventHandler(async (event) => {
 
     // 更新流水信息
     await prisma.flow.update({
-      where: {
-        id: Number(id),
-        bookId,
-      },
+      where: { id: Number(id) },
       data: {
         invoice: null,
       },

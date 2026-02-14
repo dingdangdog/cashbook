@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { add, update } from "./api";
 import { editInfoFlag } from "./flag";
 
@@ -8,22 +8,6 @@ let { item, title } = defineProps(["item", "title"]);
 let emits = defineEmits(["success", "cancel"]);
 // 编辑数据实体
 const editItem = ref<TypeRelation | any>();
-
-// 账本列表
-const bookOptions = ref<{ text: string; value: string }[]>([]);
-
-// 获取账本列表
-const getBookList = async () => {
-  try {
-    const books = await doApi.post("api/admin/entry/books/list", {}) as Book[];
-    bookOptions.value = books.map((book: Book) => ({
-      text: `${book.bookName} (${book.bookId})`,
-      value: book.bookId
-    }));
-  } catch (error) {
-    console.error("获取账本列表失败:", error);
-  }
-};
 
 if (item) {
   editItem.value = { ...item };
@@ -97,9 +81,6 @@ const close = () => {
   emits("cancel");
 };
 
-onMounted(() => {
-  getBookList();
-});
 </script>
 
 <template>

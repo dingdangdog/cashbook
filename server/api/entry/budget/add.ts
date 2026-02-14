@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             month: string 月份
  *             budget: number 预算金额（默认为0）
  *     responses:

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             old: string 原密码
  *             new: string 新密码
  *             againNew: string 确认新密码

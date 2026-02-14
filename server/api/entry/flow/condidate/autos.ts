@@ -12,8 +12,7 @@ import prisma from "~~/server/lib/prisma";
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             bookId: string 账本ID
+ *           schema: {}
  *     responses:
  *       200:
  *         description: 候选记录获取成功
@@ -22,23 +21,10 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: [] #{ out: Flow 支出记录, in: Flow 收入记录}
- *       400:
- *         description: 获取失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "No Find bookid"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
-
   const expenditures = await prisma.flow.findMany({
-    where: { flowType: "支出", eliminate: 0, bookId },
+    where: { flowType: "支出", eliminate: 0 },
     orderBy: [
       {
         day: "desc",
@@ -54,7 +40,6 @@ export default defineEventHandler(async (event) => {
       where: {
         flowType: { in: ["收入", "不计收支"] },
         money: expense.money,
-        bookId,
       },
     });
     if (candidate) {

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             types: [] #[TypeRelation类型关系数组]
  *     responses:
  *       200:
@@ -23,20 +22,9 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  *               Result:
  *                 d: TypeRelation
- *       400:
- *         description: 更新失败
- *         content:
- *           application/json:
- *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const userId = await getUserId(event);
   const types: any[] = body.types;
   const updates: any[] = [];
@@ -48,7 +36,6 @@ export default defineEventHandler(async (event) => {
       updates.push(t);
     } else {
       t.userId = userId;
-      t.bookId = bookId;
       creates.push(t);
     }
   });
@@ -56,7 +43,6 @@ export default defineEventHandler(async (event) => {
     await prisma.typeRelation.deleteMany({
       where: {
         id: { notIn: ids },
-        bookId,
       },
     });
     // 更新有ID的原有配置

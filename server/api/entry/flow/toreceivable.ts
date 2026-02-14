@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 流水ID
  *             expectDay: string 预期收款日期（可选）
  *     responses:
@@ -36,11 +35,8 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const { id, expectDay } = body;
 
   if (!id) {
@@ -53,7 +49,6 @@ export default defineEventHandler(async (event) => {
   const flow = await prisma.flow.findFirst({
     where: {
       id: Number(id),
-      bookId,
       flowType: "支出", // 只能转换支出流水
     },
   });
@@ -67,14 +62,13 @@ export default defineEventHandler(async (event) => {
     // 创建待收款记录
     const receivable = await tx.receivable.create({
       data: {
-        bookId,
         userId,
         name: flow.name || "借出款项",
         description: flow.description || `来自流水: ${flow.name}`,
         occurDay: flow.day,
-        expectDay: expectDay ? new Date(expectDay) : null,
         money: flow.money || 0,
-        occurId: flow.id,
+        occurFlowId: flow.id,
+        planType: 0,
         status: 0, // 未收款
       },
     });

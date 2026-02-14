@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             outId: number 支出记录ID
  *             inIds: number[] 收入记录ID数组
  *     responses:
@@ -33,11 +32,8 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"Not Find ID" | "Not Find IDS"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const { outId, inIds } = body;
   if (!outId) {
     return error("Not Find ID");
@@ -46,7 +42,7 @@ export default defineEventHandler(async (event) => {
     return error("Not Find IDS");
   }
   await prisma.flow.update({
-    where: { id: outId, bookId },
+    where: { id: outId },
     data: {
       eliminate: 1,
       flowType: "不计收支",
@@ -54,7 +50,7 @@ export default defineEventHandler(async (event) => {
   });
   inIds.forEach(async (id: any) => {
     await prisma.flow.update({
-      where: { id: Number(id), bookId },
+      where: { id: Number(id) },
       data: {
         eliminate: 1,
         flowType: "不计收支",

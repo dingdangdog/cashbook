@@ -15,7 +15,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         multipart/form-data:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 流水ID
  *             invoice: string 发票文件名
  *     responses:
@@ -35,18 +34,13 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find File" | "Not Find ID" | "小票上传失败"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const formdata = await readFormData(event);
   try {
-    const rawBookId = formdata.get("bookId");
-    const bookId = rawBookId ? String(rawBookId) : DEFAULT_BOOK_ID;
     const files: File[] = formdata.getAll("invoice") as File[];
     if (!files || files.length < 1) {
       return error("Not Find File");
     }
-    // console.log(formdata.getAll("images"));
     const flowId = Number(formdata.get("id"));
     if (!flowId) {
       return error("Not Find ID");
@@ -57,15 +51,13 @@ export default defineEventHandler(async (event) => {
       dataPath = process.cwd();
     }
     const invoicePath = path.join(dataPath, "images");
-    // 确保保存路径存在
     await fs.promises.mkdir(invoicePath, { recursive: true });
 
     const imageNames: string[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      // 获取文件扩展名
       const extension = path.extname(file.name);
-      const fileName = `${bookId}-${flowId}-${Date.now()}-${i + 1}${extension}`;
+      const fileName = `${flowId}-${Date.now()}-${i + 1}${extension}`;
 
       // 读取文件数据
       const fileBuffer = Buffer.from(await file.arrayBuffer());
@@ -75,10 +67,7 @@ export default defineEventHandler(async (event) => {
       imageNames.push(fileName);
     }
     const flow = await prisma.flow.findUnique({
-      where: {
-        id: flowId,
-        bookId,
-      },
+      where: { id: flowId },
     });
     if (!flow) {
       return;
@@ -88,12 +77,8 @@ export default defineEventHandler(async (event) => {
       newInvoices.push(...flow.invoice.split(","));
     }
     newInvoices.push(...imageNames);
-    // 更新流水信息
     await prisma.flow.update({
-      where: {
-        id: flowId,
-        bookId,
-      },
+      where: { id: flowId },
       data: {
         invoice: newInvoices.join(","),
       },

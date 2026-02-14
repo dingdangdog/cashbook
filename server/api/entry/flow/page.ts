@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 流水ID（可选）
  *             flowType: string 流水类型（可选）
  *             industryType: string 行业分类（可选）
@@ -41,21 +40,11 @@ import prisma from "~~/server/lib/prisma";
  *         content:
  *           application/json:
  *             schema:
- *               Error: {
- *                 message: "请先选择账本"
- *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
-  const where: any = {
-    bookId: {
-      equals: bookId,
-    },
-  }; // 条件查询
+  const where: any = {}; // 条件查询
 
   // 普通查询条件
   if (body.id) {

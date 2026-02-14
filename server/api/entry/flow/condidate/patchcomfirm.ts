@@ -14,7 +14,6 @@ import type { Prisma } from "@prisma/client";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             items: { outId: number; inIds: number[] }[] 批量平账项
  *     responses:
  *       200:
@@ -33,11 +32,8 @@ import type { Prisma } from "@prisma/client";
  *                 message: 错误信息（"Invalid params"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const items = body.items as Array<{ outId: number; inIds: number[] }> | undefined;
 
   if (!Array.isArray(items) || items.length === 0) {
@@ -65,7 +61,7 @@ export default defineEventHandler(async (event) => {
     // 更新支出记录
     txs.push(
       prisma.flow.update({
-        where: { id: it.outId, bookId },
+        where: { id: it.outId },
         data: {
           eliminate: 1,
           flowType: "不计收支",
@@ -76,7 +72,7 @@ export default defineEventHandler(async (event) => {
     // 更新对应收入记录
     txs.push(
       prisma.flow.updateMany({
-        where: { id: { in: it.inIds }, bookId },
+        where: { id: { in: it.inIds } },
         data: {
           eliminate: 1,
           flowType: "不计收支",

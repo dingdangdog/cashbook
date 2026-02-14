@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             name: string 待收款名称
  *             description: string 描述（可选）
  *             occurDay: string 发生日期
@@ -37,12 +36,9 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本" | "待收款名称不能为空" | "发生日期不能为空" | "金额不能为空"
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
-  const { name, description, occurDay, expectDay, money, occurId } = body;
+  const { name, description, occurDay, money, occurFlowId } = body;
 
   if (!name) {
     return error("待收款名称不能为空");
@@ -58,18 +54,16 @@ export default defineEventHandler(async (event) => {
 
   const userId = await getUserId(event);
 
-  // 在数据库中添加新数据
   const created = await prisma.receivable.create({
     data: {
-      bookId,
       userId,
       name,
       description: description || null,
       occurDay: new Date(occurDay),
-      expectDay: expectDay ? new Date(expectDay) : null,
       money: Number(money),
-      occurId: occurId ? Number(occurId) : null,
-      status: 0, // 默认状态为未收款
+      occurFlowId: occurFlowId ? Number(occurFlowId) : null,
+      planType: 0,
+      status: 0,
     },
   });
 

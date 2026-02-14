@@ -57,7 +57,6 @@
       "CreateFlowDto": {
         "day": "string | 流水发生日期",
         "flowType": "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
-        "bookId": "number|string | 账本ID",
         "type": "string | 分类类型 (例如：餐饮, 交通, 工资等)",
         "payType": "string | 支付方式 (例如：现金, 支付宝, 微信支付, 银行卡)",
         "money": "number | 金额",
@@ -66,7 +65,6 @@
       },
       "UpdateFlowDto": {
         "day": "string | 流水发生日期",
-        "bookId": "number|string | 账本ID",
         "flowType": "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
         "type": "string | 分类类型",
         "payType": "string | 支付方式",
@@ -78,7 +76,6 @@
         "pageNum": "number | 页码，默认为 1",
         "pageSize": "number | 每页大小，默认为 20",
         "id": "string|number | 流水ID",
-        "bookId": "string|number | 账本ID",
         "startDay": "string | 查询起始日期",
         "endDay": "string | 查询结束日期",
         "flowType": "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
@@ -99,7 +96,6 @@
         "password": "string | 管理员密码"
       },
       "CommonChartQuery": {
-        "bookId": "string | 账本ID",
         "flowType": "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
         "startDay": "string | 查询起始日期",
         "endDay": "string | 查询结束日期"
@@ -111,7 +107,6 @@
         "zeroSum": "number | 不计收支金额"
       },
       "Typer": {
-        "bookId": "string | 账本ID",
         "flowType": "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
         "type": "string | 类别名称",
         "value": "string | 新的类别值",
@@ -139,19 +134,9 @@
         "email": "string | 用户邮箱",
         "createDate": "string | 用户创建日期"
       },
-      "Book": {
-        "id": "number | 账本内部ID",
-        "bookId": "string | 账本唯一标识符 (例如 UUID)",
-        "bookName": "string | 账本名称",
-        "shareKey": "string | 账本分享密钥 (用于共享，如果需要)",
-        "userId": "number | 账本所属用户ID",
-        "budget": "number | 账本预算金额",
-        "createDate": "string | 账本创建日期"
-      },
       "Flow": {
         "id": "number | 流水ID",
         "userId": "number | 流水所属用户ID",
-        "bookId": "string | 流水所属账本ID",
         "day": "string | 流水发生日期 (YYYY-MM-DD)",
         "flowType": "string | 流水类型：收入(in)、支出(out)、不计收支(zero)",
         "industryType": "string | 行业分类（例如：餐饮, 交通, 工资等）",
@@ -167,7 +152,6 @@
       "Budget": {
         "id": "number | 预算ID",
         "userId": "number | 预算所属用户ID",
-        "bookId": "string | 预算所属账本ID",
         "month": "string | 预算所属月份 (YYYY-MM)",
         "budget": "number | 预算金额",
         "used": "number | 已使用金额"
@@ -175,7 +159,6 @@
       "FixedFlow": {
         "id": "number | 固定流水ID",
         "userId": "number | 固定流水所属用户ID",
-        "bookId": "string | 固定流水所属账本ID",
         "startMonth": "string | 开始生效月份 (YYYY-MM)",
         "endMonth": "string | 结束生效月份 (YYYY-MM)",
         "month": "string | 当前固定流水的月份 (用于记录当月生成情况)",
@@ -190,11 +173,8 @@
       "TypeRelation": {
         "id": "number | 关联ID",
         "userId": "number | 所属用户ID",
-        "bookId": "string | 所属账本ID",
         "source": "string | 源类型值 (例如：支付宝账单中的原始类别)",
-        "target": "string | 目标类型值 (映射到的系统内部类别)",
-        "bookName": "string | 账本名称 (用于显示，非数据库字段)",
-        "bookDbId": "number | 账本数据库内部ID (用于显示，非数据库字段)"
+        "target": "string | 目标类型值 (映射到的系统内部类别)"
       }
     }
   },
@@ -323,7 +303,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID（可选）",
                 "bookName": "string 账本名称（可选）",
                 "userId": "number 用户ID（可选）",
                 "pageNum": "number 页码（默认为1）",
@@ -697,7 +676,6 @@
                     "d": [
                       {
                         "id": "关系ID",
-                        "bookId": "账本ID",
                         "userId": "用户ID",
                         "source": "源类型",
                         "target": "目标类型",
@@ -775,7 +753,6 @@
             "application/json": {
               "schema": {
                 "id": "number 关系ID（可选）",
-                "bookId": "string 账本ID（可选）",
                 "userId": "number 用户ID（可选）"
               }
             }
@@ -812,7 +789,6 @@
             "application/json": {
               "schema": {
                 "id": "number 关系ID（可选）",
-                "bookId": "string 账本ID（可选，支持模糊查询）",
                 "userId": "number 用户ID（可选）",
                 "source": "string 源类型（可选，支持模糊查询）",
                 "target": "string 目标类型（可选，支持模糊查询）",
@@ -1326,7 +1302,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）",
                 "startDay": "string 开始日期（可选）",
                 "endDay": "string 结束日期（可选）"
@@ -1376,7 +1351,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）"
               }
             }
@@ -1424,7 +1398,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）",
                 "startDay": "string 开始日期（可选）",
                 "endDay": "string 结束日期（可选）"
@@ -1474,7 +1447,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）",
                 "startDay": "string 开始日期（可选）",
                 "endDay": "string 结束日期（可选）",
@@ -1525,7 +1497,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "month": "string 月份（YYYY-MM格式）",
                 "flowType": "string 流水类型（可选）"
               }
@@ -1586,7 +1557,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）",
                 "startDay": "string 开始日期（可选）",
                 "endDay": "string 结束日期（可选）"
@@ -1913,7 +1883,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "bookName": "string 账本名称",
                 "budget": "number 预算金额"
               }
@@ -1962,7 +1931,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "month": "string 月份",
                 "budget": "number 预算金额（默认为0）"
               }
@@ -2010,9 +1978,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "bookId": "string 账本ID"
-              }
+              "schema": {}
             }
           }
         },
@@ -2058,7 +2024,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 预算ID"
               }
             }
@@ -2106,7 +2071,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 预算ID（可选）",
                 "month": "string 月份（可选）"
               }
@@ -2155,7 +2119,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "month": "string 月份"
               }
             }
@@ -2203,7 +2166,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 预算ID",
                 "month": "string 月份",
                 "budget": "number 预算金额"
@@ -2253,7 +2215,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "startMonth": "string 开始月份（YYYY-MM格式）",
                 "endMonth": "string 结束月份（YYYY-MM格式）",
                 "money": "number 金额",
@@ -2308,9 +2269,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "bookId": "string 账本ID"
-              }
+              "schema": {}
             }
           }
         },
@@ -2356,7 +2315,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 固定流水ID"
               }
             }
@@ -2404,7 +2362,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 固定流水ID（可选）",
                 "month": "string 月份（可选）"
               }
@@ -2453,7 +2410,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 固定流水ID",
                 "month": "string 月份",
                 "money": "number 金额",
@@ -2509,7 +2465,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "day": "string 日期",
                 "flowType": "string 流水类型（收入、支出）",
                 "industryType": "string 行业分类",
@@ -2545,17 +2500,6 @@
         "security": [
           {
             "Authorization": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "bookId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "账本ID"
           }
         ],
         "responses": {
@@ -2599,9 +2543,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "bookId": "string 账本ID"
-              }
+              "schema": {}
             }
           }
         },
@@ -2647,7 +2589,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "outId": "number 支出记录ID",
                 "inIds": "number[] 收入记录ID数组"
               }
@@ -2696,7 +2637,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水记录ID"
               }
             }
@@ -2744,7 +2684,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "ids": "number[] 流水记录ID数组"
               }
             }
@@ -2792,7 +2731,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "criteria": {
                   "name": "boolean 是否检查名称相同",
                   "description": "boolean 是否检查描述相同",
@@ -2850,8 +2788,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "id": "number 流水ID",
-                "bookId": "string 账本ID"
+                "id": "number 流水ID"
               }
             }
           }
@@ -2898,8 +2835,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "ids": "number[] 流水ID数组",
-                "bookId": "string 账本ID"
+                "ids": "number[] 流水ID数组"
               }
             }
           }
@@ -2945,9 +2881,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "bookId": "string 账本ID"
-              }
+              "schema": {}
             }
           }
         },
@@ -2992,9 +2926,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "bookId": "string 账本ID"
-              }
+              "schema": {}
             }
           }
         },
@@ -3040,7 +2972,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "mode": "string 导入模式（add-追加，overwrite-覆盖）",
                 "flows": []
               }
@@ -3089,7 +3020,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID"
               }
             }
@@ -3137,7 +3067,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID",
                 "invoice": "string 发票文件名"
               }
@@ -3215,7 +3144,6 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID",
                 "invoice": "string 发票文件名"
               }
@@ -3264,7 +3192,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID（可选）",
                 "flowType": "string 流水类型（可选）",
                 "industryType": "string 行业分类（可选）",
@@ -3322,7 +3249,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID（可选）",
                 "flowType": "string 流水类型（可选）",
                 "industryType": "string 行业分类（可选）",
@@ -3383,7 +3309,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID",
                 "expectDay": "string 预期收款日期（可选）"
               }
@@ -3435,7 +3360,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）"
               }
             }
@@ -3483,7 +3407,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）"
               }
             }
@@ -3531,7 +3454,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "flowType": "string 流水类型（可选）"
               }
             }
@@ -3579,7 +3501,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "type": "string 类型分类",
                 "oldValue": "string 原类型值",
                 "value": "string 新类型值"
@@ -3631,7 +3552,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 流水ID",
                 "day": "string 日期",
                 "flowType": "string 流水类型（收入、支出）",
@@ -3687,7 +3607,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "ids": "number[] 流水ID数组",
                 "flowType": "string 流水类型（可选）",
                 "industryType": "string 行业分类（可选）",
@@ -3739,7 +3658,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "status": "number 状态过滤（可选）"
               }
             }
@@ -3787,7 +3705,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 待收款ID"
               }
             }
@@ -3835,7 +3752,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 待收款ID",
                 "actualDay": "string 实际收款日期",
                 "payType": "string 收款方式（可选）",
@@ -3890,7 +3806,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "id": "number 待收款ID",
                 "name": "string 待收款名称（可选）",
                 "description": "string 描述（可选）",
@@ -3970,9 +3885,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "bookId": "string 账本ID"
-              }
+              "schema": {}
             }
           }
         },
@@ -4006,7 +3919,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "types": []
               }
             }
@@ -4054,7 +3966,6 @@
           "content": {
             "application/json": {
               "schema": {
-                "bookId": "string 账本ID",
                 "old": "string 原密码",
                 "new": "string 新密码",
                 "againNew": "string 确认新密码"

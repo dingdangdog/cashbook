@@ -83,7 +83,6 @@ const swaggerDefinition = {
       CreateFlowDto: {
         day: "string | 流水发生日期",
         flowType: "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
-        bookId: "number|string | 账本ID",
         type: "string | 分类类型 (例如：餐饮, 交通, 工资等)",
         payType: "string | 支付方式 (例如：现金, 支付宝, 微信支付, 银行卡)",
         money: "number | 金额",
@@ -94,7 +93,6 @@ const swaggerDefinition = {
       // 更新流水的传输实体
       UpdateFlowDto: {
         day: "string | 流水发生日期",
-        bookId: "number|string | 账本ID",
         flowType: "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
         type: "string | 分类类型",
         payType: "string | 支付方式",
@@ -108,7 +106,6 @@ const swaggerDefinition = {
         pageNum: "number | 页码，默认为 1",
         pageSize: "number | 每页大小，默认为 20",
         id: "string|number | 流水ID",
-        bookId: "string|number | 账本ID",
         startDay: "string | 查询起始日期",
         endDay: "string | 查询结束日期",
         flowType: "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
@@ -135,7 +132,6 @@ const swaggerDefinition = {
 
       //# 通用图表查询参数
       CommonChartQuery: {
-        bookId: "string | 账本ID",
         flowType: "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
         startDay: "string | 查询起始日期",
         endDay: "string | 查询结束日期",
@@ -151,7 +147,6 @@ const swaggerDefinition = {
 
       //# 类型操作实体 (用于修改分类名称等)
       Typer: {
-        bookId: "string | 账本ID",
         flowType: "string | 流水类型 (in: 收入, out: 支出, zero: 不计收支)",
         type: "string | 类别名称",
         value: "string | 新的类别值",
@@ -186,22 +181,10 @@ const swaggerDefinition = {
         createDate: "string | 用户创建日期",
       },
 
-      // 账本
-      Book: {
-        id: "number | 账本内部ID",
-        bookId: "string | 账本唯一标识符 (例如 UUID)",
-        bookName: "string | 账本名称",
-        shareKey: "string | 账本分享密钥 (用于共享，如果需要)",
-        userId: "number | 账本所属用户ID",
-        budget: "number | 账本预算金额",
-        createDate: "string | 账本创建日期",
-      },
-
       // 流水
       Flow: {
         id: "number | 流水ID",
         userId: "number | 流水所属用户ID",
-        bookId: "string | 流水所属账本ID",
         day: "string | 流水发生日期 (YYYY-MM-DD)",
         flowType: "string | 流水类型：收入(in)、支出(out)、不计收支(zero)",
         industryType: "string | 行业分类（例如：餐饮, 交通, 工资等）",
@@ -220,7 +203,6 @@ const swaggerDefinition = {
       Budget: {
         id: "number | 预算ID",
         userId: "number | 预算所属用户ID",
-        bookId: "string | 预算所属账本ID",
         month: "string | 预算所属月份 (YYYY-MM)",
         budget: "number | 预算金额",
         used: "number | 已使用金额",
@@ -230,7 +212,6 @@ const swaggerDefinition = {
       FixedFlow: {
         id: "number | 固定流水ID",
         userId: "number | 固定流水所属用户ID",
-        bookId: "string | 固定流水所属账本ID",
         startMonth: "string | 开始生效月份 (YYYY-MM)",
         endMonth: "string | 结束生效月份 (YYYY-MM)",
         month: "string | 当前固定流水的月份 (用于记录当月生成情况)",
@@ -247,11 +228,8 @@ const swaggerDefinition = {
       TypeRelation: {
         id: "number | 关联ID",
         userId: "number | 所属用户ID",
-        bookId: "string | 所属账本ID",
         source: "string | 源类型值 (例如：支付宝账单中的原始类别)",
         target: "string | 目标类型值 (映射到的系统内部类别)",
-        bookName: "string | 账本名称 (用于显示，非数据库字段)",
-        bookDbId: "number | 账本数据库内部ID (用于显示，非数据库字段)",
       },
       // --- 结束引用你给出的类型定义 ---
     },

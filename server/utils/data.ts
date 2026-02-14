@@ -1,13 +1,10 @@
 import prisma from "~~/server/lib/prisma";
 
-export const initTypeRelation = async (bookId?: string) => {
-  if (!bookId) {
-    bookId = "0";
-  }
+export const initTypeRelation = async () => {
   // 初始化 TypeRelation 配置
-  const types = await prisma.typeRelation.count({ where: { bookId } });
+  const types = await prisma.typeRelation.count();
   if (types < 1) {
-    console.log("~初始化类型转换数据~" + bookId);
+    console.log("~初始化类型转换数据~");
     const typeRelations = {
       食品酒饮: "餐饮美食",
       餐饮美食: "餐饮美食",
@@ -57,7 +54,6 @@ export const initTypeRelation = async (bookId?: string) => {
 
     for (const [s, t] of Object.entries(typeRelations)) {
       dataList.push({
-        bookId: bookId,
         userId: 0,
         source: s,
         target: t,

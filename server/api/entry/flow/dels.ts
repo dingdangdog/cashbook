@@ -14,7 +14,6 @@ import prisma from "~~/server/lib/prisma";
  *         application/json:
  *           schema:
  *             ids: number[] 流水ID数组
- *             bookId: string 账本ID
  *     responses:
  *       200:
  *         description: 批量删除成功
@@ -32,12 +31,9 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const ids = body.ids;
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
   if (!ids) {
     return error("Not Find ID");
@@ -45,7 +41,6 @@ export default defineEventHandler(async (event) => {
   const deleted = await prisma.flow.deleteMany({
     where: {
       id: { in: ids },
-      bookId,
     },
   });
   return success(deleted);

@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             id: number 固定流水ID
  *             month: string 月份
  *             money: number 金额
@@ -40,11 +39,8 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find ID"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const {
     id,
     month,
@@ -61,7 +57,7 @@ export default defineEventHandler(async (event) => {
     return error("Not Find ID");
   }
   const updated = await prisma.fixedFlow.update({
-    where: { id, bookId },
+    where: { id },
     data: {
       month,
       money: Number(money || 0),

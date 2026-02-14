@@ -13,7 +13,6 @@ import prisma from "~~/server/lib/prisma";
  *       content:
  *         application/json:
  *           schema:
- *             bookId: string 账本ID
  *             type: string 类型分类
  *             oldValue: string 原类型值
  *             value: string 新类型值
@@ -35,19 +34,14 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"Not Find ID" | "Not Find value" | "Unknown Type"）
  *               }
  */
-const DEFAULT_BOOK_ID = "0";
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
   if (!body.value || !body.type || !body.oldValue) {
     return error("Not Find value");
   }
 
-  const where: any = {
-    bookId,
-  };
+  const where: any = {};
   const data: any = {};
   if (body.type == "支出类型/收入类型") {
     where.industryType = String(body.oldValue);

@@ -15,32 +15,6 @@ const query = ref<TypeRelation | any>({});
 const tabledata = ref<{ total?: number; data?: TypeRelation[] }>({});
 const loading = ref(false);
 
-// 是否显示模板数据
-const showTemplateData = ref(false);
-
-// 账本选择列表
-const bookOptions = ref<{ text: string; value: string }[]>([]);
-
-// 获取账本列表
-const getBookList = async () => {
-  try {
-    const books = (await doApi.post(
-      "api/admin/entry/books/list",
-      {}
-    )) as Book[];
-    bookOptions.value = [
-      { text: "全部账本", value: "" },
-      { text: "🔧 模板数据", value: "0" },
-      ...books.map((book: Book) => ({
-        text: `${book.bookName} (${book.bookId})`,
-        value: book.bookId,
-      })),
-    ];
-  } catch (error) {
-    console.error("获取账本列表失败:", error);
-  }
-};
-
 const editItem = ref<TypeRelation | any>();
 const editDialogTitle = ref("Title");
 
@@ -85,14 +59,7 @@ const toDelete = (item: TypeRelation) => {
 
 const getPages = () => {
   loading.value = true;
-
-  // 如果没有显式选择查看模板数据，则过滤掉模板数据
-  const queryParams = { ...query.value };
-  if (!showTemplateData.value && !query.value.bookId) {
-    queryParams.excludeTemplate = true; // 添加排除模板数据的标志
-  }
-
-  page(pageQuery.value, queryParams).then((res) => {
+  page(pageQuery.value, { ...query.value }).then((res) => {
     tabledata.value = res;
     loading.value = false;
   });
@@ -123,9 +90,7 @@ const endItem = computed(() => {
   return Math.min(end, tabledata.value.total || 0);
 });
 
-// 初始化
 onMounted(() => {
-  getBookList();
   getPages();
 });
 </script>
@@ -139,19 +104,6 @@ onMounted(() => {
       <div class="flex flex-col lg:flex-row gap-4 items-end">
         <!-- 搜索输入框 -->
         <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <select
-            v-model="query.bookId"
-            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option
-              v-for="option in bookOptions"
-              :key="option.value"
-              :value="option.value"
-              class="text-sm w-64 text-ellipsis overflow-hidden"
-            >
-              {{ option.text }}
-            </option>
-          </select>
           <input
             v-model="query.userId"
             type="number"
@@ -251,11 +203,6 @@ onMounted(() => {
               <th
                 class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
-                账本信息
-              </th>
-              <th
-                class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-              >
                 用户ID
               </th>
               <th
@@ -281,37 +228,6 @@ onMounted(() => {
               :key="item.id"
               class="hover:bg-gray-700/30 transition-colors"
             >
-              <td class="px-4 py-2 whitespace-nowrap text-sm">
-                <div class="flex flex-col">
-                  <div class="flex items-center space-x-2">
-                    <span
-                      v-if="item.bookId === '0'"
-                      class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded"
-                    >
-                      模板数据
-                    </span>
-                    <span
-                      class="font-medium"
-                      :class="
-                        item.bookId === '0'
-                          ? 'text-orange-400'
-                          : 'text-blue-400'
-                      "
-                    >
-                      {{
-                        item.bookId === "0"
-                          ? "系统模板"
-                          : item.bookName || "未知账本"
-                      }}
-                    </span>
-                  </div>
-                  <div class="flex space-x-2 text-xs text-gray-500 mt-1">
-                    <span>DB ID: {{ item.bookDbId || "N/A" }}</span>
-                    <span>|</span>
-                    <span>业务ID: {{ item.bookId }}</span>
-                  </div>
-                </div>
-              </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm text-white">
                 {{ item.userId }}
               </td>
