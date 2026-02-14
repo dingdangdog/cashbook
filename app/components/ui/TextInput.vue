@@ -10,15 +10,19 @@ const props = withDefaults(
     error?: string;
     required?: boolean;
     autocomplete?: string;
+    /** 输入类型：text | number 等 */
+    type?: string;
+    step?: string;
     /** 是否为密码框（带显示/隐藏切换） */
     password?: boolean;
+    disabled?: boolean;
   }>(),
-  { password: false },
+  { password: false, type: "text" },
 );
 
 const showPassword = ref(false);
 const inputType = computed(() =>
-  props.password ? (showPassword.value ? "text" : "password") : "text",
+  props.password ? (showPassword.value ? "text" : "password") : props.type,
 );
 </script>
 
@@ -36,8 +40,9 @@ const inputType = computed(() =>
         :type="inputType"
         :placeholder="placeholder"
         :autocomplete="autocomplete"
+        :disabled="disabled"
         :class="[
-          'w-full px-3 py-2 pr-10 border rounded-lg bg-background text-foreground placeholder-foreground/40 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 input-no-outline',
+          'w-full px-3 py-2 pr-10 border rounded-lg bg-background text-foreground placeholder-foreground/40 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 input-no-outline disabled:opacity-70 disabled:cursor-not-allowed',
           error ? 'border-red-500 bg-red-900/10' : 'border-border',
         ]"
       />
@@ -54,10 +59,12 @@ const inputType = computed(() =>
     <input
       v-else
       v-model="model"
-      type="text"
+      :type="type"
+      :step="step"
       :placeholder="placeholder"
+      :disabled="disabled"
       :class="[
-        'w-full px-3 py-2 border rounded-lg bg-background text-foreground placeholder-foreground/40 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 input-no-outline',
+        'w-full px-3 py-2 border rounded-lg bg-background text-foreground placeholder-foreground/40 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 input-no-outline disabled:opacity-70 disabled:cursor-not-allowed',
         error ? 'border-red-500 bg-red-900/10' : 'border-border',
       ]"
     />

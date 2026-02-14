@@ -28,133 +28,40 @@
       <div class="p-2 md:p-4 space-y-2 max-h-[80vh] overflow-y-auto">
         <!-- 日期选择 -->
         <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
+          <label class="block text-sm font-semibold text-foreground/80 mb-1">
             日期
           </label>
           <UiDatePicker v-model="flowEdit.day" class="w-full" />
         </div>
 
         <!-- 流水类型 -->
-        <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
-            流水类型
-          </label>
-          <select
-            v-model="flowEdit.flowType"
-            @change="changeFlowTypes"
-            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option value="">请选择流水类型</option>
-            <option
-              v-for="type in flowTypeDialogOptions"
-              :key="type"
-              :value="type"
-            >
-              {{ type }}
-            </option>
-          </select>
-        </div>
+        <UiComboInput
+          v-model="flowEdit.flowType"
+          label="流水类型"
+          placeholder="请选择流水类型"
+          :options="flowTypeDialogOptions"
+          @change="changeFlowTypes"
+        />
 
         <!-- 支出类型/收入类型 -->
-        <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
-            {{ industryTypeLabel }}
-          </label>
-          <div class="relative">
-            <input
-              v-model="flowEdit.industryType"
-              @input="
-                (industryTypeSearchText = flowEdit.industryType),
-                  (showIndustryTypeDropdown = true),
-                  (industryActiveIndex = 0)
-              "
-              @focus="
-                (showIndustryTypeDropdown = true), (industryActiveIndex = 0)
-              "
-              @blur="hideIndustryTypeDropdown"
-              @keydown="onIndustryKeydown($event)"
-              placeholder="输入或选择类型"
-              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <!-- 下拉选项 -->
-            <div
-              v-if="
-                showIndustryTypeDropdown &&
-                filteredIndustryTypeOptions.length > 0
-              "
-              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <div
-                v-for="(item, index) in filteredIndustryTypeOptions"
-                :key="item"
-                @mousedown="selectIndustryType(item)"
-                :class="[
-                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground',
-                  index === industryActiveIndex
-                    ? 'bg-surface-muted'
-                    : '',
-                ]"
-              >
-                {{ item }}
-              </div>
-            </div>
-          </div>
-        </div>
+        <UiComboInput
+          v-model="flowEdit.industryType"
+          :label="industryTypeLabel"
+          placeholder="输入或选择类型"
+          :options="industryTypeOptions"
+        />
 
         <!-- 支付方式/收款方式 -->
-        <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
-            {{ payTypeLabel }}
-          </label>
-          <div class="relative">
-            <input
-              v-model="flowEdit.payType"
-              @input="
-                (payTypeSearchText = flowEdit.payType),
-                  (showPayTypeDropdown = true),
-                  (payTypeActiveIndex = 0)
-              "
-              @focus="(showPayTypeDropdown = true), (payTypeActiveIndex = 0)"
-              @blur="hidePayTypeDropdown"
-              @keydown="onPayTypeKeydown($event)"
-              placeholder="输入或选择支付方式"
-              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <!-- 下拉选项 -->
-            <div
-              v-if="showPayTypeDropdown && filteredPayTypeOptions.length > 0"
-              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <div
-                v-for="(item, index) in filteredPayTypeOptions"
-                :key="item"
-                @mousedown="selectPayType(item)"
-                :class="[
-                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground',
-                  index === payTypeActiveIndex
-                    ? 'bg-surface-muted'
-                    : '',
-                ]"
-              >
-                {{ item }}
-              </div>
-            </div>
-          </div>
-        </div>
+        <UiComboInput
+          v-model="flowEdit.payType"
+          :label="payTypeLabel"
+          placeholder="输入或选择支付方式"
+          :options="payTypeOptions"
+        />
 
         <!-- 金额 -->
         <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
+          <label class="block text-sm font-semibold text-foreground/80 mb-1">
             金额
           </label>
           <input
@@ -167,98 +74,23 @@
         </div>
 
         <!-- 流水归属 -->
-        <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
-            流水归属
-          </label>
-          <div class="relative">
-            <input
-              v-model="flowEdit.attribution"
-              @input="
-                (attributionSearchText = flowEdit.attribution),
-                  (showAttributionDropdown = true),
-                  (attributionActiveIndex = 0)
-              "
-              @focus="
-                (showAttributionDropdown = true), (attributionActiveIndex = 0)
-              "
-              @blur="hideAttributionDropdown"
-              @keydown="onAttributionKeydown($event)"
-              placeholder="输入或选择归属"
-              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <!-- 下拉选项 -->
-            <div
-              v-if="showAttributionDropdown && attributionList.length > 0"
-              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <div
-                v-for="(item, index) in filteredAttributionList"
-                :key="item"
-                @mousedown="selectAttribution(item)"
-                :class="[
-                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground',
-                  index === attributionActiveIndex
-                    ? 'bg-surface-muted'
-                    : '',
-                ]"
-              >
-                {{ item }}
-              </div>
-            </div>
-          </div>
-        </div>
+        <UiComboInput
+          v-model="flowEdit.attribution"
+          label="流水归属"
+          placeholder="输入或选择归属"
+          :options="attributionList"
+        />
 
         <!-- 流水名称 -->
-        <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
-            流水名称
-          </label>
-          <div class="relative">
-            <input
-              v-model="flowEdit.name"
-              @input="
-                (nameSearchText = flowEdit.name),
-                  (showNameDropdown = true),
-                  (nameActiveIndex = 0)
-              "
-              @focus="(showNameDropdown = true), (nameActiveIndex = 0)"
-              @blur="hideNameDropdown"
-              @keydown="onNameKeydown($event)"
-              placeholder="输入或选择名称"
-              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <!-- 下拉选项 -->
-            <div
-              v-if="showNameDropdown && nameList.length > 0"
-              class="absolute z-10 w-full mt-1 bg-surface border border-border rounded-md shadow-lg max-h-60 overflow-y-auto"
-            >
-              <div
-                v-for="(item, index) in filteredNameList"
-                :key="item"
-                @mousedown="selectName(item)"
-                :class="[
-                  'px-3 py-2 hover:bg-surface-muted cursor-pointer text-sm text-foreground line-clamp-1',
-                  index === nameActiveIndex
-                    ? 'bg-surface-muted'
-                    : '',
-                ]"
-              >
-                {{ item }}
-              </div>
-            </div>
-          </div>
-        </div>
+        <UiTextInput
+          v-model="flowEdit.name"
+          label="流水名称"
+          placeholder="输入或选择名称"
+        />
 
         <!-- 备注 -->
         <div>
-          <label
-            class="block text-sm font-semibold text-foreground/80 mb-1"
-          >
+          <label class="block text-sm font-semibold text-foreground/80 mb-1">
             备注
           </label>
           <textarea
@@ -300,7 +132,7 @@
 
 <script setup lang="ts">
 import { showFlowEditDialog } from "~/utils/flag";
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
@@ -323,12 +155,6 @@ const industryTypeLabel = ref("支出类型/收入类型");
 const payTypeLabel = ref("支付方式/收款方式");
 const flowTypeDialogOptions = ref(["支出", "收入", "不计收支"]);
 
-// 下拉框显示状态
-const showIndustryTypeDropdown = ref(false);
-const showPayTypeDropdown = ref(false);
-const showAttributionDropdown = ref(false);
-const showNameDropdown = ref(false);
-
 // 支出类型/收入类型
 const industryTypeOptions = ref<any[]>([]);
 // 支付类型
@@ -337,20 +163,9 @@ const flowEdit = ref<Flow | any>({
   flowType: "",
 });
 
-const nameList = ref<string[]>([]);
-const getNames = async () => {
-  const res = await doApi.post<string[]>("api/entry/flow/getNames", {
-    
-  });
-  nameList.value = res;
-};
-getNames();
-
 const attributionList = ref<string[]>([]);
 const getAttributions = async () => {
-  const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-    
-  });
+  const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {});
   attributionList.value = res;
 };
 getAttributions();
@@ -382,10 +197,10 @@ onMounted(() => {
 
 // 修改FlowType后联动
 const changeFlowTypes = () => {
-  if (flowEdit.value.flowType === "支出") {
+  if (flowEdit.value.flowType == "支出") {
     industryTypeLabel.value = "支出类型";
     payTypeLabel.value = "支付方式";
-  } else if (flowEdit.value.flowType === "收入") {
+  } else if (flowEdit.value.flowType == "收入") {
     industryTypeLabel.value = "收入类型";
     payTypeLabel.value = "收款方式";
   } else {
@@ -405,228 +220,6 @@ const changeFlowTypes = () => {
   });
 };
 changeFlowTypes();
-
-// 添加筛选相关的响应式变量
-const industryTypeSearchText = ref("");
-const payTypeSearchText = ref("");
-
-// 计算属性：筛选后的选项
-const filteredIndustryTypeOptions = computed(() => {
-  if (!industryTypeSearchText.value) {
-    return industryTypeOptions.value;
-  }
-  return industryTypeOptions.value.filter((item) =>
-    item.toLowerCase().includes(industryTypeSearchText.value.toLowerCase())
-  );
-});
-
-const filteredPayTypeOptions = computed(() => {
-  if (!payTypeSearchText.value) {
-    return payTypeOptions.value;
-  }
-  return payTypeOptions.value.filter((item) =>
-    item.toLowerCase().includes(payTypeSearchText.value.toLowerCase())
-  );
-});
-
-// 归属与名称的前端过滤
-const attributionSearchText = ref("");
-const nameSearchText = ref("");
-
-const filteredAttributionList = computed(() => {
-  if (!attributionSearchText.value) return attributionList.value;
-  return attributionList.value.filter((item) =>
-    item.toLowerCase().includes(attributionSearchText.value.toLowerCase())
-  );
-});
-
-const filteredNameList = computed(() => {
-  if (!nameSearchText.value) return nameList.value;
-  return nameList.value.filter((item) =>
-    item.toLowerCase().includes(nameSearchText.value.toLowerCase())
-  );
-});
-
-// 键盘导航：活动索引（响应式）
-const industryActiveIndex = ref(0);
-const payTypeActiveIndex = ref(0);
-const attributionActiveIndex = ref(0);
-const nameActiveIndex = ref(0);
-
-const clampIndex = (index: number, length: number) => {
-  if (length <= 0) return -1;
-  if (index < 0) return length - 1;
-  if (index >= length) return 0;
-  return index;
-};
-
-const onIndustryKeydown = (e: KeyboardEvent) => {
-  const list = filteredIndustryTypeOptions.value;
-  if (
-    !showIndustryTypeDropdown.value &&
-    (e.key === "ArrowDown" || e.key === "ArrowUp")
-  ) {
-    showIndustryTypeDropdown.value = true;
-  }
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
-    industryActiveIndex.value = clampIndex(
-      industryActiveIndex.value + 1,
-      list.length
-    );
-  } else if (e.key === "ArrowUp") {
-    e.preventDefault();
-    industryActiveIndex.value = clampIndex(
-      industryActiveIndex.value - 1,
-      list.length
-    );
-  } else if (e.key === "Enter") {
-    e.preventDefault();
-    if (
-      industryActiveIndex.value >= 0 &&
-      industryActiveIndex.value < list.length
-    ) {
-      selectIndustryType(list[industryActiveIndex.value]);
-    }
-  } else if (e.key === "Escape") {
-    showIndustryTypeDropdown.value = false;
-  }
-};
-
-const onPayTypeKeydown = (e: KeyboardEvent) => {
-  const list = filteredPayTypeOptions.value;
-  if (
-    !showPayTypeDropdown.value &&
-    (e.key === "ArrowDown" || e.key === "ArrowUp")
-  ) {
-    showPayTypeDropdown.value = true;
-  }
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
-    payTypeActiveIndex.value = clampIndex(
-      payTypeActiveIndex.value + 1,
-      list.length
-    );
-  } else if (e.key === "ArrowUp") {
-    e.preventDefault();
-    payTypeActiveIndex.value = clampIndex(
-      payTypeActiveIndex.value - 1,
-      list.length
-    );
-  } else if (e.key === "Enter") {
-    e.preventDefault();
-    if (
-      payTypeActiveIndex.value >= 0 &&
-      payTypeActiveIndex.value < list.length
-    ) {
-      selectPayType(list[payTypeActiveIndex.value]);
-    }
-  } else if (e.key === "Escape") {
-    showPayTypeDropdown.value = false;
-  }
-};
-
-const onAttributionKeydown = (e: KeyboardEvent) => {
-  const list = attributionList.value;
-  if (
-    !showAttributionDropdown.value &&
-    (e.key === "ArrowDown" || e.key === "ArrowUp")
-  ) {
-    showAttributionDropdown.value = true;
-  }
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
-    attributionActiveIndex.value = clampIndex(
-      attributionActiveIndex.value + 1,
-      list.length
-    );
-  } else if (e.key === "ArrowUp") {
-    e.preventDefault();
-    attributionActiveIndex.value = clampIndex(
-      attributionActiveIndex.value - 1,
-      list.length
-    );
-  } else if (e.key === "Enter") {
-    e.preventDefault();
-    if (
-      attributionActiveIndex.value >= 0 &&
-      attributionActiveIndex.value < list.length
-    ) {
-      selectAttribution(list[attributionActiveIndex.value]);
-    }
-  } else if (e.key === "Escape") {
-    showAttributionDropdown.value = false;
-  }
-};
-
-const onNameKeydown = (e: KeyboardEvent) => {
-  const list = nameList.value;
-  if (
-    !showNameDropdown.value &&
-    (e.key === "ArrowDown" || e.key === "ArrowUp")
-  ) {
-    showNameDropdown.value = true;
-  }
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
-    nameActiveIndex.value = clampIndex(nameActiveIndex.value + 1, list.length);
-  } else if (e.key === "ArrowUp") {
-    e.preventDefault();
-    nameActiveIndex.value = clampIndex(nameActiveIndex.value - 1, list.length);
-  } else if (e.key === "Enter") {
-    e.preventDefault();
-    if (nameActiveIndex.value >= 0 && nameActiveIndex.value < list.length) {
-      selectName(list[nameActiveIndex.value]);
-    }
-  } else if (e.key === "Escape") {
-    showNameDropdown.value = false;
-  }
-};
-
-// 下拉框处理方法
-const hideIndustryTypeDropdown = () => {
-  setTimeout(() => {
-    showIndustryTypeDropdown.value = false;
-  }, 200);
-};
-
-const hidePayTypeDropdown = () => {
-  setTimeout(() => {
-    showPayTypeDropdown.value = false;
-  }, 200);
-};
-
-const hideAttributionDropdown = () => {
-  setTimeout(() => {
-    showAttributionDropdown.value = false;
-  }, 200);
-};
-
-const hideNameDropdown = () => {
-  setTimeout(() => {
-    showNameDropdown.value = false;
-  }, 200);
-};
-
-const selectIndustryType = (item: string) => {
-  flowEdit.value.industryType = item;
-  showIndustryTypeDropdown.value = false;
-};
-
-const selectPayType = (item: string) => {
-  flowEdit.value.payType = item;
-  showPayTypeDropdown.value = false;
-};
-
-const selectAttribution = (item: string) => {
-  flowEdit.value.attribution = item;
-  showAttributionDropdown.value = false;
-};
-
-const selectName = (item: string) => {
-  flowEdit.value.name = item;
-  showNameDropdown.value = false;
-};
 
 // 提交表单（新增或修改）
 const confirmForm = async (again: boolean) => {
