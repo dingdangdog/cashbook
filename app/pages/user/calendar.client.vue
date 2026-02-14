@@ -27,8 +27,12 @@
               />
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-xs md:text-sm font-medium text-foreground/70">总收入</p>
-              <p class="text-sm md:text-xl font-bold text-primary-700 dark:text-primary-300 truncate">
+              <p class="text-xs md:text-sm font-medium text-foreground/70">
+                总收入
+              </p>
+              <p
+                class="text-sm md:text-xl font-bold text-primary-700 dark:text-primary-300 truncate"
+              >
                 {{ getInMonth().toFixed(2) }}
               </p>
             </div>
@@ -48,15 +52,21 @@
               />
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-xs md:text-sm font-medium text-foreground/70">总支出</p>
-              <p class="text-sm md:text-xl font-bold text-red-700 dark:text-red-300 truncate">
+              <p class="text-xs md:text-sm font-medium text-foreground/70">
+                总支出
+              </p>
+              <p
+                class="text-sm md:text-xl font-bold text-red-700 dark:text-red-300 truncate"
+              >
                 {{ getOutMonth().toFixed(2) }}
               </p>
             </div>
           </div>
         </div>
 
-        <div class="bg-surface rounded-lg md:rounded-xl shadow border border-border">
+        <div
+          class="bg-surface rounded-lg md:rounded-xl shadow border border-border"
+        >
           <div class="flex items-center gap-2 md:gap-3 p-2 md:p-4">
             <div
               class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -76,7 +86,9 @@
               />
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-xs md:text-sm font-medium text-foreground/70">结余</p>
+              <p class="text-xs md:text-sm font-medium text-foreground/70">
+                净收入
+              </p>
               <p
                 class="text-sm md:text-xl font-bold truncate"
                 :class="
@@ -150,11 +162,20 @@
       class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 md:p-4 z-50"
       @click="monthAnalysisDialog = false"
     >
-      <div class="bg-surface rounded-xl shadow-2xl max-w-2xl w-full border border-border" @click.stop>
-        <div class="flex items-center justify-between p-4 border-b border-border">
+      <div
+        class="bg-surface rounded-xl shadow-2xl max-w-2xl w-full border border-border"
+        @click.stop
+      >
+        <div
+          class="flex items-center justify-between p-4 border-b border-border"
+        >
           <div class="flex items-center gap-3">
-            <ChartBarIcon class="w-6 h-6 text-primary-600 dark:text-primary-400" />
-            <h3 class="text-lg font-semibold text-foreground">{{ monthTitle }} 流水分析</h3>
+            <ChartBarIcon
+              class="w-6 h-6 text-primary-600 dark:text-primary-400"
+            />
+            <h3 class="text-lg font-semibold text-foreground">
+              {{ monthTitle }} 流水分析
+            </h3>
           </div>
           <button
             @click="monthAnalysisDialog = false"
@@ -179,10 +200,14 @@
         class="bg-surface rounded-xl shadow-2xl w-full max-w-6xl max-h-[85vh] overflow-hidden flex flex-col border border-border"
         @click.stop
       >
-        <div class="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0">
+        <div
+          class="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0"
+        >
           <h2 class="text-base font-bold text-foreground">
             {{ flowQuery.startDay }} ~ {{ flowQuery.endDay }}
-            <span v-if="flowQuery.flowType" class="text-foreground/70"> · {{ flowQuery.flowType }}</span>
+            <span v-if="flowQuery.flowType" class="text-foreground/70">
+              · {{ flowQuery.flowType }}</span
+            >
           </h2>
           <button
             @click="showFlowTable = false"
@@ -213,7 +238,9 @@
         class="bg-surface text-foreground rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col border border-border"
         @click.stop
       >
-        <div class="px-4 py-3 border-b border-border flex justify-between items-center">
+        <div
+          class="px-4 py-3 border-b border-border flex justify-between items-center"
+        >
           <h3 class="text-lg font-semibold">CSV流水导入</h3>
           <button
             @click="closeCsvTableDialog"
@@ -426,8 +453,10 @@ const initQuery = () => {
       const month = dayToMonth(data.type);
       outDayCount.value[data.type] = data.outSum;
       inDayCount.value[data.type] = data.inSum;
-      outMonthCount.value[month] = (outMonthCount.value[month] || 0) + Number(data.outSum);
-      inMonthCount.value[month] = (inMonthCount.value[month] || 0) + Number(data.inSum);
+      outMonthCount.value[month] =
+        (outMonthCount.value[month] || 0) + Number(data.outSum);
+      inMonthCount.value[month] =
+        (inMonthCount.value[month] || 0) + Number(data.inSum);
     });
   });
 };
@@ -436,11 +465,11 @@ const clickDay = (day: string, flowType?: string) => {
   if (day === "") {
     flowQuery.value.startDay = dateFormater(
       "YYYY-MM-dd",
-      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth(), 1)
+      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth(), 1),
     );
     flowQuery.value.endDay = dateFormater(
       "YYYY-MM-dd",
-      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth() + 1, 0)
+      new Date(nowDate.value.getFullYear(), nowDate.value.getMonth() + 1, 0),
     );
   } else {
     flowQuery.value.startDay = day;
@@ -534,13 +563,18 @@ const addFlowSuccess = (flow: Flow) => {
 };
 
 const showMonthAnalysis = (month: string) => {
-  let monthParam = month.replace("年", "-").replace("月", "").replaceAll(" ", "");
+  let monthParam = month
+    .replace("年", "-")
+    .replace("月", "")
+    .replaceAll(" ", "");
   monthTitle.value = month;
   if (monthParam.split("-")[1]?.length === 1) {
     monthParam = monthParam.split("-")[0] + "-0" + monthParam.split("-")[1];
   }
   doApi
-    .post<MonthAnalysis>("api/entry/analytics/monthAnalysis", { month: monthParam })
+    .post<MonthAnalysis>("api/entry/analytics/monthAnalysis", {
+      month: monthParam,
+    })
     .then((res) => {
       monthAnalysisData.value = res;
       monthAnalysisDialog.value = true;
@@ -559,7 +593,10 @@ const getNames = async () => {
 
 const getAttributions = async () => {
   try {
-    const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {});
+    const res = await doApi.post<string[]>(
+      "api/entry/flow/getAttributions",
+      {},
+    );
     attributionList.value = res ?? [];
   } catch (e) {
     console.error("获取归属列表失败:", e);
@@ -636,9 +673,12 @@ const readCsvInfo = (event: Event) => {
         }
         csvDatas.value.push(row);
         let flow;
-        if (fileType.value === "alipay") flow = alipayConvert(row, csvHeaders.value);
-        else if (fileType.value === "wxpay") flow = wxpayConvert(row, csvHeaders.value);
-        else if (fileType.value === "jdFinance") flow = jdFinanceConvert(row, csvHeaders.value);
+        if (fileType.value === "alipay")
+          flow = alipayConvert(row, csvHeaders.value);
+        else if (fileType.value === "wxpay")
+          flow = wxpayConvert(row, csvHeaders.value);
+        else if (fileType.value === "jdFinance")
+          flow = jdFinanceConvert(row, csvHeaders.value);
         else flow = templateConvert(row, csvHeaders.value);
         csvFlows.value.push(flow);
       });
