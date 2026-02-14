@@ -1,11 +1,8 @@
 import prisma from "~~/server/lib/prisma";
 
-export const initTypeRelation = async () => {
-  // 初始化 TypeRelation 配置
-  const types = await prisma.typeRelation.count();
-  if (types < 1) {
-    console.log("~初始化类型转换数据~");
-    const typeRelations = {
+/** @param userId 指定用户 ID 时仅初始化该用户的配置；不传时沿用旧逻辑（全局 count，无数据则创建 userId=0） */
+export const initTypeRelation = async (userId?: number) => {
+  const typeRelations = {
       食品酒饮: "餐饮美食",
       餐饮美食: "餐饮美食",
       家居家装: "日用百货",
@@ -50,17 +47,26 @@ export const initTypeRelation = async () => {
       退款: "退款",
     };
 
-    const dataList: any[] = [];
+  const dataList: any[] = [];
+  const targetUserId = userId ?? 0;
 
-    for (const [s, t] of Object.entries(typeRelations)) {
-      dataList.push({
-        userId: 0,
-        source: s,
-        target: t,
-      });
-    }
-    await prisma.typeRelation.createMany({
-      data: dataList,
+  if (userId !== undefined) {
+    const count = await prisma.typeRelation.count({ where: { userId } });
+    if (count >= 1) return;
+  } else {
+    const types = await prisma.typeRelation.count();
+    if (types >= 1) return;
+    console.log("~初始化类型转换数据~");
+  }
+
+  for (const [s, t] of Object.entries(typeRelations)) {
+    dataList.push({
+      userId: targetUserId,
+      source: s,
+      target: t,
     });
   }
+  await prisma.typeRelation.createMany({
+    data: dataList,
+  });
 };

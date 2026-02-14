@@ -1,4 +1,4 @@
-import { encryptBySHA256 } from "../utils/common";
+import { encryptBySHA256, getUUID } from "../utils/common";
 import prisma from "~~/server/lib/prisma";
 
 /**

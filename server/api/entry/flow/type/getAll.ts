@@ -24,9 +24,10 @@ import prisma from "~~/server/lib/prisma";
  *                 d: [] # { type: 类型分类（"支出类型/收入类型" | "支付方式/收款方式"）, flowType: 流水类型, value: 类型值 }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const flowType = body.flowType;
-  const where: any = {};
+  const where: any = { userId };
 
   if (flowType) {
     where.flowType = {

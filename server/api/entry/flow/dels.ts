@@ -32,6 +32,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const ids = body.ids;
 
@@ -41,6 +42,7 @@ export default defineEventHandler(async (event) => {
   const deleted = await prisma.flow.deleteMany({
     where: {
       id: { in: ids },
+      userId,
     },
   });
   return success(deleted);

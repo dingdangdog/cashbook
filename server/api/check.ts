@@ -19,7 +19,7 @@ import prisma from "~~/server/lib/prisma";
 export default defineEventHandler(async (event) => {
   try {
     const userCount = await prisma.user.count();
-    return success(userCount);
+    return success(userCount > 0 ? 1 : 0);
   } catch (error) {
     console.error("Failed to get user count:", error);
     return success(-1);

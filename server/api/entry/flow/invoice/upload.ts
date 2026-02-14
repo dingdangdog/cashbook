@@ -35,6 +35,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const formdata = await readFormData(event);
   try {
     const files: File[] = formdata.getAll("invoice") as File[];
@@ -66,11 +67,11 @@ export default defineEventHandler(async (event) => {
       await fs.promises.writeFile(path.join(invoicePath, fileName), fileBuffer);
       imageNames.push(fileName);
     }
-    const flow = await prisma.flow.findUnique({
-      where: { id: flowId },
+    const flow = await prisma.flow.findFirst({
+      where: { id: flowId, userId },
     });
     if (!flow) {
-      return;
+      return error("Not Find ID");
     }
     const newInvoices = [];
     if (flow.invoice) {
@@ -78,7 +79,7 @@ export default defineEventHandler(async (event) => {
     }
     newInvoices.push(...imageNames);
     await prisma.flow.update({
-      where: { id: flowId },
+      where: { id: flowId, userId },
       data: {
         invoice: newInvoices.join(","),
       },

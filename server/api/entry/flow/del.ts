@@ -32,15 +32,21 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const id = body.id;
 
   if (!id) {
     return error("Not Find ID");
   }
-  const deleted = await prisma.flow.delete({
-    where: { id },
+  const row = await prisma.flow.findFirst({
+    where: { id: Number(id), userId },
   });
-
+  if (!row) {
+    return error("Not Find ID");
+  }
+  const deleted = await prisma.flow.delete({
+    where: { id: Number(id) },
+  });
   return success(deleted);
 });

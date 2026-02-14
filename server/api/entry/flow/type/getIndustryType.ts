@@ -24,9 +24,10 @@ import prisma from "~~/server/lib/prisma";
  *                 d: [] # {industryType: 行业类型名称}
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const flowType = body.flowType;
-  const where: any = {};
+  const where: any = { userId };
 
   if (flowType) {
     where.flowType = {

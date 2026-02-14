@@ -27,9 +27,10 @@ import prisma from "~~/server/lib/prisma";
  *                 d: [] #[CommonChartData图表通用数据结构：月度流水分析数据数组]
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
 
-  const where: any = {};
+  const where: any = { userId };
   if (body.flowType) {
     where.flowType = {
       equals: body.flowType,

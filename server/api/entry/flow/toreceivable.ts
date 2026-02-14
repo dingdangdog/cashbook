@@ -45,10 +45,11 @@ export default defineEventHandler(async (event) => {
 
   const userId = await getUserId(event);
 
-  // 查询流水记录
+  // 查询流水记录（仅当前用户）
   const flow = await prisma.flow.findFirst({
     where: {
       id: Number(id),
+      userId,
       flowType: "支出", // 只能转换支出流水
     },
   });

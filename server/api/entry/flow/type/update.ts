@@ -35,13 +35,14 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
 
   if (!body.value || !body.type || !body.oldValue) {
     return error("Not Find value");
   }
 
-  const where: any = {};
+  const where: any = { userId };
   const data: any = {};
   if (body.type == "支出类型/收入类型") {
     where.industryType = String(body.oldValue);

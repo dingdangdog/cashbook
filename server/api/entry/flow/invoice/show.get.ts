@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import prisma from "~~/server/lib/prisma";
 
 /**
  * @swagger
@@ -23,20 +24,28 @@ import * as path from "path";
  *               Blob: 文件流，前端直接显示图片
  */
 export default defineEventHandler(async (event) => {
-  // 获取文件路径参数
-  // const file = decodeURIComponent(getRouterParam(event, "file") || "");
   const { invoice } = getQuery(event);
+  if (!invoice) return;
 
-  // 检查文件是否存在
-  if (invoice) {
-    const runtimeConfig = useRuntimeConfig();
-    let dataPath = String(runtimeConfig.dataPath);
-    if (!dataPath) {
-      dataPath = process.cwd();
-    }
-    const invoicePath = path.join(dataPath, "images");
-    const basePath = path.join(invoicePath, String(invoice)); // 替换为你的实际路径
-    // 如果格式不支持，直接返回原图
-    return sendStream(event, fs.createReadStream(basePath));
+  const userId = await getUserId(event);
+  const invoiceStr = String(invoice);
+  const flowId = Number(invoiceStr.split("-")[0]);
+  if (!Number.isFinite(flowId)) {
+    throw createError({ statusCode: 403 });
   }
+  const flow = await prisma.flow.findFirst({
+    where: { id: flowId, userId },
+  });
+  if (!flow) {
+    throw createError({ statusCode: 403 });
+  }
+
+  const runtimeConfig = useRuntimeConfig();
+  let dataPath = String(runtimeConfig.dataPath);
+  if (!dataPath) {
+    dataPath = process.cwd();
+  }
+  const invoicePath = path.join(dataPath, "images");
+  const basePath = path.join(invoicePath, invoiceStr);
+  return sendStream(event, fs.createReadStream(basePath));
 });

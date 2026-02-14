@@ -32,9 +32,10 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const { flowType } = await readBody(event); // 获取查询参数
 
-  const where: any = {}; // 条件查询
+  const where: any = { userId }; // 条件查询（仅当前用户）
 
   if (flowType) {
     where.flowType = {

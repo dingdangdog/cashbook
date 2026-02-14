@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const userId = await getUserId(event);
     const runtimeConfig = useRuntimeConfig();
     let dataPath = String(runtimeConfig.dataPath);
 
@@ -57,8 +58,8 @@ export default defineEventHandler(async (event) => {
 
     const imagePath = path.join(dataPath, "images", String(invoice));
 
-    const flow = await prisma.flow.findUnique({
-      where: { id: Number(id) },
+    const flow = await prisma.flow.findFirst({
+      where: { id: Number(id), userId },
     });
     // 校验图片是否存在
     if (!fs.existsSync(imagePath)) {
@@ -76,7 +77,7 @@ export default defineEventHandler(async (event) => {
 
     // 更新流水信息
     await prisma.flow.update({
-      where: { id: Number(id) },
+      where: { id: Number(id), userId },
       data: {
         invoice: newInvoices.join(","),
       },

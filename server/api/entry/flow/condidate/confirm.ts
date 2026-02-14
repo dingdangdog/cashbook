@@ -33,6 +33,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const { outId, inIds } = body;
   if (!outId) {
@@ -41,21 +42,21 @@ export default defineEventHandler(async (event) => {
   if (!inIds) {
     return error("Not Find IDS");
   }
-  await prisma.flow.update({
-    where: { id: outId },
+  await prisma.flow.updateMany({
+    where: { id: outId, userId },
     data: {
       eliminate: 1,
       flowType: "不计收支",
     },
   });
-  inIds.forEach(async (id: any) => {
-    await prisma.flow.update({
-      where: { id: Number(id) },
+  for (const id of inIds) {
+    await prisma.flow.updateMany({
+      where: { id: Number(id), userId },
       data: {
         eliminate: 1,
         flowType: "不计收支",
       },
     });
-  });
+  }
   return success();
 });

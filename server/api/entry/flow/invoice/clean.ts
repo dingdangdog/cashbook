@@ -34,6 +34,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const id = body.id;
 
@@ -42,12 +43,12 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const flow = await prisma.flow.findUnique({
-      where: { id: Number(id) },
+    const flow = await prisma.flow.findFirst({
+      where: { id: Number(id), userId },
     });
 
     if (!flow) {
-      return;
+      return error("Not Find ID");
     }
 
     const invoices = flow.invoice ? flow.invoice.split(",") : [];
@@ -71,7 +72,7 @@ export default defineEventHandler(async (event) => {
 
     // 更新流水信息
     await prisma.flow.update({
-      where: { id: Number(id) },
+      where: { id: Number(id), userId },
       data: {
         invoice: null,
       },

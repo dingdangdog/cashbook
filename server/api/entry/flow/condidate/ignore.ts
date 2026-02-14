@@ -32,16 +32,23 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const id = body.id;
   if (!id) {
     return error("Not Find ID");
   }
-  const updated = await prisma.flow.update({
-    where: { id },
+  const updated = await prisma.flow.updateMany({
+    where: { id: Number(id), userId },
     data: {
       eliminate: -1,
     },
   });
-  return success(updated);
+  if (updated.count === 0) {
+    return error("Not Find ID");
+  }
+  const row = await prisma.flow.findUnique({
+    where: { id: Number(id) },
+  });
+  return success(row);
 });

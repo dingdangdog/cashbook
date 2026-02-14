@@ -42,9 +42,7 @@ export function templateConvert(
 }
 
 /**
- * 支付宝
- * @param row
- * @param indexMap
+ * 支付宝（含流水编号：交易订单号，用于去重）
  */
 export function alipayConvert(
   row: any[],
@@ -53,7 +51,6 @@ export function alipayConvert(
   const flow: Flow | any = {};
   flow.day = row[indexMap["交易时间"]];
   flow.flowType = String(row[indexMap["收/支"]]);
-  // + '' 防止数据不是字符串导致报错
   flow.industryType = typeConvert(row[indexMap["交易分类"]]);
   flow.payType = "支付宝";
   flow.money = row[indexMap["金额"]];
@@ -64,6 +61,9 @@ export function alipayConvert(
     row[indexMap["收/付款方式"]] +
     "-" +
     row[indexMap["备注"]];
+  const orderNo = row[indexMap["交易订单号"]];
+  if (orderNo != null && String(orderNo).trim() !== "")
+    flow.flowNo = String(orderNo).trim().slice(0, 50);
   return flow;
 }
 
@@ -75,9 +75,7 @@ export function typeConvert(type: any): string {
 }
 
 /**
- * 微信支付
- * @param row
- * @param indexMap
+ * 微信支付（含流水编号：交易单号，用于去重）
  */
 export function wxpayConvert(
   row: any[],
@@ -97,13 +95,14 @@ export function wxpayConvert(
     row[indexMap["支付方式"]] +
     "-" +
     row[indexMap["备注"]];
+  const orderNo = row[indexMap["交易单号"]];
+  if (orderNo != null && String(orderNo).trim() !== "")
+    flow.flowNo = String(orderNo).trim().slice(0, 50);
   return flow;
 }
 
 /**
- * 京东金融
- * @param row
- * @param indexMap
+ * 京东金融（含流水编号：交易订单号，用于去重）
  */
 export function jdFinanceConvert(
   row: any[],
@@ -115,13 +114,10 @@ export function jdFinanceConvert(
   flow.industryType = typeConvert(row[indexMap["交易分类"]]);
   flow.payType = "京东金融";
 
-  // 京东的金额有特殊处理
   const jdMoney = String(row[indexMap["金额"]]);
   const match = jdMoney.match(/^(\d*\.?\d+)(.*)/);
   flow.money = match ? match[1] : jdMoney;
   const desc = match ? match[2] : "";
-  // console.log(money); // "980.27"
-  // console.log(desc); // "(已全额退款)"
   flow.name = String(row[indexMap["交易说明"]]);
   flow.description =
     desc +
@@ -130,5 +126,8 @@ export function jdFinanceConvert(
     row[indexMap["收/付款方式"]] +
     "-" +
     row[indexMap["备注"]];
+  const orderNo = row[indexMap["交易订单号"]];
+  if (orderNo != null && String(orderNo).trim() !== "")
+    flow.flowNo = String(orderNo).trim().slice(0, 50);
   return flow;
 }

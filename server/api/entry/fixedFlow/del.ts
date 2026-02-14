@@ -38,8 +38,15 @@ export default defineEventHandler(async (event) => {
   if (!id) {
     return error("Not Find ID");
   }
+  const userId = await getUserId(event);
+  const row = await prisma.fixedFlow.findFirst({
+    where: { id: Number(id), userId },
+  });
+  if (!row) {
+    return error("Not Find ID");
+  }
   const deleted = await prisma.fixedFlow.delete({
-    where: { id },
+    where: { id: Number(id) },
   });
 
   return success(deleted);

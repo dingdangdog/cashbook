@@ -59,8 +59,8 @@
           </button>
         </div>
 
-        <!-- 筛选操作 -->
-        <div class="flex gap-2">
+        <!-- 筛选操作 - 可通过 showFilterReset 控制显示 -->
+        <div v-if="showFilterReset" class="flex gap-2">
           <button
             @click="$emit('openSearch')"
             class="flex-1 sm:flex-none px-2 py-1 md:px-3 md:py-2 bg-surface-muted hover:bg-surface text-foreground rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm font-medium border border-border"
@@ -95,9 +95,13 @@ import {
 
 interface Props {
   selectedCount: number;
+  /** 是否显示筛选、重置按钮，默认 true */
+  showFilterReset?: boolean;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+  showFilterReset: true,
+});
 
 defineEmits<{
   openImportExport: [];

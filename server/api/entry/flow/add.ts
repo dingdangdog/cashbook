@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
     description: String(body.description || ""),
     // invoice: String(body.invoice || ""),
     attribution: String(body.attribution || ""),
+    flowNo: getUUID(10),
   };
 
   // 在数据库中添加新数据

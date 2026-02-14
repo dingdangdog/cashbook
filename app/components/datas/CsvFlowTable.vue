@@ -137,13 +137,20 @@ const submitUpload = () => {
   uploading.value = true;
   doApi
     .post("api/entry/flow/imports", {
+      mode: "add",
       flows: flows.value,
-      
     })
     .then((res: any) => {
-      // console.log(res)
-      if (res && res.count > 0) {
-        Alert.success("导入成功, 共导入" + res.count + "条流水");
+      if (res && typeof res.count === "number") {
+        const msg =
+          res.skipped > 0
+            ? `导入成功，共导入 ${res.count} 条流水，已跳过 ${res.skipped} 条重复`
+            : `导入成功，共导入 ${res.count} 条流水`;
+        Alert.success(msg);
+        successCallback();
+        showFlowExcelImportDialog.value = false;
+      } else if (res && res.count === 0 && res.skipped > 0) {
+        Alert.warning(`未新增流水，共跳过 ${res.skipped} 条重复`);
         successCallback();
         showFlowExcelImportDialog.value = false;
       } else {

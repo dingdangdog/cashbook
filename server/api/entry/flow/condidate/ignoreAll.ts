@@ -33,6 +33,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const ids = body.ids as number[] | undefined;
   if (!ids) {
@@ -42,7 +43,7 @@ export default defineEventHandler(async (event) => {
     return error("无数据");
   }
   const updated = await prisma.flow.updateMany({
-    where: { id: { in: ids } },
+    where: { id: { in: ids }, userId },
     data: { eliminate: -1 },
   });
 

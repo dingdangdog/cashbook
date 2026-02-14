@@ -1,4 +1,32 @@
+import crypto from "crypto";
 import prisma from "~~/server/lib/prisma";
+
+/** 根据时间+金额+方式+名称生成唯一流水编号（无第三方订单号时用于去重） */
+function genFlowNoByContent(
+  userId: number,
+  flow: {
+    day?: string | Date;
+    money?: number;
+    payType?: string;
+    name?: string;
+  },
+): string {
+  const day =
+    flow.day instanceof Date
+      ? flow.day.toISOString().slice(0, 10)
+      : flow.day
+        ? new Date(flow.day).toISOString().slice(0, 10)
+        : "";
+  const money = Number(flow.money);
+  const payType = String(flow.payType ?? "").trim();
+  const name = String(flow.name ?? "").trim();
+  const hash = crypto
+    .createHash("sha256")
+    .update(`${userId}|${day}|${money}|${payType}|${name}`)
+    .digest("hex")
+    .slice(0, 45);
+  return `imp_${hash}`;
+}
 
 /**
  * @swagger
@@ -14,7 +42,7 @@ import prisma from "~~/server/lib/prisma";
  *         application/json:
  *           schema:
  *             mode: string 导入模式（add-追加，overwrite-覆盖）
- *             flows: [] #[Flow流水记录数组]
+ *             flows: [] #[Flow流水记录数组，可含 flowNo 用于去重]
  *     responses:
  *       200:
  *         description: 导入成功
@@ -22,40 +50,93 @@ import prisma from "~~/server/lib/prisma";
  *           application/json:
  *             schema:
  *               Result:
- *                 d: number 导入的记录数量
+ *                 d: { count, skipped } 导入条数与被去重跳过条数
  *       400:
  *         description: 导入失败
- *         content:
- *           application/json:
  */
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
+  const body = await readBody(event);
 
-  const mode = String(body.mode);
-  const flows: any[] = body.flows;
+  const mode = String(body.mode ?? "add");
+  const flows: any[] = Array.isArray(body.flows) ? body.flows : [];
   const userId = await getUserId(event);
 
-  if (mode == "overwrite") {
-    await prisma.flow.deleteMany({});
+  if (mode === "overwrite") {
+    await prisma.flow.deleteMany({ where: { userId } });
   }
-  const datas: any[] = [];
-  flows.forEach((flow) => {
-    datas.push({
-      userId,
-      name: flow.name,
-      day: new Date(flow.day),
-      description: flow.description,
-      flowType: flow.flowType,
-      invoice: flow.invoice ? String(flow.invoice) : null,
-      money: Number(flow.money),
-      payType: flow.payType,
-      industryType: flow.type ? flow.type : flow.industryType || "",
-      attribution: flow.attribution,
+
+  if (flows.length === 0) {
+    return success({ count: 0, skipped: 0 });
+  }
+
+  // 1) 为每条流水确定 flowNo：有则用传入的，无则用 时间+金额+方式+名称 生成
+  const withFlowNo = flows.map((flow, index) => {
+    const rawNo =
+      flow.flowNo != null && String(flow.flowNo).trim() !== ""
+        ? String(flow.flowNo).trim()
+        : "";
+    const flowNo =
+      rawNo !== ""
+        ? rawNo.slice(0, 50)
+        : genFlowNoByContent(userId, {
+            day: flow.day,
+            money: flow.money,
+            payType: flow.payType,
+            name: flow.name,
+          });
+    return { flow, flowNo, index };
+  });
+
+  // 2) 本批内按 flowNo 去重，保留首次出现
+  const seen = new Set<string>();
+  const deduped = withFlowNo.filter(({ flowNo }) => {
+    if (seen.has(flowNo)) return false;
+    seen.add(flowNo);
+    return true;
+  });
+
+  const flowNos = deduped.map(({ flowNo }) => flowNo);
+
+  // 3) 查询库中已存在的 flowNo（仅追加模式下需要）
+  let existingSet = new Set<string>();
+  if (mode === "add" && flowNos.length > 0) {
+    const existing = await prisma.flow.findMany({
+      where: { userId, flowNo: { in: flowNos } },
+      select: { flowNo: true },
     });
+    existingSet = new Set(existing.map((r) => r.flowNo));
+  }
+
+  // 4) 仅插入不存在的
+  const toInsert = deduped.filter(({ flowNo }) => !existingSet.has(flowNo));
+  const skipped = flows.length - toInsert.length;
+
+  const datas = toInsert.map(({ flow, flowNo }) => ({
+    userId,
+    flowNo,
+    name: flow.name != null ? String(flow.name) : "",
+    day: new Date(flow.day),
+    description: flow.description != null ? String(flow.description) : null,
+    flowType: flow.flowType != null ? String(flow.flowType) : null,
+    invoice: flow.invoice ? String(flow.invoice) : null,
+    money: Number(flow.money),
+    payType: flow.payType != null ? String(flow.payType) : null,
+    industryType:
+      flow.type != null
+        ? String(flow.type)
+        : flow.industryType != null
+          ? String(flow.industryType)
+          : "",
+    attribution: flow.attribution != null ? String(flow.attribution) : null,
+  }));
+
+  const created =
+    datas.length > 0
+      ? await prisma.flow.createMany({ data: datas })
+      : { count: 0 };
+
+  return success({
+    count: created.count,
+    skipped,
   });
-  // 在数据库中添加新数据
-  const created = await prisma.flow.createMany({
-    data: datas,
-  });
-  return success(created);
 });

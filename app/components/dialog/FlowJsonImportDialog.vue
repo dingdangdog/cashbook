@@ -220,15 +220,22 @@ const readJsonInfo = () => {
 };
 
 const submitImport = () => {
-  // 调用导入接口
   doApi
-    .post<any>("api/entry/flow/imports", {
+    .post<{ count: number; skipped?: number }>("api/entry/flow/imports", {
       mode: importFlag.value,
       flows: jsonFlows.value,
     })
     .then((res) => {
-      if (res && res.count > 0) {
-        Alert.success("导入成功, 共导入" + res.count + "条流水");
+      if (res && typeof res.count === "number") {
+        const msg =
+          (res.skipped ?? 0) > 0
+            ? `导入成功，共导入 ${res.count} 条流水，已跳过 ${res.skipped} 条重复`
+            : `导入成功，共导入 ${res.count} 条流水`;
+        Alert.success(msg);
+        successCallback();
+        showFlowJsonImportDialog.value = false;
+      } else if (res && res.count === 0 && (res.skipped ?? 0) > 0) {
+        Alert.warning(`未新增流水，共跳过 ${res.skipped} 条重复`);
         successCallback();
         showFlowJsonImportDialog.value = false;
       } else {

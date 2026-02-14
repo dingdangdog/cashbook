@@ -1,4 +1,4 @@
-import { getUserId } from "~~/server/utils/common";
+import { getUserId } from "~~/server/utils/jwt";
 import { runChatAgent } from "~~/server/lib/ai";
 import { success, error } from "~~/server/utils/common";
 
@@ -19,8 +19,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const valid = messages.every(
-    (m: unknown) =>
-      m && typeof m === "object" && "role" in m && "content" in m,
+    (m: unknown) => m && typeof m === "object" && "role" in m && "content" in m,
   );
   if (!valid) {
     return error("每条消息需包含 role 和 content");

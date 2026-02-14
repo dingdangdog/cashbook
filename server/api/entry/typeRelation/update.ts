@@ -42,15 +42,17 @@ export default defineEventHandler(async (event) => {
   if (ids.length > 0) {
     await prisma.typeRelation.deleteMany({
       where: {
+        userId,
         id: { notIn: ids },
       },
     });
-    // 更新有ID的原有配置
+    // 更新有ID的原有配置（仅当前用户）
     for (let t of updates) {
-      const updated = await prisma.typeRelation.updateMany({
+      await prisma.typeRelation.updateMany({
         data: t,
         where: {
           id: t.id,
+          userId,
         },
       });
     }

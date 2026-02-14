@@ -1,4 +1,4 @@
-import { getUserId } from "~~/server/utils/common";
+import { getUserId } from "~~/server/utils/jwt";
 import { parseBillDataWithAI } from "~~/server/lib/ai";
 import { success, error } from "~~/server/utils/common";
 

@@ -23,8 +23,9 @@ import prisma from "~~/server/lib/prisma";
  *                 d: [] #{ out: Flow 支出记录, in: Flow 收入记录}
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const expenditures = await prisma.flow.findMany({
-    where: { flowType: "支出", eliminate: 0 },
+    where: { userId, flowType: "支出", eliminate: 0 },
     orderBy: [
       {
         day: "desc",
@@ -34,10 +35,11 @@ export default defineEventHandler(async (event) => {
 
   const candidatePairs = [];
 
-  // 对每笔支出查找候选记录
+  // 对每笔支出查找候选记录（仅当前用户）
   for (const expense of expenditures) {
     const candidate = await prisma.flow.findFirst({
       where: {
+        userId,
         flowType: { in: ["收入", "不计收支"] },
         money: expense.money,
       },

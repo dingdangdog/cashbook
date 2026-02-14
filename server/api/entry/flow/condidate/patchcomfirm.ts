@@ -33,6 +33,7 @@ import type { Prisma } from "@prisma/client";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const items = body.items as Array<{ outId: number; inIds: number[] }> | undefined;
 
@@ -58,10 +59,10 @@ export default defineEventHandler(async (event) => {
   let affected = 0;
 
   for (const it of normalized) {
-    // 更新支出记录
+    // 更新支出记录（仅当前用户）
     txs.push(
-      prisma.flow.update({
-        where: { id: it.outId },
+      prisma.flow.updateMany({
+        where: { id: it.outId, userId },
         data: {
           eliminate: 1,
           flowType: "不计收支",
@@ -69,10 +70,10 @@ export default defineEventHandler(async (event) => {
       })
     );
     affected += 1;
-    // 更新对应收入记录
+    // 更新对应收入记录（仅当前用户）
     txs.push(
       prisma.flow.updateMany({
-        where: { id: { in: it.inIds } },
+        where: { id: { in: it.inIds }, userId },
         data: {
           eliminate: 1,
           flowType: "不计收支",
@@ -82,6 +83,7 @@ export default defineEventHandler(async (event) => {
     affected += it.inIds.length;
   }
 
-  await prisma.$transaction(txs);
-  return success({ count: affected });
+  const results = await prisma.$transaction(txs);
+  const count = results.reduce((sum: number, r: { count: number }) => sum + (r?.count ?? 0), 0);
+  return success({ count });
 });

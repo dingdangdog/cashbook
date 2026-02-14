@@ -19,6 +19,9 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
-  const flows = await prisma.flow.findMany();
+  const userId = await getUserId(event);
+  const flows = await prisma.flow.findMany({
+    where: { userId },
+  });
   return success(flows);
 });

@@ -39,6 +39,13 @@ export default defineEventHandler(async (event) => {
     return error("Not Find ID");
   }
 
+  const userId = await getUserId(event);
+  const row = await prisma.receivable.findFirst({
+    where: { id: Number(id), userId },
+  });
+  if (!row) {
+    return error("Not Find ID");
+  }
   const deleted = await prisma.receivable.delete({
     where: { id: Number(id) },
   });

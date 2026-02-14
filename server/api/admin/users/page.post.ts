@@ -1,12 +1,7 @@
-import { getAuthPayload, hasAdminRole, success, noPermissions } from "~~/server/utils/common";
+import { success } from "~~/server/utils/common";
 import { getUsersPage } from "~~/server/utils/db/user";
 
 export default defineEventHandler(async (event) => {
-  const payload = getAuthPayload(event);
-  if (!payload || !hasAdminRole(payload.roles)) {
-    return noPermissions("需要管理员权限");
-  }
-
   const body = await readBody(event);
   const pageNum = Number(body.pageNum ?? 1);
   const pageSize = Number(body.pageSize ?? 15);

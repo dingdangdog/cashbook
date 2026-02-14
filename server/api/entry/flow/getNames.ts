@@ -23,7 +23,9 @@ import prisma from "~~/server/lib/prisma";
  *                 d: [] #[string流水名称数组]
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const flows = await prisma.flow.findMany({
+    where: { userId },
     distinct: ["name"],
     select: {
       name: true,

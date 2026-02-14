@@ -43,7 +43,8 @@ export default defineEventHandler(async (event) => {
     return error("不支持的分组字段");
   }
 
-  const where: any = {};
+  const userId = await getUserId(event);
+  const where: any = { userId };
 
   if (body.flowType) {
     where.flowType = {

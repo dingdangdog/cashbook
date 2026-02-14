@@ -3,15 +3,7 @@ import { success, error } from "~~/server/utils/common";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const {
-    code,
-    name,
-    mode,
-    colors,
-    isActive,
-    isDefault,
-    sortBy,
-  } = body;
+  const { code, name, mode, colors, isActive, isDefault, sortBy } = body;
 
   if (!code?.trim() || !name?.trim() || !mode) {
     return error("code、name、mode 不能为空");

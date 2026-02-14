@@ -24,7 +24,9 @@ import { initTypeRelation } from "~~/server/utils/data";
  *                 d: [] #[TypeRelation类型关系列表数组]
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const relations = await prisma.typeRelation.findMany({
+    where: { userId },
     orderBy: [
       {
         target: "asc",
@@ -33,9 +35,9 @@ export default defineEventHandler(async (event) => {
   });
 
   if (relations.length <= 0) {
-    await initTypeRelation();
-
+    await initTypeRelation(userId);
     const newRelations = await prisma.typeRelation.findMany({
+      where: { userId },
       orderBy: [
         {
           target: "asc",

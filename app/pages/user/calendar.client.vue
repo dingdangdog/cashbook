@@ -4,12 +4,11 @@
       <!-- 操作栏：导入、去重、平账、新增、筛选、重置 -->
       <FlowsToolbar
         :selected-count="0"
+        :show-filter-reset="false"
         @open-import-export="importDrawer = true"
         @auto-merge="toAutoMergeFlows"
         @auto-deduplication="toAutoDeduplicationFlows"
         @create-new="openCreateDialog"
-        @open-search="searchDrawer = true"
-        @reset-query="resetQuery"
       />
 
       <!-- 统计卡片 -->
@@ -520,25 +519,25 @@ const toAutoDeduplicationFlows = () => {
 };
 
 const openCreateDialog = () => {
-  dialogFormTitle.value = formTitle[0];
+  dialogFormTitle.value = formTitle[0] || "";
   selectedFlow.value = { day: dateFormater("YYYY-MM-dd", nowDate.value) };
   showFlowEditDialog.value = true;
 };
 
 const editItem = (item: any) => {
-  dialogFormTitle.value = formTitle[1];
+  dialogFormTitle.value = formTitle[1] || "";
   selectedFlow.value = item;
   showFlowEditDialog.value = true;
 };
 
 const handleMobileAddFlow = (date: any) => {
-  dialogFormTitle.value = formTitle[0];
+  dialogFormTitle.value = formTitle[0] || "";
   selectedFlow.value = { day: date.dateString };
   showFlowEditDialog.value = true;
 };
 
 const handleDesktopAddFlow = (date: any) => {
-  dialogFormTitle.value = formTitle[0];
+  dialogFormTitle.value = formTitle[0] || "";
   selectedFlow.value = { day: date.dateString };
   showFlowEditDialog.value = true;
 };
@@ -639,14 +638,17 @@ const readCsvInfo = (event: Event) => {
       removeFile();
       const sheets = workbook.SheetNames.map((sheetName) => {
         const sheet = workbook.Sheets[sheetName];
-        const sheetData = XLSX.utils.sheet_to_json<any[]>(sheet, {
-          header: 1,
-          defval: "",
-          dateNF: "yyyy-mm-dd",
-        });
+        const sheetData = XLSX.utils.sheet_to_json<any[]>(
+          sheet as XLSX.WorkSheet,
+          {
+            header: 1,
+            defval: "",
+            dateNF: "yyyy-mm-dd",
+          },
+        );
         return { sheetName, sheetData };
       });
-      const sheetData: any[] = sheets[0].sheetData;
+      const sheetData: any[] = sheets[0]?.sheetData || [];
       const headerData = sheetData[titleRowIndex.value];
       for (let i = 0; i < headerData.length; i++) {
         if (headerData[i]?.trim()) csvHeaders.value[headerData[i]] = i;

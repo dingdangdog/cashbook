@@ -36,6 +36,7 @@ import prisma from "~~/server/lib/prisma";
  *               }
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event);
   const ids = body.ids;
   const { flowType, industryType, payType, attribution } = body;
@@ -61,9 +62,8 @@ export default defineEventHandler(async (event) => {
   const updated = await prisma.flow.updateMany({
     data: updateInfo,
     where: {
-      id: {
-        in: ids,
-      },
+      id: { in: ids },
+      userId,
     },
   });
   return success(updated);

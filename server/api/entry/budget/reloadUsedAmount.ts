@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  const totalUsed = usedAmount.length > 0 ? usedAmount[0]._sum.money || 0 : 0;
+  const totalUsed = usedAmount.length > 0 ? usedAmount[0]?._sum.money || 0 : 0;
 
   const updated = await prisma.budget.updateMany({
     where: {

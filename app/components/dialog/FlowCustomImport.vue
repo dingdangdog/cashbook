@@ -324,6 +324,8 @@ interface Flow {
   attribution?: string;
   name?: string;
   description?: string;
+  /** 流水编号/订单号，用于去重（无则服务端按 时间+金额+方式+名称 生成） */
+  flowNo?: string;
 }
 
 const emits = defineEmits(["success-callback", "close"]);
@@ -357,6 +359,10 @@ const targetFields = ref<any[]>([
   { title: "流水归属", value: "attribution" },
   { title: "名称", value: "name" },
   { title: "备注", value: "description" },
+  {
+    title: "流水编号/订单号（可选，用于去重）",
+    value: "flowNo",
+  },
 ]);
 
 const targetFieldMapping = ref<Record<string, string>>({});
@@ -703,6 +709,9 @@ const customConvert = (
         flow.name = joinedValue;
       } else if (targetField === "description") {
         flow.description = joinedValue;
+      } else if (targetField === "flowNo") {
+        const v = joinedValue.trim();
+        if (v) flow.flowNo = v.slice(0, 50);
       }
 
       hasValidData = true;
@@ -737,12 +746,20 @@ const submitUpload = () => {
   uploading.value = true;
   doApi
     .post("api/entry/flow/imports", {
+      mode: "add",
       flows: flows,
-      
     })
     .then((res: any) => {
-      if (res && res.count > 0) {
-        Alert.success("导入成功, 共导入" + res.count + "条流水");
+      if (res && typeof res.count === "number") {
+        const msg =
+          res.skipped > 0
+            ? `导入成功，共导入 ${res.count} 条流水，已跳过 ${res.skipped} 条重复`
+            : `导入成功，共导入 ${res.count} 条流水`;
+        Alert.success(msg);
+        emits("success-callback");
+        showFlowExcelImportDialog.value = false;
+      } else if (res && res.count === 0 && res.skipped > 0) {
+        Alert.warning(`未新增流水，共跳过 ${res.skipped} 条重复`);
         emits("success-callback");
         showFlowExcelImportDialog.value = false;
       } else {

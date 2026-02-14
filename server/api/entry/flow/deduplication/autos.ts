@@ -39,6 +39,7 @@ import prisma from "~~/server/lib/prisma";
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
+  const userId = await getUserId(event);
   const criteria = body.criteria || {
     name: true,
     description: true,
@@ -48,6 +49,7 @@ export default defineEventHandler(async (event) => {
   };
 
   const allFlows = await prisma.flow.findMany({
+    where: { userId },
     orderBy: [
       {
         day: "desc",

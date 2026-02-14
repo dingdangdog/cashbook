@@ -54,9 +54,16 @@ export default defineEventHandler(async (event) => {
     description: String(body.description || ""),
     attribution: String(body.attribution || ""),
   };
-  const updated = await prisma.flow.update({
-    where: { id: Number(body.id) },
+  const userId = await getUserId(event);
+  const updated = await prisma.flow.updateMany({
+    where: { id: Number(body.id), userId },
     data: flow,
   });
-  return success(updated);
+  if (updated.count === 0) {
+    return error("Not Find ID");
+  }
+  const row = await prisma.flow.findUnique({
+    where: { id: Number(body.id) },
+  });
+  return success(row);
 });

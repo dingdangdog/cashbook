@@ -1,4 +1,5 @@
-import { noPermissions, getAuthPayload, hasAdminRole } from "../utils/common";
+import { noPermissions } from "../utils/common";
+import { getAuthPayload, hasAdminRole } from "../utils/jwt";
 
 /** 无需认证的 admin 路径（登录、登出、工具类） */
 const ADMIN_PUBLIC_PATHS = ["/api/admin/login", "/api/admin/logout"];

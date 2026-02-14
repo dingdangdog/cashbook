@@ -39,9 +39,10 @@ import prisma from "~~/server/lib/prisma";
  *             schema:
  */
 export default defineEventHandler(async (event) => {
+  const userId = await getUserId(event);
   const body = await readBody(event); // 获取查询参数
 
-  const where: any = {};
+  const where: any = { userId };
 
   // 添加条件：如果 `name` 存在，则根据 `name` 查询
   if (body.id) {

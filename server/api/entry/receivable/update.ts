@@ -53,6 +53,7 @@ export default defineEventHandler(async (event) => {
     return error("Not Find ID");
   }
 
+  const userId = await getUserId(event);
   const updateData: any = {};
   if (name !== undefined) updateData.name = name;
   if (description !== undefined) updateData.description = description || null;
@@ -61,6 +62,12 @@ export default defineEventHandler(async (event) => {
   if (status !== undefined) updateData.status = Number(status);
   if (occurFlowId !== undefined) updateData.occurFlowId = occurFlowId ? Number(occurFlowId) : null;
 
+  const row = await prisma.receivable.findFirst({
+    where: { id: Number(id), userId },
+  });
+  if (!row) {
+    return error("Not Find ID");
+  }
   const updated = await prisma.receivable.update({
     where: { id: Number(id) },
     data: updateData,

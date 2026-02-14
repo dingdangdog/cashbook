@@ -43,8 +43,15 @@ export default defineEventHandler(async (event) => {
   if (!month) {
     return error("Not Find Month");
   }
+  const userId = await getUserId(event);
+  const row = await prisma.budget.findFirst({
+    where: { id: Number(id), userId },
+  });
+  if (!row) {
+    return error("Not Find ID");
+  }
   const updated = await prisma.budget.update({
-    where: { id },
+    where: { id: Number(id) },
     data: {
       budget: Number(budget || 0),
     },
