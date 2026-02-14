@@ -158,8 +158,6 @@ useEscapeKey(() => {
 
 const { successCallback } = defineProps(["successCallback"]);
 
-const bookId = localStorage.getItem("bookId");
-
 /**
  * 文件上传相关代码
  */
@@ -205,10 +203,6 @@ const readJsonInfo = () => {
     try {
       // 将读取的文本解析为JSON对象
       jsonFlows.value = JSON.parse(String(event.target?.result));
-      jsonFlows.value.forEach((flow) => {
-        // 数据处理
-        flow.bookId = bookId || "0";
-      });
       if (jsonFlows.value.length > 0) {
         Alert.success(
           "共解析到" + jsonFlows.value.length + "条流水数据，可以点击确认导入"
@@ -231,7 +225,6 @@ const submitImport = () => {
     .post<any>("api/entry/flow/imports", {
       mode: importFlag.value,
       flows: jsonFlows.value,
-      bookId,
     })
     .then((res) => {
       if (res && res.count > 0) {

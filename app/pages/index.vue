@@ -2,10 +2,10 @@
 
 <script setup lang="ts">
 definePageMeta({
-  auth: ["auth"],
+  middleware: ["auth"],
 });
 onMounted(() => {
-  navigateTo("/calendar");
+  navigateTo("/user/calendar");
 });
 </script>
 

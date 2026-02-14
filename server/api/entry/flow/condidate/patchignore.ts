@@ -32,11 +32,14 @@ import prisma from "~~/server/lib/prisma";
  *                 message: string
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { ids, bookId } = body as { ids?: number[]; bookId?: string };
-  if (!bookId || !Array.isArray(ids) || ids.length === 0) {
-    return error("Invalid params: ids and bookId are required");
+  const ids = body.ids as number[] | undefined;
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return error("Invalid params: ids are required");
   }
 
   const result = await prisma.flow.updateMany({

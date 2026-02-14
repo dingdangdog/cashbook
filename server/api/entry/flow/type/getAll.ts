@@ -32,12 +32,12 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
-export default defineEventHandler(async (event) => {
-  const { bookId, flowType } = await readBody(event); // 获取查询参数
+const DEFAULT_BOOK_ID = "0";
 
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const flowType = body.flowType;
   const where: any = {
     bookId,
   }; // 条件查询

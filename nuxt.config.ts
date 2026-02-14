@@ -10,7 +10,15 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       meta: [
-        { name: "description", content: "Cashbook, 快速记账!" },
+        {
+          name: "description",
+          content: "Cashbook是快速记账的工具，支持AI记账和丰富的分析功能",
+        },
+        {
+          name: "keywords",
+          content:
+            "Cashbook,快速记账,记账,AI记账,财务管理,个人财务,财务规划,财务分析,财务报表,财务报告,财务分析报告,财务分析报告模板,财务分析报告范本,财务分析报告范文,财务分析报告范例,财务分析报告范例模板,财务分析报告范例范文,财务分析报告范例范例",
+        },
         { name: "theme-color", content: "#16a34a" },
         { name: "apple-mobile-web-app-capable", content: "yes" },
         { name: "apple-mobile-web-app-status-bar-style", content: "default" },
@@ -85,23 +93,12 @@ export default defineNuxtConfig({
     //   "/api/**": { swr: true },
     // },
   },
-  // scalar: {
-  //   darkMode: true,
-  //   // hideClientButton: true,
-  //   hiddenClients: true,
-  //   defaultHttpClient: {
-  //     targetKey: "node",
-  //     clientKey: "server",
-  //   },
-  //   url: "/api/openapi.json",
-  // },
+
   runtimeConfig: {
     public: {},
     appVersion: "",
     dataPath: "",
     authSecret: "",
-    adminUsername: "",
-    adminPassword: "",
   },
 
   modules: [

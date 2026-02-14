@@ -31,12 +31,11 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
-  const { bookId } = body;
-  if (!bookId) {
-    return error("请先选择账本");
-  }
-  const datas = await prisma.budget.findMany({ where: { bookId } });
+  const body = await readBody(event);
+  const datas = await prisma.budget.findMany({
+    where: { userId: await getUserId(event) },
+  });
   return success(datas);
 });

@@ -138,7 +138,7 @@ const submitUpload = () => {
   doApi
     .post("api/entry/flow/imports", {
       flows: flows.value,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res: any) => {
       // console.log(res)

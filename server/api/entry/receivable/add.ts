@@ -37,14 +37,12 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本" | "待收款名称不能为空" | "发生日期不能为空" | "金额不能为空"
  *               }
  */
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
-  const { bookId, name, description, occurDay, expectDay, money, occurId } =
-    body;
+const DEFAULT_BOOK_ID = "0";
 
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const { name, description, occurDay, expectDay, money, occurId } = body;
 
   if (!name) {
     return error("待收款名称不能为空");

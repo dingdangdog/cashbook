@@ -42,10 +42,12 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const {
-    bookId,
     pageNum = 1,
     pageSize = 20,
     name,
@@ -53,10 +55,6 @@ export default defineEventHandler(async (event) => {
     startDay,
     endDay,
   } = body;
-
-  if (!bookId) {
-    return error("请先选择账本");
-  }
 
   const where: any = {
     bookId,

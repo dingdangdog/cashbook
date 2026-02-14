@@ -415,7 +415,7 @@ const showMonthAnalysis = (month: string) => {
   doApi
     .post<MonthAnalysis>("api/entry/analytics/monthAnalysis", {
       month: monthParam,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res) => {
       monthAnalysisData.value = res;

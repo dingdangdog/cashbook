@@ -249,7 +249,7 @@ let payTypeChart: echarts.ECharts;
 const doQuery = (query: CommonChartQuery) => {
   doApi
     .post<CommonChartData[]>("api/entry/analytics/payType", {
-      bookId: localStorage.getItem("bookId"),
+      
       ...query,
     })
     .then((res) => {

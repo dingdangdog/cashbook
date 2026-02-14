@@ -631,7 +631,7 @@ const doQuery = () => {
   doApi
     .post<Page<Flow>>("api/entry/flow/page", {
       ...flowQuery.value,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res) => {
       flowPageRef.value = res;
@@ -685,7 +685,7 @@ const deleteFlow = (item: Flow) => {
       doApi
         .post("api/entry/flow/del", {
           id: item.id,
-          bookId: localStorage.getItem("bookId"),
+          
         })
         .then(() => {
           Alert.success("删除成功");

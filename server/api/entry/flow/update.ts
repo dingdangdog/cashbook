@@ -40,9 +40,11 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  if (!body.id || !body.bookId) {
+  if (!body.id) {
     return error("Not Find ID");
   }
   const flow = {
@@ -56,7 +58,7 @@ export default defineEventHandler(async (event) => {
     attribution: String(body.attribution || ""),
   };
   const updated = await prisma.flow.update({
-    where: { id: Number(body.id), bookId: body.bookId },
+    where: { id: Number(body.id) },
     data: flow,
   });
   return success(updated);

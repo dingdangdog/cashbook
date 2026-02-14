@@ -77,10 +77,14 @@ export default defineEventHandler(async (event) => {
     token,
   };
 
+  const isProduction = process.env.NODE_ENV === "production";
+  console.log("isProduction", isProduction);
   setCookie(event, "Authorization", token, {
     maxAge: expiresInSeconds,
+    path: "/",
     httpOnly: true,
     sameSite: "lax",
+    secure: isProduction,
   });
 
   return success(returnUser);

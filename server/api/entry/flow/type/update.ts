@@ -35,18 +35,18 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"Not Find ID" | "Not Find value" | "Unknown Type"）
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
-  if (!body.bookId) {
-    return error("Not Find ID");
-  }
   if (!body.value || !body.type || !body.oldValue) {
     return error("Not Find value");
   }
 
   const where: any = {
-    bookId: body.bookId,
+    bookId,
   };
   const data: any = {};
   if (body.type == "支出类型/收入类型") {

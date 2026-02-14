@@ -372,7 +372,7 @@ const nameList = ref<string[]>([]);
 const getNames = async () => {
   try {
     const res = await doApi.post<string[]>("api/entry/flow/getNames", {
-      bookId: localStorage.getItem("bookId"),
+      
     });
     nameList.value = res;
   } catch (error) {
@@ -384,7 +384,7 @@ const attributionList = ref<string[]>([]);
 const getAttributions = async () => {
   try {
     const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-      bookId: localStorage.getItem("bookId"),
+      
     });
     attributionList.value = res;
   } catch (error) {
@@ -401,7 +401,7 @@ const doQuery = () => {
   doApi
     .post<Page<Flow>>("api/entry/flow/page", {
       ...flowQuery.value,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res) => {
       if (res) {
@@ -540,7 +540,7 @@ const deleteItems = () => {
       doApi
         .post("api/entry/flow/dels", {
           ids: selectedFlows.value,
-          bookId: localStorage.getItem("bookId"),
+          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -582,7 +582,7 @@ const deleteItem = (item: any) => {
       doApi
         .post("api/entry/flow/del", {
           id: item.id,
-          bookId: localStorage.getItem("bookId"),
+          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -631,7 +631,7 @@ const confirmBatchChange = () => {
       doApi
         .post("api/entry/flow/updates", {
           ids: selectedFlows.value,
-          bookId: localStorage.getItem("bookId"),
+          
           ...batchChange.value,
         })
         .then(() => {
@@ -836,14 +836,12 @@ const openJsonImport = () => {
 };
 
 const exportJson = () => {
-  const bookName = localStorage.getItem("bookName");
   doApi
     .post("api/entry/flow/list", {
       ...flowQuery.value,
-      bookId: localStorage.getItem("bookId"),
     })
     .then((data) => {
-      const fileName = bookName + "-" + new Date().getTime() + ".json";
+      const fileName = "流水-" + new Date().getTime() + ".json";
       exportJsonFile(fileName, JSON.stringify(data));
       Alert.success("导出成功");
     })
@@ -853,14 +851,12 @@ const exportJson = () => {
 };
 
 const exportCsv = () => {
-  const bookName = localStorage.getItem("bookName");
   doApi
     .post<any[]>("api/entry/flow/list", {
       ...flowQuery.value,
-      bookId: localStorage.getItem("bookId"),
     })
     .then((data) => {
-      const fileName = bookName + "-" + new Date().getTime() + ".csv";
+      const fileName = "流水-" + new Date().getTime() + ".csv";
       exportCsvFile(fileName, data);
       Alert.success("导出成功");
     })

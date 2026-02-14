@@ -35,13 +35,13 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find File" | "Not Find ID" | "小票上传失败"）
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const formdata = await readFormData(event);
   try {
-    const bookId = String(formdata.get("bookId"));
-    if (!bookId) {
-      return error("请先选择账本");
-    }
+    const rawBookId = formdata.get("bookId");
+    const bookId = rawBookId ? String(rawBookId) : DEFAULT_BOOK_ID;
     const files: File[] = formdata.getAll("invoice") as File[];
     if (!files || files.length < 1) {
       return error("Not Find File");

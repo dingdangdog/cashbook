@@ -244,7 +244,7 @@ const showFlowTable = ref(false);
 const getAttributions = async () => {
   try {
     const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-      bookId: localStorage.getItem("bookId"),
+      
     });
     attributions.value = res || [];
   } catch (error) {
@@ -255,7 +255,7 @@ const getAttributions = async () => {
 
 const doQuery = () => {
   const queryParams: any = {
-    bookId: localStorage.getItem("bookId"),
+    
   };
   if (filterAttribution.value) {
     queryParams.attribution = filterAttribution.value;

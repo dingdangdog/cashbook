@@ -739,8 +739,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const bookId = localStorage.getItem("bookId");
-
 // Data
 const loading = ref(false);
 const statusFilter = ref("");
@@ -804,7 +802,7 @@ const debounceSearch = () => {
 const getAttributions = async () => {
   try {
     const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-      bookId: localStorage.getItem("bookId"),
+      
     });
     attributionList.value = res;
   } catch (error) {
@@ -821,11 +819,6 @@ onMounted(() => {
 
 // Methods
 async function loadData() {
-  if (!bookId) {
-    Alert.error("请先选择账本");
-    return;
-  }
-
   loading.value = true;
 
   try {
@@ -835,7 +828,6 @@ async function loadData() {
       pageNum: number;
       pageSize: number;
     }>("api/entry/receivable/list", {
-      bookId: bookId,
       pageNum: pagination.value.pageNum,
       pageSize: pagination.value.pageSize,
       name: searchName.value || undefined,
@@ -858,12 +850,8 @@ async function loadData() {
 }
 
 async function loadStatistics() {
-  if (!bookId) return;
-
   try {
-    const res = await doApi.post<Receivable[]>("api/entry/receivable/all", {
-      bookId: bookId,
-    });
+    const res = await doApi.post<Receivable[]>("api/entry/receivable/all", {});
 
     const stats = {
       total: res.length,
@@ -939,7 +927,6 @@ async function saveReceivable() {
   try {
     const data = {
       ...editedReceivable.value,
-      bookId: bookId,
       money: Number(editedReceivable.value.money),
       status:
         editedReceivable.value.status !== undefined
@@ -978,7 +965,6 @@ async function confirmCollect() {
 
   try {
     await doApi.post("api/entry/receivable/update", {
-      bookId: bookId,
       id: selectedReceivable.value.id,
       name: collectData.value.name || selectedReceivable.value.name,
       description:
@@ -1011,7 +997,6 @@ async function convertToFlow() {
 
   try {
     await doApi.post("api/entry/receivable/toflow", {
-      bookId: bookId,
       id: selectedReceivable.value.id,
       actualDay: toFlowData.value.actualDay,
       payType: toFlowData.value.payType,
@@ -1044,7 +1029,6 @@ async function confirmDelete() {
   try {
     await doApi.post("api/entry/receivable/del", {
       id: itemToDelete.value.id,
-      bookId: bookId,
     });
 
     Alert.success("待收款删除成功");

@@ -32,11 +32,13 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  // const userId = await getUserId(event);
-  const { id, bookId } = body;
-  if (!id || !bookId) {
+  const id = body.id;
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  if (!id) {
     return error("Not Find ID");
   }
   const updated = await prisma.flow.update({

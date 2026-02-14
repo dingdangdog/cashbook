@@ -24,16 +24,13 @@ import { initTypeRelation } from "~~/server/utils/data";
  *               Result:
  *                 d: [] #[TypeRelation类型关系列表数组]
  */
-export default defineEventHandler(async (event) => {
-  const { bookId } = await readBody(event); // 获取查询参数
-  // const userId = await getUserId(event);
+const DEFAULT_BOOK_ID = "0";
 
-  if (!bookId) {
-    return;
-  }
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const where: any = {
-    // userId,
-    bookId: String(bookId),
+    bookId,
   }; // 条件查询
 
   const relations = await prisma.typeRelation.findMany({
@@ -51,7 +48,7 @@ export default defineEventHandler(async (event) => {
   // });
 
   if (relations.length <= 0) {
-    await initTypeRelation(String(bookId));
+    await initTypeRelation(bookId);
 
     const newRelations = await prisma.typeRelation.findMany({
       where, // 使用条件查询

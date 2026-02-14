@@ -437,9 +437,7 @@ const typeDialog = ref({
   title: "流水类型批量改名",
 });
 
-// 账本编辑表单实例
 const openUpdateDialog = (row: Typer) => {
-  editType.value.bookId = localStorage.getItem("bookId") || "";
   editType.value.flowType = row.flowType;
   editType.value.type = row.type;
   editType.value.oldValue = row.value;
@@ -477,7 +475,7 @@ const doQuery = () => {
   doApi
     .post<Typer[]>("api/entry/flow/type/getAll", {
       ...typeQueryRef.value,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res) => {
       // console.log(res);
@@ -527,7 +525,7 @@ const hisFlowTypeConvert = async () => {
         doConvert += `【${t.oldValue}】-->【${t.value}】`;
         const res = await doApi.post<any>("api/entry/flow/type/update", {
           ...t,
-          bookId: localStorage.getItem("bookId"),
+          
         });
 
         if (res && res.count > 0) {

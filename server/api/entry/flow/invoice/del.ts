@@ -35,12 +35,13 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find ID" | "Not Find ImageName" | "流水信息不存在" | "小票删除失败"）
  *               }
  */
-export default defineEventHandler(async (event) => {
-  const { id, bookId, invoice } = await readBody(event);
+const DEFAULT_BOOK_ID = "0";
 
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const id = body.id;
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const invoice = body.invoice;
 
   if (!id) {
     return error("Not Find ID");
@@ -63,7 +64,7 @@ export default defineEventHandler(async (event) => {
     const flow = await prisma.flow.findUnique({
       where: {
         id: Number(id),
-        bookId: String(bookId),
+        bookId,
       },
     });
     // 校验图片是否存在
@@ -84,7 +85,7 @@ export default defineEventHandler(async (event) => {
     await prisma.flow.update({
       where: {
         id: Number(id),
-        bookId: String(bookId),
+        bookId,
       },
       data: {
         invoice: newInvoices.join(","),

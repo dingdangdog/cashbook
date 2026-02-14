@@ -631,7 +631,7 @@ const fetchCandidates = () => {
   loading.value = true;
   doApi
     .post<CandidatePair[]>("api/entry/flow/condidate/autos", {
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res) => {
       candidatePairs.value = res;
@@ -660,7 +660,7 @@ const confirmBalance = (pair: CandidatePair) => {
         .post("api/entry/flow/condidate/confirm", {
           outId: pair.out.id,
           inIds: [pair.in.id],
-          bookId: localStorage.getItem("bookId"),
+          
         })
         .then((res) => {
           Alert.success("平账成功");
@@ -679,7 +679,7 @@ const ignoreBalance = (pair: CandidatePair) => {
   doApi
     .post("api/entry/flow/condidate/ignore", {
       id: pair.out.id,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then((res) => {
       Alert.warning("已忽略");
@@ -703,7 +703,7 @@ const ignoreAllBalance = () => {
     confirm: () => {
       doApi
         .post("api/entry/flow/condidate/ignoreAll", {
-          bookId: localStorage.getItem("bookId"),
+          
           ids: candidatePairs.value.map((p) => p.out.id),
         })
         .then((res) => {
@@ -740,7 +740,7 @@ const batchIgnoreBalance = () => {
       loading.value = true;
       doApi
         .post("api/entry/flow/condidate/patchignore", {
-          bookId: localStorage.getItem("bookId"),
+          
           ids: selectedIds.value,
         })
         .then(() => {
@@ -777,7 +777,7 @@ const batchConfirmBalance = () => {
       loading.value = true;
       doApi
         .post("api/entry/flow/condidate/patchcomfirm", {
-          bookId: localStorage.getItem("bookId"),
+          
           items,
         })
         .then(() => {

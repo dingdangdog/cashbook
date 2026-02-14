@@ -25,7 +25,13 @@ export interface UserInfo {
   id: number;
   name: string;
   username: string;
-  createDate: Date;
+  createDate?: Date;
+  createAt?: Date;
+  email?: string | null;
+  /** 角色，逗号分隔，如 "admin,user" */
+  roles?: string | null;
+  /** 登录接口返回的 JWT，仅登录时存在 */
+  token?: string;
 }
 
 export interface MonthAnalysis {

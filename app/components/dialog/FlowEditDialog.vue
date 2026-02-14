@@ -340,7 +340,7 @@ const flowEdit = ref<Flow | any>({
 const nameList = ref<string[]>([]);
 const getNames = async () => {
   const res = await doApi.post<string[]>("api/entry/flow/getNames", {
-    bookId: localStorage.getItem("bookId"),
+    
   });
   nameList.value = res;
 };
@@ -349,7 +349,7 @@ getNames();
 const attributionList = ref<string[]>([]);
 const getAttributions = async () => {
   const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-    bookId: localStorage.getItem("bookId"),
+    
   });
   attributionList.value = res;
 };
@@ -647,7 +647,6 @@ const confirmForm = async (again: boolean) => {
 const createOne = (again: boolean) => {
   doApi
     .post<Flow>("api/entry/flow/add", {
-      bookId: localStorage.getItem("bookId") || "",
       day: flowEdit.value.day || new Date().toISOString().split("T")[0],
       flowType: flowEdit.value.flowType,
       industryType: flowEdit.value.industryType,
@@ -685,7 +684,6 @@ const updateOne = () => {
     .post<Flow>("api/entry/flow/update", {
       id: flowEdit.value.id,
       day: flowEdit.value.day || new Date().toISOString().split("T")[0],
-      bookId: localStorage.getItem("bookId") || "",
       flowType: flowEdit.value.flowType,
       industryType: flowEdit.value.industryType,
       money: Number(flowEdit.value.money),

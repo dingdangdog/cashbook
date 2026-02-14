@@ -40,10 +40,12 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息（"请先选择账本" | "Not Find ID"）
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const {
-    bookId,
     id,
     name,
     description,
@@ -54,10 +56,6 @@ export default defineEventHandler(async (event) => {
     status,
     actualId,
   } = body;
-
-  if (!bookId) {
-    return error("请先选择账本");
-  }
 
   if (!id) {
     return error("Not Find ID");

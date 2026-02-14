@@ -31,16 +31,14 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "No Find bookid"
  *               }
  */
-// 此处的相似性判断示例：金额完全相等（你可根据业务需要添加金额误差、日期范围等条件）
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
-  if (!body.bookId) {
-    return error("No Find bookid");
-  }
-  // const userId = await getUserId(event);
-  // 获取所有未平账的支出数据
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+
   const expenditures = await prisma.flow.findMany({
-    where: { flowType: "支出", eliminate: 0, bookId: String(body.bookId) },
+    where: { flowType: "支出", eliminate: 0, bookId },
     orderBy: [
       {
         day: "desc",
@@ -55,10 +53,8 @@ export default defineEventHandler(async (event) => {
     const candidate = await prisma.flow.findFirst({
       where: {
         flowType: { in: ["收入", "不计收支"] },
-        // 例如这里以金额完全相等为条件，实际可修改为近似匹配：
         money: expense.money,
-        bookId: String(body.bookId),
-        // 如有需要，可增加日期、描述等其它条件
+        bookId,
       },
     });
     if (candidate) {

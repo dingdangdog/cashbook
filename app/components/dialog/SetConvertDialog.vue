@@ -288,7 +288,7 @@ onMounted(() => {
 // Add a new empty key-value pair
 const addPair = () => {
   editRelations.value.unshift({
-    bookId: localStorage.getItem("bookId"),
+    
     source: "",
     target: "",
   });
@@ -309,7 +309,7 @@ const confirmTypeRelationChange = () => {
   doApi
     .post("api/entry/typeRelation/update", {
       types: validRelations,
-      bookId: localStorage.getItem("bookId"),
+      
     })
     .then(() => {
       Alert.success("保存成功");

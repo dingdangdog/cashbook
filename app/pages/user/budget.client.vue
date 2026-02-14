@@ -407,8 +407,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const bookId = localStorage.getItem("bookId");
-
 // Data
 const loading = ref(false);
 const selectedMonth = ref(getCurrentMonth());
@@ -469,7 +467,7 @@ const monthOptions = generateMonthOptions();
 const attributionList = ref<string[]>([]);
 const getAttributions = async () => {
   const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-    bookId: localStorage.getItem("bookId"),
+    
   });
   attributionList.value = res;
 };
@@ -482,17 +480,11 @@ onMounted(() => {
 
 // Methods
 function loadData() {
-  if (!bookId) {
-    Alert.error("请先选择账本");
-    return;
-  }
-
   loading.value = true;
 
   // 加载预算数据
   doApi
     .post<Budget[]>("api/entry/budget/list", {
-      bookId: bookId,
       month: selectedMonth.value,
     })
     .then((res) => {
@@ -510,7 +502,6 @@ function loadData() {
   // 加载固定支出数据
   doApi
     .post<FixedFlow[]>("api/entry/fixedFlow/list", {
-      bookId: bookId,
       month: selectedMonth.value,
     })
     .then((res) => {
@@ -535,7 +526,6 @@ function openBudgetDialog() {
 const reloadUsedAmount = () => {
   doApi
     .post("api/entry/budget/reloadUsedAmount", {
-      bookId: bookId,
       month: selectedMonth.value,
     })
     .then((res) => {
@@ -552,7 +542,6 @@ function saveBudget() {
   loading.value = true;
 
   const data = {
-    bookId: bookId,
     month: selectedMonth.value,
     budget: Number(editedBudget.value.budget),
   };
@@ -613,7 +602,6 @@ function saveFixedFlow() {
 
   const data = {
     ...editedFixedFlow.value,
-    bookId: bookId,
     month: selectedMonth.value,
     money: Number(editedFixedFlow.value.money),
   };
@@ -666,7 +654,6 @@ function confirmDelete() {
   doApi
     .post("api/entry/fixedFlow/del", {
       id: itemToDelete.value.id,
-      bookId: bookId,
     })
     .then(() => {
       Alert.success("固定支出删除成功");

@@ -9,6 +9,7 @@ const props = withDefaults(
     placeholder?: string;
     error?: string;
     required?: boolean;
+    autocomplete?: string;
     /** 是否为密码框（带显示/隐藏切换） */
     password?: boolean;
   }>(),
@@ -34,6 +35,7 @@ const inputType = computed(() =>
         v-model="model"
         :type="inputType"
         :placeholder="placeholder"
+        :autocomplete="autocomplete"
         :class="[
           'w-full px-3 py-2 pr-10 border rounded-lg bg-background text-foreground placeholder-foreground/40 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 input-no-outline',
           error ? 'border-red-500 bg-red-900/10' : 'border-border',

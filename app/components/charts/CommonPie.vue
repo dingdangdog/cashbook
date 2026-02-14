@@ -168,7 +168,7 @@ let chart: echarts.ECharts;
 const doQuery = (query: CommonChartQuery & { groupBy: string }) => {
   doApi
     .post<CommonChartData[]>("api/entry/analytics/common", {
-      bookId: localStorage.getItem("bookId"),
+      
       ...query,
     })
     .then((res) => {

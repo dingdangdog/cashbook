@@ -33,13 +33,13 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
-  if (!query.bookId) {
-    return error("请先选择账本");
-  }
+  const bookId = query.bookId ? String(query.bookId) : DEFAULT_BOOK_ID;
   const flows = await prisma.flow.findMany({
-    where: { bookId: String(query.bookId) },
+    where: { bookId },
   });
   return success(flows);
 });

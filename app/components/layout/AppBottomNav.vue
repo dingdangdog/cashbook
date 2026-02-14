@@ -4,7 +4,6 @@ import {
   ChartBarIcon,
   ExclamationTriangleIcon,
   CurrencyDollarIcon,
-  BookOpenIcon,
 } from "@heroicons/vue/24/outline";
 
 interface NavItem {
@@ -48,12 +47,6 @@ const bottomNavItems: NavItem[] = [
     icon: CurrencyDollarIcon,
     color: "text-green-500",
   },
-  {
-    title: "账本",
-    path: "books",
-    icon: BookOpenIcon,
-    color: "text-teal-500",
-  },
 ];
 
 const handleNavigate = (path: string) => {
@@ -66,7 +59,7 @@ const handleNavigate = (path: string) => {
   <nav
     class="fixed bottom-0 left-0 right-0 bg-surface border-t border-border z-40 lg:hidden"
   >
-    <div class="grid grid-cols-5 h-16 bg-surface-muted">
+    <div class="grid grid-cols-4 h-16 bg-surface-muted">
       <button
         v-for="item in bottomNavItems"
         :key="item.path"

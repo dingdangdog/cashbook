@@ -1,6 +1,5 @@
 import { Alert } from "./alert";
 import type { Result, UserInfo } from "./model";
-import { GlobalUserInfo } from "./store";
 
 const API_PREFIEX = "/";
 
@@ -66,7 +65,7 @@ const intercepterResponse = <T>(res: Result<T>): T => {
       // useAuth().signOut();
       const route = useRoute();
       navigateTo({
-        path: "/auth/login",
+        path: "/login",
         query: { callbackUrl: route.fullPath },
       });
     }
@@ -85,14 +84,14 @@ const getHeaders = () => {
 export const getUserInfo = async () => {
   try {
     const user = await doApi.get<UserInfo>("api/entry/user/info");
-
     if (user) {
-      GlobalUserInfo.value = user;
+      useUserStore().setUser(user);
       return user;
-    } else {
-      return null;
     }
-  } catch (e) {
+    useUserStore().clearUser();
+    return null;
+  } catch {
+    useUserStore().clearUser();
     return null;
   }
 };

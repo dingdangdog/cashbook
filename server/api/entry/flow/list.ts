@@ -42,15 +42,14 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取查询参数
 
-  if (!body.bookId) {
-    return error("请先选择账本");
-  }
-  // 条件查询
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const where: any = {
-    bookId: body.bookId,
+    bookId,
   };
 
   // 添加条件：如果 `name` 存在，则根据 `name` 查询

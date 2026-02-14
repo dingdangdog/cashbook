@@ -261,7 +261,6 @@ const uploadInvoiceFile = () => {
   }
   const formdata = new FormData();
   formdata.append("id", editInvoice.value.id);
-  formdata.append("bookId", localStorage.getItem("bookId") || "");
   formdata.append("invoice", newInvoice.value);
 
   doApi.postform("api/entry/flow/invoice/upload", formdata).then((res) => {
@@ -295,7 +294,7 @@ const confirmDeleteInvoice = () => {
   doApi
     .post("api/entry/flow/invoice/del", {
       id: editInvoice.value.id,
-      bookId: localStorage.getItem("bookId"),
+      
       invoice: deleteInvoice.value,
     })
     .then((res) => {

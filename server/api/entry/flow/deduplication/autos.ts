@@ -40,14 +40,12 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "No Find bookid"
  *               }
  */
-// 查找疑似重复的数据：同一天+金额相同+支出类型相同的数据
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
-  if (!body.bookId) {
-    return error("No Find bookid");
-  }
+const DEFAULT_BOOK_ID = "0";
 
-  // 获取检测条件，如果未提供则使用默认值（全部条件）
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+
   const criteria = body.criteria || {
     name: true,
     description: true,
@@ -56,10 +54,9 @@ export default defineEventHandler(async (event) => {
     payType: true,
   };
 
-  // 获取所有流水数据
   const allFlows = await prisma.flow.findMany({
     where: {
-      bookId: String(body.bookId),
+      bookId,
       // 可以根据需要添加其他过滤条件，如时间范围等
     },
     orderBy: [

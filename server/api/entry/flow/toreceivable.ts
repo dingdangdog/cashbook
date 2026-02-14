@@ -36,13 +36,12 @@ import prisma from "~~/server/lib/prisma";
  *                 message: 错误信息
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { bookId, id, expectDay } = body;
-
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const { id, expectDay } = body;
 
   if (!id) {
     return error("流水ID不能为空");

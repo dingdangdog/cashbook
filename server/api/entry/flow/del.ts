@@ -32,13 +32,16 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
-export default defineEventHandler(async (event) => {
-  const { id, bookId } = await readBody(event); // 从请求体获取 ID
+const DEFAULT_BOOK_ID = "0";
 
-  if (!id || !bookId) {
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const id = body.id;
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+
+  if (!id) {
     return error("Not Find ID");
   }
-  // 删除数据
   const deleted = await prisma.flow.delete({
     where: { id, bookId },
   });

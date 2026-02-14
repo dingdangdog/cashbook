@@ -57,7 +57,7 @@ const fetchDuplicates = () => {
   loading.value = true;
   doApi
     .post<DuplicateData>("api/entry/flow/deduplication/autos", {
-      bookId: localStorage.getItem("bookId"),
+      
       criteria: deduplicationCriteria.value, // 传递检测条件
     })
     .then((res) => {
@@ -86,7 +86,7 @@ const deleteFlow = (item: Flow) => {
       doApi
         .post("api/entry/flow/del", {
           id: item.id,
-          bookId: localStorage.getItem("bookId"),
+          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -133,7 +133,7 @@ const batchDeleteFlows = () => {
       doApi
         .post("api/entry/flow/dels", {
           ids: selectedIds.value,
-          bookId: localStorage.getItem("bookId"),
+          
         })
         .then(() => {
           Alert.success(`成功删除 ${selectedIds.value.length} 条记录`);

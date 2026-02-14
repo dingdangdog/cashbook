@@ -33,30 +33,27 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
 
-  if (!body.bookId) {
-    return error("请先选择账本");
-  }
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
 
-  // add/overwrite
   const mode = String(body.mode);
   const flows: any[] = body.flows;
   const userId = await getUserId(event);
 
   if (mode == "overwrite") {
-    const del = await prisma.flow.deleteMany({
-      where: {
-        bookId: body.bookId,
-      },
+    await prisma.flow.deleteMany({
+      where: { bookId },
     });
   }
   const datas: any[] = [];
   flows.forEach((flow) => {
     datas.push({
       userId,
-      bookId: body.bookId,
+      bookId,
       name: flow.name,
       day: new Date(flow.day),
       description: flow.description,

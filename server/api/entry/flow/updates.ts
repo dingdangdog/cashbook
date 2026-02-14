@@ -36,12 +36,15 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "Not Find ID"
  *               }
  */
-export default defineEventHandler(async (event) => {
-  const { ids, bookId, flowType, industryType, payType, attribution } =
-    await readBody(event); // 从请求体获取 ID
-  // const userId = await getUserId(event);
+const DEFAULT_BOOK_ID = "0";
 
-  if (!ids || !bookId) {
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const ids = body.ids;
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const { flowType, industryType, payType, attribution } = body;
+
+  if (!ids) {
     return error("Not Find ID");
   }
 

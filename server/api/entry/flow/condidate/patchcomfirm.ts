@@ -33,14 +33,14 @@ import type { Prisma } from "@prisma/client";
  *                 message: 错误信息（"Invalid params"）
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { bookId, items } = body as {
-    bookId?: string;
-    items?: Array<{ outId: number; inIds: number[] }>;
-  };
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
+  const items = body.items as Array<{ outId: number; inIds: number[] }> | undefined;
 
-  if (!bookId || !Array.isArray(items) || items.length === 0) {
+  if (!Array.isArray(items) || items.length === 0) {
     return error("Invalid params");
   }
 

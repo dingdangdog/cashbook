@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import {
   showSetConvertDialog,
-  showBookDialogFlag,
   showChangePasswordDialog,
 } from "~/utils/flag";
-import { SystemConfig, GlobalUserInfo } from "~/utils/store";
+import { SystemConfig } from "~/utils/store";
 import { getUserInfo, doApi } from "~/utils/api";
 
 // Responsive state
@@ -16,8 +15,6 @@ const sidebarOpen = ref(false);
 // Loading state for page transitions
 const pageLoading = ref(false);
 
-// User and book state
-const bookName = ref("");
 const route = useRoute();
 const openMenu = computed(() => route.path.slice(1) || "calendar");
 
@@ -52,14 +49,7 @@ onMounted(() => {
     window.addEventListener("resize", updateResponsive);
   }
 
-  // Set up book and user info
-  bookName.value = localStorage.getItem("bookName") || "";
-  if (!bookName.value) {
-    showBookDialogFlag.value.visible = true;
-  }
-
-  // 只有当 GlobalUserInfo 不存在时才调用 getUserInfo
-  if (!GlobalUserInfo.value) {
+  if (!useUserStore().user) {
     getUserInfo();
   }
 
@@ -76,9 +66,8 @@ onUnmounted(() => {
 // Navigation methods
 const logout = () => {
   pageLoading.value = true;
-  localStorage.removeItem("bookId");
-  localStorage.removeItem("bookName");
   doApi.get("api/logout").then(() => {
+    useUserStore().clearUser();
     Alert.success("退出登录");
     setTimeout(() => {
       navigateTo("/login");
@@ -156,14 +145,12 @@ const checkVersion = () => {
   <div class="h-screen p-0 m-0 overflow-hidden">
     <!-- Header -->
     <LayoutAppHeader
-      :book-name="bookName"
       :is-mobile="isMobile"
       @toggle-sidebar="sidebarOpen = !sidebarOpen"
       @logout="logout"
       @open-admin="openAdmin"
       @open-convert-dialog="openConvertDialog"
       @open-change-password-dialog="openChangePasswordDialog"
-      @show-book-dialog="showBookDialogFlag.visible = true"
     />
 
     <div
@@ -235,7 +222,6 @@ const checkVersion = () => {
     <GlobalConfirm />
 
     <!-- Dialogs -->
-    <DialogBookDialog v-if="showBookDialogFlag.visible" />
     <DialogSetConvertDialog v-if="showSetConvertDialog" />
     <DialogChangePasswordDialog v-if="showChangePasswordDialog" />
   </div>

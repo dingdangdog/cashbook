@@ -31,12 +31,11 @@ import prisma from "~~/server/lib/prisma";
  *                 message: "请先选择账本"
  *               }
  */
+const DEFAULT_BOOK_ID = "0";
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event); // 获取请求体
-  const { bookId } = body;
-  if (!bookId) {
-    return error("请先选择账本");
-  }
+  const body = await readBody(event);
+  const bookId = body.bookId ? String(body.bookId) : DEFAULT_BOOK_ID;
   const datas = await prisma.fixedFlow.findMany({ where: { bookId } });
   return success(datas);
 });
