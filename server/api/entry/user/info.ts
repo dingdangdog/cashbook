@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
       id: true,
       name: true,
       username: true,
+      defaultFlowType: true,
       createDate: true,
     },
     where, // 使用条件查询

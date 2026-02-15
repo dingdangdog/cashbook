@@ -5,8 +5,8 @@ echo "============================================="
 # 打印环境信息
 # echo "Checking and creating database if it does not exist..."
 echo "Starting application with Prisma database initialization..."
-npx prisma migrate deploy
-echo "Success Run npx prisma migrate deploy."
+prisma migrate deploy --schema ./prisma/schema.prisma
+echo "Success: prisma migrate deploy."
 
 # 启动应用程序
 echo "Starting application..."

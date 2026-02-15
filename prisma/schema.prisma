@@ -24,12 +24,13 @@ model SystemSetting {
 
 // 用户表
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String
-  password   String
-  name       String?
-  email      String?
-  createDate DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  username        String
+  password        String
+  name            String?
+  email           String?
+  defaultFlowType String   @default("支出")
+  createDate      DateTime @default(now())
 }
 
 model Book {

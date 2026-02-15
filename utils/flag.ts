@@ -17,3 +17,4 @@ export const showChangePasswordDialog = ref(false);
 export const showFlowEditDialog = ref(false);
 export const showAutoMergeFlowsDialog = ref(false);
 export const showAutoDeduplicationFlowsDialog = ref(false);
+export const showUserPreferenceDialog = ref(false);

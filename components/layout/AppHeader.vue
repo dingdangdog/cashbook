@@ -22,6 +22,7 @@ const emit = defineEmits<{
   logout: [];
   openAdmin: [];
   openConvertDialog: [];
+  openUserPreference: [];
   openChangePasswordDialog: [];
   showBookDialog: [];
 }>();
@@ -109,6 +110,12 @@ const showUserMenu = ref(false);
                     class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     CSV导入映射配置
+                  </button>
+                  <button
+                    @click="emit('openUserPreference')"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    个人偏好
                   </button>
                   <button
                     @click="emit('openChangePasswordDialog')"
