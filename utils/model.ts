@@ -25,6 +25,7 @@ export interface UserInfo {
   id: number;
   name: string;
   username: string;
+  defaultFlowType?: string;
   createDate: Date;
 }
 
