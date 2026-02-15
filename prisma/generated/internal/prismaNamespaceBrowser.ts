@@ -66,7 +66,9 @@ export const ModelName = {
   TypeRelation: 'TypeRelation',
   SystemAIProvider: 'SystemAIProvider',
   SystemTheme: 'SystemTheme',
-  SystemConfig: 'SystemConfig'
+  SystemConfig: 'SystemConfig',
+  UserChatSession: 'UserChatSession',
+  UserChatMessage: 'UserChatMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -327,6 +329,28 @@ export const SystemConfigScalarFieldEnum = {
 } as const
 
 export type SystemConfigScalarFieldEnum = (typeof SystemConfigScalarFieldEnum)[keyof typeof SystemConfigScalarFieldEnum]
+
+
+export const UserChatSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserChatSessionScalarFieldEnum = (typeof UserChatSessionScalarFieldEnum)[keyof typeof UserChatSessionScalarFieldEnum]
+
+
+export const UserChatMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type UserChatMessageScalarFieldEnum = (typeof UserChatMessageScalarFieldEnum)[keyof typeof UserChatMessageScalarFieldEnum]
 
 
 export const SortOrder = {

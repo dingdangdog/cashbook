@@ -17,3 +17,6 @@ export const showChangePasswordDialog = ref(false);
 export const showFlowEditDialog = ref(false);
 export const showAutoMergeFlowsDialog = ref(false);
 export const showAutoDeduplicationFlowsDialog = ref(false);
+
+/** 全局 AI 助手 Jimi 弹窗/页面 */
+export const showJimiAssistant = ref(false);

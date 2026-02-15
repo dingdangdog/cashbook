@@ -272,3 +272,27 @@ model SystemConfig {
 
   @@map("system_configs")
 }
+
+/// 用户 AI 对话会话表（Jimi 助手）
+model UserChatSession {
+  id        Int      @id @default(autoincrement()) /// 主键
+  userId    Int /// 用户 ID
+  title     String?  @db.VarChar(200) /// 会话标题（可选，默认取首条消息摘要）
+  createdAt DateTime @default(now()) /// 创建时间
+  updatedAt DateTime @updatedAt /// 最后更新时间
+
+  @@index([userId])
+  @@map("user_chat_sessions")
+}
+
+/// 用户 AI 对话消息表
+model UserChatMessage {
+  id        Int      @id @default(autoincrement()) /// 主键
+  sessionId Int /// 会话 ID
+  role      String   @db.VarChar(20) /// 角色：user / assistant / system
+  content   String   @db.Text /// 消息内容
+  createdAt DateTime @default(now()) /// 创建时间
+
+  @@index([sessionId])
+  @@map("user_chat_messages")
+}

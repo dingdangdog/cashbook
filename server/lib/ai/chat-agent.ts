@@ -14,6 +14,8 @@ export interface ChatAgentOptions {
   userId: number;
   messages: ChatCompletionMessageParam[];
   maxToolRounds?: number;
+  /** 指定使用的 AI 服务商 ID，不传则用第一个可用 */
+  providerId?: string | null;
 }
 
 export interface ChatAgentResult {
@@ -27,9 +29,9 @@ export interface ChatAgentResult {
 export async function runChatAgent(
   opts: ChatAgentOptions,
 ): Promise<ChatAgentResult> {
-  const { userId, messages, maxToolRounds = 3 } = opts;
-  const client = await getAIClient();
-  const config = await getAIProviderConfig();
+  const { userId, messages, maxToolRounds = 3, providerId } = opts;
+  const client = await getAIClient(providerId);
+  const config = await getAIProviderConfig(providerId);
 
   if (!client || !config) {
     return {

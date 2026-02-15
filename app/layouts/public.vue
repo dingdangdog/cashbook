@@ -2,6 +2,7 @@
 import {
   showSetConvertDialog,
   showChangePasswordDialog,
+  showJimiAssistant,
 } from "~/utils/flag";
 import { SystemConfig } from "~/utils/store";
 import { getUserInfo, doApi } from "~/utils/api";
@@ -29,7 +30,7 @@ watch(
         pageLoading.value = false;
       }, 500);
     }
-  }
+  },
 );
 
 // Responsive functions
@@ -92,6 +93,14 @@ const openChangePasswordDialog = () => {
   showChangePasswordDialog.value = true;
 };
 
+const openJimi = () => {
+  if (isMobile.value) {
+    navigateTo("/user/jimi");
+  } else {
+    showJimiAssistant.value = true;
+  }
+};
+
 // Version check (keeping original functionality)
 const checkVersion = () => {
   fetch("https://api.github.com/repos/dingdangdog/cashbook/releases/latest")
@@ -114,7 +123,7 @@ const checkVersion = () => {
           confirm: () => {
             window.open(
               `https://github.com/dingdangdog/cashbook/releases`,
-              "_blank"
+              "_blank",
             );
           },
           cancel: () => {
@@ -135,7 +144,7 @@ const checkVersion = () => {
 <template>
   <Head>
     <Title>{{ SystemConfig?.title }}</Title>
-    <Meta name="description" :content="SystemConfig?.description" />
+    <Meta name="description" :content="SystemConfig?.description ?? ''" />
     <Meta
       name="keywords"
       :content="`Cashbook,记账本,私人记账,开源账本,dingdangdog,月上老狗,${SystemConfig?.keywords}`"
@@ -221,9 +230,16 @@ const checkVersion = () => {
     <!-- Global Components -->
     <GlobalConfirm />
 
+    <!-- AI 助手 Jimi：右下角气泡 + 桌面端弹窗 -->
+    <JimiBubble
+      v-if="useUserStore().user"
+      :is-mobile="isMobile"
+      @open="openJimi"
+    />
+    <JimiDialog v-if="!isMobile && showJimiAssistant" />
+
     <!-- Dialogs -->
     <DialogSetConvertDialog v-if="showSetConvertDialog" />
     <DialogChangePasswordDialog v-if="showChangePasswordDialog" />
   </div>
 </template>
-

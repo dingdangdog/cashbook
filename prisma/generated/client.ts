@@ -119,3 +119,13 @@ export type SystemTheme = Prisma.SystemThemeModel
  * 系统设置表
  */
 export type SystemConfig = Prisma.SystemConfigModel
+/**
+ * Model UserChatSession
+ * 用户 AI 对话会话表（Jimi 助手）
+ */
+export type UserChatSession = Prisma.UserChatSessionModel
+/**
+ * Model UserChatMessage
+ * 用户 AI 对话消息表
+ */
+export type UserChatMessage = Prisma.UserChatMessageModel

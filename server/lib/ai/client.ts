@@ -1,20 +1,32 @@
 import OpenAI from "openai";
-import { getSystemAIProvidersPage } from "~~/server/utils/db";
+import {
+  getSystemAIProvidersPage,
+  getSystemAIProviderById,
+} from "~~/server/utils/db";
 
-/** 获取第一个可用的 OpenAI 兼容客户端 */
-export async function getAIClient(): Promise<OpenAI | null> {
+async function getProvider(providerId?: string | null) {
+  if (providerId) {
+    const p = await getSystemAIProviderById(providerId);
+    if (p?.isActive) return p;
+  }
   const { data: providers } = await getSystemAIProvidersPage(
     { isActive: true },
     { pageNum: 1, pageSize: 1 },
   );
-  const provider = providers[0];
+  return providers[0] ?? null;
+}
+
+/** 获取 OpenAI 兼容客户端，可选指定服务商 ID */
+export async function getAIClient(
+  providerId?: string | null,
+): Promise<OpenAI | null> {
+  const provider = await getProvider(providerId);
   if (provider?.apiKey) {
     return new OpenAI({
       apiKey: provider.apiKey,
       baseURL: provider.apiEndpoint || undefined,
     });
   }
-  // 回退到环境变量
   const key = process.env.OPENAI_API_KEY;
   if (key) {
     return new OpenAI({ apiKey: key });
@@ -22,17 +34,15 @@ export async function getAIClient(): Promise<OpenAI | null> {
   return null;
 }
 
-/** 获取第一个可用的 AI 配置（模型名等） */
-export async function getAIProviderConfig(): Promise<{
+/** 获取 AI 配置（模型名等），可选指定服务商 ID */
+export async function getAIProviderConfig(
+  providerId?: string | null,
+): Promise<{
   model: string;
   temperature?: number;
   maxTokens?: number;
 } | null> {
-  const { data: providers } = await getSystemAIProvidersPage(
-    { isActive: true },
-    { pageNum: 1, pageSize: 1 },
-  );
-  const provider = providers[0];
+  const provider = await getProvider(providerId);
   if (provider) {
     return {
       model: provider.apiModel || "gpt-4o-mini",

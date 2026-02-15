@@ -16,6 +16,16 @@ export const doApi = {
 
     return intercepterResponse(res);
   },
+  // delete 用于删除资源
+  delete: async <T>(path: string): Promise<T> => {
+    const res = await $fetch<Result<T>>(`${API_PREFIEX}${path}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+      credentials: "include",
+    });
+    return intercepterResponse(res);
+  },
+
   // post 用于大部分业务接口调用
   post: async <T>(path: string, data?: any): Promise<T> => {
     const res = await $fetch<Result<T>>(`${API_PREFIEX}${path}`, {
