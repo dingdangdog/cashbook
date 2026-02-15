@@ -3,6 +3,7 @@ import {
   showSetConvertDialog,
   showBookDialogFlag,
   showChangePasswordDialog,
+  showUserPreferenceDialog,
 } from "~/utils/flag";
 import { SystemConfig, GlobalUserInfo } from "~/utils/store";
 import { getUserInfo, doApi } from "~/utils/api";
@@ -99,6 +100,10 @@ const openConvertDialog = () => {
   showSetConvertDialog.value = true;
 };
 
+const openUserPreference = () => {
+  showUserPreferenceDialog.value = true;
+};
+
 const openChangePasswordDialog = () => {
   showChangePasswordDialog.value = true;
 };
@@ -162,6 +167,7 @@ const checkVersion = () => {
       @logout="logout"
       @open-admin="openAdmin"
       @open-convert-dialog="openConvertDialog"
+      @open-user-preference="openUserPreference"
       @open-change-password-dialog="openChangePasswordDialog"
       @show-book-dialog="showBookDialogFlag.visible = true"
     />
@@ -238,6 +244,7 @@ const checkVersion = () => {
     <DialogBookDialog v-if="showBookDialogFlag.visible" />
     <DialogSetConvertDialog v-if="showSetConvertDialog" />
     <DialogChangePasswordDialog v-if="showChangePasswordDialog" />
+    <DialogUserPreferenceDialog v-if="showUserPreferenceDialog" />
   </div>
 </template>
 

@@ -2,11 +2,11 @@
   <!-- 流水编辑对话框 -->
   <div
     v-if="showFlowEditDialog"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-2 pt-4 overflow-y-auto"
     style="z-index: 999"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[85vh]"
       @click.stop
     >
       <!-- 标题栏 -->
@@ -25,7 +25,7 @@
       </div>
 
       <!-- 表单内容 -->
-      <div class="p-2 md:p-4 space-y-2 max-h-[80vh] overflow-y-auto">
+      <div class="p-2 md:p-4 space-y-2 max-h-[30vh] overflow-y-auto">
         <!-- 日期和流水类型 - 同一行 -->
         <div class="grid grid-cols-2 gap-2">
           <!-- 日期选择 -->
@@ -307,7 +307,7 @@
 
       <!-- 操作按钮 -->
       <div
-        class="flex justify-center gap-3 p-4 border-t border-gray-200 dark:border-gray-700"
+        class="flex justify-center gap-3 p-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
       >
         <button
           @click="closeDialog"
@@ -338,6 +338,7 @@ import { showFlowEditDialog } from "~/utils/flag";
 import { onMounted, ref, computed, watch } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { GlobalUserInfo } from "~/utils/store";
 
 // ESC键监听
 useEscapeKey(() => {
@@ -357,7 +358,7 @@ const formTitle = ["新增流水", "修改流水"];
 const industryTypeLabel = ref("支出类型/收入类型");
 const payTypeLabel = ref("支付方式/收款方式");
 const flowTypeDialogOptions = ref(["支出", "收入", "不计收支"]);
-const defaultFlowType = "支出";
+const defaultFlowType = GlobalUserInfo.value?.defaultFlowType || "支出";
 
 // 下拉框显示状态
 const showIndustryTypeDropdown = ref(false);
