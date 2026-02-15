@@ -17,20 +17,20 @@
           class="bg-surface rounded-lg md:rounded-xl shadow border border-border cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
           @click="clickDay('', '收入')"
         >
-          <div class="flex items-center gap-2 md:gap-3 p-2 md:p-4">
+          <div class="flex items-center gap-2 md:gap-3 p-2 md:p-3">
             <div
-              class="w-8 h-8 md:w-10 md:h-10 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center flex-shrink-0"
+              class="w-8 h-8 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center flex-shrink-0"
             >
               <ArrowTrendingUpIcon
                 class="w-4 h-4 md:w-5 md:h-5 text-primary-700 dark:text-primary-300"
               />
             </div>
-            <div class="min-w-0 flex-1">
+            <div class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1">
               <p class="text-xs md:text-sm font-medium text-foreground/70">
                 总收入
               </p>
               <p
-                class="text-sm md:text-xl font-bold text-primary-700 dark:text-primary-300 truncate"
+                class="text-sm md:text-base font-bold text-primary-700 dark:text-primary-300 truncate"
               >
                 {{ getInMonth().toFixed(2) }}
               </p>
@@ -42,20 +42,20 @@
           class="bg-surface rounded-lg md:rounded-xl shadow border border-border cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
           @click="clickDay('', '支出')"
         >
-          <div class="flex items-center gap-2 md:gap-3 p-2 md:p-4">
+          <div class="flex items-center gap-2 md:gap-3 p-2 md:p-3">
             <div
-              class="w-8 h-8 md:w-10 md:h-10 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0"
+              class="w-8 h-8 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0"
             >
               <ArrowTrendingDownIcon
                 class="w-4 h-4 md:w-5 md:h-5 text-red-700 dark:text-red-300"
               />
             </div>
-            <div class="min-w-0 flex-1">
+            <div class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1">
               <p class="text-xs md:text-sm font-medium text-foreground/70">
                 总支出
               </p>
               <p
-                class="text-sm md:text-xl font-bold text-red-700 dark:text-red-300 truncate"
+                class="text-sm md:text-base font-bold text-red-700 dark:text-red-300 truncate"
               >
                 {{ getOutMonth().toFixed(2) }}
               </p>
@@ -66,9 +66,9 @@
         <div
           class="bg-surface rounded-lg md:rounded-xl shadow border border-border"
         >
-          <div class="flex items-center gap-2 md:gap-3 p-2 md:p-4">
+          <div class="flex items-center gap-2 md:gap-3 p-2 md:p-3">
             <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+              class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
               :class="
                 balance >= 0
                   ? 'bg-primary-100 dark:bg-primary-900'
@@ -84,12 +84,12 @@
                 "
               />
             </div>
-            <div class="min-w-0 flex-1">
+            <div class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1">
               <p class="text-xs md:text-sm font-medium text-foreground/70">
                 净收入
               </p>
               <p
-                class="text-sm md:text-xl font-bold truncate"
+                class="text-sm md:text-base font-bold truncate"
                 :class="
                   balance >= 0
                     ? 'text-primary-700 dark:text-primary-300'
