@@ -17,7 +17,6 @@ export default defineEventHandler(async (event) => {
       title: true,
       createdAt: true,
       updatedAt: true,
-      _count: { select: { messages: true } },
     },
   });
 

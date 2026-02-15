@@ -9,7 +9,10 @@ import {
   Bars3Icon,
   XMarkIcon,
   ChevronLeftIcon,
+  ArrowDownIcon,
+  PencilSquareIcon,
 } from "@heroicons/vue/24/outline";
+import MarkdownIt from "markdown-it";
 import UiComboInput from "~/components/ui/ComboInput.vue";
 
 export interface ChatSession {
@@ -17,7 +20,6 @@ export interface ChatSession {
   title: string | null;
   createdAt: string;
   updatedAt: string;
-  _count?: { messages: number };
 }
 
 export interface ChatMessage {
@@ -49,6 +51,11 @@ const loading = ref(false);
 const sending = ref(false);
 const inputText = ref("");
 const sessionDrawerOpen = ref(false);
+const md = new MarkdownIt({
+  html: false,
+  linkify: true,
+  breaks: true,
+});
 
 /** AI 服务商：可选列表与当前选中 */
 const aiProviders = ref<AIProviderOption[]>([]);
@@ -57,6 +64,27 @@ const selectedProviderName = ref("");
 
 /** 移动端双视图：list = 会话列表全屏，chat = 对话全屏 */
 const mobileView = ref<"list" | "chat">("list");
+
+/** 对话区域滚动容器（移动端 / 桌面端各一） */
+const mobileChatScrollRef = ref<HTMLElement | null>(null);
+const desktopChatScrollRef = ref<HTMLElement | null>(null);
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    const el =
+      props.isMobile && props.showSessionList && mobileView.value === "chat"
+        ? mobileChatScrollRef.value
+        : desktopChatScrollRef.value;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  });
+};
+
+/** 对话气泡复位：滚动到底部，避免拖动/选中导致的错位 */
+const resetChatBubbles = () => {
+  scrollToBottom();
+};
 
 const openDrawer = () => {
   sessionDrawerOpen.value = true;
@@ -119,6 +147,8 @@ const loadMessages = async (sessionId: number) => {
     messages.value = [];
     return;
   }
+  const prevLen = messages.value.length;
+  const prevLastId = messages.value[prevLen - 1]?.id;
   loading.value = true;
   try {
     const list = await doApi.get<ChatMessage[]>(
@@ -129,6 +159,9 @@ const loadMessages = async (sessionId: number) => {
     messages.value = [];
   } finally {
     loading.value = false;
+    const nowLen = messages.value.length;
+    const nowLastId = messages.value[nowLen - 1]?.id;
+    if (nowLen !== prevLen || nowLastId !== prevLastId) scrollToBottom();
   }
 };
 
@@ -168,6 +201,43 @@ const deleteSession = async (id: number, e: Event) => {
   }
 };
 
+/** 正在编辑标题的会话 id */
+const editingSessionId = ref<number | null>(null);
+const editingTitle = ref("");
+
+const startEditTitle = (s: ChatSession, e: Event) => {
+  e.stopPropagation();
+  editingSessionId.value = s.id;
+  editingTitle.value = s.title || "新对话";
+  // 延后一帧再用原生 DOM 聚焦，避免 v-for/v-if 下 ref 时机或数组问题
+  setTimeout(() => {
+    const input = document.querySelector<HTMLInputElement>(
+      "[data-jimi-edit-title-input]",
+    );
+    input?.focus();
+  }, 0);
+};
+
+const cancelEditTitle = () => {
+  editingSessionId.value = null;
+  editingTitle.value = "";
+};
+
+const saveSessionTitle = async (sessionId: number) => {
+  if (editingSessionId.value === null) return;
+  const title = editingTitle.value.trim() || null;
+  try {
+    await doApi.patch<{ title: string | null }>(
+      `api/entry/ai/sessions/${sessionId}`,
+      { title },
+    );
+    await loadSessions();
+  } catch {
+    Alert.error("保存标题失败");
+  }
+  cancelEditTitle();
+};
+
 const sendMessage = async () => {
   const text = inputText.value.trim();
   if (!text || sending.value) return;
@@ -181,6 +251,7 @@ const sendMessage = async () => {
   };
   messages.value = [...messages.value, userMsg];
   sending.value = true;
+  scrollToBottom();
 
   try {
     const res = await doApi.post<{
@@ -203,6 +274,7 @@ const sendMessage = async () => {
         createdAt: new Date().toISOString(),
       };
       messages.value = [...messages.value, assistantMsg];
+      scrollToBottom();
     }
   } catch {
     messages.value = messages.value.filter((m) => m !== userMsg);
@@ -219,6 +291,10 @@ const currentSessionTitle = computed(
 );
 
 const providerOptions = computed(() => aiProviders.value.map((p) => p.name));
+
+const renderAssistantMarkdown = (content: string) => {
+  return md.render(content || "");
+};
 
 onMounted(() => {
   loadProviders();
@@ -319,9 +395,7 @@ watch(
                   <p class="truncate text-[15px] font-medium text-foreground">
                     {{ s.title || "新对话" }}
                   </p>
-                  <p class="truncate text-xs text-foreground/50">
-                    {{ s._count?.messages ?? 0 }} 条消息
-                  </p>
+                  <p class="truncate text-xs text-foreground/50">对话</p>
                 </div>
               </button>
               <button
@@ -356,7 +430,15 @@ watch(
           >
             {{ currentSessionTitle }}
           </h2>
-          <div class="w-10" />
+          <button
+            type="button"
+            class="flex-shrink-0 rounded-full p-2 text-foreground/60 hover:bg-surface-muted hover:text-foreground"
+            aria-label="复位对话"
+            title="复位到底部"
+            @click="resetChatBubbles"
+          >
+            <ArrowDownIcon class="h-5 w-5" />
+          </button>
         </header>
         <!-- 移动端对话页：当前 AI 服务商 -->
         <div
@@ -371,7 +453,10 @@ watch(
             class="flex-1 min-w-0"
           />
         </div>
-        <div class="flex-1 overflow-y-auto px-3 py-4">
+        <div
+          ref="mobileChatScrollRef"
+          class="flex-1 overflow-y-auto overflow-x-hidden px-3 py-4 touch-pan-y select-text"
+        >
           <template v-if="!currentSessionId && messages.length === 0">
             <div
               class="flex flex-col items-center justify-center gap-4 py-12 text-center text-foreground/60"
@@ -395,7 +480,12 @@ watch(
                         : 'rounded-bl-md bg-surface-muted text-foreground'
                     "
                   >
-                    <div class="whitespace-pre-wrap break-words">
+                    <div
+                      v-if="msg.role === 'assistant'"
+                      class="jimi-markdown break-words"
+                      v-html="renderAssistantMarkdown(msg.content)"
+                    />
+                    <div v-else class="whitespace-pre-wrap break-words">
                       {{ msg.content }}
                     </div>
                   </div>
@@ -493,30 +583,59 @@ watch(
                 暂无对话，发送消息将自动创建
               </div>
             </template>
-            <button
+            <div
               v-for="s in sessions"
               :key="s.id"
-              type="button"
               class="flex w-full items-center gap-2 border-b border-border px-3 py-2 text-left text-sm transition hover:bg-surface-muted"
               :class="{
                 'bg-primary-500/15 text-primary-700': currentSessionId === s.id,
               }"
-              @click="
-                isMobile ? selectSessionAndClose(s.id) : selectSession(s.id)
-              "
             >
-              <span class="min-w-0 flex-1 truncate">{{
-                s.title || "新对话"
-              }}</span>
-              <button
-                type="button"
-                class="flex-shrink-0 rounded p-0.5 opacity-60 hover:opacity-100"
+              <template v-if="editingSessionId === s.id">
+                <input
+                  data-jimi-edit-title-input
+                  v-model="editingTitle"
+                  type="text"
+                  class="min-w-0 flex-1 rounded border border-border bg-background px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  placeholder="标题"
+                  maxlength="200"
+                  @click.stop
+                  @keydown.enter.prevent="saveSessionTitle(s.id)"
+                  @keydown.escape="cancelEditTitle"
+                  @blur="saveSessionTitle(s.id)"
+                />
+              </template>
+              <template v-else>
+                <button
+                  type="button"
+                  class="min-w-0 flex-1 truncate text-left"
+                  @click="
+                    isMobile ? selectSessionAndClose(s.id) : selectSession(s.id)
+                  "
+                >
+                  {{ s.title || "新对话" }}
+                </button>
+                <button
+                  type="button"
+                  class="flex-shrink-0 rounded p-0.5 text-foreground/50 hover:bg-surface-muted hover:text-foreground"
+                  title="编辑标题"
+                  @click.stop="startEditTitle(s, $event)"
+                >
+                  <PencilSquareIcon class="h-4 w-4" />
+                </button>
+              </template>
+              <span
+                v-if="editingSessionId !== s.id"
+                role="button"
+                tabindex="0"
+                class="flex-shrink-0 cursor-pointer rounded p-0.5 opacity-60 hover:opacity-100"
                 title="删除"
-                @click="(e: Event) => deleteSession(s.id, e)"
+                @click.stop="(e: Event) => deleteSession(s.id, e)"
+                @keydown.enter.prevent="(e: Event) => deleteSession(s.id, e)"
               >
                 <TrashIcon class="h-4 w-4" />
-              </button>
-            </button>
+              </span>
+            </div>
           </div>
         </aside>
       </template>
@@ -564,7 +683,11 @@ watch(
           <p class="text-xs">发送任意消息将自动创建新对话。</p>
         </div>
 
-        <div v-else class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div
+          ref="desktopChatScrollRef"
+          v-else
+          class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 touch-pan-y select-text"
+        >
           <template v-for="(msg, i) in messages" :key="i">
             <div
               class="flex gap-3"
@@ -578,7 +701,12 @@ watch(
                     : 'bg-surface-muted text-foreground'
                 "
               >
-                <div class="whitespace-pre-wrap break-words">
+                <div
+                  v-if="msg.role === 'assistant'"
+                  class="jimi-markdown break-words"
+                  v-html="renderAssistantMarkdown(msg.content)"
+                />
+                <div v-else class="whitespace-pre-wrap break-words">
                   {{ msg.content }}
                 </div>
               </div>
@@ -596,8 +724,10 @@ watch(
           </div>
         </div>
 
-        <div class="border-t border-border bg-surface p-3">
-          <form class="flex gap-2" @submit.prevent="sendMessage">
+        <div
+          class="flex flex-shrink-0 items-center gap-2 border-t border-border bg-surface p-3"
+        >
+          <form class="flex flex-1 gap-2" @submit.prevent="sendMessage">
             <input
               v-model="inputText"
               type="text"
@@ -613,8 +743,60 @@ watch(
               <PaperAirplaneIcon class="h-5 w-5" />
             </button>
           </form>
+          <button
+            type="button"
+            class="flex-shrink-0 rounded-lg border border-border px-2 py-2 text-foreground/70 hover:bg-surface-muted hover:text-foreground"
+            aria-label="复位对话"
+            title="复位到底部"
+            @click="resetChatBubbles"
+          >
+            <ArrowDownIcon class="h-5 w-5" />
+          </button>
         </div>
       </div>
     </template>
   </div>
 </template>
+
+<style scoped>
+.jimi-markdown :deep(p) {
+  margin: 0 0 0.45rem;
+}
+
+.jimi-markdown :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.jimi-markdown :deep(ul),
+.jimi-markdown :deep(ol) {
+  margin: 0.3rem 0 0.45rem 1.1rem;
+}
+
+.jimi-markdown :deep(li) {
+  margin: 0.2rem 0;
+}
+
+.jimi-markdown :deep(code) {
+  border-radius: 0.25rem;
+  background: rgba(148, 163, 184, 0.2);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.9em;
+}
+
+.jimi-markdown :deep(pre) {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  background: rgba(148, 163, 184, 0.15);
+  padding: 0.6rem;
+}
+
+.jimi-markdown :deep(pre code) {
+  background: transparent;
+  padding: 0;
+}
+
+.jimi-markdown :deep(a) {
+  color: #2563eb;
+  text-decoration: underline;
+}
+</style>

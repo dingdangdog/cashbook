@@ -26,6 +26,20 @@ export const doApi = {
     return intercepterResponse(res);
   },
 
+  // patch 用于部分更新资源
+  patch: async <T>(path: string, data?: any): Promise<T> => {
+    const res = await $fetch<Result<T>>(`${API_PREFIEX}${path}`, {
+      method: "PATCH",
+      headers: {
+        ...getHeaders(),
+        "Content-Type": "application/json;chartset=utf-8",
+      },
+      body: data,
+      credentials: "include",
+    });
+    return intercepterResponse(res);
+  },
+
   // post 用于大部分业务接口调用
   post: async <T>(path: string, data?: any): Promise<T> => {
     const res = await $fetch<Result<T>>(`${API_PREFIEX}${path}`, {

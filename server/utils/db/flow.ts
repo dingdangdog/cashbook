@@ -52,10 +52,12 @@ function buildFlowWhere(input: FlowQueryWhere = {}): Prisma.FlowWhereInput {
       where.day.gte =
         input.startDay instanceof Date
           ? input.startDay
-          : new Date(input.startDay);
+          : parseDateBoundary(input.startDay, "start");
     if (input.endDay)
       where.day.lte =
-        input.endDay instanceof Date ? input.endDay : new Date(input.endDay);
+        input.endDay instanceof Date
+          ? input.endDay
+          : parseDateBoundary(input.endDay, "end");
   }
   if (input.minMoney != null || input.maxMoney != null) {
     where.money = {};
@@ -63,6 +65,21 @@ function buildFlowWhere(input: FlowQueryWhere = {}): Prisma.FlowWhereInput {
     if (input.maxMoney != null) where.money.lte = input.maxMoney;
   }
   return where;
+}
+
+function parseDateBoundary(value: string, boundary: "start" | "end"): Date {
+  // 仅日期字符串（YYYY-MM-DD）按本地时区扩展为整天边界，避免遗漏当天数据
+  const pureDate = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (pureDate) {
+    const y = Number(pureDate[1]);
+    const m = Number(pureDate[2]) - 1;
+    const d = Number(pureDate[3]);
+    if (boundary === "start") {
+      return new Date(y, m, d, 0, 0, 0, 0);
+    }
+    return new Date(y, m, d, 23, 59, 59, 999);
+  }
+  return new Date(value);
 }
 
 /** 根据 ID 查询单条 */
@@ -74,13 +91,13 @@ export async function getFlowById(id: number): Promise<Flow | null> {
 export async function getFlowsPage(
   whereInput: FlowQueryWhere = {},
   pagination: PaginationParams = {},
-  orderBy: Prisma.FlowOrderByWithRelationInput = { day: "desc", id: "desc" },
+  orderBy: [{ day: "desc" }, { id: "desc" }],
 ): Promise<PaginationResult<Flow>> {
   const where = buildFlowWhere(whereInput);
   const { skip, take, pageNum, pageSize } = buildPagination(pagination);
 
   const [data, total] = await Promise.all([
-    prisma.flow.findMany({ where, orderBy, skip, take }),
+    prisma.flow.findMany({ where, orderBy: orderBy, skip, take }),
     prisma.flow.count({ where }),
   ]);
 

@@ -2,7 +2,7 @@ import prisma from "~~/server/lib/prisma";
 import { getUserId } from "~~/server/utils/jwt";
 import { success, error } from "~~/server/utils/common";
 
-/** DELETE /api/entry/ai/sessions/:id - 删除对话会话（及其消息） */
+/** PATCH /api/entry/ai/sessions/:id - 更新会话标题 */
 export default defineEventHandler(async (event) => {
   const userId = await getUserId(event);
   if (!userId) {
@@ -19,6 +19,18 @@ export default defineEventHandler(async (event) => {
     return error("无效的会话 ID");
   }
 
+  const body = await readBody(event); // 获取请求体
+  const title =
+    body?.title === null || body?.title === ""
+      ? null
+      : typeof body?.title === "string"
+        ? body.title.trim().slice(0, 200)
+        : undefined;
+
+  if (title === undefined) {
+    return error("请提供 title 字段");
+  }
+
   const session = await prisma.userChatSession.findFirst({
     where: { id: sessionId, userId },
   });
@@ -26,12 +38,14 @@ export default defineEventHandler(async (event) => {
     return error("会话不存在或无权访问");
   }
 
-  await prisma.userChatMessage.deleteMany({
-    where: { sessionId },
-  });
-  await prisma.userChatSession.delete({
+  const updated = await prisma.userChatSession.update({
     where: { id: sessionId },
+    data: { title: title || null },
   });
 
-  return success({ ok: true });
+  return success({
+    id: updated.id,
+    title: updated.title,
+    updatedAt: updated.updatedAt,
+  });
 });

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: "fullscreen",
+  layout: "public",
   middleware: ["auth"],
 });
 
@@ -30,7 +30,11 @@ const goBack = () => {
 </script>
 
 <template>
-  <div class="flex h-full min-h-screen flex-col bg-background text-foreground">
+  <!-- 固定高度容器，避免在 public 布局下无限展开 -->
+  <div
+    class="flex flex-col bg-background text-foreground overflow-hidden"
+    :class="isMobile ? 'h-[calc(100vh-4rem-3rem)]' : 'h-[calc(100vh-4rem)]'"
+  >
     <!-- 桌面端：保留顶部栏 -->
     <header
       v-if="!isMobile"

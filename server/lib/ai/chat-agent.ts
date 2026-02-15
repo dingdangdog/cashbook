@@ -21,6 +21,7 @@ export interface ChatAgentOptions {
 export interface ChatAgentResult {
   content: string;
   toolCalls?: Array<{ name: string; args: Record<string, unknown> }>;
+  strategy?: "tool_calls" | "json";
 }
 
 /**
@@ -35,12 +36,92 @@ export async function runChatAgent(
 
   if (!client || !config) {
     return {
-      content: "未配置 AI 服务，无法对话。请在系统设置中配置 AI 服务商（如 OpenAI、DeepSeek）的 API Key。",
+      content:
+        "未配置 AI 服务，无法对话。请在系统设置中配置 AI 服务商（如 OpenAI、DeepSeek）的 API Key。",
     };
   }
 
+  const latestUserText = getLatestUserText(messages);
+  logAIExecution({
+    event: "start",
+    userId,
+    strategy: "tool_calls",
+    userText: latestUserText,
+    detail: { maxToolRounds, providerId: providerId ?? null },
+  });
+
+  let toolCallsError: unknown = null;
+  try {
+    const result = await runWithToolCalls({
+      userId,
+      messages,
+      maxToolRounds,
+      client,
+      config,
+    });
+    if (result.content.trim()) {
+      logAIExecution({
+        event: "final_success",
+        userId,
+        strategy: "tool_calls",
+        userText: latestUserText,
+        toolCalls: result.toolCalls,
+      });
+      return result;
+    }
+    toolCallsError = new Error("tool_calls 方案返回空内容");
+  } catch (e) {
+    toolCallsError = e;
+    logAIExecution({
+      event: "strategy_failed",
+      userId,
+      strategy: "tool_calls",
+      userText: latestUserText,
+      detail: { error: errorToMessage(e) },
+    });
+  }
+
+  try {
+    const result = await runWithJsonPlan({
+      userId,
+      messages,
+      client,
+      config,
+    });
+    logAIExecution({
+      event: "final_success",
+      userId,
+      strategy: "json",
+      userText: latestUserText,
+      toolCalls: result.toolCalls,
+    });
+    return result;
+  } catch (jsonError) {
+    const msg1 = errorToMessage(toolCallsError);
+    const msg2 = errorToMessage(jsonError);
+    logAIExecution({
+      event: "all_failed",
+      userId,
+      strategy: "json",
+      userText: latestUserText,
+      detail: { toolCallsError: msg1, jsonError: msg2 },
+    });
+    throw new Error(`方案1(tool_calls)失败：${msg1}；方案2(json)失败：${msg2}`);
+  }
+}
+
+async function runWithToolCalls(opts: {
+  userId: number;
+  messages: ChatCompletionMessageParam[];
+  maxToolRounds: number;
+  client: NonNullable<Awaited<ReturnType<typeof getAIClient>>>;
+  config: NonNullable<Awaited<ReturnType<typeof getAIProviderConfig>>>;
+}): Promise<ChatAgentResult> {
+  const { userId, messages, maxToolRounds, client, config } = opts;
+  const now = new Date();
+  const latestUserText = getLatestUserText(messages);
   const fullMessages: ChatCompletionMessageParam[] = [
-    { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: buildTimeAwareSystemPrompt(now) },
     ...messages,
   ];
 
@@ -54,7 +135,6 @@ export async function runChatAgent(
       max_tokens: config.maxTokens ?? 3000,
       messages: fullMessages,
       tools: CHAT_TOOLS,
-      tool_choice: "auto",
     });
 
     const msg = response.choices[0]?.message;
@@ -71,14 +151,31 @@ export async function runChatAgent(
     }
 
     for (const tc of toolCalls) {
-      const name = tc.function?.name;
+      if (tc.type !== "function") {
+        continue;
+      }
+      const name = tc.function.name;
       let args: Record<string, unknown> = {};
       try {
-        args = JSON.parse(tc.function?.arguments || "{}");
+        args = JSON.parse(tc.function.arguments || "{}");
       } catch {
         args = {};
       }
-      const output = await executeTool(name!, args, { userId });
+      const normalizedArgs = applyTemporalHints(
+        name,
+        args,
+        latestUserText,
+        now,
+      );
+      logAIExecution({
+        event: "tool_execute",
+        userId,
+        strategy: "tool_calls",
+        userText: latestUserText,
+        toolCalls: [{ name, args: normalizedArgs }],
+        detail: { round },
+      });
+      const output = await executeTool(name, normalizedArgs, { userId });
       fullMessages.push({
         role: "tool",
         tool_call_id: tc.id!,
@@ -101,5 +198,309 @@ export async function runChatAgent(
     lastContent = finalMsg?.content || lastContent || "操作已完成。";
   }
 
-  return { content: lastContent };
+  return { content: lastContent, strategy: "tool_calls" };
+}
+
+const JSON_PLAN_SYSTEM_PROMPT = `你是个人记账助手，请把用户诉求解析为 JSON 指令。
+只输出 JSON，不要输出 markdown，不要输出额外解释。
+
+JSON 格式固定如下：
+{
+  "action": {
+    "name": "add_flow" | "query_flows" | "get_statistics" | "none",
+    "args": { ... }
+  },
+  "reply": "给用户的自然语言回复（当 name=none 时必须有）"
+}
+
+参数约束：
+- add_flow.args: { flowType, industryType, payType, money, name, day?, description?, attribution? }
+- query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, pageNum?, pageSize? }
+- get_statistics.args: { month? 或 startDay+endDay }
+
+要求：
+- 能调用工具就优先给 action，不要 name=none
+- 数字字段必须是 number
+- 日期格式 YYYY-MM-DD，月份 YYYY-MM`;
+
+type JsonPlan = {
+  action?: {
+    name?: string;
+    args?: Record<string, unknown>;
+  };
+  reply?: string;
+};
+
+async function runWithJsonPlan(opts: {
+  userId: number;
+  messages: ChatCompletionMessageParam[];
+  client: NonNullable<Awaited<ReturnType<typeof getAIClient>>>;
+  config: NonNullable<Awaited<ReturnType<typeof getAIProviderConfig>>>;
+}): Promise<ChatAgentResult> {
+  const { userId, messages, client, config } = opts;
+  const now = new Date();
+  const latestUserText = getLatestUserText(messages);
+  if (!latestUserText) {
+    throw new Error("json 方案未找到用户输入");
+  }
+
+  // 兼容部分严格校验角色交替的后端：仅发送单条 user 消息做 JSON 抽取
+  const fullMessages: ChatCompletionMessageParam[] = [
+    {
+      role: "user",
+      content: `${JSON_PLAN_SYSTEM_PROMPT}\n\n当前服务器时间：${getNowContext(now)}\n请基于以下用户请求返回 JSON：\n${latestUserText}`,
+    },
+  ];
+
+  const planResponse = await client.chat.completions.create({
+    model: config.model,
+    temperature: 0.1,
+    max_tokens: config.maxTokens ?? 3000,
+    messages: fullMessages,
+  });
+  const raw = planResponse.choices[0]?.message?.content?.trim();
+  if (!raw) {
+    throw new Error("json 方案未返回内容");
+  }
+
+  const parsed = parseJsonPlan(raw);
+  const actionName = parsed.action?.name;
+  const args = parsed.action?.args ?? {};
+  if (
+    actionName === "add_flow" ||
+    actionName === "query_flows" ||
+    actionName === "get_statistics"
+  ) {
+    const normalizedArgs = applyTemporalHints(
+      actionName,
+      args,
+      latestUserText,
+      now,
+    );
+    logAIExecution({
+      event: "tool_execute",
+      userId,
+      strategy: "json",
+      userText: latestUserText,
+      toolCalls: [{ name: actionName, args: normalizedArgs }],
+    });
+    const toolOutput = await executeTool(actionName, normalizedArgs, {
+      userId,
+    });
+    const finalText = await summarizeToolResult({
+      client,
+      config,
+      userMessages: messages,
+      toolName: actionName,
+      toolOutput,
+      hintReply: parsed.reply,
+    });
+    return {
+      content: finalText,
+      toolCalls: [{ name: actionName, args: normalizedArgs }],
+      strategy: "json",
+    };
+  }
+
+  const reply = parsed.reply?.trim();
+  if (!reply) {
+    throw new Error("json 方案缺少可用 reply");
+  }
+  return { content: reply, strategy: "json" };
+}
+
+function parseJsonPlan(raw: string): JsonPlan {
+  try {
+    return JSON.parse(raw) as JsonPlan;
+  } catch {
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) {
+      throw new Error("json 方案返回非 JSON 内容");
+    }
+    return JSON.parse(match[0]) as JsonPlan;
+  }
+}
+
+async function summarizeToolResult(opts: {
+  client: NonNullable<Awaited<ReturnType<typeof getAIClient>>>;
+  config: NonNullable<Awaited<ReturnType<typeof getAIProviderConfig>>>;
+  userMessages: ChatCompletionMessageParam[];
+  toolName: string;
+  toolOutput: string;
+  hintReply?: string;
+}): Promise<string> {
+  const { client, config, userMessages, toolName, toolOutput, hintReply } =
+    opts;
+  const lastUser = getLatestUserText(userMessages);
+
+  try {
+    const res = await client.chat.completions.create({
+      model: config.model,
+      temperature: 0.2,
+      max_tokens: config.maxTokens ?? 1000,
+      messages: [
+        {
+          role: "system",
+          content:
+            "你是记账助手，请基于工具执行结果，给用户生成简洁中文回复。不要编造，严格基于结果。",
+        },
+        {
+          role: "user",
+          content: `用户原话：${lastUser}\n工具：${toolName}\n工具结果JSON：${toolOutput}\n参考回复：${hintReply || ""}`,
+        },
+      ],
+    });
+    const content = res.choices[0]?.message?.content?.trim();
+    if (content) return content;
+  } catch {
+    // 忽略并走降级文本
+  }
+
+  try {
+    const parsed = JSON.parse(toolOutput) as {
+      success?: boolean;
+      message?: string;
+      total?: number;
+      summary?: Record<string, number>;
+      flow?: { name?: string; money?: number };
+    };
+    if (toolName === "add_flow" && parsed.success) {
+      return `已记账：${parsed.flow?.name || "未命名"} ${Math.abs(Number(parsed.flow?.money ?? 0))} 元。`;
+    }
+    if (toolName === "query_flows") {
+      return `查询完成，共 ${parsed.total ?? 0} 条。`;
+    }
+    if (toolName === "get_statistics") {
+      return `统计完成：${JSON.stringify(parsed.summary ?? {})}`;
+    }
+    return parsed.message || "操作已完成。";
+  } catch {
+    return "操作已完成。";
+  }
+}
+
+function getLatestUserText(messages: ChatCompletionMessageParam[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (!m) continue;
+    if (m.role !== "user") continue;
+    if (typeof m.content === "string") return m.content.trim();
+    if (Array.isArray(m.content)) {
+      const t = m.content.find((x) => x.type === "text" && "text" in x);
+      if (t && typeof t.text === "string") return t.text.trim();
+    }
+  }
+  return "";
+}
+
+function errorToMessage(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  if (typeof e === "string") return e;
+  return String(e ?? "未知错误");
+}
+
+function buildTimeAwareSystemPrompt(now: Date): string {
+  return `${SYSTEM_PROMPT}
+
+当前服务器时间：${getNowContext(now)}
+处理日期规则：
+- 用户说“今天/昨日/昨天/本月/上月/今年”时，请按当前服务器时间换算，不要猜测年份。`;
+}
+
+function getNowContext(now: Date): string {
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mm = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+}
+
+function applyTemporalHints(
+  toolName: string,
+  args: Record<string, unknown>,
+  latestUserText: string,
+  now: Date,
+): Record<string, unknown> {
+  const text = latestUserText.trim();
+  if (!text) return args;
+  const next = { ...args };
+
+  if (toolName === "add_flow") {
+    if (/(今天|今日)/.test(text)) next.day = formatDate(now);
+    if (/(昨天|昨日)/.test(text)) next.day = formatDate(addDays(now, -1));
+  }
+
+  if (toolName === "query_flows" || toolName === "get_statistics") {
+    if (/(今天|今日)/.test(text)) {
+      const day = formatDate(now);
+      next.startDay = day;
+      next.endDay = day;
+      delete next.month;
+    } else if (/(昨天|昨日)/.test(text)) {
+      const day = formatDate(addDays(now, -1));
+      next.startDay = day;
+      next.endDay = day;
+      delete next.month;
+    } else if (/本月/.test(text)) {
+      next.month = formatMonth(now);
+      delete next.startDay;
+      delete next.endDay;
+    } else if (/上月/.test(text)) {
+      next.month = formatMonth(
+        new Date(now.getFullYear(), now.getMonth() - 1, 1),
+      );
+      delete next.startDay;
+      delete next.endDay;
+    }
+  }
+  return next;
+}
+
+function formatDate(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function formatMonth(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`;
+}
+
+function addDays(base: Date, delta: number): Date {
+  const d = new Date(base);
+  d.setDate(d.getDate() + delta);
+  return d;
+}
+
+function logAIExecution(input: {
+  event:
+    | "start"
+    | "tool_execute"
+    | "strategy_failed"
+    | "final_success"
+    | "all_failed";
+  userId: number;
+  strategy: "tool_calls" | "json";
+  userText?: string;
+  toolCalls?: Array<{ name: string; args: Record<string, unknown> }>;
+  detail?: Record<string, unknown>;
+}): void {
+  const payload = {
+    ts: new Date().toISOString(),
+    ...input,
+  };
+  console.info(`[AI_CHAT_EXEC] ${safeJson(payload)}`);
+}
+
+function safeJson(v: unknown): string {
+  try {
+    return JSON.stringify(v);
+  } catch {
+    return String(v);
+  }
 }

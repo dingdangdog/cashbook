@@ -16,6 +16,7 @@ import {
   SwatchIcon,
   Cog6ToothIcon,
   DocumentMagnifyingGlassIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/vue/24/outline";
 
 interface Menu {
@@ -116,6 +117,12 @@ const adminMenuItems: Menu[] = [
 
 /** 辅助菜单（文档、外链等） */
 const auxiliaryMenuItems: Menu[] = [
+  {
+    title: "Jimi 助手",
+    path: "/user/jimi",
+    icon: ChatBubbleLeftRightIcon,
+    color: "text-indigo-500",
+  },
   {
     title: "文档站",
     path: "documentation",

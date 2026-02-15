@@ -76,25 +76,38 @@ export default defineEventHandler(async (event) => {
         ? body.providerId.trim() || undefined
         : undefined;
 
-    const result = await runChatAgent({
-      userId,
-      messages,
-      maxToolRounds: 3,
-      providerId,
-    });
+    try {
+      const result = await runChatAgent({
+        userId,
+        messages,
+        maxToolRounds: 3,
+        providerId,
+      });
 
-    await prisma.userChatMessage.create({
-      data: {
-        sessionId: session!.id,
-        role: "assistant",
+      await prisma.userChatMessage.create({
+        data: {
+          sessionId: session!.id,
+          role: "assistant",
+          content: result.content,
+        },
+      });
+
+      return success({
         content: result.content,
-      },
-    });
-
-    return success({
-      content: result.content,
-      sessionId: session!.id,
-    });
+        sessionId: session!.id,
+      });
+    } catch (e) {
+      const reason = explainAIError(e);
+      const failContent = `对话失败：${reason}`;
+      await prisma.userChatMessage.create({
+        data: {
+          sessionId: session!.id,
+          role: "assistant",
+          content: failContent,
+        },
+      });
+      return error(reason, { sessionId: session!.id, content: failContent });
+    }
   }
 
   // 兼容旧格式：messages 数组（不落库）
@@ -115,12 +128,45 @@ export default defineEventHandler(async (event) => {
       ? body.providerId.trim() || undefined
       : undefined;
 
-  const result = await runChatAgent({
-    userId,
-    messages: messages as Parameters<typeof runChatAgent>[0]["messages"],
-    maxToolRounds: 3,
-    providerId,
-  });
+  try {
+    const result = await runChatAgent({
+      userId,
+      messages: messages as Parameters<typeof runChatAgent>[0]["messages"],
+      maxToolRounds: 3,
+      providerId,
+    });
 
-  return success({ content: result.content });
+    return success({ content: result.content });
+  } catch (e) {
+    const reason = explainAIError(e);
+    return error(reason);
+  }
 });
+
+function explainAIError(e: unknown): string {
+  const msg =
+    e instanceof Error
+      ? e.message
+      : typeof e === "string"
+        ? e
+        : String(e ?? "");
+  if (
+    msg.includes("方案1(tool_calls)失败：") &&
+    msg.includes("方案2(json)失败：")
+  ) {
+    return `AI 双方案均失败：${msg}`;
+  }
+  if (
+    msg.includes('"auto" tool choice requires') ||
+    msg.includes("--enable-auto-tool-choice")
+  ) {
+    return "当前 AI 服务端未启用工具调用（tool_calls/auto tool choice），请更换支持工具调用的模型或在服务端开启对应参数。";
+  }
+  if (msg.toLowerCase().includes("unauthorized") || msg.includes("401")) {
+    return "AI 服务鉴权失败，请检查 API Key。";
+  }
+  if (msg.includes("429") || msg.toLowerCase().includes("rate limit")) {
+    return "AI 服务限流，请稍后重试。";
+  }
+  return `AI 服务调用失败：${msg}`;
+}

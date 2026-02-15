@@ -19,6 +19,7 @@
     "echarts": "6.0.0",
     "jsonwebtoken": "^9.0.2",
     "jszip": "3.10.1",
+    "markdown-it": "^14.1.1",
     "nuxt": "4.3.0",
     "nuxt-echarts": "1.0.1",
     "nuxt-openapi-docs-module": "5.3.2",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@prisma/client": "7.3.0",
     "@types/jsonwebtoken": "9.0.10",
+    "@types/markdown-it": "^14.1.2",
     "@types/swagger-jsdoc": "6.0.4",
     "prisma": "7.3.0",
     "swagger-jsdoc": "6.2.8",
