@@ -6,8 +6,18 @@ export function normalizeFlowTypeLabel(
 ): "收入" | "支出" | "不计收支" | null {
   const text = String(flowType ?? "").trim();
   if (!text) return null;
+  const lower = text.toLowerCase();
   if (text === "收入" || text.includes("收入") || /^收/.test(text))
     return "收入";
+  if (
+    lower === "income" ||
+    lower === "inflow" ||
+    lower === "earning" ||
+    lower === "earnings" ||
+    lower === "revenue"
+  ) {
+    return "收入";
+  }
   if (
     text === "支出" ||
     text.includes("支出") ||
@@ -18,10 +28,27 @@ export function normalizeFlowTypeLabel(
     return "支出";
   }
   if (
+    lower === "expense" ||
+    lower === "spend" ||
+    lower === "spending" ||
+    lower === "outflow" ||
+    lower === "cost"
+  ) {
+    return "支出";
+  }
+  if (
     text === "不计收支" ||
     text.includes("不计收支") ||
     text.includes("转账") ||
     text.includes("平账")
+  ) {
+    return "不计收支";
+  }
+  if (
+    lower === "transfer" ||
+    lower === "internal_transfer" ||
+    lower === "balance" ||
+    lower === "neutral"
   ) {
     return "不计收支";
   }

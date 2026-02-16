@@ -4,7 +4,7 @@ import { getAIProviderConfig } from "./client";
 import { CHAT_TOOLS, executeTool } from "./tools";
 import { getFundAccountsAll } from "~~/server/utils/db";
 
-const SYSTEM_PROMPT = `你是个人记账助手的AI，你的职责是分析用户意图，根据用户意图选择使用的工具，完成相关操作，目前支持的操作如下：
+const SYSTEM_PROMPT = `你是个人记账助手的AI，你的职责是分析用户意图，根据用户意图选择调用的工具，完成相关操作，目前支持的操作如下：
 
 1. 对话式记账（添加流水）：调用 add_flow
 2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，调用 query_flows
@@ -88,17 +88,39 @@ export async function runChatAgent(
         client,
         config,
       });
-      if (result.content.trim()) {
+      const executedCount = result.toolCalls?.length ?? 0;
+      if (executedCount > 0 && result.content.trim()) {
         logAIExecution({
           event: "final_success",
           userId,
           strategy: "tool_calls",
           userText: latestUserText,
           toolCalls: result.toolCalls,
+          detail: {
+            executedCount,
+            toolSummary: result.toolCalls?.map((t) => ({
+              name: t.name,
+              args: t.args,
+            })),
+          },
         });
         return result;
       }
-      toolCallsError = new Error("tool_calls 方案返回空内容");
+      if (executedCount === 0) {
+        toolCallsError = new Error("tool_calls 方案未执行任何工具");
+        logAIExecution({
+          event: "strategy_failed",
+          userId,
+          strategy: "tool_calls",
+          userText: latestUserText,
+          detail: {
+            reason: "no_tool_calls",
+            assistantContentPreview: result.content.slice(0, 300),
+          },
+        });
+      } else {
+        toolCallsError = new Error("tool_calls 方案返回空内容");
+      }
     } catch (e) {
       toolCallsError = e;
       if (isToolCallsUnsupportedError(e)) {
@@ -128,6 +150,12 @@ export async function runChatAgent(
       strategy: "json",
       userText: latestUserText,
       toolCalls: result.toolCalls,
+      detail: {
+        executedCount: result.toolCalls?.length ?? 0,
+        toolSummary: result.toolCalls?.length
+          ? result.toolCalls.map((t) => ({ name: t.name, args: t.args }))
+          : "未调用工具",
+      },
     });
     return result;
   } catch (jsonError) {
@@ -189,6 +217,17 @@ async function runWithToolCalls(opts: {
     const toolCalls = msg.tool_calls;
     if (!toolCalls?.length) {
       lastContent = msg.content || "操作已完成。";
+      logAIExecution({
+        event: "tool_execute",
+        userId,
+        strategy: "tool_calls",
+        userText: latestUserText,
+        detail: {
+          round: round + 1,
+          noToolCalls: true,
+          assistantContentPreview: (msg.content || "").slice(0, 300),
+        },
+      });
       break;
     }
 
@@ -210,7 +249,28 @@ async function runWithToolCalls(opts: {
         now,
       );
       executedToolCalls.push({ name, args: normalizedArgs });
+      logAIExecution({
+        event: "tool_execute",
+        userId,
+        strategy: "tool_calls",
+        userText: latestUserText,
+        detail: { round: round + 1, toolName: name, toolArgs: normalizedArgs },
+      });
       const output = await executeTool(name, normalizedArgs, { userId });
+      logAIExecution({
+        event: "tool_execute",
+        userId,
+        strategy: "tool_calls",
+        userText: latestUserText,
+        detail: {
+          round: round + 1,
+          toolName: name,
+          toolResultPreview:
+            typeof output === "string"
+              ? output.slice(0, 500)
+              : String(output).slice(0, 500),
+        },
+      });
       fullMessages.push({
         role: "tool",
         tool_call_id: tc.id!,
@@ -277,6 +337,7 @@ JSON 格式固定如下：
 - 能调用工具就优先给 action，不要 name=none
 - 数字字段必须是 number
 - 记账时若能从“当前用户资金账户列表”定位到账户，优先填写 add_flow.args.accountId
+- add_flow.args.flowType / query_flows.args.flowType 仅允许：收入、支出、不计收支（不要输出 income/expense/inflow/outflow 等英文值）
 - 日期格式 YYYY-MM-DD，月份 YYYY-MM`;
 
 type JsonPlan = {
