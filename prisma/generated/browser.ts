@@ -28,6 +28,11 @@ export type User = Prisma.UserModel
  */
 export type Flow = Prisma.FlowModel
 /**
+ * Model FundAccount
+ * 资金账户表（银行卡、信用卡、微信、支付宝、投资账户等）
+ */
+export type FundAccount = Prisma.FundAccountModel
+/**
  * Model Budget
  * 预算/支出计划表（按月度）
  */

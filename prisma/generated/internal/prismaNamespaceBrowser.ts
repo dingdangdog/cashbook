@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Flow: 'Flow',
+  FundAccount: 'FundAccount',
   Budget: 'Budget',
   Liability: 'Liability',
   LiabilityRepayPlan: 'LiabilityRepayPlan',
@@ -106,6 +107,9 @@ export const FlowScalarFieldEnum = {
   id: 'id',
   flowNo: 'flowNo',
   userId: 'userId',
+  accountId: 'accountId',
+  accountDelta: 'accountDelta',
+  accountBal: 'accountBal',
   day: 'day',
   flowType: 'flowType',
   industryType: 'industryType',
@@ -120,6 +124,31 @@ export const FlowScalarFieldEnum = {
 } as const
 
 export type FlowScalarFieldEnum = (typeof FlowScalarFieldEnum)[keyof typeof FlowScalarFieldEnum]
+
+
+export const FundAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  accountType: 'accountType',
+  institution: 'institution',
+  accountNo: 'accountNo',
+  currency: 'currency',
+  initialBalance: 'initialBalance',
+  currentBalance: 'currentBalance',
+  totalIncome: 'totalIncome',
+  totalExpense: 'totalExpense',
+  totalLiability: 'totalLiability',
+  totalProfit: 'totalProfit',
+  status: 'status',
+  sortBy: 'sortBy',
+  description: 'description',
+  lastFlowAt: 'lastFlowAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FundAccountScalarFieldEnum = (typeof FundAccountScalarFieldEnum)[keyof typeof FundAccountScalarFieldEnum]
 
 
 export const BudgetScalarFieldEnum = {

@@ -17,6 +17,7 @@ import {
   Cog6ToothIcon,
   DocumentMagnifyingGlassIcon,
   ChatBubbleLeftRightIcon,
+  CreditCardIcon,
 } from "@heroicons/vue/24/outline";
 
 interface Menu {
@@ -59,6 +60,12 @@ const userMenuItems: Menu[] = [
     title: "流水管理",
     path: "/user/flows",
     icon: CurrencyDollarIcon,
+    color: "text-green-500",
+  },
+  {
+    title: "资金账户",
+    path: "/user/accounts",
+    icon: CreditCardIcon,
     color: "text-green-500",
   },
   {

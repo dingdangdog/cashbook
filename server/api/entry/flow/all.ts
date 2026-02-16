@@ -22,6 +22,11 @@ export default defineEventHandler(async (event) => {
   const userId = await getUserId(event);
   const flows = await prisma.flow.findMany({
     where: { userId },
+    include: {
+      account: {
+        select: { id: true, name: true, accountType: true },
+      },
+    },
   });
   return success(flows);
 });

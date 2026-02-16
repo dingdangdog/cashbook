@@ -58,6 +58,8 @@ export interface MonthAnalysis {
  */
 export interface CreateFlowDto {
   day?: string;
+  accountId?: number;
+  accountDelta?: number;
   flowType?: string;
   industryType?: string;
   payType?: string;
@@ -75,6 +77,8 @@ export interface CreateFlowDto {
  */
 export interface UpdateFlowDto {
   day?: string;
+  accountId?: number | null;
+  accountDelta?: number | null;
   flowType?: string;
   industryType?: string;
   payType?: string;
@@ -92,6 +96,7 @@ export class FlowQuery {
   pageNum?: number = 1;
   pageSize?: number = 20;
   id?: string | number;
+  accountId?: string | number;
   startDay?: string;
   endDay?: string;
   flowType?: string;

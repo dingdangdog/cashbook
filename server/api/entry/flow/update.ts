@@ -1,4 +1,8 @@
 import prisma from "~~/server/lib/prisma";
+import {
+  applyFlowAccountDelta,
+  resolveFlowAccountDelta,
+} from "~~/server/utils/db";
 
 /**
  * @swagger
@@ -53,17 +57,72 @@ export default defineEventHandler(async (event) => {
     name: String(body.name || ""),
     description: String(body.description || ""),
     attribution: String(body.attribution || ""),
+    accountId:
+      body.accountId !== undefined
+        ? body.accountId
+          ? Number(body.accountId)
+          : null
+        : undefined,
+    accountDelta:
+      body.accountDelta !== undefined && body.accountDelta !== null
+        ? Number(body.accountDelta)
+        : undefined,
   };
   const userId = await getUserId(event);
-  const updated = await prisma.flow.updateMany({
-    where: { id: Number(body.id), userId },
-    data: flow,
+  const row = await prisma.$transaction(async (tx) => {
+    const oldRow = await tx.flow.findFirst({
+      where: { id: Number(body.id), userId },
+    });
+    if (!oldRow) {
+      return null;
+    }
+
+    const oldAccountId = oldRow.accountId;
+    const oldDelta = Number(oldRow.accountDelta || 0);
+    if (oldAccountId && oldDelta !== 0) {
+      await applyFlowAccountDelta(tx, {
+        userId,
+        accountId: oldAccountId,
+        delta: -oldDelta,
+        flowDay: oldRow.day,
+      });
+    }
+
+    const nextAccountId =
+      flow.accountId !== undefined ? flow.accountId : oldRow.accountId;
+    const nextFlowType = flow.flowType ?? oldRow.flowType ?? "";
+    const nextMoney =
+      flow.money !== undefined && flow.money !== null ? flow.money : oldRow.money;
+    const nextDay = flow.day ?? oldRow.day;
+    const nextDelta = resolveFlowAccountDelta({
+      flowType: nextFlowType,
+      money: Number(nextMoney || 0),
+      accountDelta: flow.accountDelta,
+    });
+
+    let nextAccountBal: number | null = null;
+    if (nextAccountId) {
+      const accountResult = await applyFlowAccountDelta(tx, {
+        userId,
+        accountId: nextAccountId,
+        delta: nextDelta,
+        flowDay: nextDay,
+      });
+      nextAccountBal = accountResult.accountBal;
+    }
+
+    return tx.flow.update({
+      where: { id: Number(body.id) },
+      data: {
+        ...flow,
+        accountId: nextAccountId,
+        accountDelta: nextAccountId ? nextDelta : null,
+        accountBal: nextAccountId ? nextAccountBal : null,
+      },
+    });
   });
-  if (updated.count === 0) {
+  if (!row) {
     return error("Not Find ID");
   }
-  const row = await prisma.flow.findUnique({
-    where: { id: Number(body.id) },
-  });
   return success(row);
 });

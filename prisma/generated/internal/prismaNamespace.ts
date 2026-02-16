@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Flow: 'Flow',
+  FundAccount: 'FundAccount',
   Budget: 'Budget',
   Liability: 'Liability',
   LiabilityRepayPlan: 'LiabilityRepayPlan',
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "flow" | "budget" | "liability" | "liabilityRepayPlan" | "liabilityRepayRecord" | "receivable" | "receivableCollectPlan" | "receivableCollectRecord" | "investmentProduct" | "investmentDetail" | "fixedFlow" | "typeRelation" | "systemAIProvider" | "systemTheme" | "systemConfig" | "userChatSession" | "userChatMessage"
+    modelProps: "user" | "flow" | "fundAccount" | "budget" | "liability" | "liabilityRepayPlan" | "liabilityRepayRecord" | "receivable" | "receivableCollectPlan" | "receivableCollectRecord" | "investmentProduct" | "investmentDetail" | "fixedFlow" | "typeRelation" | "systemAIProvider" | "systemTheme" | "systemConfig" | "userChatSession" | "userChatMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +567,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.FlowCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.FlowCountAggregateOutputType> | number
+        }
+      }
+    }
+    FundAccount: {
+      payload: Prisma.$FundAccountPayload<ExtArgs>
+      fields: Prisma.FundAccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FundAccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FundAccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>
+        }
+        findFirst: {
+          args: Prisma.FundAccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FundAccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>
+        }
+        findMany: {
+          args: Prisma.FundAccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>[]
+        }
+        create: {
+          args: Prisma.FundAccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>
+        }
+        createMany: {
+          args: Prisma.FundAccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FundAccountCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>[]
+        }
+        delete: {
+          args: Prisma.FundAccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>
+        }
+        update: {
+          args: Prisma.FundAccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.FundAccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FundAccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FundAccountUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>[]
+        }
+        upsert: {
+          args: Prisma.FundAccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FundAccountPayload>
+        }
+        aggregate: {
+          args: Prisma.FundAccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFundAccount>
+        }
+        groupBy: {
+          args: Prisma.FundAccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FundAccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FundAccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FundAccountCountAggregateOutputType> | number
         }
       }
     }
@@ -1811,6 +1886,9 @@ export const FlowScalarFieldEnum = {
   id: 'id',
   flowNo: 'flowNo',
   userId: 'userId',
+  accountId: 'accountId',
+  accountDelta: 'accountDelta',
+  accountBal: 'accountBal',
   day: 'day',
   flowType: 'flowType',
   industryType: 'industryType',
@@ -1825,6 +1903,31 @@ export const FlowScalarFieldEnum = {
 } as const
 
 export type FlowScalarFieldEnum = (typeof FlowScalarFieldEnum)[keyof typeof FlowScalarFieldEnum]
+
+
+export const FundAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  accountType: 'accountType',
+  institution: 'institution',
+  accountNo: 'accountNo',
+  currency: 'currency',
+  initialBalance: 'initialBalance',
+  currentBalance: 'currentBalance',
+  totalIncome: 'totalIncome',
+  totalExpense: 'totalExpense',
+  totalLiability: 'totalLiability',
+  totalProfit: 'totalProfit',
+  status: 'status',
+  sortBy: 'sortBy',
+  description: 'description',
+  lastFlowAt: 'lastFlowAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FundAccountScalarFieldEnum = (typeof FundAccountScalarFieldEnum)[keyof typeof FundAccountScalarFieldEnum]
 
 
 export const BudgetScalarFieldEnum = {
@@ -2247,6 +2350,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   flow?: Prisma.FlowOmit
+  fundAccount?: Prisma.FundAccountOmit
   budget?: Prisma.BudgetOmit
   liability?: Prisma.LiabilityOmit
   liabilityRepayPlan?: Prisma.LiabilityRepayPlanOmit

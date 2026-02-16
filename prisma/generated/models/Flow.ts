@@ -29,6 +29,9 @@ export type AggregateFlow = {
 export type FlowAvgAggregateOutputType = {
   id: number | null
   userId: number | null
+  accountId: number | null
+  accountDelta: number | null
+  accountBal: number | null
   money: number | null
   eliminate: number | null
 }
@@ -36,6 +39,9 @@ export type FlowAvgAggregateOutputType = {
 export type FlowSumAggregateOutputType = {
   id: number | null
   userId: number | null
+  accountId: number | null
+  accountDelta: number | null
+  accountBal: number | null
   money: number | null
   eliminate: number | null
 }
@@ -44,6 +50,9 @@ export type FlowMinAggregateOutputType = {
   id: number | null
   flowNo: string | null
   userId: number | null
+  accountId: number | null
+  accountDelta: number | null
+  accountBal: number | null
   day: Date | null
   flowType: string | null
   industryType: string | null
@@ -61,6 +70,9 @@ export type FlowMaxAggregateOutputType = {
   id: number | null
   flowNo: string | null
   userId: number | null
+  accountId: number | null
+  accountDelta: number | null
+  accountBal: number | null
   day: Date | null
   flowType: string | null
   industryType: string | null
@@ -78,6 +90,9 @@ export type FlowCountAggregateOutputType = {
   id: number
   flowNo: number
   userId: number
+  accountId: number
+  accountDelta: number
+  accountBal: number
   day: number
   flowType: number
   industryType: number
@@ -96,6 +111,9 @@ export type FlowCountAggregateOutputType = {
 export type FlowAvgAggregateInputType = {
   id?: true
   userId?: true
+  accountId?: true
+  accountDelta?: true
+  accountBal?: true
   money?: true
   eliminate?: true
 }
@@ -103,6 +121,9 @@ export type FlowAvgAggregateInputType = {
 export type FlowSumAggregateInputType = {
   id?: true
   userId?: true
+  accountId?: true
+  accountDelta?: true
+  accountBal?: true
   money?: true
   eliminate?: true
 }
@@ -111,6 +132,9 @@ export type FlowMinAggregateInputType = {
   id?: true
   flowNo?: true
   userId?: true
+  accountId?: true
+  accountDelta?: true
+  accountBal?: true
   day?: true
   flowType?: true
   industryType?: true
@@ -128,6 +152,9 @@ export type FlowMaxAggregateInputType = {
   id?: true
   flowNo?: true
   userId?: true
+  accountId?: true
+  accountDelta?: true
+  accountBal?: true
   day?: true
   flowType?: true
   industryType?: true
@@ -145,6 +172,9 @@ export type FlowCountAggregateInputType = {
   id?: true
   flowNo?: true
   userId?: true
+  accountId?: true
+  accountDelta?: true
+  accountBal?: true
   day?: true
   flowType?: true
   industryType?: true
@@ -249,6 +279,9 @@ export type FlowGroupByOutputType = {
   id: number
   flowNo: string
   userId: number
+  accountId: number | null
+  accountDelta: number | null
+  accountBal: number | null
   day: Date
   flowType: string | null
   industryType: string | null
@@ -289,6 +322,9 @@ export type FlowWhereInput = {
   id?: Prisma.IntFilter<"Flow"> | number
   flowNo?: Prisma.StringFilter<"Flow"> | string
   userId?: Prisma.IntFilter<"Flow"> | number
+  accountId?: Prisma.IntNullableFilter<"Flow"> | number | null
+  accountDelta?: Prisma.FloatNullableFilter<"Flow"> | number | null
+  accountBal?: Prisma.FloatNullableFilter<"Flow"> | number | null
   day?: Prisma.DateTimeFilter<"Flow"> | Date | string
   flowType?: Prisma.StringNullableFilter<"Flow"> | string | null
   industryType?: Prisma.StringNullableFilter<"Flow"> | string | null
@@ -300,12 +336,16 @@ export type FlowWhereInput = {
   origin?: Prisma.StringNullableFilter<"Flow"> | string | null
   attribution?: Prisma.StringNullableFilter<"Flow"> | string | null
   eliminate?: Prisma.IntNullableFilter<"Flow"> | number | null
+  account?: Prisma.XOR<Prisma.FundAccountNullableScalarRelationFilter, Prisma.FundAccountWhereInput> | null
 }
 
 export type FlowOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountDelta?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountBal?: Prisma.SortOrderInput | Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrderInput | Prisma.SortOrder
   industryType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -317,6 +357,7 @@ export type FlowOrderByWithRelationInput = {
   origin?: Prisma.SortOrderInput | Prisma.SortOrder
   attribution?: Prisma.SortOrderInput | Prisma.SortOrder
   eliminate?: Prisma.SortOrderInput | Prisma.SortOrder
+  account?: Prisma.FundAccountOrderByWithRelationInput
 }
 
 export type FlowWhereUniqueInput = Prisma.AtLeast<{
@@ -326,6 +367,9 @@ export type FlowWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FlowWhereInput[]
   NOT?: Prisma.FlowWhereInput | Prisma.FlowWhereInput[]
   userId?: Prisma.IntFilter<"Flow"> | number
+  accountId?: Prisma.IntNullableFilter<"Flow"> | number | null
+  accountDelta?: Prisma.FloatNullableFilter<"Flow"> | number | null
+  accountBal?: Prisma.FloatNullableFilter<"Flow"> | number | null
   day?: Prisma.DateTimeFilter<"Flow"> | Date | string
   flowType?: Prisma.StringNullableFilter<"Flow"> | string | null
   industryType?: Prisma.StringNullableFilter<"Flow"> | string | null
@@ -337,12 +381,16 @@ export type FlowWhereUniqueInput = Prisma.AtLeast<{
   origin?: Prisma.StringNullableFilter<"Flow"> | string | null
   attribution?: Prisma.StringNullableFilter<"Flow"> | string | null
   eliminate?: Prisma.IntNullableFilter<"Flow"> | number | null
+  account?: Prisma.XOR<Prisma.FundAccountNullableScalarRelationFilter, Prisma.FundAccountWhereInput> | null
 }, "id" | "flowNo">
 
 export type FlowOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountDelta?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountBal?: Prisma.SortOrderInput | Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrderInput | Prisma.SortOrder
   industryType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -368,6 +416,9 @@ export type FlowScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Flow"> | number
   flowNo?: Prisma.StringWithAggregatesFilter<"Flow"> | string
   userId?: Prisma.IntWithAggregatesFilter<"Flow"> | number
+  accountId?: Prisma.IntNullableWithAggregatesFilter<"Flow"> | number | null
+  accountDelta?: Prisma.FloatNullableWithAggregatesFilter<"Flow"> | number | null
+  accountBal?: Prisma.FloatNullableWithAggregatesFilter<"Flow"> | number | null
   day?: Prisma.DateTimeWithAggregatesFilter<"Flow"> | Date | string
   flowType?: Prisma.StringNullableWithAggregatesFilter<"Flow"> | string | null
   industryType?: Prisma.StringNullableWithAggregatesFilter<"Flow"> | string | null
@@ -384,6 +435,8 @@ export type FlowScalarWhereWithAggregatesInput = {
 export type FlowCreateInput = {
   flowNo: string
   userId: number
+  accountDelta?: number | null
+  accountBal?: number | null
   day: Date | string
   flowType?: string | null
   industryType?: string | null
@@ -395,12 +448,16 @@ export type FlowCreateInput = {
   origin?: string | null
   attribution?: string | null
   eliminate?: number | null
+  account?: Prisma.FundAccountCreateNestedOneWithoutFlowsInput
 }
 
 export type FlowUncheckedCreateInput = {
   id?: number
   flowNo: string
   userId: number
+  accountId?: number | null
+  accountDelta?: number | null
+  accountBal?: number | null
   day: Date | string
   flowType?: string | null
   industryType?: string | null
@@ -417,6 +474,8 @@ export type FlowUncheckedCreateInput = {
 export type FlowUpdateInput = {
   flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -428,12 +487,16 @@ export type FlowUpdateInput = {
   origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eliminate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  account?: Prisma.FundAccountUpdateOneWithoutFlowsNestedInput
 }
 
 export type FlowUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -451,6 +514,9 @@ export type FlowCreateManyInput = {
   id?: number
   flowNo: string
   userId: number
+  accountId?: number | null
+  accountDelta?: number | null
+  accountBal?: number | null
   day: Date | string
   flowType?: string | null
   industryType?: string | null
@@ -467,6 +533,8 @@ export type FlowCreateManyInput = {
 export type FlowUpdateManyMutationInput = {
   flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -484,6 +552,9 @@ export type FlowUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   flowNo?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -501,6 +572,9 @@ export type FlowCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
+  accountDelta?: Prisma.SortOrder
+  accountBal?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrder
   industryType?: Prisma.SortOrder
@@ -517,6 +591,9 @@ export type FlowCountOrderByAggregateInput = {
 export type FlowAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
+  accountDelta?: Prisma.SortOrder
+  accountBal?: Prisma.SortOrder
   money?: Prisma.SortOrder
   eliminate?: Prisma.SortOrder
 }
@@ -525,6 +602,9 @@ export type FlowMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
+  accountDelta?: Prisma.SortOrder
+  accountBal?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrder
   industryType?: Prisma.SortOrder
@@ -542,6 +622,9 @@ export type FlowMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   flowNo?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
+  accountDelta?: Prisma.SortOrder
+  accountBal?: Prisma.SortOrder
   day?: Prisma.SortOrder
   flowType?: Prisma.SortOrder
   industryType?: Prisma.SortOrder
@@ -558,8 +641,21 @@ export type FlowMinOrderByAggregateInput = {
 export type FlowSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
+  accountDelta?: Prisma.SortOrder
+  accountBal?: Prisma.SortOrder
   money?: Prisma.SortOrder
   eliminate?: Prisma.SortOrder
+}
+
+export type FlowListRelationFilter = {
+  every?: Prisma.FlowWhereInput
+  some?: Prisma.FlowWhereInput
+  none?: Prisma.FlowWhereInput
+}
+
+export type FlowOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type NullableFloatFieldUpdateOperationsInput = {
@@ -578,12 +674,218 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type FlowCreateNestedManyWithoutAccountInput = {
+  create?: Prisma.XOR<Prisma.FlowCreateWithoutAccountInput, Prisma.FlowUncheckedCreateWithoutAccountInput> | Prisma.FlowCreateWithoutAccountInput[] | Prisma.FlowUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FlowCreateOrConnectWithoutAccountInput | Prisma.FlowCreateOrConnectWithoutAccountInput[]
+  createMany?: Prisma.FlowCreateManyAccountInputEnvelope
+  connect?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+}
+
+export type FlowUncheckedCreateNestedManyWithoutAccountInput = {
+  create?: Prisma.XOR<Prisma.FlowCreateWithoutAccountInput, Prisma.FlowUncheckedCreateWithoutAccountInput> | Prisma.FlowCreateWithoutAccountInput[] | Prisma.FlowUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FlowCreateOrConnectWithoutAccountInput | Prisma.FlowCreateOrConnectWithoutAccountInput[]
+  createMany?: Prisma.FlowCreateManyAccountInputEnvelope
+  connect?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+}
+
+export type FlowUpdateManyWithoutAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.FlowCreateWithoutAccountInput, Prisma.FlowUncheckedCreateWithoutAccountInput> | Prisma.FlowCreateWithoutAccountInput[] | Prisma.FlowUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FlowCreateOrConnectWithoutAccountInput | Prisma.FlowCreateOrConnectWithoutAccountInput[]
+  upsert?: Prisma.FlowUpsertWithWhereUniqueWithoutAccountInput | Prisma.FlowUpsertWithWhereUniqueWithoutAccountInput[]
+  createMany?: Prisma.FlowCreateManyAccountInputEnvelope
+  set?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  disconnect?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  delete?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  connect?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  update?: Prisma.FlowUpdateWithWhereUniqueWithoutAccountInput | Prisma.FlowUpdateWithWhereUniqueWithoutAccountInput[]
+  updateMany?: Prisma.FlowUpdateManyWithWhereWithoutAccountInput | Prisma.FlowUpdateManyWithWhereWithoutAccountInput[]
+  deleteMany?: Prisma.FlowScalarWhereInput | Prisma.FlowScalarWhereInput[]
+}
+
+export type FlowUncheckedUpdateManyWithoutAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.FlowCreateWithoutAccountInput, Prisma.FlowUncheckedCreateWithoutAccountInput> | Prisma.FlowCreateWithoutAccountInput[] | Prisma.FlowUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FlowCreateOrConnectWithoutAccountInput | Prisma.FlowCreateOrConnectWithoutAccountInput[]
+  upsert?: Prisma.FlowUpsertWithWhereUniqueWithoutAccountInput | Prisma.FlowUpsertWithWhereUniqueWithoutAccountInput[]
+  createMany?: Prisma.FlowCreateManyAccountInputEnvelope
+  set?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  disconnect?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  delete?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  connect?: Prisma.FlowWhereUniqueInput | Prisma.FlowWhereUniqueInput[]
+  update?: Prisma.FlowUpdateWithWhereUniqueWithoutAccountInput | Prisma.FlowUpdateWithWhereUniqueWithoutAccountInput[]
+  updateMany?: Prisma.FlowUpdateManyWithWhereWithoutAccountInput | Prisma.FlowUpdateManyWithWhereWithoutAccountInput[]
+  deleteMany?: Prisma.FlowScalarWhereInput | Prisma.FlowScalarWhereInput[]
+}
+
+export type FlowCreateWithoutAccountInput = {
+  flowNo: string
+  userId: number
+  accountDelta?: number | null
+  accountBal?: number | null
+  day: Date | string
+  flowType?: string | null
+  industryType?: string | null
+  payType?: string | null
+  money?: number | null
+  name?: string | null
+  description?: string | null
+  invoice?: string | null
+  origin?: string | null
+  attribution?: string | null
+  eliminate?: number | null
+}
+
+export type FlowUncheckedCreateWithoutAccountInput = {
+  id?: number
+  flowNo: string
+  userId: number
+  accountDelta?: number | null
+  accountBal?: number | null
+  day: Date | string
+  flowType?: string | null
+  industryType?: string | null
+  payType?: string | null
+  money?: number | null
+  name?: string | null
+  description?: string | null
+  invoice?: string | null
+  origin?: string | null
+  attribution?: string | null
+  eliminate?: number | null
+}
+
+export type FlowCreateOrConnectWithoutAccountInput = {
+  where: Prisma.FlowWhereUniqueInput
+  create: Prisma.XOR<Prisma.FlowCreateWithoutAccountInput, Prisma.FlowUncheckedCreateWithoutAccountInput>
+}
+
+export type FlowCreateManyAccountInputEnvelope = {
+  data: Prisma.FlowCreateManyAccountInput | Prisma.FlowCreateManyAccountInput[]
+  skipDuplicates?: boolean
+}
+
+export type FlowUpsertWithWhereUniqueWithoutAccountInput = {
+  where: Prisma.FlowWhereUniqueInput
+  update: Prisma.XOR<Prisma.FlowUpdateWithoutAccountInput, Prisma.FlowUncheckedUpdateWithoutAccountInput>
+  create: Prisma.XOR<Prisma.FlowCreateWithoutAccountInput, Prisma.FlowUncheckedCreateWithoutAccountInput>
+}
+
+export type FlowUpdateWithWhereUniqueWithoutAccountInput = {
+  where: Prisma.FlowWhereUniqueInput
+  data: Prisma.XOR<Prisma.FlowUpdateWithoutAccountInput, Prisma.FlowUncheckedUpdateWithoutAccountInput>
+}
+
+export type FlowUpdateManyWithWhereWithoutAccountInput = {
+  where: Prisma.FlowScalarWhereInput
+  data: Prisma.XOR<Prisma.FlowUpdateManyMutationInput, Prisma.FlowUncheckedUpdateManyWithoutAccountInput>
+}
+
+export type FlowScalarWhereInput = {
+  AND?: Prisma.FlowScalarWhereInput | Prisma.FlowScalarWhereInput[]
+  OR?: Prisma.FlowScalarWhereInput[]
+  NOT?: Prisma.FlowScalarWhereInput | Prisma.FlowScalarWhereInput[]
+  id?: Prisma.IntFilter<"Flow"> | number
+  flowNo?: Prisma.StringFilter<"Flow"> | string
+  userId?: Prisma.IntFilter<"Flow"> | number
+  accountId?: Prisma.IntNullableFilter<"Flow"> | number | null
+  accountDelta?: Prisma.FloatNullableFilter<"Flow"> | number | null
+  accountBal?: Prisma.FloatNullableFilter<"Flow"> | number | null
+  day?: Prisma.DateTimeFilter<"Flow"> | Date | string
+  flowType?: Prisma.StringNullableFilter<"Flow"> | string | null
+  industryType?: Prisma.StringNullableFilter<"Flow"> | string | null
+  payType?: Prisma.StringNullableFilter<"Flow"> | string | null
+  money?: Prisma.FloatNullableFilter<"Flow"> | number | null
+  name?: Prisma.StringNullableFilter<"Flow"> | string | null
+  description?: Prisma.StringNullableFilter<"Flow"> | string | null
+  invoice?: Prisma.StringNullableFilter<"Flow"> | string | null
+  origin?: Prisma.StringNullableFilter<"Flow"> | string | null
+  attribution?: Prisma.StringNullableFilter<"Flow"> | string | null
+  eliminate?: Prisma.IntNullableFilter<"Flow"> | number | null
+}
+
+export type FlowCreateManyAccountInput = {
+  id?: number
+  flowNo: string
+  userId: number
+  accountDelta?: number | null
+  accountBal?: number | null
+  day: Date | string
+  flowType?: string | null
+  industryType?: string | null
+  payType?: string | null
+  money?: number | null
+  name?: string | null
+  description?: string | null
+  invoice?: string | null
+  origin?: string | null
+  attribution?: string | null
+  eliminate?: number | null
+}
+
+export type FlowUpdateWithoutAccountInput = {
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eliminate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type FlowUncheckedUpdateWithoutAccountInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eliminate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type FlowUncheckedUpdateManyWithoutAccountInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  flowNo?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  accountDelta?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  accountBal?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  day?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  flowType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industryType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  money?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attribution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eliminate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
 
 
 export type FlowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   flowNo?: boolean
   userId?: boolean
+  accountId?: boolean
+  accountDelta?: boolean
+  accountBal?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -595,12 +897,16 @@ export type FlowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   origin?: boolean
   attribution?: boolean
   eliminate?: boolean
+  account?: boolean | Prisma.Flow$accountArgs<ExtArgs>
 }, ExtArgs["result"]["flow"]>
 
 export type FlowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   flowNo?: boolean
   userId?: boolean
+  accountId?: boolean
+  accountDelta?: boolean
+  accountBal?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -612,12 +918,16 @@ export type FlowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   origin?: boolean
   attribution?: boolean
   eliminate?: boolean
+  account?: boolean | Prisma.Flow$accountArgs<ExtArgs>
 }, ExtArgs["result"]["flow"]>
 
 export type FlowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   flowNo?: boolean
   userId?: boolean
+  accountId?: boolean
+  accountDelta?: boolean
+  accountBal?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -629,12 +939,16 @@ export type FlowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   origin?: boolean
   attribution?: boolean
   eliminate?: boolean
+  account?: boolean | Prisma.Flow$accountArgs<ExtArgs>
 }, ExtArgs["result"]["flow"]>
 
 export type FlowSelectScalar = {
   id?: boolean
   flowNo?: boolean
   userId?: boolean
+  accountId?: boolean
+  accountDelta?: boolean
+  accountBal?: boolean
   day?: boolean
   flowType?: boolean
   industryType?: boolean
@@ -648,11 +962,22 @@ export type FlowSelectScalar = {
   eliminate?: boolean
 }
 
-export type FlowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "flowNo" | "userId" | "day" | "flowType" | "industryType" | "payType" | "money" | "name" | "description" | "invoice" | "origin" | "attribution" | "eliminate", ExtArgs["result"]["flow"]>
+export type FlowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "flowNo" | "userId" | "accountId" | "accountDelta" | "accountBal" | "day" | "flowType" | "industryType" | "payType" | "money" | "name" | "description" | "invoice" | "origin" | "attribution" | "eliminate", ExtArgs["result"]["flow"]>
+export type FlowInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  account?: boolean | Prisma.Flow$accountArgs<ExtArgs>
+}
+export type FlowIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  account?: boolean | Prisma.Flow$accountArgs<ExtArgs>
+}
+export type FlowIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  account?: boolean | Prisma.Flow$accountArgs<ExtArgs>
+}
 
 export type $FlowPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Flow"
-  objects: {}
+  objects: {
+    account: Prisma.$FundAccountPayload<ExtArgs> | null
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     /**
      * 主键
@@ -666,6 +991,18 @@ export type $FlowPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
      * 所属用户 ID
      */
     userId: number
+    /**
+     * 关联资金账户 ID
+     */
+    accountId: number | null
+    /**
+     * 本次流水对账户余额影响（可正可负）
+     */
+    accountDelta: number | null
+    /**
+     * 该笔流水入账后的账户余额快照
+     */
+    accountBal: number | null
     /**
      * 交易日期
      */
@@ -1104,6 +1441,7 @@ readonly fields: FlowFieldRefs;
  */
 export interface Prisma__FlowClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  account<T extends Prisma.Flow$accountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Flow$accountArgs<ExtArgs>>): Prisma.Prisma__FundAccountClient<runtime.Types.Result.GetResult<Prisma.$FundAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1136,6 +1474,9 @@ export interface FlowFieldRefs {
   readonly id: Prisma.FieldRef<"Flow", 'Int'>
   readonly flowNo: Prisma.FieldRef<"Flow", 'String'>
   readonly userId: Prisma.FieldRef<"Flow", 'Int'>
+  readonly accountId: Prisma.FieldRef<"Flow", 'Int'>
+  readonly accountDelta: Prisma.FieldRef<"Flow", 'Float'>
+  readonly accountBal: Prisma.FieldRef<"Flow", 'Float'>
   readonly day: Prisma.FieldRef<"Flow", 'DateTime'>
   readonly flowType: Prisma.FieldRef<"Flow", 'String'>
   readonly industryType: Prisma.FieldRef<"Flow", 'String'>
@@ -1164,6 +1505,10 @@ export type FlowFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
+  /**
    * Filter, which Flow to fetch.
    */
   where: Prisma.FlowWhereUniqueInput
@@ -1182,6 +1527,10 @@ export type FlowFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
+  /**
    * Filter, which Flow to fetch.
    */
   where: Prisma.FlowWhereUniqueInput
@@ -1199,6 +1548,10 @@ export type FlowFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Flow
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
   /**
    * Filter, which Flow to fetch.
    */
@@ -1248,6 +1601,10 @@ export type FlowFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
+  /**
    * Filter, which Flow to fetch.
    */
   where?: Prisma.FlowWhereInput
@@ -1296,6 +1653,10 @@ export type FlowFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
+  /**
    * Filter, which Flows to fetch.
    */
   where?: Prisma.FlowWhereInput
@@ -1339,6 +1700,10 @@ export type FlowCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
+  /**
    * The data needed to create a Flow.
    */
   data: Prisma.XOR<Prisma.FlowCreateInput, Prisma.FlowUncheckedCreateInput>
@@ -1372,6 +1737,10 @@ export type FlowCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.FlowCreateManyInput | Prisma.FlowCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1386,6 +1755,10 @@ export type FlowUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the Flow
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
   /**
    * The data needed to update a Flow.
    */
@@ -1438,6 +1811,10 @@ export type FlowUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Flows to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1452,6 +1829,10 @@ export type FlowUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the Flow
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
   /**
    * The filter to search for the Flow to update in case it exists.
    */
@@ -1479,6 +1860,10 @@ export type FlowDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
+  /**
    * Filter which Flow to delete.
    */
   where: Prisma.FlowWhereUniqueInput
@@ -1499,6 +1884,25 @@ export type FlowDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Flow.account
+ */
+export type Flow$accountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FundAccount
+   */
+  select?: Prisma.FundAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FundAccount
+   */
+  omit?: Prisma.FundAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FundAccountInclude<ExtArgs> | null
+  where?: Prisma.FundAccountWhereInput
+}
+
+/**
  * Flow without action
  */
 export type FlowDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1510,4 +1914,8 @@ export type FlowDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the Flow
    */
   omit?: Prisma.FlowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlowInclude<ExtArgs> | null
 }

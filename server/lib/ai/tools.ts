@@ -1,5 +1,15 @@
 import type { ChatCompletionTool } from "openai/resources/chat/completions";
-import { createFlow, getFlowsPage } from "~~/server/utils/db";
+import {
+  createFlow,
+  createFundAccount,
+  createFundAccountsBatch,
+  getFundAccountById,
+  getFundAccountByName,
+  getFundAccountsPage,
+  getFlowsPage,
+  normalizeFundAccountType,
+  updateFundAccount,
+} from "~~/server/utils/db";
 import type { FlowQueryWhere } from "~~/server/utils/db";
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
@@ -67,6 +77,97 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
           endDay: { type: "string", description: "结束日期 YYYY-MM-DD" },
           month: { type: "string", description: "月份 YYYY-MM，与 startDay/endDay 二选一" },
         },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "add_fund_account",
+      description:
+        "添加一个资金账户（银行卡、信用卡、微信、支付宝、投资账户等）。当用户说新增账户时使用。",
+      parameters: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "账户名称，如 招商银行卡" },
+          accountType: {
+            type: "string",
+            description: "账户类型，如 银行卡/信用卡/支付宝/微信/投资账户/现金/其他",
+          },
+          institution: { type: "string", description: "开户机构或平台（可选）" },
+          accountNo: { type: "string", description: "账号标识（可选，建议脱敏）" },
+          initialBalance: { type: "number", description: "初始余额，可选，默认0" },
+          currentBalance: {
+            type: "number",
+            description: "当前余额，可选，不传则同 initialBalance",
+          },
+          status: { type: "number", description: "状态，1启用/0停用/-1归档，默认1" },
+          description: { type: "string", description: "备注，可选" },
+        },
+        required: ["name"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "batch_add_fund_accounts",
+      description:
+        "批量添加资金账户。用户一次给出多个账户名称（如微信、支付宝、银行卡等）时使用。",
+      parameters: {
+        type: "object",
+        properties: {
+          accountNames: {
+            type: "array",
+            items: { type: "string" },
+            description: "账户名称数组",
+          },
+          defaultCurrency: {
+            type: "string",
+            description: "默认币种，默认CNY",
+          },
+        },
+        required: ["accountNames"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "query_fund_accounts",
+      description: "查询资金账户列表。用户询问账户、余额、账户明细时使用。",
+      parameters: {
+        type: "object",
+        properties: {
+          keyword: { type: "string", description: "关键字，匹配名称/机构/账号" },
+          status: { type: "number", description: "状态过滤" },
+          accountType: { type: "string", description: "账户类型过滤" },
+          pageNum: { type: "number", description: "页码，默认1" },
+          pageSize: { type: "number", description: "每页条数，默认20" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "update_fund_account_balance",
+      description:
+        "更新资金账户余额（手工校准）。用户说调整某账户余额、把某账户改成X元时使用。",
+      parameters: {
+        type: "object",
+        properties: {
+          id: { type: "number", description: "账户ID（与 name 二选一）" },
+          name: { type: "string", description: "账户名称（与 id 二选一）" },
+          currentBalance: { type: "number", description: "更新后的当前余额" },
+          totalLiability: {
+            type: "number",
+            description: "可选，同步更新负债余额",
+          },
+          totalProfit: { type: "number", description: "可选，同步更新累计收益" },
+          description: { type: "string", description: "可选，备注" },
+        },
+        required: ["currentBalance"],
       },
     },
   },
@@ -220,6 +321,189 @@ export async function execGetStatistics(
   });
 }
 
+/** 执行 add_fund_account 工具 */
+export async function execAddFundAccount(
+  args: Record<string, unknown>,
+  ctx: ToolExecutionContext,
+): Promise<string> {
+  const name = String(args.name ?? "").trim();
+  if (!name) {
+    return JSON.stringify({ success: false, message: "账户名称不能为空" });
+  }
+
+  const existed = await getFundAccountByName(ctx.userId, name);
+  if (existed) {
+    return JSON.stringify({
+      success: true,
+      message: "账户已存在，已跳过创建",
+      account: existed,
+      skipped: true,
+    });
+  }
+
+  const accountType = normalizeFundAccountType(String(args.accountType ?? name));
+  const initialBalance = Number(args.initialBalance ?? 0);
+  const currentBalance =
+    args.currentBalance != null ? Number(args.currentBalance) : initialBalance;
+  const status = args.status != null ? Number(args.status) : 1;
+
+  const created = await createFundAccount({
+    userId: ctx.userId,
+    name,
+    accountType,
+    institution: args.institution ? String(args.institution) : null,
+    accountNo: args.accountNo ? String(args.accountNo) : null,
+    currency: "CNY",
+    initialBalance,
+    currentBalance,
+    totalIncome: 0,
+    totalExpense: 0,
+    totalLiability: 0,
+    totalProfit: 0,
+    status,
+    description: args.description ? String(args.description) : null,
+  });
+
+  return JSON.stringify({
+    success: true,
+    message: "账户创建成功",
+    account: created,
+  });
+}
+
+/** 执行 batch_add_fund_accounts 工具 */
+export async function execBatchAddFundAccounts(
+  args: Record<string, unknown>,
+  ctx: ToolExecutionContext,
+): Promise<string> {
+  const list = Array.isArray(args.accountNames) ? args.accountNames : [];
+  const names = list.map((x) => String(x || "").trim()).filter(Boolean);
+  if (names.length === 0) {
+    return JSON.stringify({
+      success: false,
+      message: "accountNames 不能为空",
+    });
+  }
+
+  const result = await createFundAccountsBatch({
+    userId: ctx.userId,
+    names,
+    defaultCurrency: args.defaultCurrency
+      ? String(args.defaultCurrency)
+      : "CNY",
+  });
+
+  return JSON.stringify({
+    success: true,
+    message: `批量创建完成，成功 ${result.created.length} 个，跳过 ${result.skipped.length} 个`,
+    created: result.created.map((x) => ({
+      id: x.id,
+      name: x.name,
+      accountType: x.accountType,
+      currentBalance: x.currentBalance,
+    })),
+    skipped: result.skipped,
+  });
+}
+
+/** 执行 query_fund_accounts 工具 */
+export async function execQueryFundAccounts(
+  args: Record<string, unknown>,
+  ctx: ToolExecutionContext,
+): Promise<string> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(100, Math.max(1, Number(args.pageSize) || 20));
+
+  const result = await getFundAccountsPage(
+    {
+      userId: ctx.userId,
+      keyword: args.keyword ? String(args.keyword) : undefined,
+      status:
+        args.status !== undefined && args.status !== null
+          ? Number(args.status)
+          : undefined,
+      accountType: args.accountType ? String(args.accountType) : undefined,
+    },
+    { pageNum, pageSize },
+  );
+
+  return JSON.stringify({
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data.map((x) => ({
+      id: x.id,
+      name: x.name,
+      accountType: x.accountType,
+      currentBalance: x.currentBalance,
+      totalIncome: x.totalIncome,
+      totalExpense: x.totalExpense,
+      totalLiability: x.totalLiability,
+      status: x.status,
+    })),
+  });
+}
+
+/** 执行 update_fund_account_balance 工具 */
+export async function execUpdateFundAccountBalance(
+  args: Record<string, unknown>,
+  ctx: ToolExecutionContext,
+): Promise<string> {
+  const currentBalance = Number(args.currentBalance);
+  if (!Number.isFinite(currentBalance)) {
+    return JSON.stringify({
+      success: false,
+      message: "currentBalance 必须为数字",
+    });
+  }
+
+  let account = null as Awaited<ReturnType<typeof getFundAccountById>> | null;
+  if (args.id != null) {
+    const id = Number(args.id);
+    if (Number.isFinite(id)) {
+      const found = await getFundAccountById(id);
+      if (found && found.userId === ctx.userId) {
+        account = found;
+      }
+    }
+  }
+  if (!account && args.name) {
+    account = await getFundAccountByName(ctx.userId, String(args.name));
+  }
+  if (!account) {
+    return JSON.stringify({
+      success: false,
+      message: "未找到对应资金账户",
+    });
+  }
+
+  const updated = await updateFundAccount(account.id, {
+    currentBalance,
+    ...(args.totalLiability !== undefined &&
+      args.totalLiability !== null && {
+        totalLiability: Number(args.totalLiability),
+      }),
+    ...(args.totalProfit !== undefined &&
+      args.totalProfit !== null && { totalProfit: Number(args.totalProfit) }),
+    ...(args.description !== undefined && {
+      description: String(args.description || ""),
+    }),
+  });
+
+  return JSON.stringify({
+    success: true,
+    message: "账户余额更新成功",
+    account: {
+      id: updated.id,
+      name: updated.name,
+      accountType: updated.accountType,
+      currentBalance: updated.currentBalance,
+      totalLiability: updated.totalLiability,
+      totalProfit: updated.totalProfit,
+    },
+  });
+}
+
 /** 根据工具名和参数执行对应工具 */
 export async function executeTool(
   name: string,
@@ -233,6 +517,14 @@ export async function executeTool(
       return execQueryFlows(args, ctx);
     case "get_statistics":
       return execGetStatistics(args, ctx);
+    case "add_fund_account":
+      return execAddFundAccount(args, ctx);
+    case "batch_add_fund_accounts":
+      return execBatchAddFundAccounts(args, ctx);
+    case "query_fund_accounts":
+      return execQueryFundAccounts(args, ctx);
+    case "update_fund_account_balance":
+      return execUpdateFundAccountBalance(args, ctx);
     default:
       return JSON.stringify({ success: false, message: `未知工具: ${name}` });
   }

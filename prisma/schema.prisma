@@ -31,6 +31,9 @@ model Flow {
   id           Int      @id @default(autoincrement()) /// 主键
   flowNo       String   @unique @db.VarChar(50) /// 流水编号-唯一
   userId       Int /// 所属用户 ID
+  accountId    Int? /// 关联资金账户 ID
+  accountDelta Float? /// 本次流水对账户余额影响（可正可负）
+  accountBal   Float? /// 该笔流水入账后的账户余额快照
   day          DateTime /// 交易日期
   flowType     String?  @db.VarChar(20) /// 流水类型：收入、支出、不计收支
   industryType String?  @db.VarChar(50) /// 行业/分类（支出类型或收入类型）
@@ -43,7 +46,36 @@ model Flow {
   attribution  String?  @db.VarChar(100) /// 流水归属（谁的收入/支出）
   eliminate    Int?     @default(0) /// 平账标志：0 未平账，1 已平账，-1 忽略平账
 
+  @@index([userId, day])
+  @@index([accountId, day])
   @@map("user_flows")
+}
+
+/// 资金账户表（银行卡、信用卡、微信、支付宝、投资账户等）
+model FundAccount {
+  id             Int       @id @default(autoincrement()) /// 主键
+  userId         Int /// 用户 ID
+  name           String    @db.VarChar(100) /// 账户名称（如 招商银行卡）
+  accountType    String    @db.VarChar(50) /// 账户类型（银行卡、信用卡、支付宝、微信、投资账户、现金、其他）
+  institution    String?   @db.VarChar(100) /// 开户机构/平台（可选）
+  accountNo      String?   @db.VarChar(100) /// 账号标识（可选，建议脱敏）
+  currency       String    @default("CNY") @db.VarChar(10) /// 币种
+  initialBalance Float     @default(0) /// 初始余额
+  currentBalance Float     @default(0) /// 当前余额（自动维护）
+  totalIncome    Float     @default(0) /// 累计流入
+  totalExpense   Float     @default(0) /// 累计流出
+  totalLiability Float     @default(0) /// 当前负债余额（如信用卡欠款）
+  totalProfit    Float     @default(0) /// 累计收益（投资收益等，可手工维护）
+  status         Int       @default(1) /// 状态：1 启用，0 停用，-1 已归档
+  sortBy         Int       @default(0) /// 排序
+  description    String?   @db.VarChar(500) /// 备注
+  lastFlowAt     DateTime? /// 最近一笔关联流水时间
+  createdAt      DateTime  @default(now()) /// 创建时间
+  updatedAt      DateTime  @updatedAt /// 更新时间
+
+  @@index([userId, status])
+  @@index([userId, accountType])
+  @@map("user_fund_accounts")
 }
 
 /// 预算/支出计划表（按月度）

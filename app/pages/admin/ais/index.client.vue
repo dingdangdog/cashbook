@@ -16,6 +16,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CpuChipIcon,
+  DocumentDuplicateIcon,
 } from "@heroicons/vue/24/outline";
 
 const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
@@ -48,6 +49,16 @@ const addItem = () => {
 const editItemInfo = (item: AdminAI) => {
   editDialogTitle.value = "编辑 AI 服务商";
   editItem.value = { ...item };
+  editInfoFlag.value = true;
+};
+
+const copyItemConfig = (item: AdminAI) => {
+  editDialogTitle.value = "复制配置（新建 AI 服务商）";
+  const { id, name, ...rest } = item;
+  editItem.value = {
+    ...rest,
+    name: "",
+  };
   editInfoFlag.value = true;
 };
 
@@ -242,6 +253,13 @@ onMounted(() => getPages());
               <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
                 <div class="flex items-center gap-2">
                   <button
+                    @click="copyItemConfig(item)"
+                    class="text-muted hover:text-foreground transition-colors"
+                    title="复制配置"
+                  >
+                    <DocumentDuplicateIcon class="h-4 w-4" />
+                  </button>
+                  <button
                     @click="editItemInfo(item)"
                     class="text-primary-600 hover:text-primary-500 transition-colors"
                     title="编辑"
@@ -276,6 +294,13 @@ onMounted(() => getPages());
               {{ item.name }} ({{ item.provider }})
             </h3>
             <div class="flex items-center gap-1">
+              <button
+                @click="copyItemConfig(item)"
+                class="p-1.5 text-muted hover:bg-surface-muted rounded"
+                title="复制配置"
+              >
+                <DocumentDuplicateIcon class="h-3 w-3" />
+              </button>
               <button
                 @click="editItemInfo(item)"
                 class="p-1.5 text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded"

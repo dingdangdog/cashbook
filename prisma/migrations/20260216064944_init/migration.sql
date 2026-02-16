@@ -18,6 +18,9 @@ CREATE TABLE "user_flows" (
     "id" SERIAL NOT NULL,
     "flowNo" VARCHAR(50) NOT NULL,
     "userId" INTEGER NOT NULL,
+    "accountId" INTEGER,
+    "accountDelta" DOUBLE PRECISION,
+    "accountBal" DOUBLE PRECISION,
     "day" TIMESTAMP(3) NOT NULL,
     "flowType" VARCHAR(20),
     "industryType" VARCHAR(50),
@@ -31,6 +34,31 @@ CREATE TABLE "user_flows" (
     "eliminate" INTEGER DEFAULT 0,
 
     CONSTRAINT "user_flows_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_fund_accounts" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "accountType" VARCHAR(50) NOT NULL,
+    "institution" VARCHAR(100),
+    "accountNo" VARCHAR(100),
+    "currency" VARCHAR(10) NOT NULL DEFAULT 'CNY',
+    "initialBalance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "currentBalance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "totalIncome" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "totalExpense" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "totalLiability" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "totalProfit" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "status" INTEGER NOT NULL DEFAULT 1,
+    "sortBy" INTEGER NOT NULL DEFAULT 0,
+    "description" VARCHAR(500),
+    "lastFlowAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "user_fund_accounts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -242,8 +270,42 @@ CREATE TABLE "system_configs" (
     CONSTRAINT "system_configs_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "user_chat_sessions" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "title" VARCHAR(200),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "user_chat_sessions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_chat_messages" (
+    "id" SERIAL NOT NULL,
+    "sessionId" INTEGER NOT NULL,
+    "role" VARCHAR(20) NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_chat_messages_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_flows_flowNo_key" ON "user_flows"("flowNo");
+
+-- CreateIndex
+CREATE INDEX "user_flows_userId_day_idx" ON "user_flows"("userId", "day");
+
+-- CreateIndex
+CREATE INDEX "user_flows_accountId_day_idx" ON "user_flows"("accountId", "day");
+
+-- CreateIndex
+CREATE INDEX "user_fund_accounts_userId_status_idx" ON "user_fund_accounts"("userId", "status");
+
+-- CreateIndex
+CREATE INDEX "user_fund_accounts_userId_accountType_idx" ON "user_fund_accounts"("userId", "accountType");
 
 -- CreateIndex
 CREATE INDEX "user_liabilities_userId_idx" ON "user_liabilities"("userId");
@@ -301,3 +363,9 @@ CREATE INDEX "system_themes_isActive_idx" ON "system_themes"("isActive");
 
 -- CreateIndex
 CREATE INDEX "system_themes_isDefault_idx" ON "system_themes"("isDefault");
+
+-- CreateIndex
+CREATE INDEX "user_chat_sessions_userId_idx" ON "user_chat_sessions"("userId");
+
+-- CreateIndex
+CREATE INDEX "user_chat_messages_sessionId_idx" ON "user_chat_messages"("sessionId");

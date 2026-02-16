@@ -1,4 +1,8 @@
 import prisma from "~~/server/lib/prisma";
+import {
+  applyFlowAccountDelta,
+  resolveFlowAccountDelta,
+} from "~~/server/utils/db";
 
 /**
  * @swagger
@@ -39,7 +43,8 @@ export default defineEventHandler(async (event) => {
   const userId = await getUserId(event);
   const body = await readBody(event);
   const ids = body.ids;
-  const { flowType, industryType, payType, attribution } = body;
+  const { flowType, industryType, payType, attribution, accountId, accountDelta } =
+    body;
 
   if (!ids) {
     return error("Not Find ID");
@@ -58,13 +63,65 @@ export default defineEventHandler(async (event) => {
   if (attribution) {
     updateInfo.attribution = String(attribution);
   }
+  const hasAccountIdUpdate = accountId !== undefined;
+  const nextAccountId =
+    hasAccountIdUpdate ? (accountId ? Number(accountId) : null) : undefined;
+  const hasAccountDeltaUpdate =
+    accountDelta !== undefined && accountDelta !== null;
+  const explicitAccountDelta = hasAccountDeltaUpdate ? Number(accountDelta) : null;
 
-  const updated = await prisma.flow.updateMany({
-    data: updateInfo,
-    where: {
-      id: { in: ids },
-      userId,
-    },
+  const updated = await prisma.$transaction(async (tx) => {
+    const rows = await tx.flow.findMany({
+      where: {
+        id: { in: ids },
+        userId,
+      },
+    });
+
+    let count = 0;
+    for (const row of rows) {
+      if (row.accountId && row.accountDelta) {
+        await applyFlowAccountDelta(tx, {
+          userId,
+          accountId: row.accountId,
+          delta: -Number(row.accountDelta),
+          flowDay: row.day,
+        });
+      }
+
+      const targetAccountId =
+        nextAccountId !== undefined ? nextAccountId : row.accountId;
+      const targetFlowType = updateInfo.flowType ?? row.flowType;
+      const targetDelta = resolveFlowAccountDelta({
+        flowType: targetFlowType,
+        money: Number(row.money || 0),
+        accountDelta: hasAccountDeltaUpdate ? explicitAccountDelta : undefined,
+      });
+
+      let targetAccountBal: number | null = null;
+      if (targetAccountId) {
+        const result = await applyFlowAccountDelta(tx, {
+          userId,
+          accountId: targetAccountId,
+          delta: targetDelta,
+          flowDay: row.day,
+        });
+        targetAccountBal = result.accountBal;
+      }
+
+      await tx.flow.update({
+        where: { id: row.id },
+        data: {
+          ...updateInfo,
+          accountId: targetAccountId,
+          accountDelta: targetAccountId ? targetDelta : null,
+          accountBal: targetAccountId ? targetAccountBal : null,
+        },
+      });
+      count++;
+    }
+
+    return { count };
   });
   return success(updated);
 });

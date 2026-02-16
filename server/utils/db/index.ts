@@ -10,6 +10,8 @@ export * from "./receivable-collect-plan";
 export * from "./receivable-collect-record";
 export * from "./investment-product";
 export * from "./investment-detail";
+export * from "./fund-account";
+export * from "./flow-account-balance";
 export * from "./fixed-flow";
 export * from "./type-relation";
 export * from "./system-ai-provider";

@@ -18,6 +18,7 @@ type Flow =
 export interface FlowQueryWhere {
   id?: number;
   userId?: number;
+  accountId?: number;
   flowNo?: string;
   flowType?: string;
   industryType?: string;
@@ -36,6 +37,7 @@ function buildFlowWhere(input: FlowQueryWhere = {}): Prisma.FlowWhereInput {
   const where: Prisma.FlowWhereInput = {};
   if (input.id != null) where.id = input.id;
   if (input.userId != null) where.userId = input.userId;
+  if (input.accountId != null) where.accountId = input.accountId;
   if (input.flowNo) where.flowNo = input.flowNo;
   if (input.flowType) where.flowType = input.flowType;
   if (input.industryType) where.industryType = input.industryType;

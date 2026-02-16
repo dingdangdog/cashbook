@@ -68,6 +68,11 @@ export default defineEventHandler(async (event) => {
       equals: body.payType,
     };
   }
+  if (body.accountId !== undefined && body.accountId !== null && body.accountId !== "") {
+    where.accountId = {
+      equals: Number(body.accountId),
+    };
+  }
 
   // 时间条件（日期使用 Date 类型比较）
   if (body.startDay && body.endDay) {
@@ -126,6 +131,11 @@ export default defineEventHandler(async (event) => {
 
   const flows = await prisma.flow.findMany({
     where, // 使用条件查询
+    include: {
+      account: {
+        select: { id: true, name: true, accountType: true },
+      },
+    },
   });
 
   return success(flows);

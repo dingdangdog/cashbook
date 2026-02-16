@@ -10,9 +10,15 @@ export default defineNitroPlugin((nitroApp) => {
       await prisma.systemConfig.create({
         data: {
           id: 1,
-          title: "Cashbook",
-          description: "Cashbook",
-          keywords: "Cashbook",
+          title: "Cashbook - 开源免费个人财务管理工具",
+          description:
+            "Cashbook 是一款开源免费的个人财务管理工具，旨在帮助用户更好地管理自己的财务状况。",
+          keywords:
+            "Cashbook, 个人财务管理, 个人记账, docker部署, 开源免费, 财务管理工具, dingdangdog, 月上老狗, lodenhu",
+          version: String(useRuntimeConfig().appVersion),
+          openRegister: false,
+          createAt: new Date(),
+          updateAt: new Date(),
         },
       });
       console.log("Init System Settings");

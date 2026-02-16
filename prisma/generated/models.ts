@@ -10,6 +10,7 @@
  */
 export type * from './models/User.js'
 export type * from './models/Flow.js'
+export type * from './models/FundAccount.js'
 export type * from './models/Budget.js'
 export type * from './models/Liability.js'
 export type * from './models/LiabilityRepayPlan.js'

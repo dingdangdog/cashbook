@@ -1,4 +1,5 @@
 import prisma from "~~/server/lib/prisma";
+import { applyFlowAccountDelta } from "~~/server/utils/db";
 
 /**
  * @swagger
@@ -45,8 +46,18 @@ export default defineEventHandler(async (event) => {
   if (!row) {
     return error("Not Find ID");
   }
-  const deleted = await prisma.flow.delete({
-    where: { id: Number(id) },
+  const deleted = await prisma.$transaction(async (tx) => {
+    if (row.accountId && row.accountDelta) {
+      await applyFlowAccountDelta(tx, {
+        userId,
+        accountId: row.accountId,
+        delta: -Number(row.accountDelta),
+        flowDay: row.day,
+      });
+    }
+    return tx.flow.delete({
+      where: { id: Number(id) },
+    });
   });
   return success(deleted);
 });

@@ -31,6 +31,10 @@ export interface Flow {
   /** 流水编号-唯一 */
   flowNo?: string;
   userId?: number;
+  accountId?: number | null;
+  accountDelta?: number | null;
+  accountBal?: number | null;
+  account?: FundAccountLite | null;
   /** 交易日期（API 常用 string YYYY-MM-DD） */
   day?: string;
   flowType?: string; // 收入、支出、不计收支
@@ -43,6 +47,12 @@ export interface Flow {
   origin?: string; // 流水来源
   attribution?: string; // 流水归属
   eliminate?: number; // 0 未平账，1 已平账，-1 忽略平账
+}
+
+export interface FundAccountLite {
+  id?: number;
+  name?: string;
+  accountType?: string;
 }
 
 /** 预算/支出计划（与 Prisma Budget 一致） */
@@ -104,4 +114,27 @@ export interface TypeRelation {
   userId: number;
   source: string;
   target: string;
+}
+
+/** 资金账户（与 Prisma FundAccount 一致） */
+export interface FundAccount {
+  id?: number;
+  userId?: number;
+  name?: string;
+  accountType?: string;
+  institution?: string | null;
+  accountNo?: string | null;
+  currency?: string;
+  initialBalance?: number;
+  currentBalance?: number;
+  totalIncome?: number;
+  totalExpense?: number;
+  totalLiability?: number;
+  totalProfit?: number;
+  status?: number;
+  sortBy?: number;
+  description?: string | null;
+  lastFlowAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }

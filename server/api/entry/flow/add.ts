@@ -1,4 +1,8 @@
 import prisma from "~~/server/lib/prisma";
+import {
+  applyFlowAccountDelta,
+  resolveFlowAccountDelta,
+} from "~~/server/utils/db";
 
 /**
  * @swagger
@@ -46,11 +50,32 @@ export default defineEventHandler(async (event) => {
     // invoice: String(body.invoice || ""),
     attribution: String(body.attribution || ""),
     flowNo: getUUID(10),
+    accountId: body.accountId ? Number(body.accountId) : null,
+    accountDelta:
+      body.accountDelta !== undefined && body.accountDelta !== null
+        ? Number(body.accountDelta)
+        : null,
   };
 
-  // 在数据库中添加新数据
-  const created = await prisma.flow.create({
-    data: flow,
+  const created = await prisma.$transaction(async (tx) => {
+    const delta = resolveFlowAccountDelta({
+      flowType: flow.flowType,
+      money: flow.money,
+      accountDelta: flow.accountDelta,
+    });
+    const accountResult = await applyFlowAccountDelta(tx, {
+      userId,
+      accountId: flow.accountId,
+      delta,
+      flowDay: flow.day,
+    });
+    return tx.flow.create({
+      data: {
+        ...flow,
+        accountDelta: flow.accountId ? delta : null,
+        accountBal: flow.accountId ? accountResult.accountBal : null,
+      },
+    });
   });
   return success(created);
 });
