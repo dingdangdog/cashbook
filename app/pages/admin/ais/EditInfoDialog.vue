@@ -13,7 +13,7 @@ const editItem = ref<Partial<AdminAI>>({ ...props.item });
 watch(
   () => props.item,
   (v) => (editItem.value = { ...v }),
-  { deep: true }
+  { deep: true },
 );
 
 const errors = ref<Record<string, string>>({});
@@ -37,7 +37,8 @@ const save = () => {
     provider: String(editItem.value.provider || "").trim(),
     apiProtocol: String(editItem.value.apiProtocol || "").trim(),
     name: String(editItem.value.name || "").trim(),
-    apiKey: editItem.value.apiKey != null ? String(editItem.value.apiKey) : null,
+    apiKey:
+      editItem.value.apiKey != null ? String(editItem.value.apiKey) : null,
     apiEndpoint:
       editItem.value.apiEndpoint != null
         ? String(editItem.value.apiEndpoint)
@@ -86,7 +87,6 @@ const close = () => {
   <div
     v-if="editInfoFlag"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
-    @click="close"
   >
     <div
       class="bg-surface rounded-xl shadow-xl w-full max-w-2xl border border-border my-4"
@@ -101,8 +101,18 @@ const close = () => {
           @click="close"
           class="text-muted hover:text-foreground transition-colors"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -118,11 +128,15 @@ const close = () => {
               type="text"
               :class="[
                 'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2',
-                errors.provider ? 'border-red-500' : 'border-border focus:ring-primary-500',
+                errors.provider
+                  ? 'border-red-500'
+                  : 'border-border focus:ring-primary-500',
               ]"
               placeholder="如 openai, deepseek"
             />
-            <p v-if="errors.provider" class="mt-1 text-sm text-red-500">{{ errors.provider }}</p>
+            <p v-if="errors.provider" class="mt-1 text-sm text-red-500">
+              {{ errors.provider }}
+            </p>
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-2">
@@ -133,11 +147,15 @@ const close = () => {
               type="text"
               :class="[
                 'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2',
-                errors.name ? 'border-red-500' : 'border-border focus:ring-primary-500',
+                errors.name
+                  ? 'border-red-500'
+                  : 'border-border focus:ring-primary-500',
               ]"
               placeholder="如 OpenAI GPT-4"
             />
-            <p v-if="errors.name" class="mt-1 text-sm text-red-500">{{ errors.name }}</p>
+            <p v-if="errors.name" class="mt-1 text-sm text-red-500">
+              {{ errors.name }}
+            </p>
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-2">
@@ -148,14 +166,20 @@ const close = () => {
               type="text"
               :class="[
                 'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2',
-                errors.apiProtocol ? 'border-red-500' : 'border-border focus:ring-primary-500',
+                errors.apiProtocol
+                  ? 'border-red-500'
+                  : 'border-border focus:ring-primary-500',
               ]"
               placeholder="如 openai, gemini"
             />
-            <p v-if="errors.apiProtocol" class="mt-1 text-sm text-red-500">{{ errors.apiProtocol }}</p>
+            <p v-if="errors.apiProtocol" class="mt-1 text-sm text-red-500">
+              {{ errors.apiProtocol }}
+            </p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">API 密钥</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >API 密钥</label
+            >
             <input
               v-model="editItem.apiKey"
               type="password"
@@ -164,7 +188,9 @@ const close = () => {
             />
           </div>
           <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-foreground mb-2">API 端点</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >API 端点</label
+            >
             <input
               v-model="editItem.apiEndpoint"
               type="text"
@@ -173,7 +199,9 @@ const close = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">模型名称</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >模型名称</label
+            >
             <input
               v-model="editItem.apiModel"
               type="text"
@@ -182,7 +210,9 @@ const close = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">API 版本</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >API 版本</label
+            >
             <input
               v-model="editItem.apiVersion"
               type="text"
@@ -191,7 +221,9 @@ const close = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">temperature</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >temperature</label
+            >
             <input
               v-model.number="editItem.temperature"
               type="number"
@@ -200,7 +232,9 @@ const close = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">maxTokens</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >maxTokens</label
+            >
             <input
               v-model.number="editItem.maxTokens"
               type="number"
@@ -208,7 +242,9 @@ const close = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">超时(ms)</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >超时(ms)</label
+            >
             <input
               v-model.number="editItem.timeout"
               type="number"
@@ -217,12 +253,18 @@ const close = () => {
           </div>
           <div class="md:col-span-2 flex items-center">
             <label class="inline-flex items-center gap-2 text-foreground">
-              <input v-model="editItem.isActive" type="checkbox" class="h-4 w-4 rounded" />
+              <input
+                v-model="editItem.isActive"
+                type="checkbox"
+                class="h-4 w-4 rounded"
+              />
               <span class="text-sm">启用</span>
             </label>
           </div>
           <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-foreground mb-2">额外配置(JSON)</label>
+            <label class="block text-sm font-medium text-foreground mb-2"
+              >额外配置(JSON)</label
+            >
             <textarea
               v-model="editItem.extraConfig"
               rows="3"

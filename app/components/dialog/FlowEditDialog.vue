@@ -59,6 +59,26 @@
           :options="payTypeOptions"
         />
 
+        <!-- 资金账户 -->
+        <div>
+          <label class="block text-sm font-semibold text-foreground/80 mb-1">
+            资金账户
+          </label>
+          <select
+            v-model="flowEdit.accountId"
+            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            <option :value="''">不关联账户</option>
+            <option
+              v-for="acc in accountOptions"
+              :key="acc.id"
+              :value="acc.id"
+            >
+              {{ acc.name }}（{{ acc.accountType }}）
+            </option>
+          </select>
+        </div>
+
         <!-- 金额 -->
         <div>
           <label class="block text-sm font-semibold text-foreground/80 mb-1">
@@ -159,6 +179,7 @@ const flowTypeDialogOptions = ref(["支出", "收入", "不计收支"]);
 const industryTypeOptions = ref<any[]>([]);
 // 支付类型
 const payTypeOptions = ref<any[]>([]);
+const accountOptions = ref<any[]>([]);
 const flowEdit = ref<Flow | any>({
   flowType: "",
 });
@@ -169,6 +190,14 @@ const getAttributions = async () => {
   attributionList.value = res;
 };
 getAttributions();
+
+const loadAccounts = async () => {
+  const res = await doApi.post<any[]>("api/entry/account/all", {
+    status: 1,
+  });
+  accountOptions.value = Array.isArray(res) ? res : [];
+};
+loadAccounts();
 
 onMounted(() => {
   // console.log("flow", flow);
@@ -246,6 +275,7 @@ const createOne = (again: boolean) => {
       payType: flowEdit.value.payType,
       name: flowEdit.value.name,
       money: Number(flowEdit.value.money),
+      accountId: flowEdit.value.accountId ? Number(flowEdit.value.accountId) : null,
       description: flowEdit.value.description,
       attribution: flowEdit.value.attribution,
     })
@@ -280,6 +310,7 @@ const updateOne = () => {
       flowType: flowEdit.value.flowType,
       industryType: flowEdit.value.industryType,
       money: Number(flowEdit.value.money),
+      accountId: flowEdit.value.accountId ? Number(flowEdit.value.accountId) : null,
       payType: flowEdit.value.payType,
       name: flowEdit.value.name,
       description: flowEdit.value.description,
