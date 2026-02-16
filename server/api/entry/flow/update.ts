@@ -82,7 +82,9 @@ export default defineEventHandler(async (event) => {
       flow.accountId !== undefined ? flow.accountId : oldRow.accountId;
     const nextFlowType = flow.flowType ?? oldRow.flowType ?? "";
     const nextMoney =
-      flow.money !== undefined && flow.money !== null ? flow.money : oldRow.money;
+      flow.money !== undefined && flow.money !== null
+        ? flow.money
+        : oldRow.money;
     const nextDay = flow.day ?? oldRow.day;
     const nextDelta = resolveFlowAccountDelta({
       flowType: nextFlowType,

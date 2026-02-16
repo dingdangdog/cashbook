@@ -7,7 +7,6 @@ import {
   calcTotalPages,
 } from "./types";
 import {
-  applyFlowAccountDelta,
   normalizeFlowTypeLabel,
   recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
@@ -245,15 +244,6 @@ export async function createFlowByAI(
       money: normalizedMoney,
       accountDelta: null,
     });
-    const accountResult = await applyFlowAccountDelta(
-      tx as unknown as Prisma.TransactionClient,
-      {
-        userId: ctx.userId,
-        accountId,
-        delta,
-        flowDay: day,
-      },
-    );
     const row = await tx.flow.create({
       data: {
         flowNo: genFlowNo(),
@@ -269,13 +259,11 @@ export async function createFlowByAI(
         origin: "AI对话记账",
         accountId,
         accountDelta: delta,
-        accountBal: accountResult.accountBal,
+        accountBal: null,
       },
     });
-    await recalcFundAccountFromFlows(
-      accountId,
-      tx as unknown as Prisma.TransactionClient,
-    );
+    // 与 update 一致：流水写入后在同一事务内重算资金账户
+    await recalcFundAccountFromFlows(accountId, tx as unknown as Prisma.TransactionClient);
     return row;
   });
 
