@@ -285,9 +285,17 @@ const sendMessage = async () => {
   }
 };
 
-/** 点击历史用户消息重试：用该条内容重新请求并追加回复 */
+/** 点击历史用户消息重试：模仿用户再发一次该条消息（先追加用户气泡，再请求并显示回复） */
 const retryWithMessage = async (content: string) => {
-  if (!content?.trim() || sending.value) return;
+  const text = content?.trim();
+  if (!text || sending.value) return;
+  const userMsg: ChatMessage = {
+    id: 0,
+    role: "user",
+    content: text,
+    createdAt: new Date().toISOString(),
+  };
+  messages.value = [...messages.value, userMsg];
   sending.value = true;
   scrollToBottom();
   try {
@@ -296,7 +304,7 @@ const retryWithMessage = async (content: string) => {
       sessionId: number;
     }>("api/entry/ai/chat", {
       sessionId: currentSessionId.value ?? undefined,
-      content: content.trim(),
+      content: text,
       providerId: selectedProviderId.value ?? undefined,
     });
     if (res?.sessionId != null) {
@@ -314,6 +322,7 @@ const retryWithMessage = async (content: string) => {
       scrollToBottom();
     }
   } catch {
+    messages.value = messages.value.filter((m) => m !== userMsg);
     Alert.error("发送失败");
   } finally {
     sending.value = false;
@@ -499,7 +508,8 @@ watch(
             >
               <ChatBubbleLeftRightIcon class="h-14 w-14" />
               <p class="text-sm">
-                直接说「记一笔午饭 50」或「添加资金账户：微信、支付宝、招商银行卡」
+                直接说「记一笔午饭
+                50」或「添加资金账户：微信、支付宝、招商银行卡」
               </p>
             </div>
           </template>
