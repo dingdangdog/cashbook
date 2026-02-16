@@ -154,6 +154,44 @@ export async function resolveFundAccountByPayType(
   return fuzzy;
 }
 
+/**
+ * 获取用户默认现金账户；若不存在则自动创建。
+ * 用于无法从 payType/账户信息中解析目标账户时的兜底。
+ */
+export async function getOrCreateCashFundAccount(
+  userId: number,
+): Promise<FundAccount> {
+  const existed = await prisma.fundAccount.findFirst({
+    where: {
+      userId,
+      status: { not: -1 },
+      OR: [
+        { name: { equals: "现金", mode: "insensitive" } },
+        { accountType: "现金" },
+      ],
+    },
+    orderBy: [{ sortBy: "asc" }, { id: "desc" }],
+  });
+  if (existed) return existed;
+
+  return prisma.fundAccount.create({
+    data: {
+      userId,
+      name: "现金",
+      accountType: "现金",
+      currency: "CNY",
+      initialBalance: 0,
+      currentBalance: 0,
+      totalIncome: 0,
+      totalExpense: 0,
+      totalLiability: 0,
+      totalProfit: 0,
+      status: 1,
+      description: "系统默认现金账户",
+    },
+  });
+}
+
 /** 分页查询 */
 export async function getFundAccountsPage(
   whereInput: FundAccountQueryWhere = {},
@@ -207,11 +245,7 @@ export async function createFundAccountsBatch(input: {
   const userId = input.userId;
   const currency = input.defaultCurrency || "CNY";
   const normalizedNames = Array.from(
-    new Set(
-      input.names
-        .map((v) => String(v || "").trim())
-        .filter(Boolean),
-    ),
+    new Set(input.names.map((v) => String(v || "").trim()).filter(Boolean)),
   );
   if (normalizedNames.length === 0) {
     return { created: [], skipped: [] };
@@ -283,7 +317,9 @@ export async function addFundAccountByAI(
     };
   }
 
-  const accountType = normalizeFundAccountType(String(args.accountType ?? name));
+  const accountType = normalizeFundAccountType(
+    String(args.accountType ?? name),
+  );
   const initialBalance = Number(args.initialBalance ?? 0);
   const currentBalance =
     args.currentBalance != null ? Number(args.currentBalance) : initialBalance;
@@ -376,7 +412,9 @@ export async function batchAddFundAccountsByAI(
   const result = await createFundAccountsBatch({
     userId: ctx.userId,
     names,
-    defaultCurrency: args.defaultCurrency ? String(args.defaultCurrency) : "CNY",
+    defaultCurrency: args.defaultCurrency
+      ? String(args.defaultCurrency)
+      : "CNY",
   });
 
   return {

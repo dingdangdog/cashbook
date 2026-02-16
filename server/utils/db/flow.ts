@@ -10,7 +10,12 @@ import {
   applyFlowAccountDelta,
   resolveFlowAccountDelta,
 } from "./flow-account-balance";
-import { resolveFundAccountByPayType } from "./fund-account";
+import {
+  getFundAccountById,
+  getFundAccountByName,
+  getOrCreateCashFundAccount,
+  resolveFundAccountByPayType,
+} from "./fund-account";
 
 type Flow = Prisma.FlowGetPayload<Record<string, never>>;
 
@@ -162,14 +167,48 @@ export async function createFlowByAI(
   const day = args.day ? new Date(String(args.day)) : new Date();
   const description = args.description ? String(args.description) : null;
   const attribution = args.attribution ? String(args.attribution) : null;
+  const accountIdArg =
+    args.accountId !== undefined && args.accountId !== null
+      ? Number(args.accountId)
+      : null;
+  const accountNameArg = args.accountName
+    ? String(args.accountName).trim()
+    : "";
   if (Number.isNaN(money)) {
     return { success: false, message: "金额不能为空" };
   }
 
   const normalizedMoney =
     flowType === "支出" ? -Math.abs(money) : Math.abs(money);
-  const matchedAccount = await resolveFundAccountByPayType(ctx.userId, payType);
-  const accountId = matchedAccount?.id ?? null;
+  let matchedAccount = null as Awaited<
+    ReturnType<typeof resolveFundAccountByPayType>
+  >;
+  if (accountIdArg != null && Number.isFinite(accountIdArg)) {
+    const accountById = await getFundAccountById(accountIdArg);
+    if (
+      accountById &&
+      accountById.userId === ctx.userId &&
+      accountById.status !== -1
+    ) {
+      matchedAccount = accountById;
+    }
+  }
+  if (!matchedAccount && accountNameArg) {
+    const accountByName = await getFundAccountByName(
+      ctx.userId,
+      accountNameArg,
+    );
+    if (accountByName && accountByName.status !== -1) {
+      matchedAccount = accountByName;
+    }
+  }
+  if (!matchedAccount) {
+    matchedAccount = await resolveFundAccountByPayType(ctx.userId, payType);
+  }
+  if (!matchedAccount) {
+    matchedAccount = await getOrCreateCashFundAccount(ctx.userId);
+  }
+  const accountId = matchedAccount.id;
 
   const created = await prisma.$transaction(async (tx) => {
     const delta = resolveFlowAccountDelta({
@@ -200,8 +239,8 @@ export async function createFlowByAI(
         attribution,
         origin: "AI对话记账",
         accountId,
-        accountDelta: accountId ? delta : null,
-        accountBal: accountId ? accountResult.accountBal : null,
+        accountDelta: delta,
+        accountBal: accountResult.accountBal,
       },
     });
   });

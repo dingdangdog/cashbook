@@ -53,6 +53,14 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
           day: { type: "string", description: "日期 YYYY-MM-DD，不传则今天" },
           description: { type: "string", description: "备注" },
           attribution: { type: "string", description: "流水归属" },
+          accountId: {
+            type: "number",
+            description: "资金账户ID（可选，已知时优先使用）",
+          },
+          accountName: {
+            type: "string",
+            description: "资金账户名称（可选，如 招商银行卡；其次于 accountId）",
+          },
         },
         required: ["flowType", "industryType", "payType", "money", "name"],
       },

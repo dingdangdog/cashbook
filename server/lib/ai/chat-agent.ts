@@ -30,6 +30,11 @@ const SYSTEM_PROMPT = `你是个人记账助手的 AI，帮助用户完成：
    - 新增固定流水：调用 add_fixed_flow
    - 查询固定流水：调用 query_fixed_flows
 
+记账账户规则：
+- add_flow 时如果用户明确了账户（如“招行卡”“支付宝账户A”），优先在参数中提供 accountId 或 accountName
+- 若用户只说了支付方式（如微信/支付宝），可使用 payType 让系统自动匹配账户
+- 若无法判断具体账户，不要阻塞记账，系统会自动回退到该用户“现金”账户
+
 请根据用户意图选择合适的工具，用自然语言总结结果回复用户。若无法理解或缺少关键信息，礼貌地询问用户。`;
 
 export interface ChatAgentOptions {
@@ -247,7 +252,7 @@ JSON 格式固定如下：
 }
 
 参数约束：
-- add_flow.args: { flowType, industryType, payType, money, name, day?, description?, attribution? }
+- add_flow.args: { flowType, industryType, payType, money, name, day?, description?, attribution?, accountId?, accountName? }
 - query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, pageNum?, pageSize? }
 - get_statistics.args: { month? 或 startDay+endDay }
 - add_fund_account.args: { name, accountType?, institution?, accountNo?, initialBalance?, currentBalance?, status?, description? }

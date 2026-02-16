@@ -29,5 +29,35 @@ export default defineEventHandler(async (event) => {
     email,
     roles,
   });
+
+  const existedCash = await prisma.fundAccount.findFirst({
+    where: {
+      userId: user.id,
+      OR: [
+        { name: { equals: "现金", mode: "insensitive" } },
+        { accountType: "现金" },
+      ],
+    },
+    select: { id: true },
+  });
+  if (!existedCash) {
+    await prisma.fundAccount.create({
+      data: {
+        userId: user.id,
+        name: "现金",
+        accountType: "现金",
+        currency: "CNY",
+        initialBalance: 0,
+        currentBalance: 0,
+        totalIncome: 0,
+        totalExpense: 0,
+        totalLiability: 0,
+        totalProfit: 0,
+        status: 1,
+        description: "系统默认现金账户",
+      },
+    });
+  }
+
   return success(user);
 });
