@@ -1,6 +1,6 @@
 import prisma from "~~/server/lib/prisma";
 import {
-  applyFlowAccountDelta,
+  recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
 } from "~~/server/utils/db";
 
@@ -63,19 +63,15 @@ export default defineEventHandler(async (event) => {
       money: flow.money,
       accountDelta: flow.accountDelta,
     });
-    const accountResult = await applyFlowAccountDelta(tx, {
-      userId,
-      accountId: flow.accountId,
-      delta,
-      flowDay: flow.day,
-    });
-    return tx.flow.create({
+    const row = await tx.flow.create({
       data: {
         ...flow,
         accountDelta: flow.accountId ? delta : null,
-        accountBal: flow.accountId ? accountResult.accountBal : null,
+        accountBal: null,
       },
     });
+    await recalcFundAccountFromFlows(flow.accountId ?? undefined, tx);
+    return row;
   });
   return success(created);
 });

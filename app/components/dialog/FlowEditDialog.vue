@@ -59,10 +59,10 @@
           :options="payTypeOptions"
         />
 
-        <!-- 资金账户 -->
+        <!-- 交易账户 -->
         <div>
           <label class="block text-sm font-semibold text-foreground/80 mb-1">
-            资金账户
+            交易账户
           </label>
           <select
             v-model="flowEdit.accountId"
@@ -74,7 +74,7 @@
               :key="acc.id"
               :value="acc.id"
             >
-              {{ acc.name }}（{{ acc.accountType }}）
+              {{ acc.name }}
             </option>
           </select>
         </div>

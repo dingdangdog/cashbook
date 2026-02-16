@@ -8,6 +8,8 @@ import {
 } from "./types";
 import {
   applyFlowAccountDelta,
+  normalizeFlowTypeLabel,
+  recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
 } from "./flow-account-balance";
 import {
@@ -122,7 +124,20 @@ export async function getFlowsPage(
 
 /** 创建 */
 export async function createFlow(data: Prisma.FlowCreateInput): Promise<Flow> {
-  return prisma.flow.create({ data });
+  const normalizedType =
+    typeof data.flowType === "string"
+      ? normalizeFlowTypeLabel(data.flowType)
+      : null;
+  const created = await prisma.flow.create({
+    data: {
+      ...data,
+      flowType:
+        normalizedType ??
+        (typeof data.flowType === "string" ? data.flowType : data.flowType),
+    },
+  });
+  await recalcFundAccountFromFlows(created.accountId ?? undefined);
+  return created;
 }
 
 /** 更新 */
@@ -130,12 +145,22 @@ export async function updateFlow(
   id: number,
   data: Prisma.FlowUpdateInput,
 ): Promise<Flow> {
-  return prisma.flow.update({ where: { id }, data });
+  const oldRow = await prisma.flow.findUnique({ where: { id } });
+  const updated = await prisma.flow.update({ where: { id }, data });
+  const oldAccountId = oldRow?.accountId ?? undefined;
+  const newAccountId = updated.accountId ?? undefined;
+  await recalcFundAccountFromFlows(oldAccountId);
+  if (newAccountId !== oldAccountId) {
+    await recalcFundAccountFromFlows(newAccountId);
+  }
+  return updated;
 }
 
 /** 删除 */
 export async function deleteFlow(id: number): Promise<Flow> {
-  return prisma.flow.delete({ where: { id } });
+  const deleted = await prisma.flow.delete({ where: { id } });
+  await recalcFundAccountFromFlows(deleted.accountId ?? undefined);
+  return deleted;
 }
 
 function genFlowNo(): string {
@@ -159,7 +184,7 @@ export async function createFlowByAI(
     accountType: string;
   } | null;
 }> {
-  const flowType = String(args.flowType ?? "支出");
+  const flowType = normalizeFlowTypeLabel(String(args.flowType ?? "支出")) ?? "支出";
   const industryType = String(args.industryType ?? "其他");
   const payType = String(args.payType ?? "未知");
   const money = Number(args.money ?? 0);
@@ -179,7 +204,11 @@ export async function createFlowByAI(
   }
 
   const normalizedMoney =
-    flowType === "支出" ? -Math.abs(money) : Math.abs(money);
+    flowType === "支出"
+      ? -Math.abs(money)
+      : flowType === "收入"
+        ? Math.abs(money)
+        : Number(money);
   let matchedAccount = null as Awaited<
     ReturnType<typeof resolveFundAccountByPayType>
   >;
@@ -225,7 +254,7 @@ export async function createFlowByAI(
         flowDay: day,
       },
     );
-    return tx.flow.create({
+    const row = await tx.flow.create({
       data: {
         flowNo: genFlowNo(),
         userId: ctx.userId,
@@ -243,6 +272,11 @@ export async function createFlowByAI(
         accountBal: accountResult.accountBal,
       },
     });
+    await recalcFundAccountFromFlows(
+      accountId,
+      tx as unknown as Prisma.TransactionClient,
+    );
+    return row;
   });
 
   return {

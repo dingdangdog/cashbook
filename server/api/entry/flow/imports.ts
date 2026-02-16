@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import prisma from "~~/server/lib/prisma";
 import {
-  applyFlowAccountDelta,
+  recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
 } from "~~/server/utils/db";
 
@@ -150,30 +150,25 @@ export default defineEventHandler(async (event) => {
   } else {
     const count = await prisma.$transaction(async (tx) => {
       let inserted = 0;
+      const accountIds = new Set<number>();
       for (const row of datas) {
         const delta = resolveFlowAccountDelta({
           flowType: row.flowType,
           money: Number(row.money || 0),
           accountDelta: row.accountDelta,
         });
-        let accountBal: number | null = null;
-        if (row.accountId) {
-          const result = await applyFlowAccountDelta(tx, {
-            userId,
-            accountId: row.accountId,
-            delta,
-            flowDay: row.day,
-          });
-          accountBal = result.accountBal;
-        }
         await tx.flow.create({
           data: {
             ...row,
             accountDelta: row.accountId ? delta : null,
-            accountBal: row.accountId ? accountBal : null,
+            accountBal: null,
           },
         });
+        if (row.accountId) accountIds.add(row.accountId);
         inserted++;
+      }
+      for (const accountId of accountIds) {
+        await recalcFundAccountFromFlows(accountId, tx);
       }
       return inserted;
     });

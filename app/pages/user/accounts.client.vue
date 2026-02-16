@@ -61,7 +61,7 @@
         <thead class="bg-surface-muted">
           <tr>
             <th class="px-3 py-2 text-left">名称</th>
-            <th class="px-3 py-2 text-left">类型</th>
+            <!-- <th class="px-3 py-2 text-left">类型</th> -->
             <th class="px-3 py-2 text-left">当前余额</th>
             <th class="px-3 py-2 text-left">累计流入</th>
             <th class="px-3 py-2 text-left">累计流出</th>
@@ -89,11 +89,11 @@
           >
             <td class="px-3 py-2">
               <div class="font-medium">{{ item.name }}</div>
-              <div class="text-xs text-foreground/60">
+              <!-- <div class="text-xs text-foreground/60">
                 {{ item.institution || "-" }} {{ item.accountNo || "" }}
-              </div>
+              </div> -->
             </td>
-            <td class="px-3 py-2">{{ item.accountType }}</td>
+            <!-- <td class="px-3 py-2">{{ item.accountType }}</td> -->
             <td class="px-3 py-2">{{ formatMoney(item.currentBalance || 0) }}</td>
             <td class="px-3 py-2">{{ formatMoney(item.totalIncome || 0) }}</td>
             <td class="px-3 py-2">{{ formatMoney(item.totalExpense || 0) }}</td>

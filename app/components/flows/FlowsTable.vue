@@ -32,25 +32,20 @@
             >
               支出/收入类型
             </th>
-            <th
+            <!-- <th
               class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
             >
               支付方式
-            </th>
+            </th> -->
             <th
               class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
             >
-              账户
+              交易账户
             </th>
             <th
               class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
             >
               金额
-            </th>
-            <th
-              class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
-            >
-              账户余额
             </th>
             <th
               class="px-2 py-1 text-left text-xs font-medium text-foreground/60 uppercase tracking-wider"
@@ -118,9 +113,9 @@
             <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.industryType }}
             </td>
-            <td class="px-2 py-1 whitespace-nowrap text-sm">
+            <!-- <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.payType }}
-            </td>
+            </td> -->
             <td class="px-2 py-1 whitespace-nowrap text-sm">
               {{ item.account?.name || "-" }}
             </td>
@@ -137,13 +132,6 @@
               >
                 {{ Number(item.money || 0).toFixed(2) }}
               </span>
-            </td>
-            <td class="px-2 py-1 whitespace-nowrap text-sm">
-              {{
-                item.accountBal !== undefined && item.accountBal !== null
-                  ? Number(item.accountBal).toFixed(2)
-                  : "-"
-              }}
             </td>
             <td class="px-2 py-1 text-sm max-w-32 truncate" :title="item.name">
               {{ item.name }}

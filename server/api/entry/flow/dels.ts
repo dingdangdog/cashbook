@@ -1,5 +1,5 @@
 import prisma from "~~/server/lib/prisma";
-import { applyFlowAccountDelta } from "~~/server/utils/db";
+import { recalcFundAccountFromFlows } from "~~/server/utils/db";
 
 /**
  * @swagger
@@ -47,22 +47,20 @@ export default defineEventHandler(async (event) => {
         userId,
       },
     });
+    const accountIds = new Set<number>();
     for (const row of rows) {
-      if (row.accountId && row.accountDelta) {
-        await applyFlowAccountDelta(tx, {
-          userId,
-          accountId: row.accountId,
-          delta: -Number(row.accountDelta),
-          flowDay: row.day,
-        });
-      }
+      if (row.accountId) accountIds.add(row.accountId);
     }
-    return tx.flow.deleteMany({
+    const result = await tx.flow.deleteMany({
       where: {
         id: { in: ids },
         userId,
       },
     });
+    for (const accountId of accountIds) {
+      await recalcFundAccountFromFlows(accountId, tx);
+    }
+    return result;
   });
   return success(deleted);
 });

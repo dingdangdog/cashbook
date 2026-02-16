@@ -1,6 +1,6 @@
 import prisma from "~~/server/lib/prisma";
 import {
-  applyFlowAccountDelta,
+  recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
 } from "~~/server/utils/db";
 
@@ -77,17 +77,7 @@ export default defineEventHandler(async (event) => {
       return null;
     }
 
-    const oldAccountId = oldRow.accountId;
-    const oldDelta = Number(oldRow.accountDelta || 0);
-    if (oldAccountId && oldDelta !== 0) {
-      await applyFlowAccountDelta(tx, {
-        userId,
-        accountId: oldAccountId,
-        delta: -oldDelta,
-        flowDay: oldRow.day,
-      });
-    }
-
+    const oldAccountId = oldRow.accountId ?? undefined;
     const nextAccountId =
       flow.accountId !== undefined ? flow.accountId : oldRow.accountId;
     const nextFlowType = flow.flowType ?? oldRow.flowType ?? "";
@@ -100,26 +90,22 @@ export default defineEventHandler(async (event) => {
       accountDelta: flow.accountDelta,
     });
 
-    let nextAccountBal: number | null = null;
-    if (nextAccountId) {
-      const accountResult = await applyFlowAccountDelta(tx, {
-        userId,
-        accountId: nextAccountId,
-        delta: nextDelta,
-        flowDay: nextDay,
-      });
-      nextAccountBal = accountResult.accountBal;
-    }
-
-    return tx.flow.update({
+    const updated = await tx.flow.update({
       where: { id: Number(body.id) },
       data: {
         ...flow,
         accountId: nextAccountId,
-        accountDelta: nextAccountId ? nextDelta : null,
-        accountBal: nextAccountId ? nextAccountBal : null,
+        accountDelta: nextAccountId != null ? nextDelta : null,
+        accountBal: null,
       },
     });
+
+    await recalcFundAccountFromFlows(oldAccountId, tx);
+    const newAccountId = updated.accountId ?? undefined;
+    if (newAccountId !== oldAccountId) {
+      await recalcFundAccountFromFlows(newAccountId, tx);
+    }
+    return updated;
   });
   if (!row) {
     return error("Not Find ID");

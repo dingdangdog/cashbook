@@ -2,16 +2,18 @@ import type { ChatCompletionMessageParam } from "openai/resources/chat/completio
 import { getAIClient } from "./client";
 import { getAIProviderConfig } from "./client";
 import { CHAT_TOOLS, executeTool } from "./tools";
+import { getFundAccountsAll } from "~~/server/utils/db";
 
-const SYSTEM_PROMPT = `你是个人记账助手的 AI，帮助用户完成：
-1. 对话式记账：用户说"今天午饭花了50"、"记一笔工资收入5000"等，你调用 add_flow 添加流水
-2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，你调用 query_flows 查询
-3. 对话式统计：用户问"本月花了多少"、"收入统计"等，你调用 get_statistics 获取数据
+const SYSTEM_PROMPT = `你是个人记账助手的AI，你的职责是分析用户意图，根据用户意图选择使用的工具，完成相关操作，目前支持的操作如下：
+
+1. 对话式记账（添加流水）：调用 add_flow
+2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，调用 query_flows
+3. 对话式统计：用户问"本月花了多少"、"收入统计"等，调用 get_statistics
 4. 资金账户管理：
-   - 新增单个账户：调用 add_fund_account
-   - 一次新增多个账户（如 微信、支付宝、若干银行卡/信用卡）：调用 batch_add_fund_accounts
-   - 查询账户与余额：调用 query_fund_accounts
-   - 手工校准账户余额：调用 update_fund_account_balance
+   - 新增单个资金账户：调用 add_fund_account
+   - 批量新增多个资金账户（如 微信、支付宝、若干银行卡/信用卡）：调用 batch_add_fund_accounts
+   - 查询资金账户与余额：调用 query_fund_accounts
+   - 手工校准资金账户余额：调用 update_fund_account_balance
 5. 预算管理：
    - 设置预算：调用 set_budget
    - 查询预算：调用 query_budgets
@@ -29,11 +31,6 @@ const SYSTEM_PROMPT = `你是个人记账助手的 AI，帮助用户完成：
 9. 固定流水模板：
    - 新增固定流水：调用 add_fixed_flow
    - 查询固定流水：调用 query_fixed_flows
-
-记账账户规则：
-- add_flow 时如果用户明确了账户（如“招行卡”“支付宝账户A”），优先在参数中提供 accountId 或 accountName
-- 若用户只说了支付方式（如微信/支付宝），可使用 payType 让系统自动匹配账户
-- 若无法判断具体账户，不要阻塞记账，系统会自动回退到该用户“现金”账户
 
 请根据用户意图选择合适的工具，用自然语言总结结果回复用户。若无法理解或缺少关键信息，礼貌地询问用户。`;
 
@@ -157,8 +154,12 @@ async function runWithToolCalls(opts: {
   const { userId, messages, maxToolRounds, client, config } = opts;
   const now = new Date();
   const latestUserText = getLatestUserText(messages);
+  const accountPrompt = await buildFundAccountsPrompt(userId);
   const fullMessages: ChatCompletionMessageParam[] = [
-    { role: "system", content: buildTimeAwareSystemPrompt(now) },
+    {
+      role: "system",
+      content: buildTimeAwareSystemPrompt(now, accountPrompt),
+    },
     ...messages,
   ];
   const executedToolCalls: Array<{
@@ -275,6 +276,7 @@ JSON 格式固定如下：
 要求：
 - 能调用工具就优先给 action，不要 name=none
 - 数字字段必须是 number
+- 记账时若能从“当前用户资金账户列表”定位到账户，优先填写 add_flow.args.accountId
 - 日期格式 YYYY-MM-DD，月份 YYYY-MM`;
 
 type JsonPlan = {
@@ -316,6 +318,7 @@ async function runWithJsonPlan(opts: {
   const { userId, messages, client, config } = opts;
   const now = new Date();
   const latestUserText = getLatestUserText(messages);
+  const accountPrompt = await buildFundAccountsPrompt(userId);
   if (!latestUserText) {
     throw new Error("json 方案未找到用户输入");
   }
@@ -324,7 +327,7 @@ async function runWithJsonPlan(opts: {
   const fullMessages: ChatCompletionMessageParam[] = [
     {
       role: "user",
-      content: `${JSON_PLAN_SYSTEM_PROMPT}\n\n当前服务器时间：${getNowContext(now)}\n请基于以下用户请求返回 JSON：\n${latestUserText}`,
+      content: `${JSON_PLAN_SYSTEM_PROMPT}\n\n当前服务器时间：${getNowContext(now)}\n${accountPrompt}\n请基于以下用户请求返回 JSON：\n${latestUserText}`,
     },
   ];
 
@@ -492,12 +495,24 @@ function isToolCallsUnsupportedError(e: unknown): boolean {
   );
 }
 
-function buildTimeAwareSystemPrompt(now: Date): string {
+function buildTimeAwareSystemPrompt(now: Date, accountPrompt: string): string {
   return `${SYSTEM_PROMPT}
 
 当前服务器时间：${getNowContext(now)}
 处理日期规则：
-- 用户说“今天/昨日/昨天/本月/上月/今年”时，请按当前服务器时间换算，不要猜测年份。`;
+- 用户说“今天/昨日/昨天/本月/上月/今年”时，请按当前服务器时间换算，不要猜测年份。
+
+${accountPrompt}`;
+}
+
+async function buildFundAccountsPrompt(userId: number): Promise<string> {
+  const all = await getFundAccountsAll({ userId });
+  const available = all.filter((x) => x.status !== -1);
+  if (available.length === 0) {
+    return "当前用户资金账户列表：暂无可用账户。";
+  }
+  const accountLines = available.map((x) => `- ${x.id}: ${x.name}`).join("\n");
+  return `当前用户资金账户列表（id: 名称）：\n${accountLines}`;
 }
 
 function getNowContext(now: Date): string {

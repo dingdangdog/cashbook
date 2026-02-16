@@ -1,6 +1,6 @@
 import prisma from "~~/server/lib/prisma";
 import {
-  applyFlowAccountDelta,
+  recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
 } from "~~/server/utils/db";
 
@@ -78,17 +78,9 @@ export default defineEventHandler(async (event) => {
       },
     });
 
+    const accountIds = new Set<number>();
     let count = 0;
     for (const row of rows) {
-      if (row.accountId && row.accountDelta) {
-        await applyFlowAccountDelta(tx, {
-          userId,
-          accountId: row.accountId,
-          delta: -Number(row.accountDelta),
-          flowDay: row.day,
-        });
-      }
-
       const targetAccountId =
         nextAccountId !== undefined ? nextAccountId : row.accountId;
       const targetFlowType = updateInfo.flowType ?? row.flowType;
@@ -98,29 +90,24 @@ export default defineEventHandler(async (event) => {
         accountDelta: hasAccountDeltaUpdate ? explicitAccountDelta : undefined,
       });
 
-      let targetAccountBal: number | null = null;
-      if (targetAccountId) {
-        const result = await applyFlowAccountDelta(tx, {
-          userId,
-          accountId: targetAccountId,
-          delta: targetDelta,
-          flowDay: row.day,
-        });
-        targetAccountBal = result.accountBal;
-      }
+      if (row.accountId) accountIds.add(row.accountId);
+      if (targetAccountId) accountIds.add(targetAccountId);
 
       await tx.flow.update({
         where: { id: row.id },
         data: {
           ...updateInfo,
           accountId: targetAccountId,
-          accountDelta: targetAccountId ? targetDelta : null,
-          accountBal: targetAccountId ? targetAccountBal : null,
+          accountDelta: targetAccountId != null ? targetDelta : null,
+          accountBal: null,
         },
       });
       count++;
     }
 
+    for (const accountId of accountIds) {
+      await recalcFundAccountFromFlows(accountId, tx);
+    }
     return { count };
   });
   return success(updated);

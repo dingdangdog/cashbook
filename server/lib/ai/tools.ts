@@ -41,25 +41,29 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
             type: "string",
             description: "行业/分类，如餐饮、交通、工资",
           },
-          payType: {
-            type: "string",
-            description: "支付/收款方式，如微信、支付宝",
-          },
           money: {
             type: "number",
             description: "金额，支出为正数传入，内部会按类型处理",
           },
           name: { type: "string", description: "条目名称/摘要" },
           day: { type: "string", description: "日期 YYYY-MM-DD，不传则今天" },
-          description: { type: "string", description: "备注" },
-          attribution: { type: "string", description: "流水归属" },
+          description: {
+            type: "string",
+            description: "备注：如果没有明确说明，则无需处理",
+          },
+          attribution: {
+            type: "string",
+            description: "流水归属：如“张三购买xxx商品”，则归属为“张三”",
+          },
           accountId: {
             type: "number",
-            description: "资金账户ID（可选，已知时优先使用）",
+            description:
+              "资金账户ID。规则：1) 用户明确说了账户（如招行卡、支付宝）时，从系统提供的「当前用户资金账户列表（id+名称）」中匹配对应 id 填入；2) 无法判断具体账户时，填入该用户「现金」账户的 id，不要阻塞记账。",
           },
           accountName: {
             type: "string",
-            description: "资金账户名称（可选，如 招商银行卡；其次于 accountId）",
+            description:
+              "资金账户名称（如招商银行卡）。根据 accountId 填写对应的 name。",
           },
         },
         required: ["flowType", "industryType", "payType", "money", "name"],
@@ -115,7 +119,7 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
     function: {
       name: "add_fund_account",
       description:
-        "添加一个资金账户（银行卡、信用卡、微信、支付宝、投资账户等）。当用户说新增账户时使用。",
+        "添加一个资金账户（银行卡、信用卡、微信、支付宝、投资账户等）。当用户说新增资金账户时使用。",
       parameters: {
         type: "object",
         properties: {
