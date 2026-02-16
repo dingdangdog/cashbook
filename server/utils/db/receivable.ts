@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -102,4 +103,60 @@ export async function updateReceivable(
 /** 删除 */
 export async function deleteReceivable(id: number): Promise<Receivable> {
   return prisma.receivable.delete({ where: { id } });
+}
+
+export async function addReceivableByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const name = String(args.name || "").trim();
+  const money = Number(args.money ?? 0);
+  if (!name) return { success: false, message: "name 不能为空" };
+  if (!Number.isFinite(money) || money <= 0) {
+    return { success: false, message: "money 必须大于0" };
+  }
+
+  const row = await createReceivable({
+    userId: ctx.userId,
+    name,
+    description: args.description ? String(args.description) : null,
+    occurDay: args.occurDay ? new Date(String(args.occurDay)) : new Date(),
+    money,
+    planType: args.planType != null ? Number(args.planType) : 0,
+    interestRate:
+      args.interestRate !== undefined ? Number(args.interestRate) : null,
+    termCount: args.termCount !== undefined ? Number(args.termCount) : null,
+    termAmount: args.termAmount !== undefined ? Number(args.termAmount) : null,
+    status: args.status != null ? Number(args.status) : 0,
+    occurFlowId:
+      args.occurFlowId !== undefined ? Number(args.occurFlowId) : null,
+  });
+  return { success: true, message: "应收已新增", receivable: row };
+}
+
+export async function queryReceivablesByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(50, Math.max(1, Number(args.pageSize) || 20));
+  const result = await getReceivablesPage(
+    {
+      userId: ctx.userId,
+      status:
+        args.status !== undefined && args.status !== null
+          ? Number(args.status)
+          : undefined,
+      nameContains: args.keyword ? String(args.keyword) : undefined,
+      occurDayStart: args.startDay ? String(args.startDay) : undefined,
+      occurDayEnd: args.endDay ? String(args.endDay) : undefined,
+    },
+    { pageNum, pageSize },
+  );
+  return {
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data,
+  };
 }

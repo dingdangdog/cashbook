@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -86,4 +87,49 @@ export async function updateFixedFlow(
 /** 删除 */
 export async function deleteFixedFlow(id: number): Promise<FixedFlow> {
   return prisma.fixedFlow.delete({ where: { id } });
+}
+
+export async function addFixedFlowByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const name = String(args.name || "").trim();
+  if (!name) return { success: false, message: "name 不能为空" };
+  const row = await createFixedFlow({
+    userId: ctx.userId,
+    month: args.month ? String(args.month) : null,
+    money: args.money !== undefined ? Number(args.money) : null,
+    name,
+    description: args.description ? String(args.description) : null,
+    flowType: args.flowType ? String(args.flowType) : null,
+    industryType: args.industryType ? String(args.industryType) : null,
+    payType: args.payType ? String(args.payType) : null,
+    attribution: args.attribution ? String(args.attribution) : null,
+  });
+  return { success: true, message: "固定流水模板已新增", fixedFlow: row };
+}
+
+export async function queryFixedFlowsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(100, Math.max(1, Number(args.pageSize) || 20));
+  const result = await getFixedFlowsPage(
+    {
+      userId: ctx.userId,
+      month: args.month ? String(args.month) : undefined,
+      flowType: args.flowType ? String(args.flowType) : undefined,
+      industryType: args.industryType ? String(args.industryType) : undefined,
+      payType: args.payType ? String(args.payType) : undefined,
+      nameContains: args.keyword ? String(args.keyword) : undefined,
+    },
+    { pageNum, pageSize },
+  );
+  return {
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data,
+  };
 }

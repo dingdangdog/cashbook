@@ -12,6 +12,23 @@ const SYSTEM_PROMPT = `你是个人记账助手的 AI，帮助用户完成：
    - 一次新增多个账户（如 微信、支付宝、若干银行卡/信用卡）：调用 batch_add_fund_accounts
    - 查询账户与余额：调用 query_fund_accounts
    - 手工校准账户余额：调用 update_fund_account_balance
+5. 预算管理：
+   - 设置预算：调用 set_budget
+   - 查询预算：调用 query_budgets
+6. 负债管理：
+   - 新增负债：调用 add_liability
+   - 查询负债：调用 query_liabilities
+7. 应收管理：
+   - 新增应收：调用 add_receivable
+   - 查询应收：调用 query_receivables
+8. 投资管理：
+   - 新增投资产品：调用 add_investment_product
+   - 查询投资产品：调用 query_investment_products
+   - 新增投资明细：调用 add_investment_detail
+   - 查询投资明细：调用 query_investment_details
+9. 固定流水模板：
+   - 新增固定流水：调用 add_fixed_flow
+   - 查询固定流水：调用 query_fixed_flows
 
 请根据用户意图选择合适的工具，用自然语言总结结果回复用户。若无法理解或缺少关键信息，礼貌地询问用户。`;
 
@@ -28,6 +45,8 @@ export interface ChatAgentResult {
   toolCalls?: Array<{ name: string; args: Record<string, unknown> }>;
   strategy?: "tool_calls" | "json";
 }
+
+const TOOL_CALLS_UNSUPPORTED_PROVIDERS = new Set<string>();
 
 /**
  * AI 对话代理：解析用户意图并调用工具执行
@@ -46,44 +65,52 @@ export async function runChatAgent(
     };
   }
 
+  const providerCacheKey = getProviderCacheKey(providerId);
+  const skipToolCalls = TOOL_CALLS_UNSUPPORTED_PROVIDERS.has(providerCacheKey);
   const latestUserText = getLatestUserText(messages);
   logAIExecution({
     event: "start",
     userId,
-    strategy: "tool_calls",
+    strategy: skipToolCalls ? "json" : "tool_calls",
     userText: latestUserText,
     detail: { maxToolRounds, providerId: providerId ?? null },
   });
 
   let toolCallsError: unknown = null;
-  try {
-    const result = await runWithToolCalls({
-      userId,
-      messages,
-      maxToolRounds,
-      client,
-      config,
-    });
-    if (result.content.trim()) {
-      logAIExecution({
-        event: "final_success",
+  if (!skipToolCalls) {
+    try {
+      const result = await runWithToolCalls({
         userId,
-        strategy: "tool_calls",
-        userText: latestUserText,
-        toolCalls: result.toolCalls,
+        messages,
+        maxToolRounds,
+        client,
+        config,
       });
-      return result;
+      if (result.content.trim()) {
+        logAIExecution({
+          event: "final_success",
+          userId,
+          strategy: "tool_calls",
+          userText: latestUserText,
+          toolCalls: result.toolCalls,
+        });
+        return result;
+      }
+      toolCallsError = new Error("tool_calls 方案返回空内容");
+    } catch (e) {
+      toolCallsError = e;
+      if (isToolCallsUnsupportedError(e)) {
+        TOOL_CALLS_UNSUPPORTED_PROVIDERS.add(providerCacheKey);
+      } else {
+        logAIExecution({
+          event: "strategy_failed",
+          userId,
+          strategy: "tool_calls",
+          userText: latestUserText,
+          detail: { error: errorToMessage(e) },
+        });
+      }
     }
-    toolCallsError = new Error("tool_calls 方案返回空内容");
-  } catch (e) {
-    toolCallsError = e;
-    logAIExecution({
-      event: "strategy_failed",
-      userId,
-      strategy: "tool_calls",
-      userText: latestUserText,
-      detail: { error: errorToMessage(e) },
-    });
   }
 
   try {
@@ -129,6 +156,10 @@ async function runWithToolCalls(opts: {
     { role: "system", content: buildTimeAwareSystemPrompt(now) },
     ...messages,
   ];
+  const executedToolCalls: Array<{
+    name: string;
+    args: Record<string, unknown>;
+  }> = [];
 
   let round = 0;
   let lastContent = "";
@@ -172,14 +203,7 @@ async function runWithToolCalls(opts: {
         latestUserText,
         now,
       );
-      logAIExecution({
-        event: "tool_execute",
-        userId,
-        strategy: "tool_calls",
-        userText: latestUserText,
-        toolCalls: [{ name, args: normalizedArgs }],
-        detail: { round },
-      });
+      executedToolCalls.push({ name, args: normalizedArgs });
       const output = await executeTool(name, normalizedArgs, { userId });
       fullMessages.push({
         role: "tool",
@@ -203,7 +227,11 @@ async function runWithToolCalls(opts: {
     lastContent = finalMsg?.content || lastContent || "操作已完成。";
   }
 
-  return { content: lastContent, strategy: "tool_calls" };
+  return {
+    content: lastContent,
+    strategy: "tool_calls",
+    toolCalls: executedToolCalls,
+  };
 }
 
 const JSON_PLAN_SYSTEM_PROMPT = `你是个人记账助手，请把用户诉求解析为 JSON 指令。
@@ -212,7 +240,7 @@ const JSON_PLAN_SYSTEM_PROMPT = `你是个人记账助手，请把用户诉求�
 JSON 格式固定如下：
 {
   "action": {
-    "name": "add_flow" | "query_flows" | "get_statistics" | "add_fund_account" | "batch_add_fund_accounts" | "query_fund_accounts" | "update_fund_account_balance" | "none",
+    "name": "add_flow" | "query_flows" | "get_statistics" | "add_fund_account" | "batch_add_fund_accounts" | "query_fund_accounts" | "update_fund_account_balance" | "set_budget" | "query_budgets" | "add_liability" | "query_liabilities" | "add_receivable" | "query_receivables" | "add_investment_product" | "query_investment_products" | "add_investment_detail" | "query_investment_details" | "add_fixed_flow" | "query_fixed_flows" | "none",
     "args": { ... }
   },
   "reply": "给用户的自然语言回复（当 name=none 时必须有）"
@@ -226,6 +254,18 @@ JSON 格式固定如下：
 - batch_add_fund_accounts.args: { accountNames: string[], defaultCurrency? }
 - query_fund_accounts.args: { keyword?, status?, accountType?, pageNum?, pageSize? }
 - update_fund_account_balance.args: { id? 或 name?, currentBalance, totalLiability?, totalProfit?, description? }
+- set_budget.args: { month, budget, used? }
+- query_budgets.args: { month?, pageNum?, pageSize? }
+- add_liability.args: { name, money, occurDay?, description?, planType?, interestRate?, termCount?, termAmount?, status? }
+- query_liabilities.args: { keyword?, status?, startDay?, endDay?, pageNum?, pageSize? }
+- add_receivable.args: { name, money, occurDay?, description?, planType?, interestRate?, termCount?, termAmount?, status? }
+- query_receivables.args: { keyword?, status?, startDay?, endDay?, pageNum?, pageSize? }
+- add_investment_product.args: { productName, productType?, totalInvested?, totalReturn?, currentValue?, status? }
+- query_investment_products.args: { keyword?, productType?, status?, pageNum?, pageSize? }
+- add_investment_detail.args: { productId, tradeType, tradeDay?, amount, quantity?, price?, fee?, description? }
+- query_investment_details.args: { productId?, tradeType?, startDay?, endDay?, pageNum?, pageSize? }
+- add_fixed_flow.args: { month?, money?, name, description?, flowType?, industryType?, payType?, attribution? }
+- query_fixed_flows.args: { month?, flowType?, industryType?, payType?, keyword?, pageNum?, pageSize? }
 
 要求：
 - 能调用工具就优先给 action，不要 name=none
@@ -239,6 +279,28 @@ type JsonPlan = {
   };
   reply?: string;
 };
+
+const JSON_SUPPORTED_ACTIONS = new Set([
+  "add_flow",
+  "query_flows",
+  "get_statistics",
+  "add_fund_account",
+  "batch_add_fund_accounts",
+  "query_fund_accounts",
+  "update_fund_account_balance",
+  "set_budget",
+  "query_budgets",
+  "add_liability",
+  "query_liabilities",
+  "add_receivable",
+  "query_receivables",
+  "add_investment_product",
+  "query_investment_products",
+  "add_investment_detail",
+  "query_investment_details",
+  "add_fixed_flow",
+  "query_fixed_flows",
+]);
 
 async function runWithJsonPlan(opts: {
   userId: number;
@@ -275,28 +337,13 @@ async function runWithJsonPlan(opts: {
   const parsed = parseJsonPlan(raw);
   const actionName = parsed.action?.name;
   const args = parsed.action?.args ?? {};
-  if (
-    actionName === "add_flow" ||
-    actionName === "query_flows" ||
-    actionName === "get_statistics" ||
-    actionName === "add_fund_account" ||
-    actionName === "batch_add_fund_accounts" ||
-    actionName === "query_fund_accounts" ||
-    actionName === "update_fund_account_balance"
-  ) {
+  if (actionName && JSON_SUPPORTED_ACTIONS.has(actionName)) {
     const normalizedArgs = applyTemporalHints(
       actionName,
       args,
       latestUserText,
       now,
     );
-    logAIExecution({
-      event: "tool_execute",
-      userId,
-      strategy: "json",
-      userText: latestUserText,
-      toolCalls: [{ name: actionName, args: normalizedArgs }],
-    });
     const toolOutput = await executeTool(actionName, normalizedArgs, {
       userId,
     });
@@ -425,6 +472,19 @@ function errorToMessage(e: unknown): string {
   if (e instanceof Error) return e.message;
   if (typeof e === "string") return e;
   return String(e ?? "未知错误");
+}
+
+function getProviderCacheKey(providerId?: string | null): string {
+  return providerId ? `id:${providerId}` : "__default__";
+}
+
+function isToolCallsUnsupportedError(e: unknown): boolean {
+  const msg = errorToMessage(e);
+  return (
+    msg.includes('auto" tool choice requires') ||
+    msg.includes("--enable-auto-tool-choice") ||
+    msg.includes("--tool-call-parser")
+  );
 }
 
 function buildTimeAwareSystemPrompt(now: Date): string {

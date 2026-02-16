@@ -7,14 +7,10 @@ import {
   calcTotalPages,
 } from "./types";
 
-type FundAccount =
-  Awaited<
-    ReturnType<typeof prisma.fundAccount.findUnique>
-  > extends infer T
-    ? T extends null
-      ? never
-      : T
-    : never;
+type FundAccount = Prisma.FundAccountGetPayload<Record<string, never>>;
+export interface AIToolContext {
+  userId: number;
+}
 
 /** FundAccount 查询条件 */
 export interface FundAccountQueryWhere {
@@ -90,6 +86,74 @@ export async function getFundAccountByName(
   });
 }
 
+function splitAccountKeywords(input: string): string[] {
+  return Array.from(
+    new Set(
+      String(input || "")
+        .split(/[\/、,，\s]+/)
+        .map((x) => x.trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
+function buildAccountAliases(input: string): string[] {
+  const base = splitAccountKeywords(input);
+  const normalized = base
+    .map((x) => normalizeFundAccountType(x))
+    .filter((x) => x && x !== "其他");
+  return Array.from(new Set([...base, ...normalized]));
+}
+
+/**
+ * 按记账支付方式智能匹配资金账户（名称优先，其次类型与模糊匹配）
+ */
+export async function resolveFundAccountByPayType(
+  userId: number,
+  payType?: string | null,
+): Promise<FundAccount | null> {
+  const text = String(payType || "").trim();
+  if (!text) return null;
+
+  const aliases = buildAccountAliases(text);
+  if (aliases.length === 0) return null;
+
+  const exactByName = await prisma.fundAccount.findFirst({
+    where: {
+      userId,
+      status: { not: -1 },
+      OR: aliases.map((name) => ({
+        name: { equals: name, mode: "insensitive" as const },
+      })),
+    },
+    orderBy: [{ sortBy: "asc" }, { id: "desc" }],
+  });
+  if (exactByName) return exactByName;
+
+  const exactByType = await prisma.fundAccount.findFirst({
+    where: {
+      userId,
+      status: { not: -1 },
+      OR: aliases.map((accountType) => ({ accountType })),
+    },
+    orderBy: [{ sortBy: "asc" }, { id: "desc" }],
+  });
+  if (exactByType) return exactByType;
+
+  const fuzzy = await prisma.fundAccount.findFirst({
+    where: {
+      userId,
+      status: { not: -1 },
+      OR: aliases.flatMap((keyword) => [
+        { name: { contains: keyword, mode: "insensitive" as const } },
+        { institution: { contains: keyword, mode: "insensitive" as const } },
+      ]),
+    },
+    orderBy: [{ sortBy: "asc" }, { id: "desc" }],
+  });
+  return fuzzy;
+}
+
 /** 分页查询 */
 export async function getFundAccountsPage(
   whereInput: FundAccountQueryWhere = {},
@@ -157,7 +221,7 @@ export async function createFundAccountsBatch(input: {
     where: {
       userId,
       OR: normalizedNames.map((name) => ({
-        name: { equals: name, mode: "insensitive" },
+        name: { equals: name, mode: "insensitive" as const },
       })),
     },
     select: { name: true },
@@ -193,6 +257,176 @@ export async function createFundAccountsBatch(input: {
   }
 
   return { created, skipped };
+}
+
+export async function addFundAccountByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<{
+  success: boolean;
+  message: string;
+  account?: FundAccount;
+  skipped?: boolean;
+}> {
+  const name = String(args.name || "").trim();
+  if (!name) {
+    return { success: false, message: "账户名称不能为空" };
+  }
+
+  const existed = await getFundAccountByName(ctx.userId, name);
+  if (existed) {
+    return {
+      success: true,
+      message: "账户已存在，已跳过创建",
+      account: existed,
+      skipped: true,
+    };
+  }
+
+  const accountType = normalizeFundAccountType(String(args.accountType ?? name));
+  const initialBalance = Number(args.initialBalance ?? 0);
+  const currentBalance =
+    args.currentBalance != null ? Number(args.currentBalance) : initialBalance;
+  const status = args.status != null ? Number(args.status) : 1;
+
+  const created = await createFundAccount({
+    userId: ctx.userId,
+    name,
+    accountType,
+    institution: args.institution ? String(args.institution) : null,
+    accountNo: args.accountNo ? String(args.accountNo) : null,
+    currency: "CNY",
+    initialBalance,
+    currentBalance,
+    totalIncome: 0,
+    totalExpense: 0,
+    totalLiability: 0,
+    totalProfit: 0,
+    status,
+    description: args.description ? String(args.description) : null,
+  });
+
+  return {
+    success: true,
+    message: "账户创建成功",
+    account: created,
+  };
+}
+
+export async function updateFundAccountBalanceByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<{
+  success: boolean;
+  message: string;
+  account?: FundAccount;
+}> {
+  const currentBalance = Number(args.currentBalance);
+  if (!Number.isFinite(currentBalance)) {
+    return { success: false, message: "currentBalance 必须为数字" };
+  }
+
+  let account: FundAccount | null = null;
+  if (args.id != null) {
+    const id = Number(args.id);
+    if (Number.isFinite(id)) {
+      const found = await getFundAccountById(id);
+      if (found && found.userId === ctx.userId) {
+        account = found;
+      }
+    }
+  }
+  if (!account && args.name) {
+    account = await getFundAccountByName(ctx.userId, String(args.name));
+  }
+  if (!account) {
+    return { success: false, message: "未找到对应资金账户" };
+  }
+
+  const updated = await updateFundAccount(account.id, {
+    currentBalance,
+    ...(args.totalLiability !== undefined &&
+      args.totalLiability !== null && {
+        totalLiability: Number(args.totalLiability),
+      }),
+    ...(args.totalProfit !== undefined &&
+      args.totalProfit !== null && { totalProfit: Number(args.totalProfit) }),
+    ...(args.description !== undefined && {
+      description: String(args.description || ""),
+    }),
+  });
+
+  return {
+    success: true,
+    message: "账户余额更新成功",
+    account: updated,
+  };
+}
+
+export async function batchAddFundAccountsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const list = Array.isArray(args.accountNames) ? args.accountNames : [];
+  const names = list.map((x) => String(x || "").trim()).filter(Boolean);
+  if (names.length === 0) {
+    return { success: false, message: "accountNames 不能为空" };
+  }
+
+  const result = await createFundAccountsBatch({
+    userId: ctx.userId,
+    names,
+    defaultCurrency: args.defaultCurrency ? String(args.defaultCurrency) : "CNY",
+  });
+
+  return {
+    success: true,
+    message: `批量创建完成，成功 ${result.created.length} 个，跳过 ${result.skipped.length} 个`,
+    created: result.created.map((x) => ({
+      id: x.id,
+      name: x.name,
+      accountType: x.accountType,
+      currentBalance: x.currentBalance,
+    })),
+    skipped: result.skipped,
+  };
+}
+
+export async function queryFundAccountsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(100, Math.max(1, Number(args.pageSize) || 20));
+
+  const result = await getFundAccountsPage(
+    {
+      userId: ctx.userId,
+      keyword: args.keyword ? String(args.keyword) : undefined,
+      status:
+        args.status !== undefined && args.status !== null
+          ? Number(args.status)
+          : undefined,
+      accountType: args.accountType ? String(args.accountType) : undefined,
+    },
+    { pageNum, pageSize },
+  );
+
+  return {
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data.map((x) => ({
+      id: x.id,
+      name: x.name,
+      accountType: x.accountType,
+      currentBalance: x.currentBalance,
+      totalIncome: x.totalIncome,
+      totalExpense: x.totalExpense,
+      totalLiability: x.totalLiability,
+      status: x.status,
+    })),
+  };
 }
 
 /** 更新 */

@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -93,4 +94,50 @@ export async function deleteInvestmentProduct(
   id: number,
 ): Promise<InvestmentProduct> {
   return prisma.investmentProduct.delete({ where: { id } });
+}
+
+export async function addInvestmentProductByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const productName = String(args.productName || "").trim();
+  if (!productName) return { success: false, message: "productName 不能为空" };
+  const row = await createInvestmentProduct({
+    userId: ctx.userId,
+    productName,
+    productType: args.productType ? String(args.productType) : null,
+    totalInvested:
+      args.totalInvested !== undefined ? Number(args.totalInvested) : 0,
+    totalReturn: args.totalReturn !== undefined ? Number(args.totalReturn) : 0,
+    currentValue:
+      args.currentValue !== undefined ? Number(args.currentValue) : null,
+    status: args.status != null ? Number(args.status) : 0,
+  });
+  return { success: true, message: "投资产品已新增", product: row };
+}
+
+export async function queryInvestmentProductsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(50, Math.max(1, Number(args.pageSize) || 20));
+  const result = await getInvestmentProductsPage(
+    {
+      userId: ctx.userId,
+      productType: args.productType ? String(args.productType) : undefined,
+      status:
+        args.status !== undefined && args.status !== null
+          ? Number(args.status)
+          : undefined,
+      productNameContains: args.keyword ? String(args.keyword) : undefined,
+    },
+    { pageNum, pageSize },
+  );
+  return {
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data,
+  };
 }

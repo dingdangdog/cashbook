@@ -4,6 +4,11 @@ export interface PaginationParams {
   pageSize?: number;
 }
 
+/** AI 工具上下文 */
+export interface AIToolContext {
+  userId: number;
+}
+
 /** 分页结果 */
 export interface PaginationResult<T> {
   total: number;

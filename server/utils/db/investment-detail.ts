@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -108,4 +109,60 @@ export async function deleteInvestmentDetail(
   id: number,
 ): Promise<InvestmentDetail> {
   return prisma.investmentDetail.delete({ where: { id } });
+}
+
+export async function addInvestmentDetailByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const productId = Number(args.productId);
+  const tradeType = String(args.tradeType || "").trim();
+  const amount = Number(args.amount ?? 0);
+  if (!Number.isFinite(productId) || productId <= 0) {
+    return { success: false, message: "productId 无效" };
+  }
+  if (!tradeType) return { success: false, message: "tradeType 不能为空" };
+  if (!Number.isFinite(amount) || amount === 0) {
+    return { success: false, message: "amount 不能为0" };
+  }
+  const row = await createInvestmentDetail({
+    userId: ctx.userId,
+    productId,
+    tradeType,
+    tradeDay: args.tradeDay ? new Date(String(args.tradeDay)) : new Date(),
+    amount,
+    quantity: args.quantity !== undefined ? Number(args.quantity) : null,
+    price: args.price !== undefined ? Number(args.price) : null,
+    fee: args.fee !== undefined ? Number(args.fee) : 0,
+    description: args.description ? String(args.description) : null,
+    flowId: args.flowId !== undefined ? Number(args.flowId) : null,
+  });
+  return { success: true, message: "投资明细已新增", detail: row };
+}
+
+export async function queryInvestmentDetailsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(100, Math.max(1, Number(args.pageSize) || 20));
+  const result = await getInvestmentDetailsPage(
+    {
+      userId: ctx.userId,
+      productId:
+        args.productId !== undefined && args.productId !== null
+          ? Number(args.productId)
+          : undefined,
+      tradeType: args.tradeType ? String(args.tradeType) : undefined,
+      tradeDayStart: args.startDay ? String(args.startDay) : undefined,
+      tradeDayEnd: args.endDay ? String(args.endDay) : undefined,
+    },
+    { pageNum, pageSize },
+  );
+  return {
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data,
+  };
 }

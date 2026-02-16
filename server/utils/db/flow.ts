@@ -6,13 +6,13 @@ import {
   buildPagination,
   calcTotalPages,
 } from "./types";
+import {
+  applyFlowAccountDelta,
+  resolveFlowAccountDelta,
+} from "./flow-account-balance";
+import { resolveFundAccountByPayType } from "./fund-account";
 
-type Flow =
-  Awaited<ReturnType<typeof prisma.flow.findUnique>> extends infer T
-    ? T extends null
-      ? never
-      : T
-    : never;
+type Flow = Prisma.FlowGetPayload<Record<string, never>>;
 
 /** Flow 查询条件 */
 export interface FlowQueryWhere {
@@ -93,7 +93,10 @@ export async function getFlowById(id: number): Promise<Flow | null> {
 export async function getFlowsPage(
   whereInput: FlowQueryWhere = {},
   pagination: PaginationParams = {},
-  orderBy: [{ day: "desc" }, { id: "desc" }],
+  orderBy: Prisma.FlowOrderByWithRelationInput[] = [
+    { day: "desc" },
+    { id: "desc" },
+  ],
 ): Promise<PaginationResult<Flow>> {
   const where = buildFlowWhere(whereInput);
   const { skip, take, pageNum, pageSize } = buildPagination(pagination);
@@ -128,4 +131,208 @@ export async function updateFlow(
 /** 删除 */
 export async function deleteFlow(id: number): Promise<Flow> {
   return prisma.flow.delete({ where: { id } });
+}
+
+function genFlowNo(): string {
+  return `F${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+}
+
+export interface AIToolContext {
+  userId: number;
+}
+
+export async function createFlowByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<{
+  success: boolean;
+  message: string;
+  flow?: Flow;
+  matchedFundAccount?: {
+    id: number;
+    name: string;
+    accountType: string;
+  } | null;
+}> {
+  const flowType = String(args.flowType ?? "支出");
+  const industryType = String(args.industryType ?? "其他");
+  const payType = String(args.payType ?? "未知");
+  const money = Number(args.money ?? 0);
+  const name = String(args.name ?? "");
+  const day = args.day ? new Date(String(args.day)) : new Date();
+  const description = args.description ? String(args.description) : null;
+  const attribution = args.attribution ? String(args.attribution) : null;
+  if (Number.isNaN(money)) {
+    return { success: false, message: "金额不能为空" };
+  }
+
+  const normalizedMoney =
+    flowType === "支出" ? -Math.abs(money) : Math.abs(money);
+  const matchedAccount = await resolveFundAccountByPayType(ctx.userId, payType);
+  const accountId = matchedAccount?.id ?? null;
+
+  const created = await prisma.$transaction(async (tx) => {
+    const delta = resolveFlowAccountDelta({
+      flowType,
+      money: normalizedMoney,
+      accountDelta: null,
+    });
+    const accountResult = await applyFlowAccountDelta(
+      tx as unknown as Prisma.TransactionClient,
+      {
+        userId: ctx.userId,
+        accountId,
+        delta,
+        flowDay: day,
+      },
+    );
+    return tx.flow.create({
+      data: {
+        flowNo: genFlowNo(),
+        userId: ctx.userId,
+        day,
+        flowType,
+        industryType,
+        payType,
+        money: normalizedMoney,
+        name,
+        description,
+        attribution,
+        origin: "AI对话记账",
+        accountId,
+        accountDelta: accountId ? delta : null,
+        accountBal: accountId ? accountResult.accountBal : null,
+      },
+    });
+  });
+
+  return {
+    success: true,
+    message: "记账成功",
+    flow: created,
+    matchedFundAccount: matchedAccount
+      ? {
+          id: matchedAccount.id,
+          name: matchedAccount.name,
+          accountType: matchedAccount.accountType,
+        }
+      : null,
+  };
+}
+
+export async function queryFlowsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<{
+  total: number;
+  pageNum: number;
+  pageSize: number;
+  data: Array<{
+    id: number;
+    day: Date;
+    flowType: string | null;
+    industryType: string | null;
+    payType: string | null;
+    money: number | null;
+    name: string | null;
+    description: string | null;
+  }>;
+}> {
+  const whereInput: FlowQueryWhere = { userId: ctx.userId };
+  if (args.flowType) whereInput.flowType = String(args.flowType);
+  if (args.industryType) whereInput.industryType = String(args.industryType);
+  if (args.payType) whereInput.payType = String(args.payType);
+  if (args.name) whereInput.name = String(args.name);
+  if (args.startDay) whereInput.startDay = String(args.startDay);
+  if (args.endDay) whereInput.endDay = String(args.endDay);
+
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(50, Math.max(1, Number(args.pageSize) || 15));
+  const result = await getFlowsPage(whereInput, { pageNum, pageSize });
+
+  return {
+    total: result.total,
+    pageNum: result.pageNum,
+    pageSize: result.pageSize,
+    data: result.data.map((f) => ({
+      id: f.id,
+      day: f.day,
+      flowType: f.flowType,
+      industryType: f.industryType,
+      payType: f.payType,
+      money: f.money,
+      name: f.name,
+      description: f.description,
+    })),
+  };
+}
+
+export async function getFlowStatisticsByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<{
+  period: { start: Date; end: Date };
+  summary: Record<string, number>;
+  byCategory: Record<string, Record<string, number>>;
+}> {
+  let start: Date;
+  let end: Date;
+  const month = args.month ? String(args.month) : null;
+  if (month && /^\d{4}-\d{2}$/.test(month)) {
+    start = new Date(`${month}-01`);
+    const next = new Date(start);
+    next.setMonth(next.getMonth() + 1);
+    end = new Date(next.getTime() - 1);
+  } else if (args.startDay && args.endDay) {
+    start = new Date(String(args.startDay));
+    end = new Date(String(args.endDay));
+  } else {
+    const now = new Date();
+    start = new Date(now.getFullYear(), now.getMonth(), 1);
+    end = new Date();
+  }
+
+  const where: Prisma.FlowWhereInput = {
+    userId: ctx.userId,
+    day: { gte: start, lte: end },
+  };
+
+  const [sumByType, byIndustry] = (await Promise.all([
+    prisma.flow.groupBy({
+      by: ["flowType"],
+      where,
+      _sum: { money: true },
+      _count: true,
+    }),
+    prisma.flow.groupBy({
+      by: ["flowType", "industryType"],
+      where,
+      _sum: { money: true },
+    }),
+  ])) as [
+    Array<{ flowType: string | null; _sum: { money: number | null } }>,
+    Array<{
+      flowType: string | null;
+      industryType: string | null;
+      _sum: { money: number | null };
+    }>,
+  ];
+
+  const summary: Record<string, number> = {};
+  sumByType.forEach((r) => {
+    summary[r.flowType || "未知"] = r._sum.money ?? 0;
+  });
+
+  const byCategory: Record<string, Record<string, number>> = {};
+  byIndustry.forEach((r) => {
+    const ft = r.flowType || "未知";
+    if (!byCategory[ft]) byCategory[ft] = {};
+    byCategory[ft][r.industryType || "其他"] = r._sum.money ?? 0;
+  });
+
+  return {
+    period: { start, end },
+    summary,
+    byCategory,
+  };
 }
