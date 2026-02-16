@@ -11,6 +11,7 @@ import {
   ChevronLeftIcon,
   ArrowDownIcon,
   PencilSquareIcon,
+  ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 import MarkdownIt from "markdown-it";
 import UiComboInput from "~/components/ui/ComboInput.vue";
@@ -284,6 +285,41 @@ const sendMessage = async () => {
   }
 };
 
+/** 点击历史用户消息重试：用该条内容重新请求并追加回复 */
+const retryWithMessage = async (content: string) => {
+  if (!content?.trim() || sending.value) return;
+  sending.value = true;
+  scrollToBottom();
+  try {
+    const res = await doApi.post<{
+      content: string;
+      sessionId: number;
+    }>("api/entry/ai/chat", {
+      sessionId: currentSessionId.value ?? undefined,
+      content: content.trim(),
+      providerId: selectedProviderId.value ?? undefined,
+    });
+    if (res?.sessionId != null) {
+      currentSessionId.value = res.sessionId;
+      await loadSessions();
+      await loadMessages(res.sessionId);
+    } else {
+      const assistantMsg: ChatMessage = {
+        id: 0,
+        role: "assistant",
+        content: res?.content ?? "无回复",
+        createdAt: new Date().toISOString(),
+      };
+      messages.value = [...messages.value, assistantMsg];
+      scrollToBottom();
+    }
+  } catch {
+    Alert.error("发送失败");
+  } finally {
+    sending.value = false;
+  }
+};
+
 const currentSessionTitle = computed(
   () =>
     sessions.value.find((s) => s.id === currentSessionId.value)?.title ||
@@ -478,7 +514,7 @@ watch(
                     class="max-w-[82%] rounded-2xl px-4 py-2.5 text-[15px] leading-snug"
                     :class="
                       msg.role === 'user'
-                        ? 'rounded-br-md bg-primary-500 text-white'
+                        ? 'group rounded-br-md bg-primary-500 text-white'
                         : 'rounded-bl-md bg-surface-muted text-foreground'
                     "
                   >
@@ -487,9 +523,24 @@ watch(
                       class="jimi-markdown break-words"
                       v-html="renderAssistantMarkdown(msg.content)"
                     />
-                    <div v-else class="whitespace-pre-wrap break-words">
-                      {{ msg.content }}
-                    </div>
+                    <template v-else>
+                      <div class="whitespace-pre-wrap break-words">
+                        {{ msg.content }}
+                      </div>
+                      <div
+                        class="mt-2 flex justify-end border-t border-white/20 pt-1.5"
+                      >
+                        <button
+                          type="button"
+                          class="flex items-center gap-1 rounded-md px-2 py-0.5 text-xs opacity-80 transition hover:bg-white/20 hover:opacity-100 active:opacity-90"
+                          :disabled="sending"
+                          @click.stop="retryWithMessage(msg.content)"
+                        >
+                          <ArrowPathIcon class="h-3.5 w-3.5" />
+                          重试
+                        </button>
+                      </div>
+                    </template>
                   </div>
                 </div>
               </template>
@@ -699,7 +750,7 @@ watch(
                 class="max-w-[85%] rounded-lg px-3 py-2 text-sm"
                 :class="
                   msg.role === 'user'
-                    ? 'bg-primary-500 text-white'
+                    ? 'group bg-primary-500 text-white'
                     : 'bg-surface-muted text-foreground'
                 "
               >
@@ -708,9 +759,25 @@ watch(
                   class="jimi-markdown break-words"
                   v-html="renderAssistantMarkdown(msg.content)"
                 />
-                <div v-else class="whitespace-pre-wrap break-words">
-                  {{ msg.content }}
-                </div>
+                <template v-else>
+                  <div class="whitespace-pre-wrap break-words">
+                    {{ msg.content }}
+                  </div>
+                  <div
+                    class="mt-1.5 flex justify-end border-t border-white/20 pt-1"
+                  >
+                    <button
+                      type="button"
+                      class="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs opacity-70 transition hover:bg-white/20 hover:opacity-100"
+                      :disabled="sending"
+                      title="用此内容重新发送"
+                      @click.stop="retryWithMessage(msg.content)"
+                    >
+                      <ArrowPathIcon class="h-3 w-3" />
+                      重试
+                    </button>
+                  </div>
+                </template>
               </div>
             </div>
           </template>
