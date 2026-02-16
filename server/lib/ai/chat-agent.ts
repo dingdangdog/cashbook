@@ -7,6 +7,11 @@ const SYSTEM_PROMPT = `你是个人记账助手的 AI，帮助用户完成：
 1. 对话式记账：用户说"今天午饭花了50"、"记一笔工资收入5000"等，你调用 add_flow 添加流水
 2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，你调用 query_flows 查询
 3. 对话式统计：用户问"本月花了多少"、"收入统计"等，你调用 get_statistics 获取数据
+4. 资金账户管理：
+   - 新增单个账户：调用 add_fund_account
+   - 一次新增多个账户（如 微信、支付宝、若干银行卡/信用卡）：调用 batch_add_fund_accounts
+   - 查询账户与余额：调用 query_fund_accounts
+   - 手工校准账户余额：调用 update_fund_account_balance
 
 请根据用户意图选择合适的工具，用自然语言总结结果回复用户。若无法理解或缺少关键信息，礼貌地询问用户。`;
 
@@ -207,7 +212,7 @@ const JSON_PLAN_SYSTEM_PROMPT = `你是个人记账助手，请把用户诉求�
 JSON 格式固定如下：
 {
   "action": {
-    "name": "add_flow" | "query_flows" | "get_statistics" | "none",
+    "name": "add_flow" | "query_flows" | "get_statistics" | "add_fund_account" | "batch_add_fund_accounts" | "query_fund_accounts" | "update_fund_account_balance" | "none",
     "args": { ... }
   },
   "reply": "给用户的自然语言回复（当 name=none 时必须有）"
@@ -217,6 +222,10 @@ JSON 格式固定如下：
 - add_flow.args: { flowType, industryType, payType, money, name, day?, description?, attribution? }
 - query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, pageNum?, pageSize? }
 - get_statistics.args: { month? 或 startDay+endDay }
+- add_fund_account.args: { name, accountType?, institution?, accountNo?, initialBalance?, currentBalance?, status?, description? }
+- batch_add_fund_accounts.args: { accountNames: string[], defaultCurrency? }
+- query_fund_accounts.args: { keyword?, status?, accountType?, pageNum?, pageSize? }
+- update_fund_account_balance.args: { id? 或 name?, currentBalance, totalLiability?, totalProfit?, description? }
 
 要求：
 - 能调用工具就优先给 action，不要 name=none
@@ -269,7 +278,11 @@ async function runWithJsonPlan(opts: {
   if (
     actionName === "add_flow" ||
     actionName === "query_flows" ||
-    actionName === "get_statistics"
+    actionName === "get_statistics" ||
+    actionName === "add_fund_account" ||
+    actionName === "batch_add_fund_accounts" ||
+    actionName === "query_fund_accounts" ||
+    actionName === "update_fund_account_balance"
   ) {
     const normalizedArgs = applyTemporalHints(
       actionName,
@@ -363,6 +376,9 @@ async function summarizeToolResult(opts: {
       total?: number;
       summary?: Record<string, number>;
       flow?: { name?: string; money?: number };
+      account?: { name?: string; currentBalance?: number };
+      created?: Array<{ name?: string }>;
+      skipped?: string[];
     };
     if (toolName === "add_flow" && parsed.success) {
       return `已记账：${parsed.flow?.name || "未命名"} ${Math.abs(Number(parsed.flow?.money ?? 0))} 元。`;
@@ -372,6 +388,18 @@ async function summarizeToolResult(opts: {
     }
     if (toolName === "get_statistics") {
       return `统计完成：${JSON.stringify(parsed.summary ?? {})}`;
+    }
+    if (toolName === "query_fund_accounts") {
+      return `账户查询完成，共 ${parsed.total ?? 0} 个。`;
+    }
+    if (toolName === "add_fund_account" && parsed.success) {
+      return `资金账户已处理：${parsed.account?.name || "未命名账户"}。`;
+    }
+    if (toolName === "batch_add_fund_accounts" && parsed.success) {
+      return `资金账户批量处理完成：新增 ${parsed.created?.length ?? 0} 个，跳过 ${parsed.skipped?.length ?? 0} 个。`;
+    }
+    if (toolName === "update_fund_account_balance" && parsed.success) {
+      return `账户余额更新成功：${parsed.account?.name || "账户"} 当前余额 ${Number(parsed.account?.currentBalance ?? 0)}。`;
     }
     return parsed.message || "操作已完成。";
   } catch {

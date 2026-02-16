@@ -462,7 +462,9 @@ watch(
               class="flex flex-col items-center justify-center gap-4 py-12 text-center text-foreground/60"
             >
               <ChatBubbleLeftRightIcon class="h-14 w-14" />
-              <p class="text-sm">直接说「记一笔午饭 50」或「本月花了多少」</p>
+              <p class="text-sm">
+                直接说「记一笔午饭 50」或「添加资金账户：微信、支付宝、招商银行卡」
+              </p>
             </div>
           </template>
           <template v-else>
@@ -678,7 +680,7 @@ watch(
           <ChatBubbleLeftRightIcon class="h-16 w-16" />
           <p class="text-sm">
             我是 Jimi，你的记账助手。直接说「记一笔午饭
-            50」或「本月花了多少」即可。
+            50」、「本月花了多少」或「添加资金账户：微信、支付宝、银行卡」即可。
           </p>
           <p class="text-xs">发送任意消息将自动创建新对话。</p>
         </div>
@@ -731,7 +733,7 @@ watch(
             <input
               v-model="inputText"
               type="text"
-              placeholder="输入消息，如：记一笔午饭 50 元"
+              placeholder="输入消息，如：记一笔午饭50，或添加资金账户：微信、支付宝"
               class="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary-500"
               :disabled="sending"
             />
