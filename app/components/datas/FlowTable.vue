@@ -127,19 +127,18 @@
               >
                 {{ item.industryType }}
               </td>
-              <td
-                class="px-3 py-2 text-sm max-w-32 truncate"
-                :title="item.payType"
-              >
-                {{ item.payType }}
+              <td class="px-3 py-2 text-sm whitespace-nowrap">
+                {{ item.account?.name ?? "-" }}
               </td>
               <td class="px-3 py-2 whitespace-nowrap">
                 <span
                   :class="[
                     'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
-                    Number(item.money) > 100
-                      ? 'bg-red-500/10 text-red-600 border-red-500/20'
-                      : 'bg-surface-muted text-foreground/70 border-border',
+                    item.flowType === '收入'
+                      ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                      : item.flowType === '支出'
+                        ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                        : 'bg-surface-muted text-foreground/70 border-border',
                   ]"
                 >
                   {{ Number(item.money || 0).toFixed(2) }}
@@ -161,7 +160,7 @@
                     v-for="(img, index) in getInvoiceImages(item.invoice || '')"
                     :key="index"
                     class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-border hover:border-primary-500 transition-colors"
-                    @click="openFullscreen(invoiceImageMap[img])"
+                    @click="openFullscreen(invoiceImageMap[img] || '')"
                   >
                     <img
                       :src="invoiceImageMap[img]"
@@ -183,6 +182,9 @@
                 :title="item.description"
               >
                 {{ item.description }}
+              </td>
+              <td class="px-3 py-2 text-sm whitespace-nowrap">
+                {{ item.attribution ?? "-" }}
               </td>
               <td
                 v-if="actions"
@@ -246,9 +248,11 @@
             <span
               :class="[
                 'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
-                Number(item.money) > 100
-                  ? 'bg-red-500/10 text-red-600 border-red-500/20'
-                  : 'bg-surface-muted text-foreground/70 border-border',
+                item.flowType === '收入'
+                  ? 'bg-primary-500/10 text-primary-700 border-primary-500/20'
+                  : item.flowType === '支出'
+                    ? 'bg-red-500/10 text-red-600 border-red-500/20'
+                    : 'bg-surface-muted text-foreground/70 border-border',
               ]"
             >
               {{ Number(item.money || 0).toFixed(2) }}
@@ -266,7 +270,7 @@
                 v-for="(img, index) in getInvoiceImages(item.invoice || '')"
                 :key="index"
                 class="relative w-8 h-8 cursor-pointer group rounded overflow-hidden border border-border hover:border-primary-500 transition-colors"
-                @click="openFullscreen(invoiceImageMap[img])"
+                @click="openFullscreen(invoiceImageMap[img] || '')"
               >
                 <img
                   :src="invoiceImageMap[img]"
@@ -304,9 +308,16 @@
                 {{ item.industryType }}
               </span>
               <span
+                v-if="item.account?.name"
                 class="bg-surface-muted text-foreground/80 px-1.5 py-0.5 rounded border border-border"
               >
-                {{ item.payType }}
+                {{ item.account.name }}
+              </span>
+              <span
+                v-if="item.attribution"
+                class="bg-surface-muted text-foreground/70 px-1.5 py-0.5 rounded border border-border"
+              >
+                {{ item.attribution }}
               </span>
             </div>
             <!-- 操作按钮 -->
@@ -529,16 +540,17 @@ const changeTypes = () => {
   });
 };
 
-// 基础表头配置
+// 基础表头配置（与 FlowsTable 对齐：日期、流水类型、支出/收入类型、交易账户、金额、名称、小票、备注、归属）
 const baseHeaders = [
   { title: "日期", key: "day", sortable: false },
   { title: "流水类型", key: "flowType", sortable: false },
-  { title: "消费类型", key: "industryType", sortable: false },
-  { title: "支付方式", key: "payType", sortable: false },
+  { title: "支出/收入类型", key: "industryType", sortable: false },
+  { title: "交易账户", key: "account", sortable: false },
   { title: "金额", key: "money" },
   { title: "名称", key: "name", sortable: false },
   { title: "小票", key: "invoice", sortable: false },
   { title: "备注", key: "description", sortable: false },
+  { title: "归属", key: "attribution", sortable: false },
 ];
 
 // 根据 actions 属性动态生成表头

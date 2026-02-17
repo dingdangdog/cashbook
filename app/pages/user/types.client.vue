@@ -206,7 +206,7 @@
         </div>
 
         <!-- 第二组：支付方式/收款方式 -->
-        <div>
+        <!-- <div>
           <h3 class="text-sm font-medium text-muted mb-3">
             支付方式 / 收款方式
           </h3>
@@ -235,7 +235,7 @@
               </svg>
             </button>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- 空状态 -->
