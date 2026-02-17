@@ -78,7 +78,7 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
     function: {
       name: "query_flows",
       description:
-        "查询流水记录。当用户要查账、查流水、查某笔支出/收入、按条件筛选时使用。",
+        "查询流水记录。当用户要查账、查流水、查某笔支出/收入、按条件筛选时使用。支持按资金账户筛选（通过accountName或accountId）。",
       parameters: {
         type: "object",
         properties: {
@@ -92,6 +92,16 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
           startDay: { type: "string", description: "开始日期 YYYY-MM-DD" },
           endDay: { type: "string", description: "结束日期 YYYY-MM-DD" },
           name: { type: "string", description: "名称模糊搜索" },
+          accountName: {
+            type: "string",
+            description:
+              "资金账户名称筛选（如支付宝、微信、招商银行卡）。与accountId二选一，优先使用accountId。",
+          },
+          accountId: {
+            type: "number",
+            description:
+              "资金账户ID筛选。与accountName二选一，优先使用accountId。",
+          },
           pageNum: { type: "number", description: "页码，默认1" },
           pageSize: { type: "number", description: "每页条数，默认15" },
         },
@@ -121,6 +131,16 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
             type: "string",
             description: "月份 YYYY-MM，与 startDay/endDay 二选一",
           },
+          accountName: {
+            type: "string",
+            description:
+              "资金账户名称筛选（如支付宝、微信、招商银行卡）。与accountId二选一，优先使用accountId。",
+          },
+          accountId: {
+            type: "number",
+            description:
+              "资金账户ID筛选。与accountName二选一，优先使用accountId。",
+          },
           limit: {
             type: "number",
             description: "返回前N条极值，默认1，最大10",
@@ -134,7 +154,7 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
     function: {
       name: "get_statistics",
       description:
-        "获取统计数据。当用户问本月花了多少、收入多少、支出统计、分类汇总等时使用。",
+        "获取统计数据。当用户问本月花了多少、收入多少、支出统计、分类汇总等时使用。支持按资金账户筛选（通过accountName或accountId），可用于统计特定账户的收支总额。",
       parameters: {
         type: "object",
         properties: {
@@ -143,6 +163,16 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
           month: {
             type: "string",
             description: "月份 YYYY-MM，与 startDay/endDay 二选一",
+          },
+          accountName: {
+            type: "string",
+            description:
+              "资金账户名称筛选（如支付宝、微信、招商银行卡）。与accountId二选一，优先使用accountId。",
+          },
+          accountId: {
+            type: "number",
+            description:
+              "资金账户ID筛选。与accountName二选一，优先使用accountId。",
           },
         },
       },

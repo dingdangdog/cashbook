@@ -356,6 +356,19 @@ export async function queryFlowsByAI(
   if (args.name) whereInput.name = String(args.name);
   if (args.startDay) whereInput.startDay = String(args.startDay);
   if (args.endDay) whereInput.endDay = String(args.endDay);
+  
+  // 处理账户筛选：优先使用accountId，否则通过accountName查找
+  if (args.accountId) {
+    whereInput.accountId = Number(args.accountId);
+  } else if (args.accountName) {
+    const account = await getFundAccountByName(
+      ctx.userId,
+      String(args.accountName),
+    );
+    if (account) {
+      whereInput.accountId = account.id;
+    }
+  }
 
   const pageNum = Math.max(1, Number(args.pageNum) || 1);
   const pageSize = Math.min(50, Math.max(1, Number(args.pageSize) || 15));
@@ -466,12 +479,28 @@ export async function queryFlowExtremesByAI(
   const name = args.name ? String(args.name) : undefined;
   const industryType = args.industryType ? String(args.industryType) : undefined;
   const payType = args.payType ? String(args.payType) : undefined;
+  
+  // 处理账户筛选：优先使用accountId，否则通过accountName查找
+  let accountId: number | undefined;
+  if (args.accountId) {
+    accountId = Number(args.accountId);
+  } else if (args.accountName) {
+    const account = await getFundAccountByName(
+      ctx.userId,
+      String(args.accountName),
+    );
+    if (account) {
+      accountId = account.id;
+    }
+  }
+  
   const commonWhere: Prisma.FlowWhereInput = {
     userId: ctx.userId,
     day: { gte: start, lte: end },
     ...(industryType ? { industryType } : {}),
     ...(payType ? { payType } : {}),
     ...(name ? { name: { contains: name, mode: "insensitive" } } : {}),
+    ...(accountId !== undefined ? { accountId } : {}),
   };
 
   const needExpense = normalizedFlowType !== "收入";
@@ -573,9 +602,24 @@ export async function getFlowStatisticsByAI(
     end = new Date();
   }
 
+  // 处理账户筛选：优先使用accountId，否则通过accountName查找
+  let accountId: number | undefined;
+  if (args.accountId) {
+    accountId = Number(args.accountId);
+  } else if (args.accountName) {
+    const account = await getFundAccountByName(
+      ctx.userId,
+      String(args.accountName),
+    );
+    if (account) {
+      accountId = account.id;
+    }
+  }
+
   const where: Prisma.FlowWhereInput = {
     userId: ctx.userId,
     day: { gte: start, lte: end },
+    ...(accountId !== undefined ? { accountId } : {}),
   };
 
   const [sumByType, byIndustry] = (await Promise.all([

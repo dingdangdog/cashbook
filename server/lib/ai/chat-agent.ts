@@ -7,9 +7,9 @@ import { getFundAccountsAll } from "~~/server/utils/db";
 const SYSTEM_PROMPT = `你是个人记账助手的AI，你的职责是分析用户意图，根据用户意图选择调用的工具，完成相关操作，目前支持的操作如下：
 
 1. 对话式记账（添加流水）：调用 add_flow
-2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，调用 query_flows
-2.1 极值查询：用户问"本月最高支出是哪一笔"、"时间范围内最高收入"等，调用 query_flow_extremes
-3. 对话式统计：用户问"本月花了多少"、"收入统计"等，调用 get_statistics
+2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，调用 query_flows（支持按资金账户筛选，通过accountName或accountId参数）
+2.1 极值查询：用户问"本月最高支出是哪一笔"、"时间范围内最高收入"等，调用 query_flow_extremes（支持按资金账户筛选）
+3. 对话式统计：用户问"本月花了多少"、"收入统计"、"某账户的收支总额"等，调用 get_statistics（支持按资金账户筛选，可用于统计特定账户的收支总额）
 4. 资金账户管理：
    - 新增单个资金账户：调用 add_fund_account
    - 批量新增多个资金账户（如 微信、支付宝、若干银行卡/信用卡）：调用 batch_add_fund_accounts
@@ -317,9 +317,9 @@ JSON 格式固定如下：
 
 参数约束：
 - add_flow.args: { flowType, industryType, payType, money, name, day?, description?, attribution?, accountId?, accountName? }
-- query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, pageNum?, pageSize? }
-- query_flow_extremes.args: { flowType?, industryType?, payType?, name?, month? 或 startDay+endDay, limit? }
-- get_statistics.args: { month? 或 startDay+endDay }
+- query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, accountName?, accountId?, pageNum?, pageSize? }
+- query_flow_extremes.args: { flowType?, industryType?, payType?, name?, month? 或 startDay+endDay, accountName?, accountId?, limit? }
+- get_statistics.args: { month? 或 startDay+endDay, accountName?, accountId? }
 - add_fund_account.args: { name, accountType?, institution?, accountNo?, initialBalance?, currentBalance?, status?, description? }
 - batch_add_fund_accounts.args: { accountNames: string[], defaultCurrency? }
 - query_fund_accounts.args: { keyword?, status?, accountType?, pageNum?, pageSize? }
