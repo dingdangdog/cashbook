@@ -494,6 +494,8 @@ import { showFlowEditDialog, showFlowEditInvoiceDialog } from "~/utils/flag";
 
 const { query, actions = false } = defineProps(["query", "actions"]);
 
+defineEmits(["editItem"]);
+
 const flowQuery = ref<FlowQuery>({ pageNum: 1, pageSize: 20, ...query });
 
 // 编辑相关变量
