@@ -827,11 +827,11 @@ const readCsvInfo = (event: Event) => {
         /**************************************/
         let flow;
         if (fileType.value === "alipay") {
-          flow = alipayConvert(row, csvHeaders.value);
+          flow = alipayConvert(row, csvHeaders.value, fileType.value);
         } else if (fileType.value === "wxpay") {
-          flow = wxpayConvert(row, csvHeaders.value);
+          flow = wxpayConvert(row, csvHeaders.value, fileType.value);
         } else if (fileType.value === "jdFinance") {
-          flow = jdFinanceConvert(row, csvHeaders.value);
+          flow = jdFinanceConvert(row, csvHeaders.value, fileType.value);
         } else {
           // 其他数据，暂不处理
           flow = templateConvert(row, csvHeaders.value);

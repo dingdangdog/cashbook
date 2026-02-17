@@ -748,11 +748,11 @@ const readCsvInfo = (event: Event) => {
         csvDatas.value.push(row);
         let flow;
         if (fileType.value === "alipay")
-          flow = alipayConvert(row, csvHeaders.value);
+          flow = alipayConvert(row, csvHeaders.value, fileType.value);
         else if (fileType.value === "wxpay")
-          flow = wxpayConvert(row, csvHeaders.value);
+          flow = wxpayConvert(row, csvHeaders.value, fileType.value);
         else if (fileType.value === "jdFinance")
-          flow = jdFinanceConvert(row, csvHeaders.value);
+          flow = jdFinanceConvert(row, csvHeaders.value, fileType.value);
         else flow = templateConvert(row, csvHeaders.value);
         csvFlows.value.push(flow);
       });
