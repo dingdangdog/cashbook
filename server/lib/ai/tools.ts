@@ -10,12 +10,15 @@ import {
   createFlowByAI,
   queryBudgetsByAI,
   getFlowStatisticsByAI,
+  queryFlowExtremesByAI,
+  queryLiabilityRepayPlansByAI,
   queryFixedFlowsByAI,
   queryInvestmentDetailsByAI,
   queryInvestmentProductsByAI,
   queryLiabilitiesByAI,
   queryFlowsByAI,
   queryFundAccountsByAI,
+  queryReceivableCollectPlansByAI,
   queryReceivablesByAI,
   setBudgetByAI,
   updateFundAccountBalanceByAI,
@@ -91,6 +94,37 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
           name: { type: "string", description: "名称模糊搜索" },
           pageNum: { type: "number", description: "页码，默认1" },
           pageSize: { type: "number", description: "每页条数，默认15" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "query_flow_extremes",
+      description:
+        "查询时间范围内的最高支出和最高收入明细。当用户问“本月最大一笔支出/收入”“最近花得最多的一笔”时使用。",
+      parameters: {
+        type: "object",
+        properties: {
+          flowType: {
+            type: "string",
+            enum: ["收入", "支出"],
+            description: "可选，只查某一种类型",
+          },
+          industryType: { type: "string", description: "行业分类筛选" },
+          payType: { type: "string", description: "支付方式筛选" },
+          name: { type: "string", description: "名称模糊搜索" },
+          startDay: { type: "string", description: "开始日期 YYYY-MM-DD" },
+          endDay: { type: "string", description: "结束日期 YYYY-MM-DD" },
+          month: {
+            type: "string",
+            description: "月份 YYYY-MM，与 startDay/endDay 二选一",
+          },
+          limit: {
+            type: "number",
+            description: "返回前N条极值，默认1，最大10",
+          },
         },
       },
     },
@@ -298,6 +332,28 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
   {
     type: "function",
     function: {
+      name: "query_liability_repay_plans",
+      description:
+        "查询负债还款计划。可用于问“最近有哪些待还款”“某笔借款本月还款安排”。",
+      parameters: {
+        type: "object",
+        properties: {
+          keyword: { type: "string", description: "按负债名称关键词过滤" },
+          status: {
+            type: "number",
+            description: "状态过滤：0待还，1已还",
+          },
+          startDay: { type: "string", description: "计划开始日期 YYYY-MM-DD" },
+          endDay: { type: "string", description: "计划结束日期 YYYY-MM-DD" },
+          pageNum: { type: "number", description: "页码" },
+          pageSize: { type: "number", description: "每页条数" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "add_receivable",
       description: "新增一笔应收（借给他人）。",
       parameters: {
@@ -329,6 +385,28 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
           status: { type: "number", description: "状态" },
           startDay: { type: "string", description: "开始日期 YYYY-MM-DD" },
           endDay: { type: "string", description: "结束日期 YYYY-MM-DD" },
+          pageNum: { type: "number", description: "页码" },
+          pageSize: { type: "number", description: "每页条数" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "query_receivable_collect_plans",
+      description:
+        "查询应收回款计划。可用于问“最近有哪些待收款”“某笔借出何时回款”。",
+      parameters: {
+        type: "object",
+        properties: {
+          keyword: { type: "string", description: "按应收名称关键词过滤" },
+          status: {
+            type: "number",
+            description: "状态过滤：0待收，1已收",
+          },
+          startDay: { type: "string", description: "计划开始日期 YYYY-MM-DD" },
+          endDay: { type: "string", description: "计划结束日期 YYYY-MM-DD" },
           pageNum: { type: "number", description: "页码" },
           pageSize: { type: "number", description: "每页条数" },
         },
@@ -467,6 +545,8 @@ export async function executeTool(
       return JSON.stringify(await createFlowByAI(args, ctx));
     case "query_flows":
       return JSON.stringify(await queryFlowsByAI(args, ctx));
+    case "query_flow_extremes":
+      return JSON.stringify(await queryFlowExtremesByAI(args, ctx));
     case "get_statistics":
       return JSON.stringify(await getFlowStatisticsByAI(args, ctx));
     case "add_fund_account":
@@ -485,10 +565,14 @@ export async function executeTool(
       return JSON.stringify(await addLiabilityByAI(args, ctx));
     case "query_liabilities":
       return JSON.stringify(await queryLiabilitiesByAI(args, ctx));
+    case "query_liability_repay_plans":
+      return JSON.stringify(await queryLiabilityRepayPlansByAI(args, ctx));
     case "add_receivable":
       return JSON.stringify(await addReceivableByAI(args, ctx));
     case "query_receivables":
       return JSON.stringify(await queryReceivablesByAI(args, ctx));
+    case "query_receivable_collect_plans":
+      return JSON.stringify(await queryReceivableCollectPlansByAI(args, ctx));
     case "add_investment_product":
       return JSON.stringify(await addInvestmentProductByAI(args, ctx));
     case "query_investment_products":

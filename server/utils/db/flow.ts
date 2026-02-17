@@ -378,6 +378,127 @@ export async function queryFlowsByAI(
   };
 }
 
+export async function queryFlowExtremesByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<{
+  period: { start: Date; end: Date };
+  filters: {
+    flowType?: string;
+    industryType?: string;
+    payType?: string;
+    name?: string;
+  };
+  topExpense: Array<{
+    id: number;
+    day: Date;
+    flowType: string | null;
+    industryType: string | null;
+    payType: string | null;
+    money: number | null;
+    name: string | null;
+    description: string | null;
+  }>;
+  topIncome: Array<{
+    id: number;
+    day: Date;
+    flowType: string | null;
+    industryType: string | null;
+    payType: string | null;
+    money: number | null;
+    name: string | null;
+    description: string | null;
+  }>;
+}> {
+  const now = new Date();
+  const month = args.month ? String(args.month) : "";
+  let start: Date;
+  let end: Date;
+  if (month && /^\d{4}-\d{2}$/.test(month)) {
+    start = new Date(`${month}-01`);
+    const next = new Date(start);
+    next.setMonth(next.getMonth() + 1);
+    end = new Date(next.getTime() - 1);
+  } else {
+    const startArg = args.startDay ? String(args.startDay) : "";
+    const endArg = args.endDay ? String(args.endDay) : "";
+    if (startArg || endArg) {
+      start = startArg ? parseDateBoundary(startArg, "start") : new Date(0);
+      end = endArg ? parseDateBoundary(endArg, "end") : now;
+    } else {
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end = now;
+    }
+  }
+
+  const limit = Math.min(10, Math.max(1, Number(args.limit) || 1));
+  const normalizedFlowType = args.flowType
+    ? normalizeFlowTypeLabel(String(args.flowType))
+    : null;
+  const name = args.name ? String(args.name) : undefined;
+  const industryType = args.industryType ? String(args.industryType) : undefined;
+  const payType = args.payType ? String(args.payType) : undefined;
+  const commonWhere: Prisma.FlowWhereInput = {
+    userId: ctx.userId,
+    day: { gte: start, lte: end },
+    ...(industryType ? { industryType } : {}),
+    ...(payType ? { payType } : {}),
+    ...(name ? { name: { contains: name, mode: "insensitive" } } : {}),
+  };
+
+  const [topExpenseRows, topIncomeRows] = await Promise.all([
+    prisma.flow.findMany({
+      where: {
+        ...commonWhere,
+        ...(normalizedFlowType === "收入"
+          ? { id: -1 }
+          : {
+              flowType: "支出",
+              money: { lt: 0 },
+            }),
+      },
+      orderBy: [{ money: "asc" }, { day: "desc" }, { id: "desc" }],
+      take: limit,
+    }),
+    prisma.flow.findMany({
+      where: {
+        ...commonWhere,
+        ...(normalizedFlowType === "支出"
+          ? { id: -1 }
+          : {
+              flowType: "收入",
+              money: { gt: 0 },
+            }),
+      },
+      orderBy: [{ money: "desc" }, { day: "desc" }, { id: "desc" }],
+      take: limit,
+    }),
+  ]);
+
+  const mapRow = (f: Flow) => ({
+    id: f.id,
+    day: f.day,
+    flowType: f.flowType,
+    industryType: f.industryType,
+    payType: f.payType,
+    money: f.money,
+    name: f.name,
+    description: f.description,
+  });
+
+  return {
+    period: { start, end },
+    filters: {
+      flowType: normalizedFlowType ?? undefined,
+      industryType,
+      payType,
+      name,
+    },
+    topExpense: topExpenseRows.map(mapRow),
+    topIncome: topIncomeRows.map(mapRow),
+  };
+}
+
 export async function getFlowStatisticsByAI(
   args: Record<string, unknown>,
   ctx: AIToolContext,

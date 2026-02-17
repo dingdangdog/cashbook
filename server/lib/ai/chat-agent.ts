@@ -8,6 +8,7 @@ const SYSTEM_PROMPT = `你是个人记账助手的AI，你的职责是分析用�
 
 1. 对话式记账（添加流水）：调用 add_flow
 2. 对话式查询：用户问"本月有哪些支出"、"查一下餐饮消费"等，调用 query_flows
+2.1 极值查询：用户问"本月最高支出是哪一笔"、"时间范围内最高收入"等，调用 query_flow_extremes
 3. 对话式统计：用户问"本月花了多少"、"收入统计"等，调用 get_statistics
 4. 资金账户管理：
    - 新增单个资金账户：调用 add_fund_account
@@ -20,9 +21,11 @@ const SYSTEM_PROMPT = `你是个人记账助手的AI，你的职责是分析用�
 6. 负债管理：
    - 新增负债：调用 add_liability
    - 查询负债：调用 query_liabilities
+   - 查询负债还款计划：调用 query_liability_repay_plans
 7. 应收管理：
    - 新增应收：调用 add_receivable
    - 查询应收：调用 query_receivables
+   - 查询应收回款计划：调用 query_receivable_collect_plans
 8. 投资管理：
    - 新增投资产品：调用 add_investment_product
    - 查询投资产品：调用 query_investment_products
@@ -306,7 +309,7 @@ const JSON_PLAN_SYSTEM_PROMPT = `你是个人记账助手，请把用户诉求�
 JSON 格式固定如下：
 {
   "action": {
-    "name": "add_flow" | "query_flows" | "get_statistics" | "add_fund_account" | "batch_add_fund_accounts" | "query_fund_accounts" | "update_fund_account_balance" | "set_budget" | "query_budgets" | "add_liability" | "query_liabilities" | "add_receivable" | "query_receivables" | "add_investment_product" | "query_investment_products" | "add_investment_detail" | "query_investment_details" | "add_fixed_flow" | "query_fixed_flows" | "none",
+    "name": "add_flow" | "query_flows" | "query_flow_extremes" | "get_statistics" | "add_fund_account" | "batch_add_fund_accounts" | "query_fund_accounts" | "update_fund_account_balance" | "set_budget" | "query_budgets" | "add_liability" | "query_liabilities" | "query_liability_repay_plans" | "add_receivable" | "query_receivables" | "query_receivable_collect_plans" | "add_investment_product" | "query_investment_products" | "add_investment_detail" | "query_investment_details" | "add_fixed_flow" | "query_fixed_flows" | "none",
     "args": { ... }
   },
   "reply": "给用户的自然语言回复（当 name=none 时必须有）"
@@ -315,6 +318,7 @@ JSON 格式固定如下：
 参数约束：
 - add_flow.args: { flowType, industryType, payType, money, name, day?, description?, attribution?, accountId?, accountName? }
 - query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, pageNum?, pageSize? }
+- query_flow_extremes.args: { flowType?, industryType?, payType?, name?, month? 或 startDay+endDay, limit? }
 - get_statistics.args: { month? 或 startDay+endDay }
 - add_fund_account.args: { name, accountType?, institution?, accountNo?, initialBalance?, currentBalance?, status?, description? }
 - batch_add_fund_accounts.args: { accountNames: string[], defaultCurrency? }
@@ -324,8 +328,10 @@ JSON 格式固定如下：
 - query_budgets.args: { month?, pageNum?, pageSize? }
 - add_liability.args: { name, money, occurDay?, description?, planType?, interestRate?, termCount?, termAmount?, status? }
 - query_liabilities.args: { keyword?, status?, startDay?, endDay?, pageNum?, pageSize? }
+- query_liability_repay_plans.args: { keyword?, status?, startDay?, endDay?, pageNum?, pageSize? }
 - add_receivable.args: { name, money, occurDay?, description?, planType?, interestRate?, termCount?, termAmount?, status? }
 - query_receivables.args: { keyword?, status?, startDay?, endDay?, pageNum?, pageSize? }
+- query_receivable_collect_plans.args: { keyword?, status?, startDay?, endDay?, pageNum?, pageSize? }
 - add_investment_product.args: { productName, productType?, totalInvested?, totalReturn?, currentValue?, status? }
 - query_investment_products.args: { keyword?, productType?, status?, pageNum?, pageSize? }
 - add_investment_detail.args: { productId, tradeType, tradeDay?, amount, quantity?, price?, fee?, description? }
@@ -351,6 +357,7 @@ type JsonPlan = {
 const JSON_SUPPORTED_ACTIONS = new Set([
   "add_flow",
   "query_flows",
+  "query_flow_extremes",
   "get_statistics",
   "add_fund_account",
   "batch_add_fund_accounts",
@@ -360,8 +367,10 @@ const JSON_SUPPORTED_ACTIONS = new Set([
   "query_budgets",
   "add_liability",
   "query_liabilities",
+  "query_liability_repay_plans",
   "add_receivable",
   "query_receivables",
+  "query_receivable_collect_plans",
   "add_investment_product",
   "query_investment_products",
   "add_investment_detail",
@@ -502,11 +511,30 @@ async function summarizeToolResult(opts: {
     if (toolName === "query_flows") {
       return `查询完成，共 ${parsed.total ?? 0} 条。`;
     }
+    if (toolName === "query_flow_extremes") {
+      const expenseCount = Array.isArray(
+        (parsed as { topExpense?: unknown[] }).topExpense,
+      )
+        ? (parsed as { topExpense?: unknown[] }).topExpense!.length
+        : 0;
+      const incomeCount = Array.isArray(
+        (parsed as { topIncome?: unknown[] }).topIncome,
+      )
+        ? (parsed as { topIncome?: unknown[] }).topIncome!.length
+        : 0;
+      return `极值查询完成：最高支出 ${expenseCount} 条，最高收入 ${incomeCount} 条。`;
+    }
     if (toolName === "get_statistics") {
       return `统计完成：${JSON.stringify(parsed.summary ?? {})}`;
     }
     if (toolName === "query_fund_accounts") {
       return `账户查询完成，共 ${parsed.total ?? 0} 个。`;
+    }
+    if (toolName === "query_liability_repay_plans") {
+      return `还款计划查询完成，共 ${parsed.total ?? 0} 条。`;
+    }
+    if (toolName === "query_receivable_collect_plans") {
+      return `回款计划查询完成，共 ${parsed.total ?? 0} 条。`;
     }
     if (toolName === "add_fund_account" && parsed.success) {
       return `资金账户已处理：${parsed.account?.name || "未命名账户"}。`;
@@ -601,7 +629,13 @@ function applyTemporalHints(
     if (/(昨天|昨日)/.test(text)) next.day = formatDate(addDays(now, -1));
   }
 
-  if (toolName === "query_flows" || toolName === "get_statistics") {
+  if (
+    toolName === "query_flows" ||
+    toolName === "get_statistics" ||
+    toolName === "query_flow_extremes" ||
+    toolName === "query_liability_repay_plans" ||
+    toolName === "query_receivable_collect_plans"
+  ) {
     if (/(今天|今日)/.test(text)) {
       const day = formatDate(now);
       next.startDay = day;
@@ -622,6 +656,27 @@ function applyTemporalHints(
       );
       delete next.startDay;
       delete next.endDay;
+    } else if (/本周/.test(text)) {
+      next.startDay = formatDate(getStartOfWeek(now));
+      next.endDay = formatDate(getEndOfWeek(now));
+      delete next.month;
+    } else if (/上周/.test(text)) {
+      const lastWeekBase = addDays(now, -7);
+      next.startDay = formatDate(getStartOfWeek(lastWeekBase));
+      next.endDay = formatDate(getEndOfWeek(lastWeekBase));
+      delete next.month;
+    } else if (/本年|今年/.test(text)) {
+      next.startDay = formatDate(new Date(now.getFullYear(), 0, 1));
+      next.endDay = formatDate(new Date(now.getFullYear(), 11, 31));
+      delete next.month;
+    } else if (/近7天|最近7天/.test(text)) {
+      next.startDay = formatDate(addDays(now, -6));
+      next.endDay = formatDate(now);
+      delete next.month;
+    } else if (/近30天|最近30天/.test(text)) {
+      next.startDay = formatDate(addDays(now, -29));
+      next.endDay = formatDate(now);
+      delete next.month;
     }
   }
   return next;
@@ -644,6 +699,18 @@ function addDays(base: Date, delta: number): Date {
   const d = new Date(base);
   d.setDate(d.getDate() + delta);
   return d;
+}
+
+function getStartOfWeek(d: Date): Date {
+  const day = d.getDay();
+  const delta = day === 0 ? -6 : 1 - day;
+  const result = new Date(d);
+  result.setDate(d.getDate() + delta);
+  return result;
+}
+
+function getEndOfWeek(d: Date): Date {
+  return addDays(getStartOfWeek(d), 6);
 }
 
 function logAIExecution(input: {

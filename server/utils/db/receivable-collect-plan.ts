@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -103,4 +104,73 @@ export async function deleteReceivableCollectPlan(
   id: number,
 ): Promise<ReceivableCollectPlan> {
   return prisma.receivableCollectPlan.delete({ where: { id } });
+}
+
+export async function queryReceivableCollectPlansByAI(
+  args: Record<string, unknown>,
+  ctx: AIToolContext,
+): Promise<Record<string, unknown>> {
+  const pageNum = Math.max(1, Number(args.pageNum) || 1);
+  const pageSize = Math.min(50, Math.max(1, Number(args.pageSize) || 20));
+  const status =
+    args.status !== undefined && args.status !== null
+      ? Number(args.status)
+      : undefined;
+  const keyword = args.keyword ? String(args.keyword).trim() : "";
+  const startDay = args.startDay ? new Date(String(args.startDay)) : null;
+  const endDay = args.endDay ? new Date(String(args.endDay)) : null;
+
+  const receivables = await prisma.receivable.findMany({
+    where: {
+      userId: ctx.userId,
+      ...(keyword
+        ? { name: { contains: keyword, mode: "insensitive" as const } }
+        : {}),
+    },
+    select: { id: true, name: true },
+  });
+  if (receivables.length === 0) {
+    return {
+      total: 0,
+      pageNum,
+      pageSize,
+      data: [],
+    };
+  }
+
+  const receivableIds = receivables.map((x) => x.id);
+  const receivableNameMap = new Map(receivables.map((x) => [x.id, x.name]));
+  const where: Prisma.ReceivableCollectPlanWhereInput = {
+    receivableId: { in: receivableIds },
+    ...(status !== undefined ? { status } : {}),
+    ...(startDay || endDay
+      ? {
+          planDay: {
+            ...(startDay ? { gte: startDay } : {}),
+            ...(endDay ? { lte: endDay } : {}),
+          },
+        }
+      : {}),
+  };
+  const { skip, take } = buildPagination({ pageNum, pageSize });
+
+  const [total, data] = await Promise.all([
+    prisma.receivableCollectPlan.count({ where }),
+    prisma.receivableCollectPlan.findMany({
+      where,
+      orderBy: [{ planDay: "asc" }, { termNo: "asc" }],
+      skip,
+      take,
+    }),
+  ]);
+
+  return {
+    total,
+    pageNum,
+    pageSize,
+    data: data.map((row) => ({
+      ...row,
+      receivableName: receivableNameMap.get(row.receivableId) ?? null,
+    })),
+  };
 }
