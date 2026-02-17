@@ -410,15 +410,43 @@ export async function queryFlowExtremesByAI(
     description: string | null;
   }>;
 }> {
+  const toMonthRange = (monthText: string): { start: Date; end: Date } | null => {
+    const match = monthText.match(/^(\d{4})-(\d{2})$/);
+    if (!match) return null;
+    const year = Number(match[1]);
+    const monthIndex = Number(match[2]) - 1;
+    if (!Number.isFinite(year) || !Number.isFinite(monthIndex)) return null;
+    if (monthIndex < 0 || monthIndex > 11) return null;
+    return {
+      start: new Date(year, monthIndex, 1, 0, 0, 0, 0),
+      end: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999),
+    };
+  };
+  const sortByAmountAbsDesc = <T extends { money: number | null }>(rows: T[]): T[] =>
+    rows
+      .slice()
+      .sort((a, b) => Math.abs(Number(b.money ?? 0)) - Math.abs(Number(a.money ?? 0)));
+
   const now = new Date();
   const month = args.month ? String(args.month) : "";
   let start: Date;
   let end: Date;
-  if (month && /^\d{4}-\d{2}$/.test(month)) {
-    start = new Date(`${month}-01`);
-    const next = new Date(start);
-    next.setMonth(next.getMonth() + 1);
-    end = new Date(next.getTime() - 1);
+  if (month) {
+    const monthRange = toMonthRange(month);
+    if (monthRange) {
+      start = monthRange.start;
+      end = monthRange.end;
+    } else {
+      const startArg = args.startDay ? String(args.startDay) : "";
+      const endArg = args.endDay ? String(args.endDay) : "";
+      if (startArg || endArg) {
+        start = startArg ? parseDateBoundary(startArg, "start") : new Date(0);
+        end = endArg ? parseDateBoundary(endArg, "end") : now;
+      } else {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = now;
+      }
+    }
   } else {
     const startArg = args.startDay ? String(args.startDay) : "";
     const endArg = args.endDay ? String(args.endDay) : "";
@@ -446,34 +474,55 @@ export async function queryFlowExtremesByAI(
     ...(name ? { name: { contains: name, mode: "insensitive" } } : {}),
   };
 
-  const [topExpenseRows, topIncomeRows] = await Promise.all([
-    prisma.flow.findMany({
-      where: {
-        ...commonWhere,
-        ...(normalizedFlowType === "收入"
-          ? { id: -1 }
-          : {
-              flowType: "支出",
-              money: { lt: 0 },
-            }),
-      },
-      orderBy: [{ money: "asc" }, { day: "desc" }, { id: "desc" }],
-      take: limit,
-    }),
-    prisma.flow.findMany({
-      where: {
-        ...commonWhere,
-        ...(normalizedFlowType === "支出"
-          ? { id: -1 }
-          : {
-              flowType: "收入",
-              money: { gt: 0 },
-            }),
-      },
-      orderBy: [{ money: "desc" }, { day: "desc" }, { id: "desc" }],
-      take: limit,
-    }),
+  const needExpense = normalizedFlowType !== "收入";
+  const needIncome = normalizedFlowType !== "支出";
+  const [
+    expenseNegativeRows,
+    expensePositiveRows,
+    incomePositiveRows,
+    incomeNegativeRows,
+  ] = await Promise.all([
+    needExpense
+      ? prisma.flow.findMany({
+          where: { ...commonWhere, flowType: "支出", money: { lt: 0 } },
+          orderBy: [{ money: "asc" }, { day: "desc" }, { id: "desc" }],
+          take: limit,
+        })
+      : Promise.resolve([] as Flow[]),
+    needExpense
+      ? prisma.flow.findMany({
+          where: { ...commonWhere, flowType: "支出", money: { gt: 0 } },
+          orderBy: [{ money: "desc" }, { day: "desc" }, { id: "desc" }],
+          take: limit,
+        })
+      : Promise.resolve([] as Flow[]),
+    needIncome
+      ? prisma.flow.findMany({
+          where: { ...commonWhere, flowType: "收入", money: { gt: 0 } },
+          orderBy: [{ money: "desc" }, { day: "desc" }, { id: "desc" }],
+          take: limit,
+        })
+      : Promise.resolve([] as Flow[]),
+    needIncome
+      ? prisma.flow.findMany({
+          where: { ...commonWhere, flowType: "收入", money: { lt: 0 } },
+          orderBy: [{ money: "asc" }, { day: "desc" }, { id: "desc" }],
+          take: limit,
+        })
+      : Promise.resolve([] as Flow[]),
   ]);
+  const topExpenseRows = needExpense
+    ? sortByAmountAbsDesc([...expenseNegativeRows, ...expensePositiveRows]).slice(
+        0,
+        limit,
+      )
+    : [];
+  const topIncomeRows = needIncome
+    ? sortByAmountAbsDesc([...incomePositiveRows, ...incomeNegativeRows]).slice(
+        0,
+        limit,
+      )
+    : [];
 
   const mapRow = (f: Flow) => ({
     id: f.id,
