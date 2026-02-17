@@ -613,9 +613,15 @@ const removeFile = () => {
   csvFlows.value = [];
   csvHeaders.value = {};
   csvDatas.value = [];
+  if (csvFileInput.value) {
+    csvFileInput.value.value = "";
+  }
 };
 
 const openCsvImport = (type: string) => {
+  if (csvFileInput.value) {
+    csvFileInput.value.value = "";
+  }
   fileType.value = type;
   if (type === "alipay") titleRowIndex.value = 24;
   else if (type === "wxpay") titleRowIndex.value = 16;

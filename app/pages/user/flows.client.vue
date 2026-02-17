@@ -638,6 +638,9 @@ const openCsvImport = (type: string) => {
   if (!csvFileInput.value) {
     return;
   }
+  if ("value" in csvFileInput.value) {
+    (csvFileInput.value as HTMLInputElement).value = "";
+  }
   fileType.value = type;
   if (fileType.value === "alipay") {
     // 支付宝表头行是第25行，索引是24
@@ -857,6 +860,9 @@ const removeFile = () => {
   csvHeaders.value = {};
   csvDatas.value = [];
   csvFile.value = undefined; // 清楚选中的文件
+  if (csvFileInput.value && "value" in csvFileInput.value) {
+    (csvFileInput.value as HTMLInputElement).value = "";
+  }
   return true;
 };
 
