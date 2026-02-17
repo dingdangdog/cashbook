@@ -25,7 +25,9 @@
                 class="w-4 h-4 md:w-5 md:h-5 text-primary-700 dark:text-primary-300"
               />
             </div>
-            <div class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1">
+            <div
+              class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1"
+            >
               <p class="text-xs md:text-sm font-medium text-foreground/70">
                 总收入
               </p>
@@ -50,7 +52,9 @@
                 class="w-4 h-4 md:w-5 md:h-5 text-red-700 dark:text-red-300"
               />
             </div>
-            <div class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1">
+            <div
+              class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1"
+            >
               <p class="text-xs md:text-sm font-medium text-foreground/70">
                 总支出
               </p>
@@ -84,7 +88,9 @@
                 "
               />
             </div>
-            <div class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1">
+            <div
+              class="flex flex-col md:flex-row items-center md:space-x-2 min-w-0 flex-1"
+            >
               <p class="text-xs md:text-sm font-medium text-foreground/70">
                 净收入
               </p>
@@ -254,6 +260,7 @@
             :table-head="csvHeaders"
             :table-body="csvDatas"
             :success-callback="importSuccess"
+            :import-source="fileType"
           />
         </div>
       </div>
@@ -649,13 +656,72 @@ const readCsvInfo = (event: Event) => {
         return { sheetName, sheetData };
       });
       const sheetData: any[] = sheets[0]?.sheetData || [];
-      const headerData = sheetData[titleRowIndex.value];
+      const firstSheetName = workbook.SheetNames[0];
+      const rawSheet =
+        firstSheetName != null
+          ? (workbook.Sheets[firstSheetName] as XLSX.WorkSheet | undefined)
+          : undefined;
+
+      const colToLetter = (col: number): string => {
+        let s = "";
+        for (let c = col + 1; c > 0; c = Math.floor((c - 1) / 26)) {
+          s = String.fromCharCode(65 + ((c - 1) % 26)) + s;
+        }
+        return s;
+      };
+
+      const normalizeOrderNo = (v: unknown): string => {
+        if (v == null || v === "") return "";
+        if (typeof v === "number") {
+          // 超过安全整数时数值已失真，不再继续转字符串参与去重
+          if (
+            !Number.isFinite(v) ||
+            !Number.isInteger(v) ||
+            !Number.isSafeInteger(v)
+          ) {
+            return "";
+          }
+          return String(v).trim();
+        }
+        return String(v).trim();
+      };
+
+      const headerData = sheetData[titleRowIndex.value] ?? [];
       for (let i = 0; i < headerData.length; i++) {
-        if (headerData[i]?.trim()) csvHeaders.value[headerData[i]] = i;
+        const h = headerData[i] != null ? String(headerData[i]).trim() : "";
+        if (h) csvHeaders.value[h] = i;
       }
       sheetData.splice(0, titleRowIndex.value + 1);
       const timeIndex = csvHeaders.value["交易时间"];
-      sheetData.forEach((row) => {
+      const orderNoKey =
+        fileType.value === "wxpay"
+          ? "交易单号"
+          : fileType.value === "alipay" || fileType.value === "jdFinance"
+            ? "交易订单号"
+            : null;
+      const orderNoCol =
+        orderNoKey != null ? csvHeaders.value[orderNoKey] : undefined;
+
+      sheetData.forEach((row, rowIndex) => {
+        if (orderNoCol !== undefined) {
+          let orderNoVal = "";
+          if (rawSheet) {
+            const excelRow = titleRowIndex.value + 2 + rowIndex;
+            const cellRef = colToLetter(orderNoCol) + excelRow;
+            const cell = rawSheet[cellRef] as
+              | { t?: string; v?: unknown; w?: unknown }
+              | undefined;
+            // 优先读单元格格式化文本 w，可保留 CSV 原始订单号（包含超长数字）
+            orderNoVal = normalizeOrderNo(cell?.w);
+            if (orderNoVal === "") {
+              orderNoVal = normalizeOrderNo(cell?.v);
+            }
+          }
+          if (orderNoVal === "") {
+            orderNoVal = normalizeOrderNo(row[orderNoCol]);
+          }
+          row[orderNoCol] = orderNoVal;
+        }
         for (let i = 0; i < row.length; i++) {
           let cellValue = row[i];
           if (i === timeIndex && cellValue != null) {

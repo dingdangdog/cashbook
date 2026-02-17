@@ -41,6 +41,19 @@ export function templateConvert(
   return flow;
 }
 
+/** 订单号按字符串读取并 trim，避免制表符/空格和科学计数法、精度丢失 */
+function safeOrderNo(v: unknown): string {
+  if (v == null || v === "") return "";
+  if (typeof v === "number") {
+    // 超过安全整数后已丢失精度，宁可放弃该 flowNo，也不要用错误值参与去重
+    if (!Number.isFinite(v) || !Number.isInteger(v) || !Number.isSafeInteger(v)) {
+      return "";
+    }
+    return String(v).trim().slice(0, 50);
+  }
+  return String(v).trim().slice(0, 50);
+}
+
 /**
  * 支付宝（含流水编号：交易订单号，用于去重）
  */
@@ -61,9 +74,9 @@ export function alipayConvert(
     row[indexMap["收/付款方式"]] +
     "-" +
     row[indexMap["备注"]];
-  const orderNo = row[indexMap["交易订单号"]];
-  if (orderNo != null && String(orderNo).trim() !== "")
-    flow.flowNo = String(orderNo).trim().slice(0, 50);
+  const raw = row[indexMap["交易订单号"]];
+  const flowNoStr = safeOrderNo(raw);
+  if (flowNoStr !== "") flow.flowNo = flowNoStr;
   return flow;
 }
 
@@ -95,9 +108,9 @@ export function wxpayConvert(
     row[indexMap["支付方式"]] +
     "-" +
     row[indexMap["备注"]];
-  const orderNo = row[indexMap["交易单号"]];
-  if (orderNo != null && String(orderNo).trim() !== "")
-    flow.flowNo = String(orderNo).trim().slice(0, 50);
+  const raw = row[indexMap["交易单号"]];
+  const flowNoStr = safeOrderNo(raw);
+  if (flowNoStr !== "") flow.flowNo = flowNoStr;
   return flow;
 }
 
@@ -126,8 +139,8 @@ export function jdFinanceConvert(
     row[indexMap["收/付款方式"]] +
     "-" +
     row[indexMap["备注"]];
-  const orderNo = row[indexMap["交易订单号"]];
-  if (orderNo != null && String(orderNo).trim() !== "")
-    flow.flowNo = String(orderNo).trim().slice(0, 50);
+  const raw = row[indexMap["交易订单号"]];
+  const flowNoStr = safeOrderNo(raw);
+  if (flowNoStr !== "") flow.flowNo = flowNoStr;
   return flow;
 }

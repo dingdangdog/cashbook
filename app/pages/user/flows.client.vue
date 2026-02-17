@@ -100,6 +100,7 @@
             :table-head="csvHeaders"
             :table-body="csvDatas"
             :success-callback="importSuccess"
+            :import-source="fileType"
           />
         </div>
       </div>
@@ -164,9 +165,7 @@
 
         <div class="p-4 space-y-4">
           <div class="space-y-2">
-            <label
-              class="block text-sm font-medium text-foreground/70"
-            >
+            <label class="block text-sm font-medium text-foreground/70">
               流水类型
             </label>
             <select
@@ -181,9 +180,7 @@
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-sm font-medium text-foreground/70"
-            >
+            <label class="block text-sm font-medium text-foreground/70">
               支出/收入类型
             </label>
             <input
@@ -195,9 +192,7 @@
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-sm font-medium text-foreground/70"
-            >
+            <label class="block text-sm font-medium text-foreground/70">
               支付/收款方式
             </label>
             <input
@@ -209,9 +204,7 @@
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-sm font-medium text-foreground/70"
-            >
+            <label class="block text-sm font-medium text-foreground/70">
               流水归属
             </label>
             <input
@@ -223,9 +216,7 @@
           </div>
         </div>
 
-        <div
-          class="px-4 py-3 border-t border-border bg-surface-muted"
-        >
+        <div class="px-4 py-3 border-t border-border bg-surface-muted">
           <div class="flex gap-2">
             <button
               @click="closeBatchChangeDialog"
@@ -371,9 +362,7 @@ const batchChange = ref<any>({
 const nameList = ref<string[]>([]);
 const getNames = async () => {
   try {
-    const res = await doApi.post<string[]>("api/entry/flow/getNames", {
-      
-    });
+    const res = await doApi.post<string[]>("api/entry/flow/getNames", {});
     nameList.value = res;
   } catch (error) {
     console.error("获取名称列表失败:", error);
@@ -383,9 +372,10 @@ const getNames = async () => {
 const attributionList = ref<string[]>([]);
 const getAttributions = async () => {
   try {
-    const res = await doApi.post<string[]>("api/entry/flow/getAttributions", {
-      
-    });
+    const res = await doApi.post<string[]>(
+      "api/entry/flow/getAttributions",
+      {},
+    );
     attributionList.value = res;
   } catch (error) {
     console.error("获取归属列表失败:", error);
@@ -401,7 +391,6 @@ const doQuery = () => {
   doApi
     .post<Page<Flow>>("api/entry/flow/page", {
       ...flowQuery.value,
-      
     })
     .then((res) => {
       if (res) {
@@ -424,7 +413,7 @@ const isAllSelected = computed(() => {
 });
 
 const totalPages = computed(() =>
-  Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20))
+  Math.ceil((flowPageRef.value?.total || 0) / (flowQuery.value.pageSize || 20)),
 );
 
 const pageNumbers = computed(() => {
@@ -523,7 +512,7 @@ const toAutoDeduplicationFlows = () => {
 };
 
 const openCreateDialog = () => {
-  dialogFormTitle.value = formTitle[0];
+  dialogFormTitle.value = formTitle[0] || "";
   showFlowEditDialog.value = true;
   selectedFlow.value = {};
 };
@@ -540,7 +529,6 @@ const deleteItems = () => {
       doApi
         .post("api/entry/flow/dels", {
           ids: selectedFlows.value,
-          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -564,7 +552,7 @@ const toChangeTypeBatch = () => {
 
 // 编辑单个流水
 const editItem = (item: any) => {
-  dialogFormTitle.value = formTitle[1];
+  dialogFormTitle.value = formTitle[1] || "";
   selectedFlow.value = item;
   showFlowEditDialog.value = true;
 };
@@ -582,7 +570,6 @@ const deleteItem = (item: any) => {
       doApi
         .post("api/entry/flow/del", {
           id: item.id,
-          
         })
         .then(() => {
           Alert.success("删除成功");
@@ -631,7 +618,7 @@ const confirmBatchChange = () => {
       doApi
         .post("api/entry/flow/updates", {
           ids: selectedFlows.value,
-          
+
           ...batchChange.value,
         })
         .then(() => {
@@ -706,12 +693,15 @@ const readCsvInfo = (event: Event) => {
       // sheets是sheet的数组，每个sheet有两个属性: name - sheet名称 data - sheet数据
       /**************************************/
       const sheets = workbook.SheetNames.map((sheetName) => {
-        const xlsxSheet = workbook.Sheets[sheetName];
-        const sheetData = XLSX.utils.sheet_to_json<any[]>(xlsxSheet, {
-          header: 1, // 表头行数
-          defval: "",
-          dateNF: "yyyy-mm-dd", // 日期格式
-        });
+        const xlsxSheet = workbook.Sheets[sheetName] ?? {};
+        const sheetData = XLSX.utils.sheet_to_json<any[]>(
+          xlsxSheet as XLSX.WorkSheet,
+          {
+            header: 1, // 表头行数
+            defval: "",
+            dateNF: "yyyy-mm-dd", // 日期格式
+          },
+        );
         return {
           sheetName,
           sheetData,
@@ -719,19 +709,47 @@ const readCsvInfo = (event: Event) => {
       });
 
       // 数据集合--csv默认只有一个sheet，所以只需要取第一个sheet
-      const sheetData: any[] = sheets[0].sheetData;
+      const sheetData: any[] = sheets[0]?.sheetData ?? [];
+      const firstSheetName = workbook.SheetNames[0];
+      const rawSheet =
+        firstSheetName != null
+          ? (workbook.Sheets[firstSheetName] as XLSX.WorkSheet | undefined)
+          : undefined;
+
+      /** 0-based 列索引转 Excel 列字母，用于从原始 sheet 取单元格 */
+      const colToLetter = (col: number): string => {
+        let s = "";
+        for (let c = col + 1; c > 0; c = Math.floor((c - 1) / 26)) {
+          s = String.fromCharCode(65 + ((c - 1) % 26)) + s;
+        }
+        return s;
+      };
+
+      const normalizeOrderNo = (v: unknown): string => {
+        if (v == null || v === "") return "";
+        if (typeof v === "number") {
+          // 超过安全整数时数值已失真，不再继续转字符串参与去重
+          if (
+            !Number.isFinite(v) ||
+            !Number.isInteger(v) ||
+            !Number.isSafeInteger(v)
+          ) {
+            return "";
+          }
+          return String(v).trim();
+        }
+        return String(v).trim();
+      };
 
       /**************************************/
       // 表头数据
       /**************************************/
-      // 表头索引集合，key-表头值，value-表头索引
-      const headerData = sheetData[titleRowIndex.value];
+      // 表头索引集合，key-表头值，value-表头索引（表头值先 trim，避免键不一致）
+      const headerData = sheetData[titleRowIndex.value] ?? [];
       for (let i = 0; i < headerData.length; i++) {
-        if (!headerData[i] || headerData[i].trim() === "") {
-          // 表头为空，跳过该列
-          continue;
-        }
-        csvHeaders.value[headerData[i]] = i;
+        const h = headerData[i] != null ? String(headerData[i]).trim() : "";
+        if (h === "") continue;
+        csvHeaders.value[h] = i;
       }
       // 删除表头及以上行数据，只保留流水数据
       sheetData.splice(0, titleRowIndex.value + 1);
@@ -739,9 +757,36 @@ const readCsvInfo = (event: Event) => {
       /**************************************/
       // 数据主体（table-body）回显
       /**************************************/
-      // 时间列的索引
       const timeIndex = csvHeaders.value["交易时间"];
-      sheetData.forEach((row) => {
+      const orderNoKey =
+        fileType.value === "wxpay"
+          ? "交易单号"
+          : fileType.value === "alipay" || fileType.value === "jdFinance"
+            ? "交易订单号"
+            : null;
+      const orderNoCol =
+        orderNoKey != null ? csvHeaders.value[orderNoKey] : undefined;
+
+      sheetData.forEach((row, rowIndex) => {
+        if (orderNoCol !== undefined) {
+          let orderNoVal = "";
+          if (rawSheet) {
+            const excelRow = titleRowIndex.value + 2 + rowIndex;
+            const cellRef = colToLetter(orderNoCol) + excelRow;
+            const cell = rawSheet[cellRef] as
+              | { t?: string; v?: unknown; w?: unknown }
+              | undefined;
+            // 优先读单元格格式化文本 w，可保留 CSV 原始订单号（包含超长数字）
+            orderNoVal = normalizeOrderNo(cell?.w);
+            if (orderNoVal === "") {
+              orderNoVal = normalizeOrderNo(cell?.v);
+            }
+          }
+          if (orderNoVal === "") {
+            orderNoVal = normalizeOrderNo(row[orderNoCol]);
+          }
+          row[orderNoCol] = orderNoVal;
+        }
         // 部分数据字段格式化，并回显
         for (let i = 0; i < row.length; i++) {
           let cellValue = row[i];

@@ -138,6 +138,10 @@ export default defineEventHandler(async (event) => {
           ? String(flow.industryType)
           : "",
     attribution: flow.attribution != null ? String(flow.attribution) : null,
+    origin:
+      flow.origin != null && String(flow.origin).trim() !== ""
+        ? String(flow.origin).trim().slice(0, 200)
+        : null,
   }));
 
   let created = { count: 0 };
