@@ -32,8 +32,6 @@ model Flow {
   flowNo       String   @unique @db.VarChar(50) /// 流水编号-唯一
   userId       Int /// 所属用户 ID
   accountId    Int? /// 关联资金账户 ID
-  accountDelta Float? /// 本次流水对账户余额影响（可正可负）
-  accountBal   Float? /// 该笔流水入账后的账户余额快照
   day          DateTime /// 交易日期
   flowType     String?  @db.VarChar(20) /// 流水类型：收入、支出、不计收支
   industryType String?  @db.VarChar(50) /// 行业/分类（支出类型或收入类型）
@@ -61,7 +59,7 @@ model FundAccount {
   accountNo      String?   @db.VarChar(100) /// 账号标识（可选，建议脱敏）
   currency       String    @default("CNY") @db.VarChar(10) /// 币种
   initialBalance Float     @default(0) /// 初始余额
-  currentBalance Float     @default(0) /// 当前余额（自动维护）
+  currentBalance Float     @default(0) /// 当前余额
   totalIncome    Float     @default(0) /// 累计流入
   totalExpense   Float     @default(0) /// 累计流出
   totalLiability Float     @default(0) /// 当前负债余额（如信用卡欠款）

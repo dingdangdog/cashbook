@@ -85,6 +85,29 @@ export function resolveFlowAccountDelta(input: {
   return rawMoney < 0 ? -amount : amount;
 }
 
+function resolveFlowAccountDeltaForRecalc(input: {
+  flowType?: string | null;
+  money?: number | null;
+  accountDelta?: number | null;
+}): number {
+  const rawMoney = Number(input.money ?? 0);
+  const normalizedType = normalizeFlowTypeLabel(input.flowType);
+  if (normalizedType === "收入") {
+    return Math.abs(rawMoney || 0);
+  }
+  if (normalizedType === "支出") {
+    return -Math.abs(rawMoney || 0);
+  }
+  if (normalizedType === "不计收支") {
+    return 0;
+  }
+  if (Number.isFinite(rawMoney)) {
+    return rawMoney;
+  }
+  const explicitDelta = Number(input.accountDelta);
+  return Number.isFinite(explicitDelta) ? explicitDelta : 0;
+}
+
 export async function applyFlowAccountDelta(
   tx: Prisma.TransactionClient,
   input: {
@@ -169,7 +192,7 @@ export async function recalcFundAccountFromFlows(
   let totalIncome = 0;
   let totalExpense = 0;
   for (const row of flows) {
-    const delta = resolveFlowAccountDelta({
+    const delta = resolveFlowAccountDeltaForRecalc({
       flowType: row.flowType,
       money: row.money,
       accountDelta: row.accountDelta,

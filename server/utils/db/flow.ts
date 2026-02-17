@@ -127,7 +127,7 @@ export async function createFlow(data: Prisma.FlowCreateInput): Promise<Flow> {
     typeof data.flowType === "string"
       ? normalizeFlowTypeLabel(data.flowType)
       : null;
-  const created = await prisma.flow.create({
+  let created = await prisma.flow.create({
     data: {
       ...data,
       flowType:
@@ -135,6 +135,20 @@ export async function createFlow(data: Prisma.FlowCreateInput): Promise<Flow> {
         (typeof data.flowType === "string" ? data.flowType : data.flowType),
     },
   });
+  if (created.accountId != null) {
+    const nextDelta = resolveFlowAccountDelta({
+      flowType: created.flowType,
+      money: created.money,
+      accountDelta: created.accountDelta,
+    });
+    created = await prisma.flow.update({
+      where: { id: created.id },
+      data: {
+        accountDelta: nextDelta,
+        accountBal: null,
+      },
+    });
+  }
   await recalcFundAccountFromFlows(created.accountId ?? undefined);
   return created;
 }
@@ -144,15 +158,47 @@ export async function updateFlow(
   id: number,
   data: Prisma.FlowUpdateInput,
 ): Promise<Flow> {
-  const oldRow = await prisma.flow.findUnique({ where: { id } });
-  const updated = await prisma.flow.update({ where: { id }, data });
-  const oldAccountId = oldRow?.accountId ?? undefined;
-  const newAccountId = updated.accountId ?? undefined;
-  await recalcFundAccountFromFlows(oldAccountId);
-  if (newAccountId !== oldAccountId) {
-    await recalcFundAccountFromFlows(newAccountId);
-  }
-  return updated;
+  return prisma.$transaction(async (tx) => {
+    const oldRow = await tx.flow.findUnique({ where: { id } });
+    let updated = await tx.flow.update({ where: { id }, data });
+
+    if (updated.accountId != null) {
+      const nextDelta = resolveFlowAccountDelta({
+        flowType: updated.flowType,
+        money: updated.money,
+        accountDelta: updated.accountDelta,
+      });
+      updated = await tx.flow.update({
+        where: { id },
+        data: {
+          accountDelta: nextDelta,
+          accountBal: null,
+        },
+      });
+    } else if (updated.accountDelta != null || updated.accountBal != null) {
+      updated = await tx.flow.update({
+        where: { id },
+        data: {
+          accountDelta: null,
+          accountBal: null,
+        },
+      });
+    }
+
+    const oldAccountId = oldRow?.accountId ?? undefined;
+    const newAccountId = updated.accountId ?? undefined;
+    await recalcFundAccountFromFlows(
+      oldAccountId,
+      tx as unknown as Prisma.TransactionClient,
+    );
+    if (newAccountId !== oldAccountId) {
+      await recalcFundAccountFromFlows(
+        newAccountId,
+        tx as unknown as Prisma.TransactionClient,
+      );
+    }
+    return updated;
+  });
 }
 
 /** 删除 */
@@ -183,7 +229,8 @@ export async function createFlowByAI(
     accountType: string;
   } | null;
 }> {
-  const flowType = normalizeFlowTypeLabel(String(args.flowType ?? "支出")) ?? "支出";
+  const flowType =
+    normalizeFlowTypeLabel(String(args.flowType ?? "支出")) ?? "支出";
   const industryType = String(args.industryType ?? "其他");
   const payType = String(args.payType ?? "未知");
   const money = Number(args.money ?? 0);
@@ -263,7 +310,10 @@ export async function createFlowByAI(
       },
     });
     // 与 update 一致：流水写入后在同一事务内重算资金账户
-    await recalcFundAccountFromFlows(accountId, tx as unknown as Prisma.TransactionClient);
+    await recalcFundAccountFromFlows(
+      accountId,
+      tx as unknown as Prisma.TransactionClient,
+    );
     return row;
   });
 
