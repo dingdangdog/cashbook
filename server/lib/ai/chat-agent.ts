@@ -73,13 +73,53 @@ export async function runChatAgent(
   const providerCacheKey = getProviderCacheKey(providerId);
   const skipToolCalls = TOOL_CALLS_UNSUPPORTED_PROVIDERS.has(providerCacheKey);
   const latestUserText = getLatestUserText(messages);
+  const requireTool = isLikelyToolIntent(latestUserText);
   logAIExecution({
     event: "start",
     userId,
-    strategy: skipToolCalls ? "json" : "tool_calls",
+    strategy: "json",
     userText: latestUserText,
-    detail: { maxToolRounds, providerId: providerId ?? null },
+    detail: {
+      maxToolRounds,
+      providerId: providerId ?? null,
+      preferredStrategy: "json",
+      fallbackStrategy: skipToolCalls ? "none" : "tool_calls",
+    },
   });
+
+  let jsonError: unknown = null;
+  try {
+    const result = await runWithJsonPlan({
+      userId,
+      messages,
+      client,
+      config,
+      requireTool,
+    });
+    logAIExecution({
+      event: "final_success",
+      userId,
+      strategy: "json",
+      userText: latestUserText,
+      toolCalls: result.toolCalls,
+      detail: {
+        executedCount: result.toolCalls?.length ?? 0,
+        toolSummary: result.toolCalls?.length
+          ? result.toolCalls.map((t) => ({ name: t.name, args: t.args }))
+          : "未调用工具",
+      },
+    });
+    return result;
+  } catch (e) {
+    jsonError = e;
+    logAIExecution({
+      event: "strategy_failed",
+      userId,
+      strategy: "json",
+      userText: latestUserText,
+      detail: { error: errorToMessage(e) },
+    });
+  }
 
   let toolCallsError: unknown = null;
   if (!skipToolCalls) {
@@ -140,39 +180,18 @@ export async function runChatAgent(
     }
   }
 
-  try {
-    const result = await runWithJsonPlan({
-      userId,
-      messages,
-      client,
-      config,
-    });
-    logAIExecution({
-      event: "final_success",
-      userId,
-      strategy: "json",
-      userText: latestUserText,
-      toolCalls: result.toolCalls,
-      detail: {
-        executedCount: result.toolCalls?.length ?? 0,
-        toolSummary: result.toolCalls?.length
-          ? result.toolCalls.map((t) => ({ name: t.name, args: t.args }))
-          : "未调用工具",
-      },
-    });
-    return result;
-  } catch (jsonError) {
-    const msg1 = errorToMessage(toolCallsError);
-    const msg2 = errorToMessage(jsonError);
-    logAIExecution({
-      event: "all_failed",
-      userId,
-      strategy: "json",
-      userText: latestUserText,
-      detail: { toolCallsError: msg1, jsonError: msg2 },
-    });
-    throw new Error(`方案1(tool_calls)失败：${msg1}；方案2(json)失败：${msg2}`);
-  }
+  const jsonMsg = errorToMessage(jsonError);
+  const toolCallsMsg = errorToMessage(toolCallsError);
+  logAIExecution({
+    event: "all_failed",
+    userId,
+    strategy: "json",
+    userText: latestUserText,
+    detail: { jsonError: jsonMsg, toolCallsError: toolCallsMsg },
+  });
+  throw new Error(
+    `方案1(json)失败：${jsonMsg}；方案2(tool_calls)失败：${toolCallsMsg}`,
+  );
 }
 
 async function runWithToolCalls(opts: {
@@ -343,7 +362,10 @@ JSON 格式固定如下：
 - 能调用工具就优先给 action，不要 name=none
 - 数字字段必须是 number
 - 记账时若能从“当前用户资金账户列表”定位到账户，优先填写 add_flow.args.accountId
+- 记账类请求（如“记账/记一笔/花了/收入/支出/买了”）必须优先输出 add_flow，不要改成查询或闲聊
+- 查询类请求（如“查/统计/总支出/多少/最高/明细”）必须优先输出 query_flows、query_flow_extremes 或 get_statistics，不要输出泛化客套回复
 - add_flow.args.flowType / query_flows.args.flowType 仅允许：收入、支出、不计收支（不要输出 income/expense/inflow/outflow 等英文值）
+- add_flow.args.payType 尽量从用户原话抽取（如“支付宝支付/微信支付/现金/银行卡/信用卡”），无法判断时填“未知”
 - 日期格式 YYYY-MM-DD，月份 YYYY-MM`;
 
 type JsonPlan = {
@@ -384,8 +406,9 @@ async function runWithJsonPlan(opts: {
   messages: ChatCompletionMessageParam[];
   client: NonNullable<Awaited<ReturnType<typeof getAIClient>>>;
   config: NonNullable<Awaited<ReturnType<typeof getAIProviderConfig>>>;
+  requireTool?: boolean;
 }): Promise<ChatAgentResult> {
-  const { userId, messages, client, config } = opts;
+  const { userId, messages, client, config, requireTool = false } = opts;
   const now = new Date();
   const latestUserText = getLatestUserText(messages);
   const accountPrompt = await buildFundAccountsPrompt(userId);
@@ -394,10 +417,11 @@ async function runWithJsonPlan(opts: {
   }
 
   // 兼容部分严格校验角色交替的后端：仅发送单条 user 消息做 JSON 抽取
+  const recentContext = buildRecentConversationContext(messages);
   const fullMessages: ChatCompletionMessageParam[] = [
     {
       role: "user",
-      content: `${JSON_PLAN_SYSTEM_PROMPT}\n\n当前服务器时间：${getNowContext(now)}\n${accountPrompt}\n请基于以下用户请求返回 JSON：\n${latestUserText}`,
+      content: `${JSON_PLAN_SYSTEM_PROMPT}\n\n当前服务器时间：${getNowContext(now)}\n${accountPrompt}\n最近对话上下文（仅供理解，不要原样复述）：\n${recentContext}\n请基于以下用户请求返回 JSON：\n${latestUserText}`,
     },
   ];
 
@@ -441,6 +465,9 @@ async function runWithJsonPlan(opts: {
   }
 
   const reply = parsed.reply?.trim();
+  if (requireTool) {
+    throw new Error("json 方案在工具意图下未产出可执行 action");
+  }
   if (!reply) {
     throw new Error("json 方案缺少可用 reply");
   }
@@ -480,7 +507,7 @@ async function summarizeToolResult(opts: {
         {
           role: "system",
           content:
-            "你是记账助手，请基于工具执行结果，给用户生成简洁中文回复。不要编造，严格基于结果。",
+            "你是记账助手，请基于工具执行结果给用户生成简洁中文回复。不要编造，严格基于结果。禁止输出与本次工具结果无关的客套话；优先明确结果是否成功、关键数字、账户或条目名称。",
         },
         {
           role: "user",
@@ -563,6 +590,40 @@ function getLatestUserText(messages: ChatCompletionMessageParam[]): string {
     }
   }
   return "";
+}
+
+function buildRecentConversationContext(
+  messages: ChatCompletionMessageParam[],
+): string {
+  const rows: string[] = [];
+  for (let i = messages.length - 1; i >= 0 && rows.length < 6; i--) {
+    const m = messages[i];
+    if (!m) continue;
+    if (m.role !== "user" && m.role !== "assistant") continue;
+    const content =
+      typeof m.content === "string"
+        ? m.content.trim()
+        : Array.isArray(m.content)
+          ? m.content
+              .filter((x) => x.type === "text" && "text" in x)
+              .map((x) => (typeof x.text === "string" ? x.text : ""))
+              .join(" ")
+              .trim()
+          : "";
+    if (!content) continue;
+    rows.push(
+      `${m.role === "user" ? "用户" : "助手"}：${content.slice(0, 200)}`,
+    );
+  }
+  if (rows.length === 0) return "无";
+  return rows.reverse().join("\n");
+}
+
+function isLikelyToolIntent(text: string): boolean {
+  if (!text) return false;
+  return /(记账|记一笔|新增|添加|查|查询|统计|总支出|总收入|花了多少|最高|最低|明细|流水|预算|账户|余额|负债|应收|投资|固定流水)/.test(
+    text,
+  );
 }
 
 function errorToMessage(e: unknown): string {
