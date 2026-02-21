@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -210,10 +211,6 @@ export async function deleteFlow(id: number): Promise<Flow> {
 
 function genFlowNo(): string {
   return `F${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
-}
-
-export interface AIToolContext {
-  userId: number;
 }
 
 export async function createFlowByAI(

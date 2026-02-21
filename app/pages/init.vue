@@ -5,6 +5,7 @@ definePageMeta({
 
 import { SunIcon, MoonIcon } from "@heroicons/vue/24/outline";
 import { SystemConfig } from "~/utils/store";
+import { clearAuthStorage } from "~/utils/common";
 
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.isDark);
@@ -87,9 +88,13 @@ onMounted(async () => {
     const count = await doApi.get<number>("api/check");
     if (count !== 0) {
       navigateTo("/login");
+      return;
     }
+    // 未初始化时清除前端登录态，避免残留 cookie 导致与 init 冲突、来回跳转
+    clearAuthStorage();
   } catch {
     navigateTo("/login");
+    return;
   }
   if (SystemConfig.value?.title) {
     systemForm.value.title = SystemConfig.value.title;

@@ -1,6 +1,7 @@
 import prisma from "~~/server/lib/prisma";
 import type { Prisma } from "~~/prisma/generated/client";
 import {
+  type AIToolContext,
   type PaginationParams,
   type PaginationResult,
   buildPagination,
@@ -8,9 +9,6 @@ import {
 } from "./types";
 
 type FundAccount = Prisma.FundAccountGetPayload<Record<string, never>>;
-export interface AIToolContext {
-  userId: number;
-}
 
 /** FundAccount 查询条件 */
 export interface FundAccountQueryWhere {

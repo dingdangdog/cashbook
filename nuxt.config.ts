@@ -130,5 +130,8 @@ export default defineNuxtConfig({
           "./node_modules/.prisma/client/index-browser.js",
       },
     },
+    ssr: {
+      noExternal: ["openai"],
+    },
   },
 });
