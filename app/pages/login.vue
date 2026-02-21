@@ -62,7 +62,7 @@ const login = () => {
         if (fromUrl.value && fromUrl.value.startsWith("http")) {
           window.location.href = fromUrl.value;
         } else {
-          navigateTo(fromUrl.value || "/");
+          navigateTo(fromUrl.value || "/user/jimi");
         }
       }
     })
@@ -159,7 +159,7 @@ onMounted(async () => {
       if (fromUrl.value) {
         window.location.href = fromUrl.value;
       } else {
-        navigateTo("/");
+        navigateTo("/user/jimi");
       }
     }, 200);
   }

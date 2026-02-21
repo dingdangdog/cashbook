@@ -5,7 +5,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 onMounted(() => {
-  navigateTo("/user/calendar");
+  navigateTo("/user/jimi");
 });
 </script>
 
