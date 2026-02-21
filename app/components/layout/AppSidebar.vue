@@ -51,10 +51,22 @@ const toggleTheme = () => {
 /** 普通用户菜单 */
 const userMenuItems: Menu[] = [
   {
+    title: "Jimi 助手",
+    path: "/user/jimi",
+    icon: ChatBubbleLeftRightIcon,
+    color: "text-indigo-500",
+  },
+  {
     title: "账本日历",
     path: "/user/calendar",
     icon: CalendarDaysIcon,
     color: "text-green-500",
+  },
+  {
+    title: "数据分析",
+    path: "/user/analysis",
+    icon: ChartBarIcon,
+    color: "text-purple-500",
   },
   {
     title: "资金账户",
@@ -79,12 +91,6 @@ const userMenuItems: Menu[] = [
     path: "/user/budget",
     icon: ExclamationTriangleIcon,
     color: "text-red-500",
-  },
-  {
-    title: "数据分析",
-    path: "/user/analysis",
-    icon: ChartBarIcon,
-    color: "text-purple-500",
   },
   {
     title: "类型管理",
@@ -124,12 +130,6 @@ const adminMenuItems: Menu[] = [
 
 /** 辅助菜单（文档、外链等） */
 const auxiliaryMenuItems: Menu[] = [
-  {
-    title: "Jimi 助手",
-    path: "/user/jimi",
-    icon: ChatBubbleLeftRightIcon,
-    color: "text-indigo-500",
-  },
   {
     title: "文档站",
     path: "documentation",
@@ -185,38 +185,27 @@ const handleNavigate = (menu: Menu) => {
 
 <template>
   <!-- Mobile backdrop -->
-  <div
-    v-if="isMobile && isOpen"
-    @click="emit('close')"
-    class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-  ></div>
+  <div v-if="isMobile && isOpen" @click="emit('close')" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden">
+  </div>
 
   <!-- Sidebar -->
-  <aside
-    :class="[
-      'fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-border transform transition-transform duration-200 ease-in-out',
-      isMobile
-        ? isOpen
-          ? 'translate-x-0'
-          : '-translate-x-full'
-        : 'translate-x-0',
-      !isMobile && 'lg:relative lg:translate-x-0 h-full',
-    ]"
-  >
+  <aside :class="[
+    'fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-border transform transition-transform duration-200 ease-in-out',
+    isMobile
+      ? isOpen
+        ? 'translate-x-0'
+        : '-translate-x-full'
+      : 'translate-x-0',
+    !isMobile && 'lg:relative lg:translate-x-0 h-full',
+  ]">
     <div class="flex flex-col h-full bg-surface-muted">
       <!-- Mobile header -->
-      <div
-        v-if="isMobile"
-        class="flex items-center justify-between p-2 md:p-4 border-b border-border"
-      >
+      <div v-if="isMobile" class="flex items-center justify-between p-2 md:p-4 border-b border-border">
         <div class="flex items-center">
           <img src="/logo.webp" alt="Cashbook" class="h-8 w-8" />
           <span class="ml-2 text-lg font-bold text-primary-600">Cashbook</span>
         </div>
-        <button
-          @click="emit('close')"
-          class="p-2 rounded-md text-foreground/70 hover:bg-surface"
-        >
+        <button @click="emit('close')" class="p-2 rounded-md text-foreground/70 hover:bg-surface">
           <XMarkIcon class="h-6 w-6" />
         </button>
       </div>
@@ -224,155 +213,99 @@ const handleNavigate = (menu: Menu) => {
       <!-- Navigation -->
       <nav class="flex-1 overflow-y-auto p-4 space-y-1">
         <!-- 普通用户菜单 -->
-        <p
-          class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50"
-        >
+        <p class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50">
           主要功能
         </p>
         <div class="space-y-0.5">
-          <button
-            v-for="item in userMenuItems"
-            :key="item.path"
-            @click="handleNavigate(item)"
-            :class="[
-              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+          <button v-for="item in userMenuItems" :key="item.path" @click="handleNavigate(item)" :class="[
+            'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+            isActive(item.path)
+              ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
+              : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
+          ]">
+            <component v-if="item.icon !== 'string'" :is="item.icon" :class="[
+              'h-5 w-5 mr-3 shrink-0',
               isActive(item.path)
-                ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
-                : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
-            ]"
-          >
-            <component
-              v-if="item.icon !== 'string'"
-              :is="item.icon"
-              :class="[
-                'h-5 w-5 mr-3 shrink-0',
-                isActive(item.path)
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : 'text-muted',
-              ]"
-            />
-            <i
-              v-else
-              :class="[
-                item.icon,
-                'text-base mr-3 shrink-0',
-                isActive(item.path)
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : 'text-muted',
-              ]"
-            ></i>
-            <span
-              :class="isActive(item.path) ? 'font-semibold' : 'font-medium'"
-              >{{ item.title }}</span
-            >
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-muted',
+            ]" />
+            <i v-else :class="[
+              item.icon,
+              'text-base mr-3 shrink-0',
+              isActive(item.path)
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-muted',
+            ]"></i>
+            <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
           </button>
         </div>
 
         <!-- 管理员菜单 -->
         <template v-if="isAdmin">
           <div class="my-3 border-t border-border"></div>
-          <p
-            class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50"
-          >
+          <p class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50">
             系统管理
           </p>
           <div class="space-y-0.5">
-            <button
-              v-for="item in adminMenuItems"
-              :key="item.path"
-              @click="handleNavigate(item)"
-              :class="[
-                'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+            <button v-for="item in adminMenuItems" :key="item.path" @click="handleNavigate(item)" :class="[
+              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+              isActive(item.path)
+                ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
+                : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
+            ]">
+              <component v-if="item.icon !== 'string'" :is="item.icon" :class="[
+                'h-5 w-5 mr-3 shrink-0',
                 isActive(item.path)
-                  ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
-                  : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
-              ]"
-            >
-              <component
-                v-if="item.icon !== 'string'"
-                :is="item.icon"
-                :class="[
-                  'h-5 w-5 mr-3 shrink-0',
-                  isActive(item.path)
-                    ? 'text-primary-600 dark:text-primary-400'
-                    : 'text-muted',
-                ]"
-              />
-              <i
-                v-else
-                :class="[
-                  item.icon,
-                  'text-base mr-3 shrink-0',
-                  isActive(item.path)
-                    ? 'text-primary-600 dark:text-primary-400'
-                    : 'text-muted',
-                ]"
-              ></i>
-              <span
-                :class="isActive(item.path) ? 'font-semibold' : 'font-medium'"
-                >{{ item.title }}</span
-              >
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-muted',
+              ]" />
+              <i v-else :class="[
+                item.icon,
+                'text-base mr-3 shrink-0',
+                isActive(item.path)
+                  ? 'text-primary-600 dark:text-primary-400'
+                  : 'text-muted',
+              ]"></i>
+              <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
             </button>
           </div>
         </template>
 
         <!-- 辅助菜单 -->
         <div class="my-3 border-t border-border"></div>
-        <p
-          class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50"
-        >
+        <p class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/50">
           其他
         </p>
         <div class="space-y-0.5">
-          <button
-            v-for="item in auxiliaryMenuItems"
-            :key="item.path"
-            @click="handleNavigate(item)"
-            :class="[
-              'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+          <button v-for="item in auxiliaryMenuItems" :key="item.path" @click="handleNavigate(item)" :class="[
+            'w-full flex items-center px-3 py-2 rounded-lg text-left transition-all duration-200 outline-none border-l-4',
+            isActive(item.path)
+              ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
+              : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
+          ]">
+            <component v-if="item.icon !== 'string'" :is="item.icon" :class="[
+              'h-5 w-5 mr-3 shrink-0',
               isActive(item.path)
-                ? 'bg-primary-100/90 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 border-l-primary-500 shadow-sm'
-                : 'border-l-transparent text-foreground/80 hover:bg-surface hover:border-l-foreground/10',
-            ]"
-          >
-            <component
-              v-if="item.icon !== 'string'"
-              :is="item.icon"
-              :class="[
-                'h-5 w-5 mr-3 shrink-0',
-                isActive(item.path)
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : 'text-muted',
-              ]"
-            />
-            <i
-              v-else
-              :class="[
-                item.icon,
-                'text-base mr-3 shrink-0',
-                isActive(item.path)
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : 'text-muted',
-              ]"
-            ></i>
-            <span
-              :class="isActive(item.path) ? 'font-semibold' : 'font-medium'"
-              >{{ item.title }}</span
-            >
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-muted',
+            ]" />
+            <i v-else :class="[
+              item.icon,
+              'text-base mr-3 shrink-0',
+              isActive(item.path)
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-muted',
+            ]"></i>
+            <span :class="isActive(item.path) ? 'font-semibold' : 'font-medium'">{{ item.title }}</span>
           </button>
         </div>
       </nav>
 
       <!-- Theme toggle -->
       <div class="p-4 border-t border-border">
-        <button
-          @click="toggleTheme"
-          class="w-full flex items-center justify-center px-3 py-2 rounded-lg text-foreground hover:bg-surface transition-colors font-medium"
-        >
-          <SunIcon
-            v-if="!isDark"
-            class="h-5 w-5 mr-2 shrink-0 text-foreground"
-          />
+        <button @click="toggleTheme"
+          class="w-full flex items-center justify-center px-3 py-2 rounded-lg text-foreground hover:bg-surface transition-colors font-medium">
+          <SunIcon v-if="!isDark" class="h-5 w-5 mr-2 shrink-0 text-foreground" />
           <MoonIcon v-else class="h-5 w-5 mr-2 shrink-0 text-foreground" />
           <span>{{ isDark ? "深色模式" : "浅色模式" }}</span>
         </button>

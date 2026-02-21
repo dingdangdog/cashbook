@@ -85,21 +85,14 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="fixed z-40 flex h-8 w-8 md:h-14 md:w-14 cursor-grab rounded-full bg-primary-500 text-white shadow-lg transition hover:bg-primary-600 active:cursor-grabbing"
-    aria-label="打开 Jimi 助手"
-    :style="{
+    class="fixed z-[60] flex h-8 w-8 md:h-14 md:w-14 cursor-grab rounded-full bg-primary-500 text-white shadow-lg transition hover:bg-primary-600 active:cursor-grabbing"
+    aria-label="打开 Jimi 助手" :style="{
       left: `${left}px`,
       bottom: `${bottom}px`,
       width: `${SIZE}px`,
       height: `${SIZE}px`,
-    }"
-    @mousedown.prevent="onPointerDown"
-    @touchstart.prevent="onPointerDown"
-    @click.prevent
-  >
-    <span
-      class="flex h-full w-full items-center justify-center pointer-events-none"
-    >
+    }" @mousedown.prevent="onPointerDown" @touchstart.prevent="onPointerDown" @click.prevent>
+    <span class="flex h-full w-full items-center justify-center pointer-events-none">
       <ChatBubbleLeftRightIcon class="h-6 w-6 md:h-7 md:w-7" />
     </span>
   </div>
