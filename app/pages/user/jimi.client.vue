@@ -6,6 +6,10 @@ definePageMeta({
 
 import JimiChat from "~/components/jimi/JimiChat.vue";
 import CsvFlowTable from "@/components/datas/CsvFlowTable.vue";
+import DatasFlowTable from "@/components/datas/FlowTable.vue";
+import FlowEditDialog from "~/components/dialog/FlowEditDialog.vue";
+import { showFlowEditDialog } from "~/utils/flag";
+import type { Flow } from "~/utils/table";
 import {
   DocumentTextIcon,
   ChevronDownIcon,
@@ -96,6 +100,60 @@ async function fetchStats() {
 }
 
 watch(statsTab, () => fetchStats());
+
+/** 流水详情弹窗：点击总收入/总支出卡片打开 */
+const showFlowTable = ref(false);
+const flowTableRef = ref();
+const flowQuery = ref<{
+  pageNum: number;
+  pageSize: number;
+  startDay: string;
+  endDay: string;
+  flowType: string;
+  attribution?: string;
+  name?: string;
+  description?: string;
+  industryType?: string;
+  payType?: string;
+  minMoney?: number;
+  maxMoney?: number;
+}>({
+  pageNum: 1,
+  pageSize: 20,
+  startDay: "",
+  endDay: "",
+  flowType: "",
+  attribution: "",
+  name: "",
+  description: "",
+  industryType: "",
+  payType: "",
+  minMoney: undefined,
+  maxMoney: undefined,
+});
+
+function openFlowDetail(flowType: "收入" | "支出") {
+  const range = getRangeDates(statsTab.value);
+  flowQuery.value.startDay = range.startDate ?? "";
+  flowQuery.value.endDay = range.endDate ?? "";
+  flowQuery.value.flowType = flowType;
+  flowQuery.value.pageNum = 1;
+  showFlowTable.value = true;
+}
+
+const selectedFlow = ref<Flow | any>({});
+const dialogFormTitle = ref("修改流水");
+
+function editItem(item: Flow) {
+  selectedFlow.value = item;
+  dialogFormTitle.value = "修改流水";
+  showFlowEditDialog.value = true;
+}
+
+function onFlowEditSuccess() {
+  fetchStats();
+  if (flowTableRef.value?.refresh) flowTableRef.value.refresh();
+}
 
 const closeTools = () => { toolsOpen.value = false; };
 onMounted(() => {
@@ -204,14 +262,20 @@ const goBack = () => {
         加载中...
       </div>
       <div v-else class="grid grid-cols-3 gap-2">
-        <div class="rounded-lg bg-surface border border-border p-2 flex flex-col items-center">
+        <div
+          class="rounded-lg bg-surface border border-border p-2 flex flex-col items-center cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
+          @click="openFlowDetail('收入')"
+        >
           <ArrowTrendingUpIcon class="h-4 w-4 text-primary-600 mb-0.5" />
           <span class="text-xs text-foreground/60">总收入</span>
           <span class="text-sm font-semibold text-primary-700 dark:text-primary-300">
             {{ stats.totalIncome.toFixed(2) }}
           </span>
         </div>
-        <div class="rounded-lg bg-surface border border-border p-2 flex flex-col items-center">
+        <div
+          class="rounded-lg bg-surface border border-border p-2 flex flex-col items-center cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
+          @click="openFlowDetail('支出')"
+        >
           <ArrowTrendingDownIcon class="h-4 w-4 text-red-600 mb-0.5" />
           <span class="text-xs text-foreground/60">总支出</span>
           <span class="text-sm font-semibold text-red-700 dark:text-red-300">
@@ -256,6 +320,52 @@ const goBack = () => {
         </div>
       </div>
     </div>
+
+    <!-- 流水详情弹窗（与日历点击收入/支出效果一致） -->
+    <div
+      v-if="showFlowTable"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-2 md:p-4 z-[70]"
+      @click="showFlowTable = false"
+    >
+      <div
+        class="bg-surface rounded-xl shadow-2xl w-full max-w-6xl max-h-[85vh] overflow-hidden flex flex-col border border-border"
+        @click.stop
+      >
+        <div
+          class="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0"
+        >
+          <h2 class="text-base font-bold text-foreground">
+            {{ flowQuery.startDay || "全部" }} ~ {{ flowQuery.endDay || "全部" }}
+            <span v-if="flowQuery.flowType" class="text-foreground/70">
+              · {{ flowQuery.flowType }}</span
+            >
+          </h2>
+          <button
+            type="button"
+            @click="showFlowTable = false"
+            class="px-3 py-1.5 bg-surface-muted hover:bg-surface text-foreground rounded-lg text-sm transition-colors"
+          >
+            关闭
+          </button>
+        </div>
+        <div class="flex-1 overflow-auto p-4">
+          <DatasFlowTable
+            ref="flowTableRef"
+            :query="flowQuery"
+            v-if="showFlowTable"
+            @edit-item="editItem"
+            :actions="true"
+          />
+        </div>
+      </div>
+    </div>
+
+    <FlowEditDialog
+      v-if="showFlowEditDialog"
+      title="修改流水"
+      :flow="selectedFlow"
+      :success-callback="onFlowEditSuccess"
+    />
 
     <input ref="csvFileInput" type="file" accept=".csv,.xlsx" style="display: none" @change="readCsvInfo" />
   </div>
