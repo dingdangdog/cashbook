@@ -78,7 +78,9 @@ export default defineEventHandler(async (event) => {
         ? item.day.toISOString().slice(0, 10)
         : String(item.day ?? "");
     const flowType = item.flowType;
-    const moneySum = item._sum.money || 0; // 如果 money 为 null，默认值为 0
+    const raw = item._sum.money || 0;
+    const moneySum =
+      flowType === "收入" || flowType === "支出" ? Math.abs(raw) : raw;
 
     if (!acc[dayKey]) {
       acc[dayKey] = {

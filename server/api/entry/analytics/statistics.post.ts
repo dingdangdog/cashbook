@@ -32,8 +32,9 @@ export default defineEventHandler(async (event) => {
   let totalExpense = 0;
   for (const g of groups) {
     const sum = g._sum.money ?? 0;
-    if (g.flowType === "收入") totalIncome += sum;
-    else if (g.flowType === "支出") totalExpense += sum;
+    const amount = Math.abs(sum);
+    if (g.flowType === "收入") totalIncome += amount;
+    else if (g.flowType === "支出") totalExpense += amount;
   }
   const netIncome = totalIncome - totalExpense;
 

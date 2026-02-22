@@ -104,12 +104,13 @@ export default defineEventHandler(async (event) => {
     where,
   });
   monthSum.forEach((item) => {
+    const raw = item._sum.money || 0;
     if (item.flowType == "收入") {
-      res.inSum = (item._sum.money || 0).toFixed(2);
+      res.inSum = Math.abs(raw).toFixed(2);
     } else if (item.flowType == "支出") {
-      res.outSum = (item._sum.money || 0).toFixed(2);
+      res.outSum = Math.abs(raw).toFixed(2);
     } else if (item.flowType == "不计收支") {
-      res.zeroSum = (item._sum.money || 0).toFixed(2);
+      res.zeroSum = raw.toFixed(2);
     }
   });
 
@@ -132,7 +133,7 @@ export default defineEventHandler(async (event) => {
   });
   if (maxInType[0]) {
     res.maxInType = maxInType[0].industryType || "";
-    res.maxInTypeSum = (maxInType[0]._sum.money || 0).toFixed(2);
+    res.maxInTypeSum = Math.abs(maxInType[0]._sum.money || 0).toFixed(2);
   }
 
   // 3. 查询当月最高支出类型
@@ -154,7 +155,7 @@ export default defineEventHandler(async (event) => {
   });
   if (maxOutType[0]) {
     res.maxOutType = maxOutType[0].industryType || "";
-    res.maxOutTypeSum = (maxOutType[0]._sum.money || 0).toFixed(2);
+    res.maxOutTypeSum = Math.abs(maxOutType[0]._sum.money || 0).toFixed(2);
   }
 
   // 4. 查询当月最高单笔收入

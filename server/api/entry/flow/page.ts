@@ -189,12 +189,13 @@ export default defineEventHandler(async (event) => {
   let totalOut = 0;
   let notInOut = 0;
   sumMoney.forEach((t: any) => {
+    const raw = Number(t._sum.money);
     if (t.flowType == "收入") {
-      totalIn = Number(t._sum.money);
+      totalIn = Math.abs(raw);
     } else if (t.flowType == "支出") {
-      totalOut = Number(t._sum.money);
+      totalOut = Math.abs(raw);
     } else if (t.flowType == "不计收支") {
-      notInOut = Number(t._sum.money);
+      notInOut = raw;
     }
   });
 

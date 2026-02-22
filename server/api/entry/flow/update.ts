@@ -2,6 +2,7 @@ import prisma from "~~/server/lib/prisma";
 import {
   recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
+  normalizeFlowTypeLabel,
 } from "~~/server/utils/db";
 
 /**
@@ -81,10 +82,15 @@ export default defineEventHandler(async (event) => {
     const nextAccountId =
       flow.accountId !== undefined ? flow.accountId : oldRow.accountId;
     const nextFlowType = flow.flowType ?? oldRow.flowType ?? "";
-    const nextMoney =
+    const normalizedType = normalizeFlowTypeLabel(nextFlowType);
+    const rawNextMoney =
       flow.money !== undefined && flow.money !== null
         ? flow.money
         : oldRow.money;
+    const nextMoney =
+      normalizedType === "收入" || normalizedType === "支出"
+        ? Math.abs(Number(rawNextMoney || 0))
+        : rawNextMoney;
     const nextDay = flow.day ?? oldRow.day;
     const nextDelta = resolveFlowAccountDelta({
       flowType: nextFlowType,

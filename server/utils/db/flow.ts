@@ -122,18 +122,36 @@ export async function getFlowsPage(
   };
 }
 
+/** 收入/支出时金额存为正数，与 flowType 方向一致，避免统计双重符号 */
+function normalizeMoneyByFlowType(
+  money: number | null | undefined,
+  flowType: string | null | undefined,
+): number | null | undefined {
+  if (money == null) return money;
+  const n = Number(money);
+  if (!Number.isFinite(n)) return money;
+  const type = normalizeFlowTypeLabel(flowType ?? null);
+  if (type === "收入" || type === "支出") return Math.abs(n);
+  return n;
+}
+
 /** 创建 */
 export async function createFlow(data: Prisma.FlowCreateInput): Promise<Flow> {
   const normalizedType =
     typeof data.flowType === "string"
       ? normalizeFlowTypeLabel(data.flowType)
       : null;
+  const normalizedMoney = normalizeMoneyByFlowType(
+    data.money as number | null | undefined,
+    normalizedType ?? (data.flowType as string) ?? null,
+  );
   let created = await prisma.flow.create({
     data: {
       ...data,
       flowType:
         normalizedType ??
         (typeof data.flowType === "string" ? data.flowType : data.flowType),
+      ...(normalizedMoney !== undefined && { money: normalizedMoney }),
     },
   });
   if (created.accountId != null) {
@@ -161,7 +179,20 @@ export async function updateFlow(
 ): Promise<Flow> {
   return prisma.$transaction(async (tx) => {
     const oldRow = await tx.flow.findUnique({ where: { id } });
-    let updated = await tx.flow.update({ where: { id }, data });
+    const effectiveFlowType = normalizeFlowTypeLabel(
+      (data.flowType as string) ?? oldRow?.flowType ?? null,
+    );
+    const moneyInput = data.money as number | null | undefined;
+    const normalizedMoney =
+      moneyInput != null &&
+      (effectiveFlowType === "收入" || effectiveFlowType === "支出")
+        ? Math.abs(Number(moneyInput))
+        : moneyInput;
+    const updateData = {
+      ...data,
+      ...(normalizedMoney !== undefined && { money: normalizedMoney }),
+    };
+    let updated = await tx.flow.update({ where: { id }, data: updateData });
 
     if (updated.accountId != null) {
       const nextDelta = resolveFlowAccountDelta({
@@ -246,12 +277,11 @@ export async function createFlowByAI(
     return { success: false, message: "金额不能为空" };
   }
 
+  // 收入/支出仅用 flowType 表示方向，金额统一存为正数，避免统计/展示出现双重符号
   const normalizedMoney =
-    flowType === "支出"
-      ? -Math.abs(money)
-      : flowType === "收入"
-        ? Math.abs(money)
-        : Number(money);
+    flowType === "支出" || flowType === "收入"
+      ? Math.abs(money)
+      : Number(money);
   let matchedAccount = null as Awaited<
     ReturnType<typeof resolveFundAccountByPayType>
   >;
@@ -642,14 +672,18 @@ export async function getFlowStatisticsByAI(
 
   const summary: Record<string, number> = {};
   sumByType.forEach((r) => {
-    summary[r.flowType || "未知"] = r._sum.money ?? 0;
+    const raw = r._sum.money ?? 0;
+    summary[r.flowType || "未知"] =
+      r.flowType === "收入" || r.flowType === "支出" ? Math.abs(raw) : raw;
   });
 
   const byCategory: Record<string, Record<string, number>> = {};
   byIndustry.forEach((r) => {
     const ft = r.flowType || "未知";
     if (!byCategory[ft]) byCategory[ft] = {};
-    byCategory[ft][r.industryType || "其他"] = r._sum.money ?? 0;
+    const raw = r._sum.money ?? 0;
+    byCategory[ft][r.industryType || "其他"] =
+      r.flowType === "收入" || r.flowType === "支出" ? Math.abs(raw) : raw;
   });
 
   return {

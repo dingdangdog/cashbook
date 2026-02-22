@@ -86,7 +86,9 @@ export default defineEventHandler(async (event) => {
       industryType = "未知";
     }
     const flowType = item.flowType;
-    const moneySum = item._sum.money || 0; // 如果 money 为 null，默认值为 0
+    const raw = item._sum.money || 0;
+    const moneySum =
+      flowType === "收入" || flowType === "支出" ? Math.abs(raw) : raw;
 
     // 如果当前 day 不存在，则初始化
     if (!acc[industryType]) {

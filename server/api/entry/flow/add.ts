@@ -2,6 +2,7 @@ import prisma from "~~/server/lib/prisma";
 import {
   recalcFundAccountFromFlows,
   resolveFlowAccountDelta,
+  normalizeFlowTypeLabel,
 } from "~~/server/utils/db";
 
 /**
@@ -38,14 +39,21 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event); // 获取请求体
 
   const userId = await getUserId(event);
+  const flowType = String(body.flowType || "");
+  const normalizedType = normalizeFlowTypeLabel(flowType);
+  const rawMoney = Number(body.money || "");
+  const money =
+    normalizedType === "收入" || normalizedType === "支出"
+      ? Math.abs(rawMoney)
+      : rawMoney;
   const flow = {
     userId: userId,
     day: body.day ? new Date(body.day) : new Date(),
-    flowType: String(body.flowType || ""), // 流水类型：收入、支出
+    flowType, // 流水类型：收入、支出
     industryType: String(body.industryType || ""), // 行业分类 原 type（收入类型、支出类型）
     payType: String(body.payType || ""), // 支付方式
     name: String(body.name || ""),
-    money: Number(body.money || ""),
+    money,
     description: String(body.description || ""),
     // invoice: String(body.invoice || ""),
     attribution: String(body.attribution || ""),
