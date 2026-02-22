@@ -36,3 +36,13 @@ export const list = (data: Partial<AdminTheme>): Promise<AdminTheme[]> => {
 export const all = (): Promise<AdminTheme[]> => {
   return doApi.post(`${prefix}/all`, {});
 };
+export const generateAI = (data: {
+  name: string;
+  description: string;
+  mode: ThemeMode;
+}): Promise<AdminTheme> => {
+  return doApi.post(`${prefix}/generate-ai`, data);
+};
+export const setDefault = (id: string): Promise<AdminTheme> => {
+  return doApi.post(`${prefix}/set-default`, { id });
+};

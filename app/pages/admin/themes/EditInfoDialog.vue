@@ -115,20 +115,11 @@ const close = () => {
 </script>
 
 <template>
-  <div
-    v-if="editInfoFlag"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-  >
-    <div
-      class="bg-surface rounded-xl shadow-xl w-full max-w-3xl border border-border"
-      @click.stop
-    >
+  <div v-if="editInfoFlag" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-surface rounded-xl shadow-xl w-full max-w-3xl border border-border" @click.stop>
       <div class="px-6 py-4 border-b border-border flex justify-between items-center">
         <h3 class="text-lg font-semibold text-foreground">{{ title }}</h3>
-        <button
-          @click="close"
-          class="text-muted hover:text-foreground transition-colors"
-        >
+        <button @click="close" class="text-muted hover:text-foreground transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
@@ -141,43 +132,30 @@ const close = () => {
             <label class="block text-sm font-medium text-foreground mb-2">
               code <span class="text-red-500">*</span>
             </label>
-            <input
-              v-model="editItem.code"
-              type="text"
-              :class="[
-                'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 transition-colors',
-                errors.code ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500 focus:border-primary-500',
-              ]"
-              placeholder="如：light-green"
-            />
+            <input v-model="editItem.code" type="text" :class="[
+              'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 transition-colors',
+              errors.code ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500 focus:border-primary-500',
+            ]" placeholder="如：light-green" />
             <p v-if="errors.code" class="mt-1 text-sm text-red-500">{{ errors.code }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-2">
               name <span class="text-red-500">*</span>
             </label>
-            <input
-              v-model="editItem.name"
-              type="text"
-              :class="[
-                'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 transition-colors',
-                errors.name ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500 focus:border-primary-500',
-              ]"
-              placeholder="显示名称"
-            />
+            <input v-model="editItem.name" type="text" :class="[
+              'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 transition-colors',
+              errors.name ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500 focus:border-primary-500',
+            ]" placeholder="显示名称" />
             <p v-if="errors.name" class="mt-1 text-sm text-red-500">{{ errors.name }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-2">
               mode <span class="text-red-500">*</span>
             </label>
-            <select
-              v-model="editItem.mode"
-              :class="[
-                'w-full px-3 py-2 border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 transition-colors',
-                errors.mode ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500',
-              ]"
-            >
+            <select v-model="editItem.mode" :class="[
+              'w-full px-3 py-2 border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 transition-colors',
+              errors.mode ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500',
+            ]">
               <option value="light">light</option>
               <option value="dark">dark</option>
             </select>
@@ -185,12 +163,9 @@ const close = () => {
           </div>
           <div>
             <label class="block text-sm font-medium text-foreground mb-2">sortBy</label>
-            <input
-              v-model.number="editItem.sortBy"
-              type="number"
+            <input v-model.number="editItem.sortBy" type="number"
               class="w-full px-3 py-2 border border-border rounded-lg bg-surface text-foreground focus:ring-2 focus:ring-primary-500"
-              placeholder="0"
-            />
+              placeholder="0" />
           </div>
         </div>
         <div class="flex flex-wrap gap-6">
@@ -198,43 +173,32 @@ const close = () => {
             <input v-model="editItem.isActive" type="checkbox" class="h-4 w-4 rounded" />
             <span class="text-sm">启用</span>
           </label>
-          <label class="inline-flex items-center gap-2 text-foreground">
-            <input v-model="editItem.isDefault" type="checkbox" class="h-4 w-4 rounded" />
-            <span class="text-sm">默认（同模式仅保留一个）</span>
-          </label>
         </div>
         <div>
           <label class="block text-sm font-medium text-foreground mb-2">colors（JSON）</label>
-          <textarea
-            v-model="editItem.colors"
-            rows="10"
-            :class="[
-              'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted font-mono text-xs focus:outline-none focus:ring-2 transition-colors',
-              errors.colors ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500',
-            ]"
-            placeholder='{"background":"255 255 255","foreground":"15 23 42","primary":{"500":"34 197 94"}}'
-          ></textarea>
+          <textarea v-model="editItem.colors" rows="10" :class="[
+            'w-full px-3 py-2 border rounded-lg bg-surface text-foreground placeholder-muted font-mono text-xs focus:outline-none focus:ring-2 transition-colors',
+            errors.colors ? 'border-red-500 focus:ring-red-500' : 'border-border focus:ring-primary-500',
+          ]"
+            placeholder='{"background":"255 255 255","foreground":"15 23 42","primary":{"500":"34 197 94"}}'></textarea>
           <p v-if="errors.colors" class="mt-1 text-sm text-red-500">{{ errors.colors }}</p>
-          <p v-else class="mt-1 text-xs text-muted">建议包含：background/foreground/surface/surfaceMuted/border/muted + primary(50-950)。</p>
+          <p v-else class="mt-1 text-xs text-muted">建议包含：background/foreground/surface/surfaceMuted/border/muted +
+            primary(50-950)。</p>
         </div>
       </div>
 
       <div class="px-6 py-4 border-t border-border flex justify-end space-x-3">
-        <button
-          @click="close"
-          :disabled="loading"
-          class="px-4 py-2 bg-surface-muted hover:bg-muted text-foreground rounded-lg transition-colors border border-border"
-        >
+        <button @click="close" :disabled="loading"
+          class="px-4 py-2 bg-surface-muted hover:bg-muted text-foreground rounded-lg transition-colors border border-border">
           取消
         </button>
-        <button
-          @click="save"
-          :disabled="loading"
-          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors flex items-center gap-2"
-        >
+        <button @click="save" :disabled="loading"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors flex items-center gap-2">
           <svg v-if="loading" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
           </svg>
           <span>{{ loading ? "保存中..." : "保存" }}</span>
         </button>
@@ -244,4 +208,3 @@ const close = () => {
 </template>
 
 <style scoped></style>
-

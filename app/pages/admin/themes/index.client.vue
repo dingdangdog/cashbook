@@ -4,9 +4,10 @@ definePageMeta({
   middleware: ["admin"],
 });
 
-import { del, page, type AdminTheme } from "./api";
-import { editInfoFlag } from "./flag";
+import { del, page, setDefault, type AdminTheme } from "./api";
+import { editInfoFlag, aiGenerateFlag } from "./flag";
 import EditInfoDialog from "./EditInfoDialog.vue";
+import AIGenerateDialog from "./AIGenerateDialog.vue";
 import { generateMobileFriendlyPageNumbers } from "~/utils/common";
 import {
   PencilIcon,
@@ -15,6 +16,8 @@ import {
   MagnifyingGlassIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  SparklesIcon,
+  StarIcon,
 } from "@heroicons/vue/24/outline";
 
 const pageQuery = ref<PageParam>({ pageSize: 15, pageNum: 1 });
@@ -45,6 +48,10 @@ const addItem = () => {
   editInfoFlag.value = true;
 };
 
+const openAIGenerate = () => {
+  aiGenerateFlag.value = true;
+};
+
 const editItemInfo = (item: AdminTheme) => {
   editDialogTitle.value = "编辑主题";
   editItem.value = { ...item };
@@ -66,6 +73,26 @@ const toDelete = (item: AdminTheme) => {
         .catch(() => Alert.error("删除失败"));
     },
     cancel: () => Alert.info("取消删除"),
+  });
+};
+
+const setAsDefault = (item: AdminTheme) => {
+  if (item.isDefault) {
+    Alert.info("该主题已经是默认主题");
+    return;
+  }
+  Confirm.open({
+    title: "设置默认主题",
+    content: `确定要将主题【${item.name} / ${item.code}】设置为${item.mode === "light" ? "浅色" : "深色"}模式的默认主题吗？\n\n注意：同模式下只能有一个默认主题，设置后会自动取消其他默认主题。`,
+    confirm: () => {
+      setDefault(String(item.id))
+        .then(() => {
+          Alert.success("设置默认主题成功");
+          getPages();
+        })
+        .catch((err) => Alert.error("设置失败: " + (err?.message || err)));
+    },
+    cancel: () => Alert.info("取消设置"),
   });
 };
 
@@ -160,6 +187,13 @@ onMounted(() => getPages());
           </button>
         </div>
         <div class="flex flex-wrap gap-2">
+          <button
+            @click="openAIGenerate"
+            class="px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+          >
+            <SparklesIcon class="h-4 w-4" />
+            AI生成主题
+          </button>
           <button
             @click="addItem"
             class="px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap"
@@ -274,6 +308,18 @@ onMounted(() => getPages());
                     <PencilIcon class="h-4 w-4" />
                   </button>
                   <button
+                    @click="setAsDefault(item)"
+                    :class="[
+                      'transition-colors',
+                      item.isDefault
+                        ? 'text-yellow-600 hover:text-yellow-500'
+                        : 'text-amber-600 hover:text-amber-500',
+                    ]"
+                    :title="item.isDefault ? '已是默认主题' : '设置为默认主题'"
+                  >
+                    <StarIcon :class="['h-4 w-4', item.isDefault ? 'fill-current' : '']" />
+                  </button>
+                  <button
                     @click="toDelete(item)"
                     class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                     title="删除"
@@ -306,6 +352,18 @@ onMounted(() => getPages());
                 class="p-1.5 text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded"
               >
                 <PencilIcon class="h-3 w-3" />
+              </button>
+              <button
+                @click="setAsDefault(item)"
+                :class="[
+                  'p-1.5 rounded transition-colors',
+                  item.isDefault
+                    ? 'text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
+                    : 'text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20',
+                ]"
+                :title="item.isDefault ? '已是默认主题' : '设置为默认主题'"
+              >
+                <StarIcon :class="['h-3 w-3', item.isDefault ? 'fill-current' : '']" />
               </button>
               <button
                 @click="toDelete(item)"
@@ -421,6 +479,11 @@ onMounted(() => getPages());
       v-if="editInfoFlag"
       :item="editItem"
       :title="editDialogTitle"
+      @success="getPages"
+      @cancel="cancelEdit"
+    />
+
+    <AIGenerateDialog
       @success="getPages"
       @cancel="cancelEdit"
     />
