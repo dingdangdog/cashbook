@@ -25,100 +25,126 @@
       </div>
 
       <!-- 表单内容 -->
-      <div class="p-2 md:p-4 space-y-2 max-h-[80vh] overflow-y-auto">
-        <!-- 日期选择 -->
-        <div>
-          <label class="block text-sm font-semibold text-foreground/80 mb-1">
-            日期
-          </label>
-          <UiDatePicker v-model="flowEdit.day" class="w-full" />
-        </div>
+      <div class="p-2 md:p-4 space-y-3 max-h-[80vh] overflow-y-auto">
+        <!-- 重要字段：日期、金额、资金账户、消费类型 -->
+        <div class="space-y-3">
+          <!-- 日期 -->
+          <div>
+            <label class="block text-sm font-semibold text-foreground/80 mb-1">
+              日期
+            </label>
+            <UiDatePicker v-model="flowEdit.day" class="w-full" />
+          </div>
 
-        <!-- 流水类型 -->
-        <UiComboInput
-          v-model="flowEdit.flowType"
-          label="流水类型"
-          placeholder="请选择流水类型"
-          :options="flowTypeDialogOptions"
-          @change="changeFlowTypes"
-        />
+          <!-- 金额 -->
+          <div>
+            <label class="block text-sm font-semibold text-foreground/80 mb-1">
+              金额
+            </label>
+            <input
+              v-model="flowEdit.money"
+              type="number"
+              step="0.01"
+              placeholder="请输入金额"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+          </div>
 
-        <!-- 支出类型/收入类型 -->
-        <UiComboInput
-          v-model="flowEdit.industryType"
-          :label="industryTypeLabel"
-          placeholder="输入或选择类型"
-          :options="industryTypeOptions"
-        />
-
-        <!-- 支付方式/收款方式 -->
-        <UiComboInput
-          v-model="flowEdit.payType"
-          :label="payTypeLabel"
-          placeholder="输入或选择支付方式"
-          :options="payTypeOptions"
-        />
-
-        <!-- 交易账户 -->
-        <div>
-          <label class="block text-sm font-semibold text-foreground/80 mb-1">
-            交易账户
-          </label>
-          <select
-            v-model="flowEdit.accountId"
-            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option :value="''">不关联账户</option>
-            <option
-              v-for="acc in accountOptions"
-              :key="acc.id"
-              :value="acc.id"
+          <!-- 资金账户 -->
+          <div>
+            <label class="block text-sm font-semibold text-foreground/80 mb-1">
+              资金账户
+            </label>
+            <select
+              v-model="flowEdit.accountId"
+              class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              {{ acc.name }}
-            </option>
-          </select>
-        </div>
+              <option :value="''">不关联账户</option>
+              <option
+                v-for="acc in accountOptions"
+                :key="acc.id"
+                :value="acc.id"
+              >
+                {{ acc.name }}
+              </option>
+            </select>
+          </div>
 
-        <!-- 金额 -->
-        <div>
-          <label class="block text-sm font-semibold text-foreground/80 mb-1">
-            金额
-          </label>
-          <input
-            v-model="flowEdit.money"
-            type="number"
-            step="0.01"
-            placeholder="请输入金额"
-            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          <!-- 消费类型：流水类型 + 支出/收入类型 -->
+          <UiComboInput
+            v-model="flowEdit.flowType"
+            label="流水类型"
+            placeholder="请选择流水类型"
+            :options="flowTypeDialogOptions"
+            @change="changeFlowTypes"
+          />
+          <UiComboInput
+            v-model="flowEdit.industryType"
+            :label="industryTypeLabel"
+            placeholder="输入或选择类型"
+            :options="industryTypeOptions"
           />
         </div>
 
-        <!-- 流水归属 -->
-        <UiComboInput
-          v-model="flowEdit.attribution"
-          label="流水归属"
-          placeholder="输入或选择归属"
-          :options="attributionList"
-        />
-
-        <!-- 流水名称 -->
-        <UiTextInput
-          v-model="flowEdit.name"
-          label="流水名称"
-          placeholder="输入或选择名称"
-        />
-
-        <!-- 备注 -->
-        <div>
-          <label class="block text-sm font-semibold text-foreground/80 mb-1">
-            备注
-          </label>
-          <textarea
-            v-model="flowEdit.description"
-            rows="3"
-            placeholder="请输入备注"
-            class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-          ></textarea>
+        <!-- 详细设置（次要字段折叠） -->
+        <div class="border-t border-border pt-3">
+          <button
+            type="button"
+            class="flex items-center gap-2 w-full text-sm text-foreground/70 hover:text-foreground transition-colors"
+            @click="showDetail = !showDetail"
+          >
+            <ChevronDownIcon
+              class="w-4 h-4 transition-transform"
+              :class="{ 'rotate-180': showDetail }"
+            />
+            <span>详细设置</span>
+            <span v-if="hasDetailContent" class="text-foreground/50 text-xs">
+              (名称、备注、归属等)
+            </span>
+          </button>
+          <Transition
+            enter-active-class="transition-all duration-200 ease-out"
+            enter-from-class="opacity-0 max-h-0 overflow-hidden"
+            enter-to-class="opacity-100 max-h-[500px]"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 max-h-[500px]"
+            leave-to-class="opacity-0 max-h-0 overflow-hidden"
+          >
+            <div v-show="showDetail" class="space-y-3 mt-3 pl-1">
+              <!-- 支付方式/收款方式 -->
+              <!-- <UiComboInput
+                v-model="flowEdit.payType"
+                :label="payTypeLabel"
+                placeholder="输入或选择支付方式"
+                :options="payTypeOptions"
+              /> -->
+              <!-- 流水归属 -->
+              <UiComboInput
+                v-model="flowEdit.attribution"
+                label="流水归属"
+                placeholder="输入或选择归属"
+                :options="attributionList"
+              />
+              <!-- 流水名称 -->
+              <UiTextInput
+                v-model="flowEdit.name"
+                label="流水名称"
+                placeholder="输入或选择名称"
+              />
+              <!-- 备注 -->
+              <div>
+                <label class="block text-sm font-semibold text-foreground/80 mb-1">
+                  备注
+                </label>
+                <textarea
+                  v-model="flowEdit.description"
+                  rows="3"
+                  placeholder="请输入备注"
+                  class="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder-foreground/40 focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                />
+              </div>
+            </div>
+          </Transition>
         </div>
       </div>
 
@@ -152,9 +178,9 @@
 
 <script setup lang="ts">
 import { showFlowEditDialog } from "~/utils/flag";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { getIndustryType, getPayType } from "~/utils/apis";
-import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 // ESC键监听
 useEscapeKey(() => {
@@ -183,6 +209,12 @@ const accountOptions = ref<any[]>([]);
 const flowEdit = ref<Flow | any>({
   flowType: "",
 });
+
+const showDetail = ref(false);
+const hasDetailContent = computed(
+  () =>
+    !!(flowEdit.value?.name || flowEdit.value?.description || flowEdit.value?.attribution || flowEdit.value?.payType)
+);
 
 const attributionList = ref<string[]>([]);
 const getAttributions = async () => {
@@ -220,6 +252,10 @@ onMounted(() => {
   }
   // 根据当前 flowType 联动标签与选项
   changeFlowTypes();
+  // 编辑时若已有名称/备注/归属等，默认展开详细设置
+  if (flow && (flow.name || flow.description || (flow as any).attribution || (flow as any).payType)) {
+    showDetail.value = true;
+  }
 });
 
 // 每次打开弹窗时，根据标题判定并重置表单，避免误把新增识别为修改
