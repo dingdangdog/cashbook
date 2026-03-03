@@ -23,6 +23,16 @@ const { isDark, toggleTheme } = useAppTheme();
 const openRegister = ref(false);
 const registerDialog = ref(false);
 
+const route = useRoute();
+const fromUrl = computed(() => {
+  const callbackUrl = route.query.callbackUrl as string | undefined;
+  const loginUrl = route.path;
+  if (callbackUrl && callbackUrl !== loginUrl) {
+    return callbackUrl;
+  }
+  return undefined;
+});
+
 if (systemConfig.value) {
   openRegister.value = systemConfig.value.openRegister;
 }
@@ -55,7 +65,8 @@ const login = async () => {
   if (validateLoginForm()) {
     doApi.post("api/login", loginParam.value).then((res) => {
       Alert.success("登录成功");
-      navigateTo(fromUrl.value || "/");
+      const target = fromUrl.value || "/";
+      navigateTo(target);
     });
   }
 };
@@ -109,15 +120,7 @@ const lookLoginPS = ref(false);
 const lookRegisterPS = ref(false);
 const lookRegisterAPS = ref(false);
 
-const fromUrl = ref();
 onMounted(async () => {
-  const route = useRoute();
-  const loginUrl = route.path;
-  const callbackUrl = route.query.callbackUrl;
-  if (loginUrl != callbackUrl) {
-    fromUrl.value = callbackUrl;
-  }
-
   // 校验登录
   if (checkSignIn()) {
     Alert.success("登录成功");
