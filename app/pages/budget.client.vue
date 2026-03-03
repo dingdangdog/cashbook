@@ -1,34 +1,25 @@
 <template>
   <div class="p-2 md:p-4 bg-gray-50 dark:bg-green-950/20 min-h-full">
     <!-- 月份选择和操作栏 -->
-    <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 mb-3"
-    >
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 mb-3">
       <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div class="flex items-center gap-3">
           <h1 class="text-lg font-semibold text-green-950 dark:text-white">预算管理</h1>
-          <select
-            v-model="selectedMonth"
-            @change="loadData"
-            class="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+          <select v-model="selectedMonth" @change="loadData"
+            class="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option v-for="month in monthOptions" :key="month.value" :value="month.value">
               {{ month.title }}
             </option>
           </select>
         </div>
         <div class="flex gap-2 flex-wrap">
-          <button
-            @click="openBudgetDialog"
-            class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
-          >
+          <button @click="openBudgetDialog"
+            class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium">
             <CogIcon class="h-4 w-4" />
             设置预算
           </button>
-          <button
-            @click="reloadUsedAmount"
-            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
-          >
+          <button @click="reloadUsedAmount"
+            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium">
             <ArrowPathIcon class="h-4 w-4" />
             刷新额度
           </button>
@@ -74,16 +65,13 @@
 
     <!-- 固定支出管理 -->
     <div
-      class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg"
-    >
+      class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden rounded-lg">
       <!-- 标题栏 -->
       <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-green-950 dark:text-white">固定支出管理</h2>
-          <button
-            @click="openFixedFlowDialog()"
-            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
-          >
+          <button @click="openFixedFlowDialog()"
+            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm font-medium">
             <PlusIcon class="h-4 w-4" />
             添加支出
           </button>
@@ -110,11 +98,8 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
-            <tr
-              v-for="item in fixedFlows"
-              :key="item.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
+            <tr v-for="item in fixedFlows" :key="item.id"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
               <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                 {{ item.startMonth }} ~ {{ item.endMonth }}
               </td>
@@ -122,7 +107,8 @@
                 {{ item.name }}
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                <span
+                  class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                   {{ formatCurrency(item.money || 0) }}
                 </span>
               </td>
@@ -134,18 +120,14 @@
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
                 <div class="flex items-center gap-2">
-                  <button
-                    @click="openFixedFlowDialog(item)"
+                  <button @click="openFixedFlowDialog(item)"
                     class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-                    title="编辑"
-                  >
+                    title="编辑">
                     <PencilIcon class="h-4 w-4" />
                   </button>
-                  <button
-                    @click="deleteFixedFlow(item)"
+                  <button @click="deleteFixedFlow(item)"
                     class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-                    title="删除"
-                  >
+                    title="删除">
                     <TrashIcon class="h-4 w-4" />
                   </button>
                 </div>
@@ -157,11 +139,8 @@
 
       <!-- 移动端卡片 -->
       <div v-if="!loading && fixedFlows.length" class="lg:hidden max-h-[50vh] overflow-y-auto">
-        <div
-          v-for="item in fixedFlows"
-          :key="item.id"
-          class="p-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
+        <div v-for="item in fixedFlows" :key="item.id"
+          class="p-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1">
               <h3 class="text-sm font-medium text-green-950 dark:text-white">{{ item.name }}</h3>
@@ -170,22 +149,17 @@
               </p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+              <span
+                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                 {{ formatCurrency(item.money || 0) }}
               </span>
               <div class="flex gap-1">
-                <button
-                  @click="openFixedFlowDialog(item)"
-                  class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
-                  title="编辑"
-                >
+                <button @click="openFixedFlowDialog(item)"
+                  class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors" title="编辑">
                   <PencilIcon class="h-3 w-3" />
                 </button>
-                <button
-                  @click="deleteFixedFlow(item)"
-                  class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
-                  title="删除"
-                >
+                <button @click="deleteFixedFlow(item)"
+                  class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded transition-colors" title="删除">
                   <TrashIcon class="h-3 w-3" />
                 </button>
               </div>
@@ -209,10 +183,8 @@
         </div>
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">暂无固定支出</h3>
         <p class="text-gray-500 dark:text-gray-400 mb-4">开始添加您的固定支出吧</p>
-        <button
-          @click="openFixedFlowDialog()"
-          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
-        >
+        <button @click="openFixedFlowDialog()"
+          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 inline-flex items-center gap-2">
           <PlusIcon class="h-4 w-4" />
           添加固定支出
         </button>
@@ -231,26 +203,18 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 预算金额
               </label>
-              <input
-                v-model="editedBudget.budget"
-                type="number"
-                placeholder="请输入预算金额"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <input v-model="editedBudget.budget" type="number" placeholder="请输入预算金额"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
           </div>
         </div>
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end">
-          <button
-            @click="budgetDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
-          >
+          <button @click="budgetDialog = false"
+            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
             取消
           </button>
-          <button
-            @click="saveBudget"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
+          <button @click="saveBudget"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
             保存
           </button>
         </div>
@@ -271,10 +235,8 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 开始月份(包含)
               </label>
-              <select
-                v-model="editedFixedFlow.startMonth"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <select v-model="editedFixedFlow.startMonth"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">请选择开始月份</option>
                 <option v-for="month in monthOptions" :key="month.value" :value="month.value">
                   {{ month.title }}
@@ -285,10 +247,8 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 结束月份(包含)
               </label>
-              <select
-                v-model="editedFixedFlow.endMonth"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <select v-model="editedFixedFlow.endMonth"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">请选择结束月份</option>
                 <option v-for="month in monthOptions" :key="month.value" :value="month.value">
                   {{ month.title }}
@@ -299,32 +259,22 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 名称
               </label>
-              <input
-                v-model="editedFixedFlow.name"
-                type="text"
-                placeholder="请输入支出名称"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <input v-model="editedFixedFlow.name" type="text" placeholder="请输入支出名称"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 金额
               </label>
-              <input
-                v-model="editedFixedFlow.money"
-                type="number"
-                placeholder="请输入金额"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <input v-model="editedFixedFlow.money" type="number" placeholder="请输入金额"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 流水归属
               </label>
-              <select
-                v-model="editedFixedFlow.attribution"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <select v-model="editedFixedFlow.attribution"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">请选择归属</option>
                 <option v-for="attr in attributionList" :key="attr" :value="attr">
                   {{ attr }}
@@ -335,26 +285,18 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 备注
               </label>
-              <textarea
-                v-model="editedFixedFlow.description"
-                rows="3"
-                placeholder="请输入备注信息"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-              ></textarea>
+              <textarea v-model="editedFixedFlow.description" rows="3" placeholder="请输入备注信息"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-green-950 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
             </div>
           </div>
         </div>
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end">
-          <button
-            @click="fixedFlowDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
-          >
+          <button @click="fixedFlowDialog = false"
+            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
             取消
           </button>
-          <button
-            @click="saveFixedFlow"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-          >
+          <button @click="saveFixedFlow"
+            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
             保存
           </button>
         </div>
@@ -362,7 +304,8 @@
     </div>
 
     <!-- 删除确认对话框 -->
-    <div v-if="confirmDeleteDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div v-if="confirmDeleteDialog"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h3 class="text-lg font-semibold text-red-600 dark:text-red-400">确认删除</h3>
@@ -373,16 +316,12 @@
           </p>
         </div>
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg flex gap-3 justify-end">
-          <button
-            @click="confirmDeleteDialog = false"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
-          >
+          <button @click="confirmDeleteDialog = false"
+            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
             取消
           </button>
-          <button
-            @click="confirmDelete"
-            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-          >
+          <button @click="confirmDelete"
+            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
             删除
           </button>
         </div>

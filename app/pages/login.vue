@@ -179,12 +179,14 @@ const toAdmin = () => {
     <Meta name="keywords" :content="`Cashbook,记账本,私人记账,开源账本,dingdangdog,月上老狗,${systemConfig?.keywords}`" />
   </Head>
 
-  <div :class="[
-    'h-screen p-2 transition-colors duration-300',
-    isDark
-      ? 'bg-gradient-to-br from-green-950 to-gray-800'
-      : 'bg-gradient-to-br from-green-50 to-emerald-100',
-  ]">
+  <div
+    :class="[
+      'h-screen p-2 transition-colors duration-300',
+      isDark
+        ? 'bg-gradient-to-br from-surface-dark via-brand-950 to-surface-dark'
+        : 'bg-gradient-to-br from-surface-muted via-brand-50 to-surface',
+    ]"
+  >
     <!-- 右上角导航栏 -->
     <div class="fixed top-2 right-2 flex items-center gap-2 z-50">
       <!-- 主题切换按钮 - 移到最左侧 -->
@@ -240,20 +242,26 @@ const toAdmin = () => {
       <!-- Logo 和标题 - 响应式调整 -->
       <div class="flex flex-col sm:flex-row items-center mb-4 text-center sm:text-left">
         <img src="/logo.png" class="w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2 sm:mb-0 sm:mr-4" />
-        <h1 :class="[
-          'text-xl sm:text-2xl lg:text-3xl font-bold',
-          isDark ? 'text-white' : 'text-gray-800',
-        ]">
+        <h1
+          :class="[
+            'text-xl sm:text-2xl lg:text-3xl font-bold',
+            isDark ? 'text-ink-onDark' : 'text-ink-primary',
+          ]"
+        >
           欢迎使用{{ systemConfig?.title }}
         </h1>
       </div>
 
       <!-- 登录表单 - 响应式调整 -->
       <div class="w-full max-w-[26rem]">
-        <div :class="[
-          'rounded-xl shadow-xl p-4 md:p-6 border',
-          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
-        ]">
+        <div
+          :class="[
+            'rounded-xl shadow-xl p-4 md:p-6 border',
+            isDark
+              ? 'bg-surface-dark border-frame-dark'
+              : 'bg-surface border-frame',
+          ]"
+        >
           <form @submit.prevent="login" class="space-y-4">
             <!-- 用户名输入 -->
             <div>
@@ -310,20 +318,26 @@ const toAdmin = () => {
 
             <!-- 登录按钮 -->
             <div>
-              <button type="submit"
-                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold mt-4 py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none">
+              <button
+                type="submit"
+                class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold mt-4 py-2 sm:py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none"
+              >
                 登录
               </button>
             </div>
 
             <!-- 注册按钮 -->
             <div v-if="openRegister" class="text-center pt-2">
-              <button type="button" @click="registerDialog = true" :class="[
-                'font-medium transition-colors duration-200',
-                isDark
-                  ? 'text-green-400 hover:text-green-300'
-                  : 'text-green-600 hover:text-green-700',
-              ]">
+              <button
+                type="button"
+                @click="registerDialog = true"
+                :class="[
+                  'font-medium transition-colors duration-200',
+                  isDark
+                    ? 'text-brand-300 hover:text-brand-200'
+                    : 'text-brand-600 hover:text-brand-700',
+                ]"
+              >
                 注册账号
               </button>
             </div>
@@ -334,24 +348,31 @@ const toAdmin = () => {
 
     <!-- 注册对话框 -->
     <div v-if="registerDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div :class="[
-        'rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto',
-        isDark ? 'bg-gray-800' : 'bg-white',
-      ]">
+      <div
+        :class="[
+          'rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto',
+          isDark ? 'bg-surface-dark' : 'bg-surface',
+        ]"
+      >
         <div class="p-2">
           <div class="flex justify-between items-center mb-6">
-            <h3 :class="[
-              'text-xl font-semibold',
-              isDark ? 'text-white' : 'text-green-950',
-            ]">
+            <h3
+              :class="[
+                'text-xl font-semibold',
+                isDark ? 'text-ink-onDark' : 'text-ink-primary',
+              ]"
+            >
               注册用户
             </h3>
-            <button @click="registerDialog = false" :class="[
-              'transition-colors',
-              isDark
-                ? 'text-gray-400 hover:text-gray-300'
-                : 'text-gray-400 hover:text-gray-600',
-            ]">
+              <button
+                @click="registerDialog = false"
+                :class="[
+                  'transition-colors',
+                  isDark
+                    ? 'text-ink-muted hover:text-ink-onDark'
+                    : 'text-ink-muted hover:text-ink-secondary',
+                ]"
+              >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -441,8 +462,10 @@ const toAdmin = () => {
                 class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                 取消
               </button>
-              <button type="submit"
-                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+              <button
+                type="submit"
+                class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+              >
                 注册
               </button>
             </div>

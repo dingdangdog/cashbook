@@ -3,17 +3,17 @@
     <!-- 桌面端统计信息 -->
     <div class="grid grid-cols-4 gap-1 md:gap-4">
       <div
-        class="bg-green-50 dark:bg-green-900/20 rounded-lg p-1.5 md:p-3 border border-green-200 dark:border-green-800"
+        class="bg-brand-50 dark:bg-brand-900/20 rounded-lg p-1.5 md:p-3 border border-frame-light dark:border-frame-dark"
       >
         <div class="flex items-center justify-between">
           <div>
             <p
-              class="text-xs md:text-sm font-base text-green-800 dark:text-green-300"
+              class="text-xs md:text-sm font-base text-brand-700 dark:text-brand-300"
             >
               总收入
             </p>
             <p
-              class="text-xs md:text-lg font-medium text-green-600 dark:text-green-400"
+              class="text-xs md:text-lg font-medium text-brand-600 dark:text-brand-300"
             >
               {{ Number(statistics?.totalIn || 0).toFixed(2) }}
             </p>
@@ -28,12 +28,12 @@
         <div class="flex items-center justify-between">
           <div>
             <p
-              class="text-xs md:text-sm font-base text-red-800 dark:text-red-300"
+              class="text-xs md:text-sm font-base text-state-danger dark:text-state-danger"
             >
               总支出
             </p>
             <p
-              class="text-xs md:text-lg font-medium text-red-600 dark:text-red-400"
+              class="text-xs md:text-lg font-medium text-state-danger dark:text-state-danger"
             >
               {{ Number(statistics?.totalOut || 0).toFixed(2) }}
             </p>
@@ -43,17 +43,17 @@
       </div>
 
       <div
-        class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-1.5 md:p-3 border border-blue-200 dark:border-blue-800"
+        class="bg-brand-50 dark:bg-brand-900/20 rounded-lg p-1.5 md:p-3 border border-frame-light dark:border-frame-dark"
       >
         <div class="flex items-center justify-between">
           <div>
             <p
-              class="text-xs md:text-sm font-base text-blue-800 dark:text-blue-300"
+              class="text-xs md:text-sm font-base text-brand-700 dark:text-brand-300"
             >
               净收入
             </p>
             <p
-              class="text-xs md:text-lg font-medium text-blue-600 dark:text-blue-400"
+              class="text-xs md:text-lg font-medium text-brand-600 dark:text-brand-300"
             >
               {{
                 Number(
@@ -67,17 +67,17 @@
       </div>
 
       <div
-        class="bg-gray-50 dark:bg-gray-900/20 rounded-lg p-1.5 md:p-3 border border-gray-200 dark:border-gray-800"
+        class="bg-surface-soft dark:bg-surface-darkMuted rounded-lg p-1.5 md:p-3 border border-frame-light dark:border-frame-dark"
       >
         <div class="flex items-center justify-between">
           <div>
             <p
-              class="text-xs md:text-sm font-base text-gray-800 dark:text-gray-300"
+              class="text-xs md:text-sm font-base text-ink-secondary dark:text-ink-onDark"
             >
               不计收支
             </p>
             <p
-              class="text-xs md:text-lg font-medium text-gray-600 dark:text-gray-400"
+              class="text-xs md:text-lg font-medium text-ink-secondary dark:text-ink-onDark"
             >
               {{ Number(statistics?.notInOut || 0).toFixed(2) }}
             </p>

@@ -34,19 +34,19 @@ const closeConfirm = () => {
   <!-- 确认对话框 -->
   <div
     v-if="openConfirmDialogFlag"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black/60 flex items-center justify-center p-4"
     style="z-index: 10000"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[90vh] overflow-y-auto"
+      class="bg-surface dark:bg-surface-dark rounded-lg shadow-xl w-full max-w-md mx-auto max-h-[90vh] overflow-y-auto border border-frame dark:border-frame-dark"
       @click.stop
       v-if="ThisConfirmModel"
     >
       <!-- 标题栏 -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+        class="flex items-center justify-between p-4 border-b border-frame-light dark:border-frame-dark"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 class="text-lg font-semibold text-ink-primary dark:text-ink-onDark">
           {{ ThisConfirmModel.title }}
         </h3>
       </div>
@@ -54,7 +54,7 @@ const closeConfirm = () => {
       <!-- 内容区域 -->
       <div v-if="ThisConfirmModel?.content" class="p-4">
         <div
-          class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words leading-relaxed"
+          class="text-sm text-ink-secondary dark:text-ink-onDark whitespace-pre-wrap break-words leading-relaxed"
         >
           {{ ThisConfirmModel.content }}
         </div>
@@ -62,12 +62,12 @@ const closeConfirm = () => {
 
       <!-- 操作按钮 -->
       <div
-        class="flex justify-end gap-3 p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30"
+        class="flex justify-end gap-3 p-4 border-t border-frame-light dark:border-frame-dark bg-surface-soft dark:bg-surface-darkMuted"
       >
         <!-- 关闭按钮 -->
         <button
           @click="close"
-          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded text-sm font-medium transition-colors"
+          class="px-4 py-2 bg-surface-muted hover:bg-surface-soft dark:bg-surface-darkMuted dark:hover:bg-surface-dark text-ink-secondary dark:text-ink-onDark rounded text-sm font-medium transition-colors"
         >
           {{ ThisConfirmModel.closeText || "关闭" }}
         </button>
@@ -76,7 +76,7 @@ const closeConfirm = () => {
         <button
           v-if="ThisConfirmModel.cancel"
           @click="cancel"
-          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-medium transition-colors"
+          class="px-4 py-2 bg-state-danger hover:bg-state-danger/90 text-white rounded text-sm font-medium transition-colors"
         >
           {{ ThisConfirmModel.cancelText || "取消" }}
         </button>
@@ -84,7 +84,7 @@ const closeConfirm = () => {
         <!-- 确定按钮 -->
         <button
           @click="confirm"
-          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors"
+          class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded text-sm font-medium transition-colors"
         >
           {{ ThisConfirmModel.confirmText || "确定" }}
         </button>

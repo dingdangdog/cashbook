@@ -101,11 +101,11 @@ const getIconComponent = (iconName: string) => {
   </Head>
 
   <div
-    class="min-h-screen bg-gradient-to-br from-gray-900 via-green-950 to-gray-900"
+    class="min-h-screen bg-gradient-to-br from-black via-brand-950 to-black text-ink-onDark"
   >
     <!-- 顶部导航栏 -->
     <header
-      class="bg-green-900/10 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-40"
+      class="bg-surface-dark/60 backdrop-blur-sm border-b border-frame-dark sticky top-0 z-40"
     >
       <div class="flex items-center justify-between px-4 py-3">
         <!-- 左侧：菜单按钮和Logo -->
@@ -114,7 +114,7 @@ const getIconComponent = (iconName: string) => {
           <button
             v-if="miniWindow"
             @click="menuer = !menuer"
-            class="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors lg:hidden"
+            class="p-2 rounded-lg text-ink-muted hover:text-ink-onDark hover:bg-surface-darkMuted/70 transition-colors lg:hidden"
           >
             <svg
               class="w-5 h-5"
@@ -137,7 +137,7 @@ const getIconComponent = (iconName: string) => {
             class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
             <img src="/logo.png" class="w-8 h-8 rounded-full" alt="logo" />
-            <span class="text-white font-semibold text-lg hidden sm:block">
+            <span class="text-brand-100 font-semibold text-lg hidden sm:block">
               {{ systemConfig?.title }} - 管理
             </span>
           </button>
@@ -170,7 +170,7 @@ const getIconComponent = (iconName: string) => {
       <!-- 侧边栏 -->
       <aside
         :class="[
-          'bg-gray-900/20 backdrop-blur-sm border-r border-gray-700 transition-all duration-300 z-30',
+          'bg-surface-darkMuted/60 backdrop-blur-sm border-r border-frame-dark transition-all duration-300 z-30',
           menuer ? 'w-64' : 'w-0 overflow-hidden',
           miniWindow
             ? 'fixed inset-y-0 left-0 top-16'
@@ -191,8 +191,8 @@ const getIconComponent = (iconName: string) => {
               :class="[
                 'w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 text-left',
                 currentPath === item.path || openMenu === item.path
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-700/70',
+                  ? 'bg-brand-600 text-white shadow-lg'
+                  : 'text-ink-muted hover:text-ink-onDark hover:bg-surface-darkMuted/70',
               ]"
             >
               <svg

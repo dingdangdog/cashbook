@@ -2,23 +2,23 @@
   <!-- 导入导出抽屉 -->
   <div
     v-if="show"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-start z-50"
+    class="fixed inset-0 bg-black/60 flex justify-start z-50"
     @click="$emit('close')"
   >
     <div
-      class="bg-white dark:bg-gray-800 w-full max-w-md h-full flex flex-col shadow-xl transform transition-transform"
+      class="bg-surface dark:bg-surface-dark w-full max-w-md h-full flex flex-col shadow-xl transform transition-transform border-r border-frame dark:border-frame-dark"
       @click.stop
     >
       <!-- 标题栏 -->
       <div
-        class="px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center"
+        class="px-4 py-3 border-b border-frame-light dark:border-frame-dark flex justify-between items-center"
       >
-        <h3 class="text-lg font-semibold text-green-950 dark:text-white">
+        <h3 class="text-lg font-semibold text-ink-primary dark:text-ink-onDark">
           导入导出
         </h3>
         <button
           @click="$emit('close')"
-          class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+          class="text-ink-muted hover:text-ink-secondary dark:text-ink-onDark dark:hover:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted p-1 rounded transition-colors"
         >
           <svg
             class="w-4 h-4"
@@ -40,10 +40,10 @@
       <div class="flex-1 overflow-y-auto p-4 space-y-3">
         <!-- 账单导入 -->
         <div
-          class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800"
+          class="bg-brand-50 dark:bg-brand-900/20 rounded-lg p-4 border border-frame-light dark:border-frame-dark"
         >
           <h4
-            class="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-brand-700 dark:text-brand-300 mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -63,7 +63,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('importAlipay')"
-              class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -82,7 +82,7 @@
             </button>
             <button
               @click="$emit('importWechat')"
-              class="w-full px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-700 hover:bg-brand-800 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -101,7 +101,7 @@
             </button>
             <button
               @click="$emit('importJd')"
-              class="w-full px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-state-danger hover:bg-state-danger/90 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -123,10 +123,10 @@
 
         <!-- 自定义导入 -->
         <div
-          class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800"
+          class="bg-surface-soft dark:bg-surface-darkMuted rounded-lg p-4 border border-frame-light dark:border-frame-dark"
         >
           <h4
-            class="text-sm font-semibold text-purple-800 dark:text-purple-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-ink-secondary dark:text-ink-onDark mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -146,7 +146,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('customImport')"
-              class="w-full px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -165,7 +165,7 @@
             </button>
             <button
               @click="$emit('importJson')"
-              class="w-full px-3 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-700 hover:bg-brand-800 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -187,10 +187,10 @@
 
         <!-- 数据导出 -->
         <div
-          class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800"
+          class="bg-brand-50 dark:bg-brand-900/20 rounded-lg p-4 border border-frame-light dark:border-frame-dark"
         >
           <h4
-            class="text-sm font-semibold text-green-800 dark:text-green-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-brand-700 dark:text-brand-300 mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -210,7 +210,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('exportCsv')"
-              class="w-full px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -229,7 +229,7 @@
             </button>
             <button
               @click="$emit('exportJson')"
-              class="w-full px-3 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-700 hover:bg-brand-800 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -251,10 +251,10 @@
 
         <!-- 模板管理 -->
         <div
-          class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 border border-orange-200 dark:border-orange-800"
+          class="bg-surface-soft dark:bg-surface-darkMuted rounded-lg p-4 border border-frame-light dark:border-frame-dark"
         >
           <h4
-            class="text-sm font-semibold text-orange-800 dark:text-orange-300 mb-3 flex items-center gap-2"
+            class="text-sm font-semibold text-ink-secondary dark:text-ink-onDark mb-3 flex items-center gap-2"
           >
             <svg
               class="w-4 h-4"
@@ -273,7 +273,7 @@
 
             <button
               @click="$emit('downloadTemplate')"
-              class="text-orange-600 rounded text-sm hover:underline font-medium transition-colors flex items-center gap-2"
+              class="text-brand-600 rounded text-sm hover:underline font-medium transition-colors flex items-center gap-2"
             >
               下载模板
             </button>
@@ -281,7 +281,7 @@
           <div class="space-y-2">
             <button
               @click="$emit('importTemplate')"
-              class="w-full px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
+              class="w-full px-3 py-2 bg-brand-700 hover:bg-brand-800 text-white rounded text-sm font-medium transition-colors flex items-center gap-2"
             >
               <svg
                 class="w-4 h-4"
@@ -304,9 +304,9 @@
 
       <!-- 说明文档 -->
       <div
-        class="px-4 py-3 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+        class="px-4 py-3 border-t border-frame-light dark:border-frame-dark bg-surface-soft dark:bg-surface-darkMuted"
       >
-        <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+        <div class="text-xs text-ink-muted dark:text-ink-onDark space-y-1">
           <p class="flex items-center gap-1">
             <svg
               class="w-3 h-3 flex-shrink-0"

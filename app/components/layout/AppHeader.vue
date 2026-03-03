@@ -35,9 +35,9 @@ const showUserMenu = ref(false);
 
 <template>
   <header
-    class="bg-white dark:bg-black shadow-sm border-b border-green-100 dark:border-green-900"
+    class="bg-surface dark:bg-surface-dark shadow-sm border-b border-frame dark:border-frame-dark"
   >
-    <div class="px-2 md:px-4 bg-green-100 dark:bg-green-950/30">
+    <div class="px-2 md:px-4 bg-surface-muted dark:bg-surface-darkMuted">
       <div class="flex justify-between h-12 md:h-16">
         <!-- Left side -->
         <div class="flex items-center">
@@ -53,7 +53,7 @@ const showUserMenu = ref(false);
           <!-- Logo and brand -->
           <div class="items-center ml-2 md:ml-0 hidden sm:flex">
             <img src="/logo.png" alt="Cashbook" class="h-8 w-8" />
-            <span class="ml-2 text-xl font-bold text-green-500">
+            <span class="ml-2 text-xl font-bold text-brand-600">
               Cashbook
             </span>
           </div>
@@ -64,13 +64,13 @@ const showUserMenu = ref(false);
           <div class="flex items-center space-x-2 md:space-x-4">
             <span
               v-if="bookName"
-              class="flex text-gray-700 dark:text-gray-200 font-medium"
+              class="flex text-ink-secondary dark:text-ink-onDark font-medium"
             >
               <span class="hidden md:block">当前账本：</span>{{ bookName }}
             </span>
             <button
               @click="emit('showBookDialog')"
-              class="px-2 py-1 md:px-4 md:py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md transition-colors text-xs font-medium"
+              class="px-2 py-1 md:px-4 md:py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-md transition-colors text-xs font-medium"
             >
               切换账本
             </button>
@@ -81,7 +81,7 @@ const showUserMenu = ref(false);
         <div class="relative flex items-center">
           <button
             @click="showUserMenu = !showUserMenu"
-            class="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-ink-secondary dark:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted transition-colors"
           >
             <UserCircleIcon class="h-5 w-5" />
             <span v-if="globalUserInfo && !isMobile" class="text-sm">
@@ -104,26 +104,26 @@ const showUserMenu = ref(false);
                 <div class="py-1">
                   <button
                     @click="emit('openAdmin')"
-                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-ink-secondary dark:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted transition-colors"
                   >
                     后台管理
                   </button>
                   <button
                     @click="emit('openConvertDialog')"
-                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-ink-secondary dark:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted transition-colors"
                   >
                     CSV导入映射配置
                   </button>
                   <button
                     @click="emit('openChangePasswordDialog')"
-                    class="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    class="w-full px-4 py-2 text-left text-sm font-medium text-ink-secondary dark:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted transition-colors"
                   >
                     修改密码
                   </button>
-                  <hr class="my-1 border-gray-200 dark:border-gray-600" />
+                  <hr class="my-1 border-frame-light dark:border-frame-dark" />
                   <button
                     @click="emit('logout')"
-                    class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    class="w-full px-4 py-2 text-left text-sm text-state-danger dark:text-state-danger hover:bg-surface-soft dark:hover:bg-surface-darkMuted transition-colors"
                   >
                     退出登录
                   </button>

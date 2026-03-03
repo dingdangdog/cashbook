@@ -28,31 +28,31 @@ const bottomNavItems: NavItem[] = [
     title: "预算",
     path: "budget",
     icon: ExclamationTriangleIcon,
-    color: "text-red-500",
+    color: "text-state-warning",
   },
   {
     title: "分析",
     path: "analysis",
     icon: ChartBarIcon,
-    color: "text-purple-500",
+    color: "text-brand-500",
   },
   {
     title: "日历",
     path: "calendar",
     icon: CalendarDaysIcon,
-    color: "text-blue-500",
+    color: "text-brand-500",
   },
   {
     title: "流水",
     path: "flows",
     icon: CurrencyDollarIcon,
-    color: "text-green-500",
+    color: "text-brand-500",
   },
   {
     title: "账本",
     path: "books",
     icon: BookOpenIcon,
-    color: "text-teal-500",
+    color: "text-brand-500",
   },
 ];
 
@@ -64,17 +64,17 @@ const handleNavigate = (path: string) => {
 
 <template>
   <nav
-    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-green-100 dark:border-green-900 z-40 lg:hidden"
+    class="fixed bottom-0 left-0 right-0 bg-surface dark:bg-surface-dark border-t border-frame dark:border-frame-dark z-40 lg:hidden"
   >
-    <div class="grid grid-cols-5 h-16 bg-green-100 dark:bg-green-950/30">
+    <div class="grid grid-cols-5 h-16 bg-surface-muted dark:bg-surface-darkMuted">
       <button
         v-for="item in bottomNavItems"
         :key="item.path"
         @click="handleNavigate(item.path)"
         :class="[
-          'flex flex-col items-center justify-center space-y-1 transition-colors duration-200 text-green-600 dark:text-green-700',
+          'flex flex-col items-center justify-center space-y-1 transition-colors duration-200 text-ink-secondary dark:text-ink-onDark',
           currentPath == item.path
-            ? ' bg-green-300/20 font-bold'
+            ? 'bg-brand-100 dark:bg-brand-900 font-bold text-brand-700 dark:text-brand-300'
             : 'font-medium',
         ]"
       >

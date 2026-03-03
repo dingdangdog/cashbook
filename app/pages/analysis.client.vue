@@ -5,7 +5,7 @@
       <!-- Desktop & Tablet: Chart Carousel -->
       <div class="w-full" v-if="!loading">
         <div
-          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+          class="w-full bg-surface dark:bg-surface-dark rounded-lg shadow border border-frame dark:border-frame-dark p-2 md:p-4 mb-4"
         >
           <!-- Chart Container -->
           <div
@@ -24,13 +24,13 @@
           </div>
         </div>
         <div
-          class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+          class="w-full bg-surface dark:bg-surface-dark rounded-lg shadow border border-frame dark:border-frame-dark p-2 md:p-4 mb-4"
         >
           <!-- Chart Container -->
           <div
             class="flex justify-between items-center flex-col md:flex-row gap-2 md:gap-4 md:items-center w-full md:w-auto mb-4"
           >
-            <h3 class="min-w-20 text-base md:text-lg font-semibold text-green-950 dark:text-white">
+            <h3 class="min-w-20 text-base md:text-lg font-semibold text-ink-primary dark:text-ink-onDark">
               支出分析
             </h3>
             <!-- 时间筛选和图表类型切换 -->
@@ -42,7 +42,7 @@
                 class="text-sm md:text-base w-36 md:w-48"
                 clearable
               />
-              <span class="text-gray-500 dark:text-gray-400">至</span>
+              <span class="text-ink-muted">至</span>
               <UiDatePicker
                 v-model="expenseEndDay"
                 placeholder="结束日期"
@@ -52,14 +52,14 @@
               />
             </div>
             <!-- 图表类型切换 -->
-            <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+            <div class="flex bg-surface-muted dark:bg-surface-darkMuted rounded-lg p-1">
               <button
                 @click="expenseChartType = 'pie'"
                 :class="[
                   'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                   expenseChartType === 'pie'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                    ? 'bg-brand-600 text-white'
+                    : 'text-ink-muted hover:text-ink-primary dark:hover:text-ink-onDark',
                 ]"
               >
                 饼图
@@ -69,8 +69,8 @@
                 :class="[
                   'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                   expenseChartType === 'bar'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                    ? 'bg-brand-600 text-white'
+                    : 'text-ink-muted hover:text-ink-primary dark:hover:text-ink-onDark',
                 ]"
               >
                 柱图
@@ -178,14 +178,14 @@
         </div>
       </div>
       <div
-        class="w-full bg-white dark:bg-gray-900 rounded-lg shadow p-2 md:p-4 mb-4"
+        class="w-full bg-surface dark:bg-surface-dark rounded-lg shadow border border-frame dark:border-frame-dark p-2 md:p-4 mb-4"
       >
         <!-- Chart Container -->
         <div
           class="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 md:items-center w-full md:w-auto mb-4"
         >
           <h3
-            class="min-w-20 text-base md:text-lg font-semibold text-green-950 dark:text-white"
+            class="min-w-20 text-base md:text-lg font-semibold text-ink-primary dark:text-ink-onDark"
           >
             收入分析
           </h3>
@@ -198,7 +198,7 @@
               class="text-sm md:text-base w-36 md:w-48"
               clearable
             />
-            <span class="text-gray-500 dark:text-gray-400">至</span>
+            <span class="text-ink-muted">至</span>
             <UiDatePicker
               v-model="incomeEndDay"
               placeholder="结束日期"
@@ -208,14 +208,14 @@
             />
           </div>
           <!-- 图表类型切换 -->
-          <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+          <div class="flex bg-surface-muted dark:bg-surface-darkMuted rounded-lg p-1">
             <button
               @click="incomeChartType = 'pie'"
               :class="[
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 incomeChartType === 'pie'
-                  ? 'bg-green-600 text-white'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                  ? 'bg-brand-600 text-white'
+                  : 'text-ink-muted hover:text-ink-primary dark:hover:text-ink-onDark',
               ]"
             >
               饼图
@@ -225,8 +225,8 @@
               :class="[
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 incomeChartType === 'bar'
-                  ? 'bg-green-600 text-white'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
+                  ? 'bg-brand-600 text-white'
+                  : 'text-ink-muted hover:text-ink-primary dark:hover:text-ink-onDark',
               ]"
             >
               柱图

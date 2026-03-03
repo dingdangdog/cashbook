@@ -1,231 +1,159 @@
-<template>
-  <div class="bg-green-50 dark:bg-green-950/10 p-0 md:p-4">
-    <!-- Header Section -->
-    <div class="max-w-7xl mx-auto">
-      <!-- Summary Cards -->
-      <div
-        class="grid grid-cols-3 gap-2 md:gap-4 mb-4 mx-2 md:mx-0 mt-4 md:mt-0"
-      >
-        <!-- Income Card -->
-        <div
-          class="bg-white dark:bg-green-900/10 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-green-100 dark:border-green-800 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
-          @click="clickDay('', '收入')"
-        >
-          <div class="flex items-center flex-row space-x-2">
-            <div class="flex-shrink-0 mb-0">
-              <div
-                class="w-8 h-8 md:w-12 md:h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center"
-              >
-                <ArrowTrendingUpIcon
-                  class="w-4 h-4 md:w-6 md:h-6 text-green-700 dark:text-green-300"
-                />
+  <template>
+    <div class="bg-surface-muted dark:bg-surface-dark p-0 md:p-4">
+      <!-- Header Section -->
+      <div class="max-w-7xl mx-auto">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4 mx-2 md:mx-0 mt-4 md:mt-0">
+          <!-- Income Card -->
+          <div
+            class="bg-surface dark:bg-surface-darkMuted rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-frame dark:border-frame-dark cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
+            @click="clickDay('', '收入')">
+            <div class="flex items-center flex-row space-x-2">
+              <div class="flex-shrink-0 mb-0">
+                <div
+                  class="w-8 h-8 md:w-12 md:h-12 bg-brand-100 dark:bg-brand-900 rounded-lg flex items-center justify-center">
+                  <ArrowTrendingUpIcon class="w-4 h-4 md:w-6 md:h-6 text-brand-700 dark:text-brand-300" />
+                </div>
+              </div>
+              <div class="md:ml-4 text-center md:text-left">
+                <p class="text-xs md:text-sm font-medium text-brand-600 dark:text-brand-400">
+                  总收入
+                </p>
+                <p class="text-sm md:text-2xl font-bold text-brand-700 dark:text-brand-300">
+                  {{ getInMonth().toFixed(2) }}
+                </p>
               </div>
             </div>
-            <div class="md:ml-4 text-center md:text-left">
-              <p
-                class="text-xs md:text-sm font-medium text-green-600 dark:text-green-400"
-              >
-                总收入
-              </p>
-              <p
-                class="text-sm md:text-2xl font-bold text-green-700 dark:text-green-300"
-              >
-                {{ getInMonth().toFixed(2) }}
-              </p>
+          </div>
+
+          <!-- Expense Card -->
+          <div
+            class="bg-surface dark:bg-surface-darkMuted rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-frame dark:border-frame-dark cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
+            @click="clickDay('', '支出')">
+            <div class="flex items-center flex-row space-x-2">
+              <div class="flex-shrink-0 mb-0">
+                <div
+                  class="w-8 h-8 md:w-12 md:h-12 bg-state-danger/20 dark:bg-state-danger/30 rounded-lg flex items-center justify-center">
+                  <ArrowTrendingDownIcon class="w-4 h-4 md:w-6 md:h-6 text-state-danger" />
+                </div>
+              </div>
+              <div class="md:ml-4 text-center md:text-left">
+                <p class="text-xs md:text-sm font-medium text-ink-secondary dark:text-ink-onDark">
+                  总支出
+                </p>
+                <p class="text-sm md:text-2xl font-bold text-state-danger">
+                  {{ getOutMonth().toFixed(2) }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Balance Card -->
+          <div
+            class="bg-surface dark:bg-surface-darkMuted rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-frame dark:border-frame-dark">
+            <div class="flex items-center flex-row space-x-2">
+              <div class="flex-shrink-0 mb-0">
+                <div class="w-8 h-8 md:w-12 md:h-12 rounded-lg flex items-center justify-center" :class="balance >= 0
+                  ? 'bg-brand-100 dark:bg-brand-900'
+                  : 'bg-state-warning/20 dark:bg-state-warning/30'
+                  ">
+                  <ScaleIcon class="w-4 h-4 md:w-6 md:h-6" :class="balance >= 0
+                    ? 'text-brand-700 dark:text-brand-300'
+                    : 'text-state-warning'
+                    " />
+                </div>
+              </div>
+              <div class="md:ml-4 text-center md:text-left">
+                <p class="text-xs md:text-sm font-medium text-ink-secondary dark:text-ink-onDark">
+                  结余
+                </p>
+                <p class="text-sm md:text-2xl font-bold" :class="balance >= 0
+                  ? 'text-brand-700 dark:text-brand-300'
+                  : 'text-state-warning'
+                  ">
+                  {{ balance.toFixed(2) }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Expense Card -->
+        <!-- Calendar -->
         <div
-          class="bg-white dark:bg-green-900/10 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-green-100 dark:border-green-800 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
-          @click="clickDay('', '支出')"
-        >
-          <div class="flex items-center flex-row space-x-2">
-            <div class="flex-shrink-0 mb-0">
-              <div
-                class="w-8 h-8 md:w-12 md:h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center"
-              >
-                <ArrowTrendingDownIcon
-                  class="w-4 h-4 md:w-6 md:h-6 text-red-700 dark:text-red-300"
-                />
-              </div>
-            </div>
-            <div class="md:ml-4 text-center md:text-left">
-              <p
-                class="text-xs md:text-sm font-medium text-green-600 dark:text-green-400"
-              >
-                总支出
-              </p>
-              <p
-                class="text-sm md:text-2xl font-bold text-red-700 dark:text-red-300"
-              >
-                {{ getOutMonth().toFixed(2) }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Balance Card -->
-        <div
-          class="bg-white dark:bg-green-900/10 rounded-lg md:rounded-xl shadow-lg p-2 md:p-4 border border-green-100 dark:border-green-800"
-        >
-          <div class="flex items-center flex-row space-x-2">
-            <div class="flex-shrink-0 mb-0">
-              <div
-                class="w-8 h-8 md:w-12 md:h-12 rounded-lg flex items-center justify-center"
-                :class="
-                  balance >= 0
-                    ? 'bg-blue-100 dark:bg-blue-900'
-                    : 'bg-orange-100 dark:bg-orange-900'
-                "
-              >
-                <ScaleIcon
-                  class="w-4 h-4 md:w-6 md:h-6"
-                  :class="
-                    balance >= 0
-                      ? 'text-blue-700 dark:text-blue-300'
-                      : 'text-orange-700 dark:text-orange-300'
-                  "
-                />
-              </div>
-            </div>
-            <div class="md:ml-4 text-center md:text-left">
-              <p
-                class="text-xs md:text-sm font-medium text-green-600 dark:text-green-400"
-              >
-                结余
-              </p>
-              <p
-                class="text-sm md:text-2xl font-bold"
-                :class="
-                  balance >= 0
-                    ? 'text-blue-700 dark:text-blue-300'
-                    : 'text-orange-700 dark:text-orange-300'
-                "
-              >
-                {{ balance.toFixed(2) }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Calendar -->
-      <div
-        class="bg-white dark:bg-green-800/10 border border-green-100 dark:border-green-800 w-full overflow-hidden"
-        :class="
-          isMobile
+          class="bg-surface dark:bg-surface-darkMuted border border-frame dark:border-frame-dark w-full overflow-hidden"
+          :class="isMobile
             ? 'rounded-lg shadow-md'
             : 'rounded-xl shadow-lg'
-        "
-      >
-        <!-- Desktop Calendar -->
-        <div v-if="!isMobile" class="w-full">
-          <DesktopCalendar
-            :current-date="nowDate"
-            :income-data="inDayCount"
-            :expense-data="outDayCount"
-            @add-flow="handleDesktopAddFlow"
-            @click-day="clickDay"
-            @month-change="handleDesktopMonthChange"
-            @show-analysis="showMonthAnalysis"
-          />
-        </div>
-
-        <!-- Mobile Calendar -->
-        <div v-else class="p-0">
-          <MobileCalendar
-            :current-date="nowDate"
-            :income-data="inDayCount"
-            :expense-data="outDayCount"
-            @add-flow="handleMobileAddFlow"
-            @click-day="clickDay"
-            @month-change="handleMobileMonthChange"
-            @show-analysis="showMonthAnalysis"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- Month Analysis Dialog -->
-    <div
-      v-if="monthAnalysisDialog"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 md:p-4 z-50"
-      @click="monthAnalysisDialog = false"
-    >
-      <div
-        class="bg-white dark:bg-green-800/10 rounded-xl shadow-2xl max-w-2xl w-full"
-        @click.stop
-      >
-        <div
-          class="flex items-center justify-between p-2 md:p-6 border-b border-green-100 dark:border-green-800"
-        >
-          <div class="flex items-center gap-3">
-            <ChartBarIcon class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            <h3 class="text-lg font-semibold text-green-900 dark:text-green-100">
-              {{ monthTitle }} 流水分析
-            </h3>
+            ">
+          <!-- Desktop Calendar -->
+          <div v-if="!isMobile" class="w-full">
+            <DesktopCalendar :current-date="nowDate" :income-data="inDayCount" :expense-data="outDayCount"
+              @add-flow="handleDesktopAddFlow" @click-day="clickDay" @month-change="handleDesktopMonthChange"
+              @show-analysis="showMonthAnalysis" />
           </div>
-          <button
-            @click="monthAnalysisDialog = false"
-            class="p-2 rounded-lg hover:bg-green-100 dark:hover:bg-green-700 transition-colors duration-200"
-          >
-            <XMarkIcon class="w-5 h-5 text-green-500 dark:text-green-400" />
-          </button>
-        </div>
 
-        <div class="p-2 md:p-4 max-h-[70vh] overflow-y-auto">
-          <DatasMonthAnalysis :data="monthAnalysisData" />
+          <!-- Mobile Calendar -->
+          <div v-else class="p-0">
+            <MobileCalendar :current-date="nowDate" :income-data="inDayCount" :expense-data="outDayCount"
+              @add-flow="handleMobileAddFlow" @click-day="clickDay" @month-change="handleMobileMonthChange"
+              @show-analysis="showMonthAnalysis" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Flow Table Dialog -->
-    <div
-      v-if="showFlowTable"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 md:p-4 z-50"
-      @click="showFlowTable = false"
-    >
-      <div
-        class="bg-white dark:bg-green-800/10 rounded-xl shadow-2xl w-full max-w-6xl max-h-[80vh] overflow-hidden"
-        @click.stop
-      >
+      <!-- Month Analysis Dialog -->
+      <div v-if="monthAnalysisDialog" class="fixed inset-0 bg-black/60 flex items-center justify-center p-2 md:p-4 z-50"
+        @click="monthAnalysisDialog = false">
         <div
-          class="flex items-center justify-between p-2 md:p-3 border-b border-green-100 dark:border-green-800"
-        >
-          <h2 class="text-base font-bold text-green-900 dark:text-green-100">
-            {{ query.startDay }} - {{ query.endDay }} - {{ query.flowType }}
-          </h2>
-          <button
-            @click="showFlowTable = false"
-            class="md:px-3 px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 font-xs md:font-sm"
-          >
-            关闭
-          </button>
-        </div>
+          class="bg-surface dark:bg-surface-dark rounded-xl shadow-2xl max-w-2xl w-full border border-frame dark:border-frame-dark"
+          @click.stop>
+          <div class="flex items-center justify-between p-2 md:p-6 border-b border-frame-light dark:border-frame-dark">
+            <div class="flex items-center gap-3">
+              <ChartBarIcon class="w-6 h-6 text-brand-600 dark:text-brand-400" />
+              <h3 class="text-lg font-semibold text-ink-primary dark:text-ink-onDark">
+                {{ monthTitle }} 流水分析
+              </h3>
+            </div>
+            <button @click="monthAnalysisDialog = false"
+              class="p-2 rounded-lg hover:bg-surface-soft dark:hover:bg-surface-darkMuted transition-colors duration-200 text-ink-muted hover:text-ink-primary dark:text-ink-onDark">
+              <XMarkIcon class="w-5 h-5" />
+            </button>
+          </div>
 
-        <div class="p-2 md:p-4 overflow-y-auto">
-          <DatasFlowTable
-            ref="flowTableRef"
-            :query="query"
-            v-if="showFlowTable"
-            @edit-item="editItem"
-            :actions="true"
-          />
+          <div class="p-2 md:p-4 max-h-[70vh] overflow-y-auto">
+            <DatasMonthAnalysis :data="monthAnalysisData" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Add Flow Dialog -->
-    <FlowEditDialog
-      v-if="showFlowEditDialog"
-      :title="dialogFormTitle"
-      :flow="selectedFlow"
-      :success-callback="addFlowSuccess"
-    />
-  </div>
-</template>
+      <!-- Flow Table Dialog -->
+      <div v-if="showFlowTable" class="fixed inset-0 bg-black/60 flex items-center justify-center p-2 md:p-4 z-50"
+        @click="showFlowTable = false">
+        <div
+          class="bg-surface dark:bg-surface-dark rounded-xl shadow-2xl w-full max-w-6xl max-h-[80vh] overflow-hidden border border-frame dark:border-frame-dark"
+          @click.stop>
+          <div class="flex items-center justify-between p-2 md:p-3 border-b border-frame-light dark:border-frame-dark">
+            <h2 class="text-base font-bold text-ink-primary dark:text-ink-onDark">
+              {{ query.startDay }} - {{ query.endDay }} - {{ query.flowType }}
+            </h2>
+            <button @click="showFlowTable = false"
+              class="md:px-3 px-2 py-1 bg-state-danger hover:opacity-90 text-white rounded-lg transition-colors duration-200 font-xs md:font-sm">
+              关闭
+            </button>
+          </div>
+
+          <div class="p-2 md:p-4 overflow-y-auto">
+            <DatasFlowTable ref="flowTableRef" :query="query" v-if="showFlowTable" @edit-item="editItem"
+              :actions="true" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Flow Dialog -->
+      <FlowEditDialog v-if="showFlowEditDialog" :title="dialogFormTitle" :flow="selectedFlow"
+        :success-callback="addFlowSuccess" />
+    </div>
+  </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
@@ -254,8 +182,9 @@ definePageMeta({
 
 // 编辑相关
 const selectedFlow = ref<Flow | any>({});
-const dialogFormTitle = ref("新增流水");
+const dialogFormTitle = ref();
 const formTitle = ["新增流水", "修改流水"];
+dialogFormTitle.value = formTitle[0];
 const flowTableRef = ref();
 
 const editItem = (item: any) => {
