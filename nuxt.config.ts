@@ -104,33 +104,12 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
     "nuxt-echarts",
-    "@prisma/nuxt",
+    "@pinia/nuxt",
     "nuxt-openapi-docs-module",
   ],
 
-  i18n: {
-    strategy: "prefix_except_default",
-    defaultLocale: "zh",
-    locales: [
-      {
-        code: "en",
-        name: "English",
-      },
-      {
-        code: "zh",
-        name: "简体中文",
-      },
-    ],
-    vueI18n: "./i18n.config.ts",
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: "i18n_redirected",
-      redirectOn: "root",
-    },
-  },
   // 动态引入echars图表
   echarts: {
     features: ["LabelLayout", "UniversalTransition"],

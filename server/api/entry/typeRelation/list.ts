@@ -1,5 +1,5 @@
-import prisma from "~/lib/prisma";
-import { initTypeRelation } from "~/server/utils/data";
+import prisma from "~~/server/lib/prisma";
+import { initTypeRelation } from "~~/server/utils/data";
 
 /**
  * @swagger

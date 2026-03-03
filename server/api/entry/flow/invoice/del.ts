@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import prisma from "~/lib/prisma";
+import prisma from "~~/server/lib/prisma";
 
 /**
  * @swagger

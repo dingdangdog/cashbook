@@ -1,4 +1,4 @@
-import prisma from "~/lib/prisma";
+import prisma from "~~/server/lib/prisma";
 
 export const initTypeRelation = async (bookId?: string) => {
   if (!bookId) {

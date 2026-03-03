@@ -2,13 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
   // provider = env("DATEBASE_PROVIDER")
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model SystemSetting {
