@@ -55,7 +55,7 @@
           </div>
           <p
             v-if="!changPasswordData.old && showErrors"
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-state-danger dark:text-state-danger"
           >
             原密码为必填项
           </p>
@@ -90,7 +90,7 @@
           </div>
           <p
             v-if="!changPasswordData.new && showErrors"
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-state-danger dark:text-state-danger"
           >
             新密码为必填项
           </p>
@@ -128,7 +128,7 @@
           </div>
           <p
             v-if="!changPasswordData.againNew && showErrors"
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-state-danger dark:text-state-danger"
           >
             重复新密码为必填项
           </p>
@@ -136,7 +136,7 @@
             v-else-if="
               changPasswordData.new !== changPasswordData.againNew && showErrors
             "
-            class="mt-1 text-sm text-red-600 dark:text-red-400"
+            class="mt-1 text-sm text-state-danger dark:text-state-danger"
           >
             两次密码不一致
           </p>
