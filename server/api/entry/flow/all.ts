@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     where: { userId },
     include: {
       account: {
-        select: { id: true, name: true, accountType: true },
+        select: { id: true, name: true },
       },
     },
   });

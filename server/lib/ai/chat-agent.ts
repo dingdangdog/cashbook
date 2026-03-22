@@ -339,9 +339,9 @@ JSON 格式固定如下：
 - query_flows.args: { flowType?, industryType?, payType?, startDay?, endDay?, name?, accountName?, accountId?, pageNum?, pageSize? }
 - query_flow_extremes.args: { flowType?, industryType?, payType?, name?, month? 或 startDay+endDay, accountName?, accountId?, limit? }
 - get_statistics.args: { month? 或 startDay+endDay, accountName?, accountId? }
-- add_fund_account.args: { name, accountType?, institution?, accountNo?, initialBalance?, currentBalance?, status?, description? }
+- add_fund_account.args: { name, institution?, accountNo?, initialBalance?, currentBalance?, status?, description? }
 - batch_add_fund_accounts.args: { accountNames: string[], defaultCurrency? }
-- query_fund_accounts.args: { keyword?, status?, accountType?, pageNum?, pageSize? }
+- query_fund_accounts.args: { keyword?, status?, pageNum?, pageSize? }
 - update_fund_account_balance.args: { id? 或 name?, currentBalance, totalLiability?, totalProfit?, description? }
 - set_budget.args: { month, budget, used? }
 - query_budgets.args: { month?, pageNum?, pageSize? }

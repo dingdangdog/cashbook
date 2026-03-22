@@ -5,12 +5,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   const name = String(body.name || "").trim();
-  const accountType = String(body.accountType || "").trim();
   if (!name) {
     return error("账户名称不能为空");
-  }
-  if (!accountType) {
-    return error("账户类型不能为空");
   }
 
   const initialBalance = Number(body.initialBalance ?? 0);
@@ -23,7 +19,6 @@ export default defineEventHandler(async (event) => {
     data: {
       userId,
       name,
-      accountType,
       institution: body.institution ? String(body.institution) : null,
       accountNo: body.accountNo ? String(body.accountNo) : null,
       currency: body.currency ? String(body.currency) : "CNY",

@@ -472,7 +472,7 @@ interface FlowItem {
   flowType: string;
   industryType: string;
   payType: string;
-  account?: { id?: number; name?: string; accountType?: string } | null;
+  account?: { id?: number; name?: string } | null;
   accountBal?: number | null;
   money: number;
   name: string;

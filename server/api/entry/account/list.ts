@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
     pageNum = 1,
     pageSize = 20,
     status,
-    accountType,
     keyword,
     name,
   } = body;
@@ -15,9 +14,6 @@ export default defineEventHandler(async (event) => {
   const where: any = { userId };
   if (status !== undefined && status !== null && status !== "") {
     where.status = Number(status);
-  }
-  if (accountType) {
-    where.accountType = String(accountType);
   }
   if (name) {
     where.name = { contains: String(name), mode: "insensitive" };

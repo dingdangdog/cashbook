@@ -108,9 +108,7 @@ flows.value.push(...items);
 const attribution = ref("");
 
 // 资金账户：当前用户全部账户（启用）
-const fundAccounts = ref<{ id: number; name: string; accountType: string }[]>(
-  [],
-);
+const fundAccounts = ref<{ id: number; name: string }[]>([]);
 // 用户选中的账户 ID（可手动切换，默认由自动匹配填充），空字符串表示不指定
 const selectedAccountId = ref<number | "">("");
 
@@ -131,7 +129,7 @@ const originLabel = computed(() => {
 
 /** 按导入途径自动匹配账户：关键词模糊 → 现金 → 无 */
 function matchAccountId(
-  accounts: { id: number; name: string; accountType: string }[],
+  accounts: { id: number; name: string }[],
   source: string,
 ): number | null {
   const keyword =
@@ -139,22 +137,19 @@ function matchAccountId(
     "";
   if (!keyword || !accounts?.length) return null;
   const fuzzy = accounts.find(
-    (a) =>
-      (a.name && a.name.includes(keyword)) ||
-      (a.accountType && a.accountType.includes(keyword)),
+    (a) => a.name && a.name.includes(keyword),
   );
   if (fuzzy) return fuzzy.id;
-  const cash = accounts.find(
-    (a) => a.name === "现金" || a.accountType === "现金",
-  );
+  const cash = accounts.find((a) => a.name === "现金");
   return cash ? cash.id : null;
 }
 
 const loadAccounts = async () => {
   try {
-    const res = await doApi.post<
-      { id: number; name: string; accountType: string }[]
-    >("api/entry/account/all", { status: 1 });
+    const res = await doApi.post<{ id: number; name: string }[]>(
+      "api/entry/account/all",
+      { status: 1 },
+    );
     fundAccounts.value = Array.isArray(res) ? res : [];
   } catch {
     fundAccounts.value = [];

@@ -61,7 +61,6 @@
         <thead class="bg-surface-muted">
           <tr>
             <th class="px-3 py-2 text-left">名称</th>
-            <!-- <th class="px-3 py-2 text-left">类型</th> -->
             <th class="px-3 py-2 text-left">当前余额</th>
             <th class="px-3 py-2 text-left">累计流入</th>
             <th class="px-3 py-2 text-left">累计流出</th>
@@ -93,7 +92,6 @@
                 {{ item.institution || "-" }} {{ item.accountNo || "" }}
               </div> -->
             </td>
-            <!-- <td class="px-3 py-2">{{ item.accountType }}</td> -->
             <td class="px-3 py-2">{{ formatMoney(item.currentBalance || 0) }}</td>
             <td class="px-3 py-2">{{ formatMoney(item.totalIncome || 0) }}</td>
             <td class="px-3 py-2">{{ formatMoney(item.totalExpense || 0) }}</td>
@@ -131,21 +129,6 @@
               v-model="editForm.name"
               class="w-full mt-1 px-3 py-2 border border-border rounded bg-background"
             />
-          </div>
-          <div>
-            <label class="text-sm">账户类型</label>
-            <select
-              v-model="editForm.accountType"
-              class="w-full mt-1 px-3 py-2 border border-border rounded bg-background"
-            >
-              <option value="银行卡">银行卡</option>
-              <option value="信用卡">信用卡</option>
-              <option value="支付宝">支付宝</option>
-              <option value="微信">微信</option>
-              <option value="投资账户">投资账户</option>
-              <option value="现金">现金</option>
-              <option value="其他">其他</option>
-            </select>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
@@ -237,7 +220,6 @@ const stats = ref({
 
 const dialogVisible = ref(false);
 const editForm = ref<FundAccount>({
-  accountType: "银行卡",
   initialBalance: 0,
   currentBalance: 0,
   status: 1,
@@ -277,7 +259,6 @@ const openDialog = (item?: FundAccount) => {
     editForm.value = { ...item };
   } else {
     editForm.value = {
-      accountType: "银行卡",
       initialBalance: 0,
       currentBalance: 0,
       status: 1,
@@ -289,10 +270,6 @@ const openDialog = (item?: FundAccount) => {
 const saveItem = async () => {
   if (!editForm.value.name) {
     Alert.error("账户名称不能为空");
-    return;
-  }
-  if (!editForm.value.accountType) {
-    Alert.error("账户类型不能为空");
     return;
   }
 

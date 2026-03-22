@@ -188,11 +188,6 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
         type: "object",
         properties: {
           name: { type: "string", description: "账户名称，如 招商银行卡" },
-          accountType: {
-            type: "string",
-            description:
-              "账户类型，如 银行卡/信用卡/支付宝/微信/投资账户/现金/其他",
-          },
           institution: {
             type: "string",
             description: "开户机构或平台（可选）",
@@ -255,7 +250,6 @@ export const CHAT_TOOLS: ChatCompletionTool[] = [
             description: "关键字，匹配名称/机构/账号",
           },
           status: { type: "number", description: "状态过滤" },
-          accountType: { type: "string", description: "账户类型过滤" },
           pageNum: { type: "number", description: "页码，默认1" },
           pageSize: { type: "number", description: "每页条数，默认20" },
         },

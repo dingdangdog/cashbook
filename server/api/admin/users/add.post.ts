@@ -33,10 +33,7 @@ export default defineEventHandler(async (event) => {
   const existedCash = await prisma.fundAccount.findFirst({
     where: {
       userId: user.id,
-      OR: [
-        { name: { equals: "现金", mode: "insensitive" } },
-        { accountType: "现金" },
-      ],
+      name: { equals: "现金", mode: "insensitive" },
     },
     select: { id: true },
   });
@@ -45,7 +42,6 @@ export default defineEventHandler(async (event) => {
       data: {
         userId: user.id,
         name: "现金",
-        accountType: "现金",
         currency: "CNY",
         initialBalance: 0,
         currentBalance: 0,

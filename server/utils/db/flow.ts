@@ -254,7 +254,6 @@ export async function createFlowByAI(
   matchedFundAccount?: {
     id: number;
     name: string;
-    accountType: string;
   } | null;
 }> {
   const flowType =
@@ -352,7 +351,6 @@ export async function createFlowByAI(
       ? {
           id: matchedAccount.id,
           name: matchedAccount.name,
-          accountType: matchedAccount.accountType,
         }
       : null,
   };

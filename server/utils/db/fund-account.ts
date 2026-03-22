@@ -15,33 +15,8 @@ export interface FundAccountQueryWhere {
   id?: number;
   userId?: number;
   status?: number;
-  accountType?: string;
   name?: string;
   keyword?: string;
-}
-
-const KNOWN_ACCOUNT_TYPES = [
-  "银行卡",
-  "信用卡",
-  "支付宝",
-  "微信",
-  "投资账户",
-  "现金",
-  "其他",
-];
-
-export function normalizeFundAccountType(input?: string | null): string {
-  const raw = String(input || "").trim();
-  if (!raw) return "其他";
-  if (KNOWN_ACCOUNT_TYPES.includes(raw)) return raw;
-
-  if (/微信/.test(raw)) return "微信";
-  if (/支付宝/.test(raw)) return "支付宝";
-  if (/信用卡/.test(raw)) return "信用卡";
-  if (/银行卡|借记卡|储蓄卡/.test(raw)) return "银行卡";
-  if (/现金/.test(raw)) return "现金";
-  if (/投资|基金|股票|理财|券商|金融/.test(raw)) return "投资账户";
-  return "其他";
 }
 
 function buildFundAccountWhere(
@@ -51,7 +26,6 @@ function buildFundAccountWhere(
   if (input.id != null) where.id = input.id;
   if (input.userId != null) where.userId = input.userId;
   if (input.status != null) where.status = input.status;
-  if (input.accountType) where.accountType = input.accountType;
   if (input.name) where.name = input.name;
   if (input.keyword) {
     where.OR = [
@@ -96,15 +70,11 @@ function splitAccountKeywords(input: string): string[] {
 }
 
 function buildAccountAliases(input: string): string[] {
-  const base = splitAccountKeywords(input);
-  const normalized = base
-    .map((x) => normalizeFundAccountType(x))
-    .filter((x) => x && x !== "其他");
-  return Array.from(new Set([...base, ...normalized]));
+  return splitAccountKeywords(input);
 }
 
 /**
- * 按记账支付方式智能匹配资金账户（名称优先，其次类型与模糊匹配）
+ * 按记账支付方式智能匹配资金账户（名称、机构等模糊匹配）
  */
 export async function resolveFundAccountByPayType(
   userId: number,
@@ -127,16 +97,6 @@ export async function resolveFundAccountByPayType(
     orderBy: [{ sortBy: "asc" }, { id: "desc" }],
   });
   if (exactByName) return exactByName;
-
-  const exactByType = await prisma.fundAccount.findFirst({
-    where: {
-      userId,
-      status: { not: -1 },
-      OR: aliases.map((accountType) => ({ accountType })),
-    },
-    orderBy: [{ sortBy: "asc" }, { id: "desc" }],
-  });
-  if (exactByType) return exactByType;
 
   const fuzzy = await prisma.fundAccount.findFirst({
     where: {
@@ -163,10 +123,7 @@ export async function getOrCreateCashFundAccount(
     where: {
       userId,
       status: { not: -1 },
-      OR: [
-        { name: { equals: "现金", mode: "insensitive" } },
-        { accountType: "现金" },
-      ],
+      name: { equals: "现金", mode: "insensitive" },
     },
     orderBy: [{ sortBy: "asc" }, { id: "desc" }],
   });
@@ -176,7 +133,6 @@ export async function getOrCreateCashFundAccount(
     data: {
       userId,
       name: "现金",
-      accountType: "现金",
       currency: "CNY",
       initialBalance: 0,
       currentBalance: 0,
@@ -269,12 +225,10 @@ export async function createFundAccountsBatch(input: {
 
   const created: FundAccount[] = [];
   for (const name of toCreate) {
-    const accountType = normalizeFundAccountType(name);
     const row = await prisma.fundAccount.create({
       data: {
         userId,
         name,
-        accountType,
         currency,
         initialBalance: 0,
         currentBalance: 0,
@@ -315,9 +269,6 @@ export async function addFundAccountByAI(
     };
   }
 
-  const accountType = normalizeFundAccountType(
-    String(args.accountType ?? name),
-  );
   const initialBalance = Number(args.initialBalance ?? 0);
   const currentBalance =
     args.currentBalance != null ? Number(args.currentBalance) : initialBalance;
@@ -326,7 +277,6 @@ export async function addFundAccountByAI(
   const created = await createFundAccount({
     userId: ctx.userId,
     name,
-    accountType,
     institution: args.institution ? String(args.institution) : null,
     accountNo: args.accountNo ? String(args.accountNo) : null,
     currency: "CNY",
@@ -421,7 +371,6 @@ export async function batchAddFundAccountsByAI(
     created: result.created.map((x) => ({
       id: x.id,
       name: x.name,
-      accountType: x.accountType,
       currentBalance: x.currentBalance,
     })),
     skipped: result.skipped,
@@ -443,7 +392,6 @@ export async function queryFundAccountsByAI(
         args.status !== undefined && args.status !== null
           ? Number(args.status)
           : undefined,
-      accountType: args.accountType ? String(args.accountType) : undefined,
     },
     { pageNum, pageSize },
   );
@@ -455,7 +403,6 @@ export async function queryFundAccountsByAI(
     data: result.data.map((x) => ({
       id: x.id,
       name: x.name,
-      accountType: x.accountType,
       currentBalance: x.currentBalance,
       totalIncome: x.totalIncome,
       totalExpense: x.totalExpense,

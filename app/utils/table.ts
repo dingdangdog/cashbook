@@ -52,7 +52,6 @@ export interface Flow {
 export interface FundAccountLite {
   id?: number;
   name?: string;
-  accountType?: string;
 }
 
 /** 预算/支出计划（与 Prisma Budget 一致） */
@@ -121,7 +120,6 @@ export interface FundAccount {
   id?: number;
   userId?: number;
   name?: string;
-  accountType?: string;
   institution?: string | null;
   accountNo?: string | null;
   currency?: string;

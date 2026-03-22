@@ -133,7 +133,7 @@ export default defineEventHandler(async (event) => {
     where, // 使用条件查询
     include: {
       account: {
-        select: { id: true, name: true, accountType: true },
+        select: { id: true, name: true },
       },
     },
   });

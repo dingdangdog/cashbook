@@ -17,8 +17,6 @@ export default defineEventHandler(async (event) => {
 
   const data: any = {};
   if (body.name !== undefined) data.name = String(body.name || "").trim();
-  if (body.accountType !== undefined)
-    data.accountType = String(body.accountType || "").trim();
   if (body.institution !== undefined)
     data.institution = body.institution ? String(body.institution) : null;
   if (body.accountNo !== undefined)
@@ -44,9 +42,6 @@ export default defineEventHandler(async (event) => {
 
   if (data.name !== undefined && !data.name) {
     return error("账户名称不能为空");
-  }
-  if (data.accountType !== undefined && !data.accountType) {
-    return error("账户类型不能为空");
   }
 
   const updated = await prisma.fundAccount.update({

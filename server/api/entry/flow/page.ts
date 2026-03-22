@@ -154,7 +154,7 @@ export default defineEventHandler(async (event) => {
       orderBy,
       include: {
         account: {
-          select: { id: true, name: true, accountType: true },
+          select: { id: true, name: true },
         },
       },
     });
@@ -168,7 +168,7 @@ export default defineEventHandler(async (event) => {
       take: pageSize,
       include: {
         account: {
-          select: { id: true, name: true, accountType: true },
+          select: { id: true, name: true },
         },
       },
     });
