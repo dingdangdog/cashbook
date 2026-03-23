@@ -81,10 +81,6 @@ const navigateToPath = (path: string) => {
   navigateTo({ path: `/${path}` });
 };
 
-const openAdmin = () => {
-  window.open(`/admin`, "_blank");
-};
-
 const openConvertDialog = () => {
   showSetConvertDialog.value = true;
 };
@@ -157,7 +153,6 @@ const checkVersion = () => {
       :is-mobile="isMobile"
       @toggle-sidebar="sidebarOpen = !sidebarOpen"
       @logout="logout"
-      @open-admin="openAdmin"
       @open-convert-dialog="openConvertDialog"
       @open-change-password-dialog="openChangePasswordDialog"
     />
