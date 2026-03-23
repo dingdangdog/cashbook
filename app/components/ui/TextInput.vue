@@ -32,7 +32,7 @@ const inputType = computed(() =>
       v-if="label"
       class="block text-sm font-medium text-foreground/80 mb-1"
     >
-      {{ label }}{{ required ? " *" : "" }}
+      {{ label }}<span v-if="required" class="text-red-500" aria-hidden="true"> *</span>
     </label>
     <div v-if="password" class="relative">
       <input
