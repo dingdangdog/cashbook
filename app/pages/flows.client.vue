@@ -27,25 +27,17 @@
       @export-csv="exportCsv" @download-template="downloadCsvTemplate" @import-template="importCsvTemplate" />
 
     <!-- CSV流水导入对话框 -->
-    <div
-      v-if="showFlowExcelImportDialog"
-      class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
-      @click="closeCsvTableDialog"
-    >
+    <div v-if="showFlowExcelImportDialog" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+      @click="closeCsvTableDialog">
       <div
         class="bg-surface dark:bg-surface-dark rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col border border-frame dark:border-frame-dark"
-        @click.stop
-      >
-        <div
-          class="px-4 py-3 border-b border-frame-light dark:border-frame-dark flex justify-between items-center"
-        >
+        @click.stop>
+        <div class="px-4 py-3 border-b border-frame-light dark:border-frame-dark flex justify-between items-center">
           <h3 class="text-lg font-semibold text-ink-primary dark:text-ink-onDark">
             CSV流水导入
           </h3>
-          <button
-            @click="closeCsvTableDialog"
-            class="text-ink-muted hover:text-ink-secondary dark:text-ink-onDark dark:hover:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted p-1 rounded transition-colors"
-          >
+          <button @click="closeCsvTableDialog"
+            class="text-ink-muted hover:text-ink-secondary dark:text-ink-onDark dark:hover:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted p-1 rounded transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -59,15 +51,11 @@
     </div>
 
     <!-- 自定义导入对话框 -->
-    <div
-      v-if="showFlowCustomImportDialog"
-      class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
-      @click="closeCustomImport"
-    >
+    <div v-if="showFlowCustomImportDialog" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+      @click="closeCustomImport">
       <div
         class="bg-surface dark:bg-surface-dark rounded-lg shadow-xl w-full max-w-md flex flex-col border border-frame dark:border-frame-dark"
-        @click.stop
-      >
+        @click.stop>
         <FlowCustomImportDialog @success-callback="doQuery" @close="closeCustomImport" />
       </div>
     </div>
@@ -76,25 +64,17 @@
     <FlowJsonImportDialog v-if="showFlowJsonImportDialog" :success-callback="doQuery" />
 
     <!-- 批量修改类型对话框 -->
-    <div
-      v-if="showBatchChangeDialog"
-      class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
-      @click="closeBatchChangeDialog"
-    >
+    <div v-if="showBatchChangeDialog" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+      @click="closeBatchChangeDialog">
       <div
         class="bg-surface dark:bg-surface-dark rounded-lg shadow-xl w-full max-w-md flex flex-col border border-frame dark:border-frame-dark"
-        @click.stop
-      >
-        <div
-          class="px-4 py-3 border-b border-frame-light dark:border-frame-dark flex justify-between items-center"
-        >
+        @click.stop>
+        <div class="px-4 py-3 border-b border-frame-light dark:border-frame-dark flex justify-between items-center">
           <h3 class="text-lg font-semibold text-ink-primary dark:text-ink-onDark">
             批量修改类型
           </h3>
-          <button
-            @click="closeBatchChangeDialog"
-            class="text-ink-muted hover:text-ink-secondary dark:text-ink-onDark dark:hover:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted p-1 rounded transition-colors"
-          >
+          <button @click="closeBatchChangeDialog"
+            class="text-ink-muted hover:text-ink-secondary dark:text-ink-onDark dark:hover:text-ink-onDark hover:bg-surface-soft dark:hover:bg-surface-darkMuted p-1 rounded transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -106,10 +86,8 @@
             <label class="block text-sm font-medium text-ink-secondary dark:text-ink-onDark">
               流水类型
             </label>
-            <select
-              v-model="batchChange.flowType"
-              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500"
-            >
+            <select v-model="batchChange.flowType"
+              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500">
               <option value="">不修改</option>
               <option value="支出">支出</option>
               <option value="收入">收入</option>
@@ -121,53 +99,36 @@
             <label class="block text-sm font-medium text-ink-secondary dark:text-ink-onDark">
               支出/收入类型
             </label>
-            <input
-              v-model="batchChange.industryType"
-              type="text"
-              placeholder="不修改"
-              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark placeholder-ink-muted dark:placeholder-ink-onDark/60 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500"
-            />
+            <input v-model="batchChange.industryType" type="text" placeholder="不修改"
+              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark placeholder-ink-muted dark:placeholder-ink-onDark/60 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500" />
           </div>
 
           <div class="space-y-2">
             <label class="block text-sm font-medium text-ink-secondary dark:text-ink-onDark">
               支付/收款方式
             </label>
-            <input
-              v-model="batchChange.payType"
-              type="text"
-              placeholder="不修改"
-              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark placeholder-ink-muted dark:placeholder-ink-onDark/60 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500"
-            />
+            <input v-model="batchChange.payType" type="text" placeholder="不修改"
+              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark placeholder-ink-muted dark:placeholder-ink-onDark/60 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500" />
           </div>
 
           <div class="space-y-2">
             <label class="block text-sm font-medium text-ink-secondary dark:text-ink-onDark">
               流水归属
             </label>
-            <input
-              v-model="batchChange.attribution"
-              type="text"
-              placeholder="不修改"
-              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark placeholder-ink-muted dark:placeholder-ink-onDark/60 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500"
-            />
+            <input v-model="batchChange.attribution" type="text" placeholder="不修改"
+              class="w-full px-3 py-2 text-sm border border-frame dark:border-frame-dark rounded bg-surface dark:bg-surface-dark text-ink-primary dark:text-ink-onDark placeholder-ink-muted dark:placeholder-ink-onDark/60 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500" />
           </div>
         </div>
 
         <div
-          class="px-4 py-3 border-t border-frame-light dark:border-frame-dark bg-surface-soft dark:bg-surface-darkMuted"
-        >
+          class="px-4 py-3 border-t border-frame-light dark:border-frame-dark bg-surface-soft dark:bg-surface-darkMuted">
           <div class="flex gap-2">
-            <button
-              @click="closeBatchChangeDialog"
-              class="flex-1 px-4 py-2 bg-surface-muted hover:bg-surface-soft dark:bg-surface-darkMuted dark:hover:bg-surface-dark text-ink-secondary dark:text-ink-onDark rounded text-sm font-medium transition-colors"
-            >
+            <button @click="closeBatchChangeDialog"
+              class="flex-1 px-4 py-2 bg-surface-muted hover:bg-surface-soft dark:bg-surface-darkMuted dark:hover:bg-surface-dark text-ink-secondary dark:text-ink-onDark rounded text-sm font-medium transition-colors">
               取消
             </button>
-            <button
-              @click="confirmBatchChange"
-              class="flex-1 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded text-sm font-medium transition-colors"
-            >
+            <button @click="confirmBatchChange"
+              class="flex-1 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded text-sm font-medium transition-colors">
               确认修改
             </button>
           </div>
@@ -574,7 +535,7 @@ const openCsvImport = (type: string) => {
     titleRowIndex.value = 24;
   } else if (fileType.value === "wxpay") {
     // 微信表头行是第17行，索引是16
-    titleRowIndex.value = 16;
+    titleRowIndex.value = 17;
   } else if (fileType.value === "jdFinance") {
     // 京东金融表头行是第22行，索引是21
     titleRowIndex.value = 21;
@@ -622,7 +583,7 @@ const readCsvInfo = (event: Event) => {
       // 将 xlsx 数据结构转换为 node-xlsx 数据结构，便于页面回显
       // sheets是sheet的数组，每个sheet有两个属性: name - sheet名称 data - sheet数据
       /**************************************/
-  const sheets = workbook.SheetNames.map((sheetName) => {
+      const sheets = workbook.SheetNames.map((sheetName) => {
         const xlsxSheet = workbook.Sheets[sheetName] as XLSX.WorkSheet;
         const sheetData = XLSX.utils.sheet_to_json<any[]>(xlsxSheet, {
           header: 1, // 表头行数

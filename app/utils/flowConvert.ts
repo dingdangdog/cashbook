@@ -90,7 +90,12 @@ export function wxpayConvert(
     row[indexMap["收/支"]] == "/" ? "不计收支" : row[indexMap["收/支"]];
   flow.industryType = String(typeConvert(row[indexMap["交易类型"]]));
   flow.payType = "微信";
-  flow.money = parseFloat(row[indexMap["金额(元)"]].replace("¥", ""));
+  const wxMoneyRaw = row[indexMap["金额(元)"]];
+  flow.money =
+    typeof wxMoneyRaw === "number"
+      ? wxMoneyRaw
+      : parseFloat(String(wxMoneyRaw ?? "").replace("¥", "").replace("￥", ""));
+
   flow.name = String(row[indexMap["商品"]]);
   flow.description =
     row[indexMap["交易对方"]] +
