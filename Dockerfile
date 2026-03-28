@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # 3. 生成 Prisma Client 和运行构建
-RUN npx prisma generate 
+# RUN npx prisma generate 
 RUN npm run build
 
 # ==============================================================================
