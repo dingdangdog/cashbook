@@ -1,7 +1,7 @@
 # ==============================================================================
 # 阶段 1: BUILDER
 # ==============================================================================
-FROM node:20-alpine3.21 AS builder
+FROM node:22.21.1-alpine3.22 AS builder
 
 WORKDIR /app
 
@@ -20,12 +20,12 @@ RUN npm run build
 # ==============================================================================
 # 阶段 2: RUNNER (精简版)
 # ==============================================================================
-FROM node:20-alpine3.21 AS runner
+FROM node:22.21.1-alpine3.22 AS runner
 
 LABEL author.name="DingDangDog"
 LABEL author.email="dingdangdogx@outlook.com"
 LABEL project.name="cashbook"
-LABEL project.version="3"
+LABEL project.version="4"
 
 WORKDIR /app
 
@@ -41,11 +41,11 @@ COPY ./docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 # 预装prisma，可以提升容器启动速度，但镜像体积会大很多
-RUN npm install -g prisma@6.19.1
+RUN npm install -g prisma@7.6.0
 
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
 
-ENV NUXT_APP_VERSION="4.3.12"
+ENV NUXT_APP_VERSION="4.3.13"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
 ENV NUXT_ADMIN_USERNAME="admin"
