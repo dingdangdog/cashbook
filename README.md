@@ -22,6 +22,7 @@
 3. **新仓库 https://github.com/dingdangdog/Jimily 正在建设中~**
 
 
+记米粒（Jimily）在线体验：https://jimily.oldmoon.top (体验账号: `jimilydemo`/`jimily2026`)
 
 - 官方文档站：[https://doc.cashbook.oldmoon.top](https://doc.cashbook.oldmoon.top)
 - 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号: `cashbook`/`cashbook`)
