@@ -16,6 +16,13 @@
 <!--   <img alt="GitHub Releases Download" src="https://img.shields.io/github/downloads/dingdangdog/cashbook/total.svg" /> -->
 </p>
 
+**重要声明：**
+1. **本仓库不再增加新功能，只做BUG维护，并且随时可能停更~**；
+2. **本仓库即便维护，也只会维护主分支（Postgre数据库），其他分支有需要者请自行拉取维护~**
+3. **新仓库 https://github.com/dingdangdog/Jimily 正在建设中~**
+
+
+
 - 官方文档站：[https://doc.cashbook.oldmoon.top](https://doc.cashbook.oldmoon.top)
 - 在线体验：[cashbook.oldmoon.top](https://cashbook.oldmoon.top/) (体验账号: `cashbook`/`cashbook`)
 - QQ交流群：`564081656`
