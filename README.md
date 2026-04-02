@@ -19,7 +19,7 @@
 **重要声明：**
 1. **本仓库不再增加新功能，只做BUG维护，并且随时可能停更~**；
 2. **本仓库即便维护，也只会维护主分支（Postgre数据库），其他分支有需要者请自行拉取维护~**
-3. **新仓库 https://github.com/dingdangdog/Jimily_release 正在建设中~**
+3. **新仓库 https://github.com/dingdangdog/Jimily-release 正在建设中~**
 
 
 记米粒（Jimily）在线体验：https://jimily.oldmoon.top (体验账号: `jimilydemo`/`jimily2026`)
