@@ -261,7 +261,7 @@ export type ReceivableGroupByOutputType = {
   _max: ReceivableMaxAggregateOutputType | null
 }
 
-type GetReceivableGroupByPayload<T extends ReceivableGroupByArgs> = Prisma.PrismaPromise<
+export type GetReceivableGroupByPayload<T extends ReceivableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ReceivableGroupByOutputType, T['by']> &
       {
@@ -1221,6 +1221,11 @@ export type ReceivableFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` Receivables.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Receivables.
+   */
   distinct?: Prisma.ReceivableScalarFieldEnum | Prisma.ReceivableScalarFieldEnum[]
 }
 
