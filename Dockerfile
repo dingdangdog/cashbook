@@ -36,7 +36,7 @@ COPY --from=builder /app/prisma/generated ./prisma/generated
 COPY --from=builder /app/prisma/migrations ./prisma/migrations
 
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
-ENV NUXT_APP_VERSION="4.3.13"
+ENV NUXT_APP_VERSION="4.3.14"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
 ENV NUXT_ADMIN_USERNAME="admin"
