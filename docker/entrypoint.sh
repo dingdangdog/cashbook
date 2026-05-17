@@ -1,4 +1,6 @@
 #!/bin/sh
+# 可选参考：当前生产 Dockerfile 在应用启动时通过 server/lib/db-migrations.ts 自动迁移，
+# 不再使用本脚本。若改回 Prisma CLI 方式，需在 runner 镜像中安装 prisma 并设置 ENTRYPOINT。
 echo "============================================="
 echo "欢迎使用 Cashbook"
 echo "============================================="

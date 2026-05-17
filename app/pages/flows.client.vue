@@ -185,6 +185,7 @@ import * as XLSX from "xlsx";
 import {
   alipayConvert,
   jdFinanceConvert,
+  resolveAlipayHeaderRowIndex,
   wxpayConvert,
   templateConvert,
 } from "@/utils/flowConvert";
@@ -530,10 +531,7 @@ const openCsvImport = (type: string) => {
     return;
   }
   fileType.value = type;
-  if (fileType.value === "alipay") {
-    // 支付宝表头行是第25行，索引是24
-    titleRowIndex.value = 24;
-  } else if (fileType.value === "wxpay") {
+  if (fileType.value === "wxpay") {
     // 微信表头行是第17行，索引是16
     titleRowIndex.value = 17;
   } else if (fileType.value === "jdFinance") {
@@ -598,6 +596,10 @@ const readCsvInfo = (event: Event) => {
 
       // 数据集合--csv默认只有一个sheet，所以只需要取第一个sheet
       const sheetData: any[] = sheets[0].sheetData;
+
+      if (fileType.value === "alipay") {
+        titleRowIndex.value = resolveAlipayHeaderRowIndex(sheetData);
+      }
 
       /**************************************/
       // 表头数据

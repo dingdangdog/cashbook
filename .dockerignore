@@ -6,3 +6,5 @@
 node_modules/
 data/
 doc/
+038-docker-database-migration-sync.md
+Dockerfile copy

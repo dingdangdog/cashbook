@@ -1,5 +1,41 @@
 import { useSystemStore } from "./store";
 
+/** 支付宝账单表头行默认索引（首列「交易时间」识别失败时使用） */
+export const ALIPAY_HEADER_ROW_FALLBACK_INDEX = 23;
+
+/** 支付宝表头首列标识 */
+export const ALIPAY_HEADER_FIRST_COLUMN = "交易时间";
+
+/**
+ * 在 Sheet 数据中查找表头行：首列等于指定表头文字
+ * @returns 0-based 行索引，未找到返回 null
+ */
+export function findCsvHeaderRowIndex(
+  sheetData: unknown[][],
+  firstColumnHeader: string,
+  maxScanRows = 100
+): number | null {
+  const target = firstColumnHeader.trim();
+  const limit = Math.min(sheetData.length, maxScanRows);
+  for (let i = 0; i < limit; i++) {
+    const row = sheetData[i];
+    if (!Array.isArray(row) || row.length === 0) continue;
+    const first = String(row[0] ?? "").trim();
+    if (first === target) return i;
+  }
+  return null;
+}
+
+/**
+ * 解析支付宝账单表头行索引（动态识别，失败时用写死默认值）
+ */
+export function resolveAlipayHeaderRowIndex(sheetData: unknown[][]): number {
+  return (
+    findCsvHeaderRowIndex(sheetData, ALIPAY_HEADER_FIRST_COLUMN) ??
+    ALIPAY_HEADER_ROW_FALLBACK_INDEX
+  );
+}
+
 // | 本软件类型 | 支付宝 | 微信 | 京东金融 | 备注 |
 // | -------- | ---- | -------- | ---- | ---- |
 // | 数码电器 | 数码电器 |      | 数码电器/手机通讯/电脑办公 | 电子产品、家电等 |

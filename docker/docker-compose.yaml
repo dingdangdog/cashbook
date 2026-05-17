@@ -11,6 +11,8 @@ services:
       - ./data:/app/data # 数据挂载到本地，不建议修改
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@cashbook_db:5432/cashbook?schema=public" # 数据库链接，【请自行修改！与你的数据库一致】
+      # DATABASE_AUTO_MIGRATE: "false" # 由外部运维执行迁移时可关闭
+      # DATABASE_BOOTSTRAP_URL: "postgresql://postgres:postgres@cashbook_db:5432/postgres"
       NUXT_DATA_PATH: "/app/data" # 数据存储未知，现在只有小票图片了，不建议修改
       NUXT_AUTH_SECRET: "auth_secret" # 前台登录加密使用的密钥 【自行修改！】
       NUXT_ADMIN_USERNAME: "admin" # 后台登录用户名

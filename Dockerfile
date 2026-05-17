@@ -5,20 +5,20 @@ FROM node:22.21.1-alpine3.22 AS builder
 
 WORKDIR /app
 
-# 1. 拷贝 package 文件以利用缓存
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-# 2. 安装所有依赖 (如果构建需要 devDependencies)
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-# 3. 生成 Prisma Client 和运行构建
-# RUN npx prisma generate 
+# 构建期不连库；仅生成 Client 与 Nuxt 产物
+ENV DATABASE_URL="postgresql://postgres:postgres@localhost:5432/cashbook?schema=public"
+
+RUN npx prisma generate
 RUN npm run build
 
 # ==============================================================================
-# 阶段 2: RUNNER (精简版)
+# 阶段 2: RUNNER
 # ==============================================================================
 FROM node:22.21.1-alpine3.22 AS runner
 
@@ -29,22 +29,13 @@ LABEL project.version="4"
 
 WORKDIR /app
 
-# 1. 拷贝编译后的 Nuxt/Node.js 应用
-#    这应该包含所有代码、静态资源和生产依赖 (node_modules, .prisma/)
-COPY --from=builder /app/.output/ ./ 
-#COPY --from=builder /app/.output/server/node_modules/ ./node_modules/
-#COPY --from=builder /app/.output/server/node_modules/.prisma/ ./.prisma/
-COPY ./prisma/ ./prisma/
+ENV TZ=Asia/Shanghai
 
-# 2. 拷贝 entrypoint 脚本
-COPY ./docker/entrypoint.sh ./entrypoint.sh
-RUN chmod +x entrypoint.sh
-
-# 预装prisma，可以提升容器启动速度，但镜像体积会大很多
-RUN npm install -g prisma@7.6.0
+COPY --from=builder /app/.output ./
+COPY --from=builder /app/prisma/generated ./prisma/generated
+COPY --from=builder /app/prisma/migrations ./prisma/migrations
 
 ENV DATABASE_URL="postgresql://postgres:123456@localhost:5432/cashbook?schema=public"
-
 ENV NUXT_APP_VERSION="4.3.13"
 ENV NUXT_DATA_PATH="/app/data"
 ENV NUXT_AUTH_SECRET="auth123"
@@ -56,4 +47,4 @@ VOLUME /app/data/
 
 EXPOSE 9090
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["node", "/app/server/index.mjs"]
